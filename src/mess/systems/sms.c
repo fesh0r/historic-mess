@@ -188,7 +188,7 @@ struct GameDriver sms_driver =
 	0,
 	"sms",
 	"Sega Master System",
-	"19??",
+	"1983",
 	"Sega",
     "Marat Fayzullin (MG source)\nCharles Mac Donald\nMathis Rosenhauer\nBrad Oliver",
     0,

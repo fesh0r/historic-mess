@@ -126,7 +126,7 @@ struct GameDriver amiga_driver =
 	__FILE__,
 	0,
 	"amiga",
-	"Commodore Amiga (NTSC)",
+	"Amiga (NTSC)",
 	"1984",
 	"Commodore Busines Machines Co.",
 	"Ernesto Corvi",

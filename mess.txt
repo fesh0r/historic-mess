@@ -76,25 +76,26 @@ System:   Description:
 a5200     "Atari 5200"
 a7800     "Atari 7800"
 a800      "Atari 800"
-amiga     "Commodore Amiga (NTSC)"
-amstrad   "Amstrad CPC6128"
-apl2cpls  "Apple IIc Plus"
+amiga     "Amiga (NTSC)"
 apple2c   "Apple IIc"
 apple2c0  "Apple IIc (3.5 ROM)"
+apple2cp  "Apple IIc Plus"
 apple2e   "Apple IIe"
 apple2ee  "Apple IIe (enhanced)"
 apple2ep  "Apple IIe (Platinum)"
 astrocde  "Bally Arcade/Astrocade"
-cgenie    "EACA Colour Genie 2000"
+cgenie    "EACA Colour Genie EG 2000"
 coco      "Color Computer"
 coleco    "Colecovision"
+cpc6128   "Amstrad/Schneider CPC6128"
 dragon32  "Dragon 32"
 ep128     "Enterprise 128K"
 gamegear  "Sega Game Gear"
 genesis   "Sega Megadrive/Genesis"
 kaypro    "Kaypro 2x"
 kccomp    "KC Compact"
-nes       "Nintendo Entertainment System / Famicom"
+kim1      "KIM-1"
+nes       "Nintendo Entertainment System/Famicom"
 pccga     "IBM PC/XT - CGA"
 pce       "PC-Engine"
 pcmda     "IBM PC/XT - MDA"
@@ -102,8 +103,9 @@ pdp1      "pdp1 SPACEWAR!"
 raaspec   "RA+A Spectrum I+"
 sms       "Sega Master System"
 spectrum  "ZX-Spectrum 48k"
+tandy1t   "Tandy 1000TX"
 ti99      "TI99/4A Home Computer"
-trs80     "TRS-80 Model I"
+trs80     "TRS-80 Model I (Level II Basic)"
 vectrex   "GCE Vectrex"
 
 
@@ -380,6 +382,22 @@ Additional info:
 	defined run address. If a program does not have a run address, you 
 	could also specify /<decimal value> to run from a specific value...
 
+	Also,.....
+	Tap <ENTER> and also confirm the following 
+	MEM SIZE?
+	with <ENTER>.
+	After that you're in BASIC (DISK BASIC, to be exact, unless you disable 
+	cgdos.rom via the dip switches).
+
+	Now you can use the DISK BASIC extensions to issue commands.  Most important
+	CMD"I<disk#>	display inventory, disk# is optional and can be from 0 to 3
+	CMD"Sname/cmd	start a binary file name/cmd from any disk
+	CMD"Limage/bin:3	load image/bin from disk 3
+
+	To ease things you could also enbale my DOS lookalike frontend ;)
+	It's contained in newE000.rom but not enabled by default.
+	If you enable it you can type HELP (hehe ;) and DIR and simply
+	give a name to execute a binary file.
 
 
 
@@ -556,6 +574,70 @@ Compatibility:
        KC compact screen is shown.  Image loading is not supported yet.
 
 
+
+
+------------
+kim1 - KIM-1
+------------
+Compatibility:
+     - This driver supports the backdrop image of the KIM-1.
+
+Description:
+A 'Lunar Lander' game is currently hardcoded into kim1_init_machine() ;-)
+It is in memory from 0200 to 02DA. To start it just enter
+[0] [2] [0] [0] and [F5] afterwards (GO).
+
+/*
+ * LUNAR LANDER
+ *   Jim Butterfield
+ *
+ * Description
+ *      This program starts at 0200.  When started, you will find
+ * yourself at 4500 feet and falling.  The thrust on your machine
+ * is set to low; so you will pick up speed due to the force of
+ * gravity.
+ *     You can look at your fuel at any time by pressing the
+ * "F" button.  Your fuel (initially 800 pounds) will be shown
+ * in the first four digits of the KIM display.
+ *     The last two digits of the KIM display always show
+ * your rate of ascent of descent.  "A" restores altitude.
+ *     Set your thrust by pressing buttons 1 through 9.
+ * Warning: button 0 turns you motor off, and it will not
+ * reignite!  A thrust of 1, minimum, burns very little fuel;
+ * but gravity will be pulling your craft down faster and
+ * faster.  A thrust of 9, maximum, overcomes gravity
+ * and reduces your rate of descent very sharply  A thrust of 5
+ * exactly counterbalances gravity; you will continue to descend
+ * (or ascend) at a constant rate.  If you run out of fuel,
+ * your thrust controls will become inoperative.
+ *
+ * Suggestions for a safe flight:
+ *   [1] Conserve fuel at the beginning by pressing 1.  You
+ *       begin to pick up speed downwards.
+ *   [2] When your rate of descent gets up to the 90's, you're
+ *       falling fast enough.  Press 5 to steady the rate.
+ *   [3] When your altitude reaches about 1500 feet, you'll
+ *       need to slow down.  Press 9 and slow down fast.
+ *   [4] When your rate of descent has dropped to 15 or 20,
+ *       steady the craft by pressing 5 or 6.  Now you're on
+ *       your own.
+ */
+
+It'd be interesting if the audio output of a save would be readable
+on a KIM-1 board. To listen to the hard-bit-rock ;) just type
+[F1] [1] [8] [0] [0] and [F5]
+
+the keys:
+key	name	description
+-------------------------------------
+F1	AD	address mode
+F2	DA	data mode
+F3	RS	reset
+F5	GO	execute from address
+F6	PC	program counter (hmm.. whatever)
+F7	ST	step (does not yet work; NMI handling for K7 missing)
+ENTER	+	increase address
+0-F	hex	hex digits
 
 
 

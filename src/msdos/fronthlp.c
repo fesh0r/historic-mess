@@ -297,7 +297,8 @@ void romident(const char* name,int enter_dirs) {
 
 enum { LIST_LIST = 1, LIST_LISTINFO, LIST_LISTFULL, LIST_LISTSAMDIR, LIST_LISTROMS, LIST_LISTSAMPLES,
 		LIST_LMR, LIST_LISTDETAILS, LIST_LISTGAMES, LIST_LISTCLONES,
-		LIST_WRONGORIENTATION, LIST_WRONGFPS, LIST_LISTCRC, LIST_LISTDUPCRC, LIST_WRONGMERGE };
+		LIST_WRONGORIENTATION, LIST_WRONGFPS, LIST_LISTCRC, LIST_LISTDUPCRC, LIST_WRONGMERGE,
+		LIST_SOURCEFILE };
 
 int frontend_help (int argc, char **argv)
 {
@@ -365,6 +366,7 @@ int frontend_help (int argc, char **argv)
 			if (!stricmp(argv[i],"-verifysamples")) verify = 2;
 			if (!stricmp(argv[i],"-romident")) ident = 1;
 			if (!stricmp(argv[i],"-isknown")) ident = 2;
+			if (!stricmp(argv[i],"-sourcefile")) list = LIST_SOURCEFILE;
 		}
 	}
 
@@ -551,8 +553,14 @@ int frontend_help (int argc, char **argv)
 
             /* First, we shall print the header */
 
-            printf(" romname driver     cpu 1    cpu 2    cpu 3    cpu 4    sound 1     sound 2     sound 3     sound 4     name\n");
-            printf("-------- ---------- -------- -------- -------- -------- ----------- ----------- ----------- ----------- --------------------------\n");
+			printf(" romname driver     ");
+			for(j=0;j<MAX_CPU;j++) printf("cpu %d    ",j+1);
+			for(j=0;j<MAX_SOUND;j++) printf("sound %d     ",j+1);
+			printf("name\n");
+			printf("-------- ---------- ");
+			for(j=0;j<MAX_CPU;j++) printf("-------- ");
+			for(j=0;j<MAX_SOUND;j++) printf("----------- ");
+			printf("--------------------------\n");
 
             /* Let's cycle through the drivers */
 
@@ -560,7 +568,13 @@ int frontend_help (int argc, char **argv)
 
             while (drivers[i])
 			{
-				if (!strwildcmp(gamename, drivers[i]->name))
+				if ((listclones || drivers[i]->clone_of == 0
+#ifndef NEOFREE
+#ifndef TINY_COMPILE
+						|| drivers[i]->clone_of == &neogeo_bios
+#endif
+#endif
+						) && !strwildcmp(gamename, drivers[i]->name))
 				{
 					/* Dummy structs to fetch the information from */
 
@@ -572,11 +586,15 @@ int frontend_help (int argc, char **argv)
 
 					printf("%-8s ",drivers[i]->name);
 
+					#ifndef MESS
 					/* source file (skip the leading "src/drivers/" */
+                    printf("%-10s ",&drivers[i]->source_file[12]);
+                    #else
+					/* source file (skip the leading "src/mess/systems/" */
+					printf("%-10s ",&drivers[i]->source_file[17]);
+					#endif
 
-					printf("%-10s ",&drivers[i]->source_file[12]);
-
-					/* Then, cpus */
+                    /* Then, cpus */
 
 					for(j=0;j<MAX_CPU;j++)
 					{
@@ -588,7 +606,7 @@ int frontend_help (int argc, char **argv)
 
 					/* Then, sound chips */
 
-					for(j=0;j<MAX_CPU;j++)
+					for(j=0;j<MAX_SOUND;j++)
 					{
 						if (sound_num(&x_sound[j]))
 						{
@@ -743,6 +761,17 @@ int frontend_help (int argc, char **argv)
 							drivers[i]->drv->visible_area.max_y - drivers[i]->drv->visible_area.min_y + 1,
 							drivers[i]->drv->frames_per_second);
 				}
+				i++;
+			}
+			return 0;
+			break;
+
+		case LIST_SOURCEFILE:
+			i = 0;
+			while (drivers[i])
+			{
+				if (!strwildcmp(gamename,drivers[i]->name))
+					printf("%-8s %s\n",drivers[i]->name,drivers[i]->source_file);
 				i++;
 			}
 			return 0;

@@ -562,8 +562,8 @@ static struct MachineDriver mda_machine_driver =
 
 	/* sound hardware */
 	0,
-	pc_sh_start,
-	pc_sh_stop,
+	0,/*pc_sh_start,*/
+	0,/*pc_sh_stop,*/
 	0
 };
 
@@ -779,8 +779,8 @@ static struct MachineDriver cga_machine_driver =
 
     /* sound hardware */
 	0,
-	pc_sh_start,
-	pc_sh_stop,
+	0,/*pc_sh_start,*/
+	0,/*pc_sh_stop,*/
 	0
 };
 
@@ -821,8 +821,8 @@ static struct MachineDriver t1t_machine_driver =
 
     /* sound hardware */
 	0,
-	pc_sh_start,
-	pc_sh_stop,
+	0,/*pc_sh_start,*/
+	0,/*pc_sh_stop,*/
 	0,
 	{
         {
@@ -990,10 +990,10 @@ struct GameDriver pccga_driver =
 ROM_START(t1t_rom)
 	ROM_REGION(0x100000)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-    ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xab3ded01)
+    ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f)
 
 	ROM_REGION(0x1100)
-	ROM_LOAD("cga.chr",     0x00000, 0x01000, 0xb2bdcad3)
+	ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
 ROM_END
 
 struct GameDriver tandy1t_driver =

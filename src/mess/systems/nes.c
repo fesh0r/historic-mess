@@ -369,7 +369,6 @@ static struct MachineDriver machine_driver =
 
 ROM_START( nes_rom )
 	ROM_REGION( 0x10000 ) /* 6502 memory */
-
 	ROM_REGION( 0x20000 ) /* PPU memory 131072k for Super Mario Brother 2 :(*/
 	ROM_REGION( 0x4000 ) /* ??? memory */
 ROM_END
@@ -381,11 +380,11 @@ struct GameDriver nes_driver =
 	__FILE__,
 	0,
 	"nes",
-	"Nintendo Entertainment System / Famicom",
+	"Nintendo Entertainment System/Famicom",
 	"1983",
 	"Nintendo",
 	"Brad Oliver\nChuck Mason\nRichard Bannister\nNicolas Hamel\nJeff Mitchell\nNicola Salmoria (sound)\n",
-	0,
+	GAME_IMPERFECT_SOUND,
 	&machine_driver,
 	0,
 

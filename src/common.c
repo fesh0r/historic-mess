@@ -176,7 +176,8 @@ int readroms(void)
 						explength += length;
 
 					if (romp->offset + length > region_size ||
-						((romp->length & ROMFLAG_ALTERNATE) && (romp->offset&~1) + 2*length > region_size))
+						(!(romp->length & ROMFLAG_NIBBLE) && (romp->length & ROMFLAG_ALTERNATE)
+								&& (romp->offset&~1) + 2*length > region_size))
 					{
 						printf("Error in RomModule definition: %s out of memory region space\n",name);
 						osd_fclose(f);
@@ -379,7 +380,7 @@ getout:
 void printromlist(const struct RomModule *romp,const char *basename)
 {
 #ifdef MESS
-	if (romp == NULL) return;
+	if (romp == NULL || (!strcmp(basename,"nes"))) return;
 #endif
 
 	printf("This is the list of the ROMs required for driver \"%s\".\n"

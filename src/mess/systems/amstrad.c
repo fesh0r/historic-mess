@@ -16,6 +16,8 @@ for the full-area visible on a amstrad monitor. 50 CRTC chars in X,
 /* 50hz screen refresh */
 #define AMSTRAD_SCREEN_REFRESH (1<<4)
 
+int Amstrad_VsyncFlag = 0;
+
 /* pointers to each of the 16k banks in read/write mode */
 static int AmstradCPC_SelectedKeyboardLine = 0;
 
@@ -37,10 +39,10 @@ unsigned char Amstrad_8255PortA;
 
 
 /* Amstrad Sound Hardware */
-int     amstrad_sh_control_port_r(int offset);
-int     amstrad_sh_data_port_r(int offset);
-void    amstrad_sh_control_port_w(int offset, int data);
-void    amstrad_sh_data_port_w(int offset, int data);
+int     amstrad_sh_control_port_r(void);
+int     amstrad_sh_data_port_r(void);
+void    amstrad_sh_control_port_w( int data);
+void    amstrad_sh_data_port_w(int data);
 
 
 static void HandlePSG(void)
@@ -53,14 +55,14 @@ static void HandlePSG(void)
                 // PSG Read selected
                 case 1:
                 {
-                        i8255_set_porta(amstrad_sh_data_port_r(0));
+                        i8255_set_porta(amstrad_sh_data_port_r());
                 }
                 break;
 
                 // PSG Write data
                 case 2:
                 {
-                      amstrad_sh_data_port_w(0, Amstrad_8255PortA);
+                      amstrad_sh_data_port_w(Amstrad_8255PortA);
 
                 }
                 break;
@@ -68,7 +70,7 @@ static void HandlePSG(void)
                 // write index register
                 case 3:
                 {
-                        amstrad_sh_control_port_w(0, Amstrad_8255PortA);
+                     amstrad_sh_control_port_w(Amstrad_8255PortA);
                 }
                 break;
           }
@@ -86,14 +88,15 @@ int	amstrad_ppi_porta_r(void)
 
 int	amstrad_ppi_portb_r(void)
 {
-        i8255_set_portb(AMSTRAD_MACHINE_NAME);
+        i8255_set_portb((AMSTRAD_MACHINE_NAME + AMSTRAD_SCREEN_REFRESH + Amstrad_VsyncFlag));
 
-        return 0x0ff;
+        return AMSTRAD_MACHINE_NAME + AMSTRAD_SCREEN_REFRESH + Amstrad_VsyncFlag;
 }
 
 int	amstrad_ppi_portc_r(void)
 {
-        return 0x0ff;
+        i8255_set_portc(Amstrad_8255PortC);
+        return Amstrad_8255PortC;
 }
 
 
@@ -179,6 +182,52 @@ static unsigned char AmstradCPC_ReadKeyboard(void)
 	return readinputport(AmstradCPC_SelectedKeyboardLine);
 }
 
+void    Amstrad_RethinkMemory(void)
+{
+	/* the following is used for banked memory read/writes and for setting up
+	opcode and opcode argument reads */
+	{
+		unsigned char *BankBase;
+
+		/* bank 0 - 0x0000..0x03fff */
+		if ((AmstradCPC_GA_RomConfiguration & 0x04)==0)
+		{
+                        BankBase = &Machine->memory_region[0][0x010000];
+		}
+		else
+		{
+			BankBase = AmstradCPC_RamBanks[0];
+		}
+                /* set bank address for MRA_BANK1 */
+                cpu_setbank(1, BankBase);
+
+
+		/* bank 1 - 0x04000..0x07fff */
+                cpu_setbank(2, AmstradCPC_RamBanks[1]);
+
+		/* bank 2 - 0x08000..0x0bfff */
+                cpu_setbank(3, AmstradCPC_RamBanks[2]);
+
+		/* bank 3 - 0x0c000..0x0ffff */
+		if ((AmstradCPC_GA_RomConfiguration & 0x08)==0)
+		{
+			BankBase = Amstrad_UpperRom;
+		}
+		else
+		{
+			BankBase = AmstradCPC_RamBanks[3];
+		}
+                cpu_setbank(4, BankBase);
+
+                cpu_setbank(5, AmstradCPC_RamBanks[0]);
+                cpu_setbank(6, AmstradCPC_RamBanks[1]);
+                cpu_setbank(7, AmstradCPC_RamBanks[2]);
+                cpu_setbank(8, AmstradCPC_RamBanks[3]);
+          }
+ }
+
+
+
 
 /* simplified ram configuration - e.g. only correct for 128k machines */
 void	AmstradCPC_GA_SetRamConfiguration(void)
@@ -258,43 +307,7 @@ void	AmstradCPC_GA_Write(int Data)
 	}
 
 
-	/* the following is used for banked memory read/writes and for setting up
-	opcode and opcode argument reads */
-	{
-		unsigned char *BankBase;
-
-		/* bank 0 - 0x0000..0x03fff */
-		if ((AmstradCPC_GA_RomConfiguration & 0x04)==0)
-		{
-                        BankBase = &Machine->memory_region[0][0x010000];
-		}
-		else
-		{
-			BankBase = AmstradCPC_RamBanks[0];
-		}
-                /* set bank address for MRA_BANK1 */
-                cpu_setbank(1, BankBase);
-
-
-		/* bank 1 - 0x04000..0x07fff */
-                cpu_setbank(2, AmstradCPC_RamBanks[1]);
-
-		/* bank 2 - 0x08000..0x0bfff */
-                cpu_setbank(3, AmstradCPC_RamBanks[2]);
-
-		/* bank 3 - 0x0c000..0x0ffff */
-		if ((AmstradCPC_GA_RomConfiguration & 0x08)==0)
-		{
-			BankBase = Amstrad_UpperRom;
-		}
-		else
-		{
-			BankBase = AmstradCPC_RamBanks[3];
-		}
-                cpu_setbank(4, BankBase);
-          }
-
-
+        Amstrad_RethinkMemory();
 }
 
 /* very simplified version of setting upper rom - since
@@ -313,27 +326,8 @@ void	AmstradCPC_SetUpperRom(int Data)
 		/* select basic rom */
                 Amstrad_UpperRom = &Machine->memory_region[0][0x014000];
 	}
-}
 
-/* write Ram functions */
-void	AmstradCPC_WriteMem0(int Offset, int Data)
-{
-	AmstradCPC_RamBanks[0][Offset & 0x03fff] = Data;
-}
-
-void	AmstradCPC_WriteMem1(int Offset, int Data)
-{
-	AmstradCPC_RamBanks[1][Offset & 0x03fff] = Data;
-}
-
-void	AmstradCPC_WriteMem2(int Offset, int Data)
-{
-	AmstradCPC_RamBanks[2][Offset & 0x03fff] = Data;
-}
-
-void	AmstradCPC_WriteMem3(int Offset, int Data)
-{
-	AmstradCPC_RamBanks[3][Offset & 0x03fff] = Data;
+        Amstrad_RethinkMemory();
 }
 
 /*
@@ -569,25 +563,58 @@ gate array and the top bit of this counter is reset.
 Interrupts are therefore never closer than 32 lines. For this
 driver, for now, we will assume that ints do occur every 300Hz. */
 
+static int count=6;
+
 int amstrad_timer_interrupt(void)
 {
-	return ignore_interrupt();
-	//return 0;
+        count--;
+
+        if (count<0)
+        {
+                Amstrad_VsyncFlag = 1;
+                count = 6;
+        }
+        else
+        {
+                Amstrad_VsyncFlag = 0;
+        }
+
+
+        cpu_set_irq_line(0,0, HOLD_LINE);
+
+        return ignore_interrupt();
+        //return 0;
 }
 
 int amstrad_frame_interrupt(void)
 {
 	return 0;
 }
-#if 0
-int	amstrad_opbase_override(int pc)
-{
-	/* get memory address for opcode and opcode argument reads */
-	OP_RAM = OP_ROM = (unsigned long)AmstradCPC_ReadBanks[(pc>>14)] - (unsigned long)(pc<<14));
 
-	return -1;
+
+void    Amstrad_Init(void)
+{
+        /* set all colours to black */
+        int i;
+
+        for (i=0; i<17; i++)
+        {
+                AmstradCPC_PenColours[i] = 0x014;
+        }
+
+
+        i8255_init(&amstrad_i8255_interface);
+
+        cpu_setbankhandler_r(1, MRA_BANK1);
+        cpu_setbankhandler_r(2, MRA_BANK2);
+        cpu_setbankhandler_r(3, MRA_BANK3);
+        cpu_setbankhandler_r(4, MRA_BANK4);
+
+        cpu_setbankhandler_w(5, MWA_BANK5);
+        cpu_setbankhandler_w(6, MWA_BANK6);
+        cpu_setbankhandler_w(7, MWA_BANK7);
+        cpu_setbankhandler_w(8, MWA_BANK8);
 }
-#endif
 
 /* sets up for a machine reset */
 void	Amstrad_Reset(void)
@@ -598,12 +625,8 @@ void	Amstrad_Reset(void)
 	/* set ram config 0 */
 	AmstradCPC_GA_Write(0x0c0);
 
-        i8255_init(&amstrad_i8255_interface);
 
-	/* cpu opcode read and cpu opcode argument reads go via OP_RAM and OP_ROM.
-	The following code sets these up depending on which memory bank we are reading from.
-	The cpu opcode handling doesn't go through the banked mechanism! */
-//	cpu_setOPbaseoverride(amstrad_opbase_override);
+
 }
 
 
@@ -664,10 +687,10 @@ static struct MemoryReadAddress readmem_amstrad[] =
 
 static struct MemoryWriteAddress writemem_amstrad[] =
 {
-          { 0x00000, 0x03fff, AmstradCPC_WriteMem0 },
-         { 0x04000, 0x07fff, AmstradCPC_WriteMem1 },
-           {0x08000,0x0bfff, AmstradCPC_WriteMem2 },
-           {0x0c000,0x0ffff, AmstradCPC_WriteMem3 },
+          { 0x00000, 0x03fff, MWA_BANK5 },
+         { 0x04000, 0x07fff, MWA_BANK6 },
+           {0x08000,0x0bfff, MWA_BANK7 },
+           {0x0c000,0x0ffff, MWA_BANK8 },
         { -1 }  /* end of table */
 };
 
@@ -698,7 +721,7 @@ static struct AY8910interface amstrad_ay_interface =
 {
 	1,	/* 1 chips */
 	1000000,	/* 1.0 MHz  */
-	{ 0x20ff},
+        { 25,25},
 	AY8910_DEFAULT_GAIN,/* ???????? */
 	{ amstrad_psg_porta_read },
 	{ 0 },
@@ -716,11 +739,11 @@ INPUT_PORTS_START(amstrad_input_ports)
 	PORT_BITX(0x010, IP_ACTIVE_LOW, IPT_UNKNOWN, "F6", KEYCODE_6_PAD,IP_JOY_NONE)
 	PORT_BITX(0x020, IP_ACTIVE_LOW, IPT_UNKNOWN, "F3", KEYCODE_3_PAD,IP_JOY_NONE)
 	PORT_BITX(0x040, IP_ACTIVE_LOW, IPT_UNKNOWN, "Small Enter", KEYCODE_ENTER_PAD, IP_JOY_NONE)
-	//PORT_BITX(0x080, IP_ACTIVE_LOW, IPT_UNKNOWN, "F.", KEYCODE_STOP_PAD, IP_JOY_NONE)
+        PORT_BITX(0x080, IP_ACTIVE_LOW, IPT_UNKNOWN, "F.", KEYCODE_DEL_PAD, IP_JOY_NONE)
         	/* keyboard line 1 */
 	PORT_START
 	PORT_BITX(0x001,IP_ACTIVE_LOW, IPT_UNKNOWN, "Cursor Left", KEYCODE_LEFT,IP_JOY_NONE)
-	//PORT_BITX(0x002, IP_ACTIVE_LOW, IPT_UNKNOWN, "Copy", KEYCODE_ALT,IP_JOY_NONE)
+        PORT_BITX(0x002, IP_ACTIVE_LOW, IPT_UNKNOWN, "Copy", KEYCODE_LALT,IP_JOY_NONE)
 	PORT_BITX(0x004, IP_ACTIVE_LOW, IPT_UNKNOWN, "F7", KEYCODE_7_PAD,IP_JOY_NONE)
 	PORT_BITX(0x008, IP_ACTIVE_LOW, IPT_UNKNOWN, "F8", KEYCODE_8_PAD,IP_JOY_NONE)
 	PORT_BITX(0x010, IP_ACTIVE_LOW, IPT_UNKNOWN, "F5", KEYCODE_5_PAD,IP_JOY_NONE)
@@ -849,8 +872,8 @@ per second */
         50,						/* frames per second */
 	  DEFAULT_60HZ_VBLANK_DURATION,       /* vblank duration */
         1,						/* cpu slices per frame */
-        amstrad_init_machine,			/* init machine */
-	NULL,
+        amstrad_init_machine,                   /* init machine */
+        amstrad_shutdown_machine,
 	/* video hardware */
         AMSTRAD_SCREEN_WIDTH,             /* screen width */
         AMSTRAD_SCREEN_HEIGHT,            /* screen height */
@@ -909,17 +932,18 @@ ROM_START(kccompact_rom)
         ROM_LOAD("kccbas.rom",0x14000,0x04000, 0xca6af63d)
 ROM_END
 
+
 /* amstrad cpc 6128 game driver */
-struct GameDriver amstrad_driver =
+struct GameDriver cpc6128_driver =
 {
 	__FILE__,
 	0,
-	"amstrad",
-        "Amstrad CPC6128",			/* description */
+    "cpc6128",
+    "Amstrad/Schneider CPC6128",			/* description */
 	"1985",
 	"Amstrad plc",
 	"Kevin Thacker [MESS driver]", /* credits */
-    GAME_COMPUTER,
+	GAME_COMPUTER,
 	&amstrad_machine_driver,		/* MachineDriver */
 	0,
         amstrad_rom,
@@ -952,9 +976,9 @@ struct GameDriver kccomp_driver =
 	__FILE__,
 	0,
 	"kccomp",
-        "KC Compact",			/* description */
-        "19??",
-        "Veb Mikroelektronik <<wilhelm pieck>> mulhausen",
+    "KC Compact",			/* description */
+    "19??",
+    "Veb Mikroelektronik ", /*<<wilhelm pieck>> mulhausen*/
 	"Kevin Thacker [MESS driver]", /* credits */
     GAME_COMPUTER,
 	&amstrad_machine_driver,		/* MachineDriver */

@@ -14,15 +14,8 @@ MESS info - modified/added MAME core files (see below for details)
 8.  version....  after $(TINYFLAGS) -DMESS
 9.  next #(TINYFLAGS) -DMESS
 10. replace archive definitions
-11. add MAKE MESSDIR to the bottom of MAKE MAKEDIR ;-)
-12. add MAKE CLEANMESS to the bottom of MAKE CLEAN
-13. add messdir:
-14. add cleanmess: 
+11. add MAKE MESSDIR to the bottom of MAKETREE
+12. add messdir:
 
 
-[MAME file mods]
-1.  MAME.C   		(modified)
-2.  TIASOUND.C		(modified)
-3.  USRINTRF.C		(modified)
-4.  FILEIO.C		(modified)
-5.  FRONTHLP.C		(modified)
+

@@ -50,8 +50,8 @@
 unsigned char *Enterprise_RAM;
 
 /* current ram pages for 16k page 0..3 */
-static unsigned char *Enterprise_CPU_ReadPages[4];
-static unsigned char *Enterprise_CPU_WritePages[4];
+//static unsigned char *Enterprise_CPU_ReadPages[4];
+//static unsigned char *Enterprise_CPU_WritePages[4];
 
 static unsigned char KeyboardState_Previous[16]={0x0ff};
 
@@ -95,12 +95,13 @@ static int Enterprise_KeyboardLine = 0;
 /* set read/write pointers for CPU page */
 void	Enterprise_SetMemoryPage(int CPU_Page, int EP_Page)
 {
-	Enterprise_CPU_ReadPages[CPU_Page] =
-				Enterprise_Pages_Read[EP_Page & 0x0ff];
-	Enterprise_CPU_WritePages[CPU_Page] =
-				Enterprise_Pages_Write[EP_Page & 0x0ff];
+        //Enterprise_CPU_ReadPages[CPU_Page] =
+        //                        Enterprise_Pages_Read[EP_Page & 0x0ff];
+        //Enterprise_CPU_WritePages[CPU_Page] =
+        //                        Enterprise_Pages_Write[EP_Page & 0x0ff];
 
         cpu_setbank((CPU_Page+1), Enterprise_Pages_Read[EP_Page & 0x0ff]);
+        cpu_setbank((CPU_Page+5), Enterprise_Pages_Write[EP_Page & 0x0ff]);
 }
 
 /* EP specific handling of dave register write */
@@ -230,7 +231,7 @@ void	Enterprise_Initialise()
 	Enterprise_Pages_Read[MEM_RAM_6] = Enterprise_RAM + 0x018000;
 	Enterprise_Pages_Read[MEM_RAM_7] = Enterprise_RAM + 0x01c000;
         /* exdos */
-     // Enterprise_Pages_Read[MEM_EXDOS_0] = &Machine->memory_region[0][0x01c000];
+      //Enterprise_Pages_Read[MEM_EXDOS_0] = &Machine->memory_region[0][0x01c000];
       //Enterprise_Pages_Read[MEM_EXDOS_1] = &Machine->memory_region[0][0x020000];
 
 	/* set write pointers */
@@ -245,32 +246,21 @@ void	Enterprise_Initialise()
 
 	Dave_SetIFace(&enterprise_dave_interface);
 
+        cpu_setbankhandler_r(1, MRA_BANK1);
+        cpu_setbankhandler_r(2, MRA_BANK2);
+        cpu_setbankhandler_r(3, MRA_BANK3);
+        cpu_setbankhandler_r(4, MRA_BANK4);
+
+        cpu_setbankhandler_w(5, MWA_BANK5);
+        cpu_setbankhandler_w(6, MWA_BANK6);
+        cpu_setbankhandler_w(7, MWA_BANK7);
+        cpu_setbankhandler_w(8, MWA_BANK8);
+
 
 	Dave_reg_w(0x010,0);
 	Dave_reg_w(0x011,0);
 	Dave_reg_w(0x012,0);
 	Dave_reg_w(0x013,0);
-}
-
-/* write Ram functions */
-void	Enterprise_WriteMem0(int Offset, int Data)
-{
-     Enterprise_CPU_WritePages[0][Offset & 0x03fff] = Data;
-}
-
-void	Enterprise_WriteMem1(int Offset, int Data)
-{
-     Enterprise_CPU_WritePages[1][Offset & 0x03fff] = Data;
-}
-
-void	Enterprise_WriteMem2(int Offset, int Data)
-{
-     Enterprise_CPU_WritePages[2][Offset & 0x03fff] = Data;
-}
-
-void	Enterprise_WriteMem3(int Offset, int Data)
-{
-     Enterprise_CPU_WritePages[3][Offset & 0x03fff] = Data;
 }
 
 int enterprise_timer_interrupt(void)
@@ -295,53 +285,53 @@ int enterprise_frame_interrupt(void)
 
 static int	wd177x_status_r(int Offset)
 {
-        //printf("WD177X Read Status\r\n");
+        if (errorlog) fprintf(errorlog,"WD177X Read Status\r\n");
 
 	return 0;
 }
 
 static int	wd177x_track_r(int Offset)
 {
-        //printf("WD177X Read Track\r\n");
+        if (errorlog) fprintf(errorlog,"WD177X Read Track\r\n");
 	return 1;
 }
 
 static int	wd177x_sector_r(int Offset)
 {
-        //printf("WD177X Read Sector\r\n");
+        if (errorlog) fprintf(errorlog,"WD177X Read Sector\r\n");
 	return 0;
 }
 
 static int	wd177x_data_r(int Offset)
 {
-        //printf("WD177X Read Data\r\n");
+        if (errorlog) fprintf(errorlog,"WD177X Read Data\r\n");
 
 	return 0x0ff;
 }
 
 static void	wd177x_command_w(int Offset, int Data)
 {
-        //printf("WD177X Write Command: DATA: %02x\r\n",Data);
+        if (errorlog) fprintf(errorlog,"WD177X Write Command: DATA: %02x\r\n",Data);
 }
 
 static void	wd177x_track_w(int Offset, int Data)
 {
-        //printf("WD177X Write Track: DATA: %02x\r\n",Data);
+        if (errorlog) fprintf(errorlog,"WD177X Write Track: DATA: %02x\r\n",Data);
 }
 
 static void	wd177x_sector_w(int Offset, int Data)
 {
-        //printf("WD177X Write Sector: DATA: %02x\r\n",Data);
+        if (errorlog) fprintf(errorlog,"WD177X Write Sector: DATA: %02x\r\n",Data);
 }
 
 static void	wd177x_data_w(int Offset, int Data)
 {
-        //printf("WD177X Write Data: DATA: %02x\r\n",Data);
+        if (errorlog) fprintf(errorlog,"WD177X Write Data: DATA: %02x\r\n",Data);
 }
 
 static int	enterprise_wd177x_read(int Offset)
 {
-        //printf("WD177X Read\r\n");
+        if (errorlog) fprintf(errorlog,"WD177X Read\r\n");
 
 	switch (Offset)
 	{
@@ -361,7 +351,7 @@ static int	enterprise_wd177x_read(int Offset)
 
 static void	enterprise_wd177x_write(int Offset, int Data)
 {
-        //printf("WD177X Write\r\n");
+        if (errorlog) fprintf(errorlog,"WD177X Write\r\n");
 
 	switch (Offset)
 	{
@@ -400,10 +390,10 @@ static struct MemoryReadAddress readmem_enterprise[] =
 
 static struct MemoryWriteAddress writemem_enterprise[] =
 {
-       { 0x0000, 0x3fff, Enterprise_WriteMem0 },
-	{ 0x4000, 0x7fff, Enterprise_WriteMem1 },
-	   {0x08000,0x0bfff, Enterprise_WriteMem2 },
-	   {0x0c000,0x0ffff, Enterprise_WriteMem3 },
+       { 0x0000, 0x3fff, MWA_BANK5 },
+        { 0x4000, 0x7fff, MWA_BANK6 },
+           {0x08000,0x0bfff, MWA_BANK7 },
+           {0x0c000,0x0ffff, MWA_BANK8 },
         { -1 }  /* end of table */
 };
 
@@ -417,7 +407,7 @@ static struct IOReadPort readport_enterprise[] =
 
 static void	exdos_card_w(int Offset, int Data)
 {
-        //printf("exdos card w: %02x\r\n",Data);
+        if (errorlog) fprintf(errorlog,"exdos card w: %02x\r\n",Data);
 
 }
 

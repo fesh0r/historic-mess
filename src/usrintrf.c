@@ -2386,11 +2386,13 @@ static int displaygameinfo(int selected)
 		pixely /= tmin;
 
 		sprintf(&buf[strlen(buf)],"\nScreen resolution:\n");
-		sprintf(&buf[strlen(buf)],"%d x %d (%s) %d Hz\npixel aspect ratio %d:%d\n",
+		sprintf(&buf[strlen(buf)],"%d x %d (%s) %d Hz\n",
 				Machine->drv->visible_area.max_x - Machine->drv->visible_area.min_x + 1,
 				Machine->drv->visible_area.max_y - Machine->drv->visible_area.min_y + 1,
 				(Machine->gamedrv->orientation & ORIENTATION_SWAP_XY) ? "V" : "H",
-				Machine->drv->frames_per_second,
+				Machine->drv->frames_per_second);
+#if 0
+		sprintf(&buf[strlen(buf)],"pixel aspect ratio %d:%d\n",
 				pixelx,pixely);
 		sprintf(&buf[strlen(buf)],"%d colors ",Machine->drv->total_colors);
 		if (Machine->drv->video_attributes & VIDEO_SUPPORTS_16BIT)
@@ -2398,13 +2400,20 @@ static int displaygameinfo(int selected)
 		else if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
 			strcat(buf,"(dynamic)\n");
 		else strcat(buf,"(static)\n");
+#endif
 	}
 
 
 	if (sel == -1)
 	{
 		/* startup info, print MAME version and ask for any key */
+
+		#ifndef MESS
 		strcat(buf,"\n\tMAME ");	/* \t means that the line will be centered */
+		#else
+		strcat(buf,"\n\tMESS ");	/* \t means that the line will be centered */
+ 		#endif
+
 		strcat(buf,build_version);
 		strcat(buf,"\n\tPress any key");
 		drawbox(0,0,Machine->uiwidth,Machine->uiheight);
@@ -2450,8 +2459,11 @@ int showgamewarnings(void)
 	{
 		int done;
 
-
+		#ifndef MESS
 		strcpy(buf, "There are known problems with this game:\n\n");
+		#else
+		strcpy(buf, "There are known problems with this system:\n\n");
+		#endif
 
 
 #ifdef MESS
@@ -2931,8 +2943,13 @@ static void setup_menu_init(void)
 
 	menu_item[menu_total] = "Keys (general)"; menu_action[menu_total++] = UI_DEFKEY;
 	menu_item[menu_total] = "Joystick (general)"; menu_action[menu_total++] = UI_DEFJOY;
+	#ifndef MESS
 	menu_item[menu_total] = "Keys (this game)"; menu_action[menu_total++] = UI_KEY;
 	menu_item[menu_total] = "Joystick (this game)"; menu_action[menu_total++] = UI_JOY;
+	#else
+	menu_item[menu_total] = "Keys (this machine)"; menu_action[menu_total++] = UI_KEY;
+	menu_item[menu_total] = "Joystick (this machine)"; menu_action[menu_total++] = UI_JOY;
+	#endif
 	menu_item[menu_total] = "Dip Switches"; menu_action[menu_total++] = UI_SWITCH;
 
 	/* Determine if there are any analog controls */
@@ -2964,8 +2981,13 @@ static void setup_menu_init(void)
 	}
 
 	menu_item[menu_total] = "Bookkeeping Info"; menu_action[menu_total++] = UI_STATS;
+	#ifndef MESS
 	menu_item[menu_total] = "Game Information"; menu_action[menu_total++] = UI_GAMEINFO;
 	menu_item[menu_total] = "Game History"; menu_action[menu_total++] = UI_HISTORY;
+	#else
+	menu_item[menu_total] = "Machine Information"; menu_action[menu_total++] = UI_GAMEINFO;
+	menu_item[menu_total] = "Machine History"; menu_action[menu_total++] = UI_HISTORY;
+	#endif
 
 	if (options.cheat)
 	{
@@ -2983,8 +3005,13 @@ static void setup_menu_init(void)
 #endif
 #endif
 
+	#ifndef MESS
 	menu_item[menu_total] = "Reset Game"; menu_action[menu_total++] = UI_RESET;
 	menu_item[menu_total] = "Return to Game"; menu_action[menu_total++] = UI_EXIT;
+	#else
+	menu_item[menu_total] = "Reset Machine"; menu_action[menu_total++] = UI_RESET;
+	menu_item[menu_total] = "Return to Machine"; menu_action[menu_total++] = UI_EXIT;
+	#endif
 	menu_item[menu_total] = 0; /* terminate array */
 }
 

@@ -12,11 +12,11 @@
 
 int dragon_cart_inserted;
 UINT8 *dragon_tape;
+int dragon_tapesize;
 
 int dragon_rom_load(void)
 {
 	void *fp;
-	int tapesize;
 	
 	fp = NULL;
 	dragon_cart_inserted = 0;
@@ -34,13 +34,13 @@ int dragon_rom_load(void)
 
 	if (fp!=NULL)
 	{
-		tapesize = osd_fsize(fp);
-		if ((dragon_tape = (UINT8 *)malloc(tapesize)) == NULL)
+		dragon_tapesize = osd_fsize(fp);
+		if ((dragon_tape = (UINT8 *)malloc(dragon_tapesize)) == NULL)
 		{
 			if (errorlog) fprintf(errorlog,"Not enough memory.\n");
 			return 1;
 		}
-		osd_fread (fp, dragon_tape, tapesize);
+		osd_fread (fp, dragon_tape, dragon_tapesize);
 	}
 	
 	return 0;

@@ -278,7 +278,7 @@ static struct MachineDriver machine_driver =
 ROM_START (kaypro_rom)
 	ROM_REGION (0x11600)	/* 64K for the Z80 */
 	/* totally empty :) */
-	
+
 	ROM_REGION (0x4000) 	/* 4 * 4K font ram */
 	ROM_LOAD ("kaypro2x.fnt", 0x0000, 0x1000, 0x5f72da5b)
 
@@ -290,7 +290,7 @@ static void kaypro_rom_decode(void)
 {
   UINT8 * FONT = Machine->memory_region[1];
   int i;
-  
+
   /* copy font, but add underline in last line */
   for (i = 0; i < 0x1000; i++)
     FONT[0x1000 + i] = ((i % KAYPRO_FONT_H) == (KAYPRO_FONT_H - 1)) ?
@@ -308,7 +308,7 @@ struct GameDriver kaypro_driver =
 	"kaypro",
 	"Kaypro 2x",
 	"19??",
-	"Kaypro",
+	"Non Linear Systems Kaypro",
 	"Juergen Buchmueller (MESS driver)\nBenjamin C. W. Sittler (terminal)\nChi-Yuan Lin (CP/M info)",
 	GAME_COMPUTER,
 	&machine_driver,

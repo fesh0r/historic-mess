@@ -1,7 +1,7 @@
 #ifndef MESS_H
 #define MESS_H
 
-#include "driver.h"
+//#include "driver.h"
 
 
 //extern char messversion[];
@@ -15,29 +15,12 @@ void showmessinfo(void);
 #define MAX_FLOPPY 4     /* MAX_FLOPPY is the maximum number of floppy drives a driver supports */
 #define MAX_HARD 2       /* MAX_HARD is the maximum number of hard drives a driver supports */
 #define MAX_CASSETTE 2   /* MAX_CASSETTE is the maximum number of cassette drives a driver supports */
+#define MAX_PATH 2048	 /* Maximum Number of char for the path length */
 
-
-extern char rom_name[MAX_ROM][2048];
-extern char floppy_name[MAX_FLOPPY][2048];
-extern char hard_name[MAX_HARD][2048];
-extern char cassette_name[MAX_CASSETTE][2048];
-
-/*
-void drawgfx_line(struct osd_bitmap *dest,
-						struct GfxElement *gfx,
-                  unsigned int code,
-                  unsigned int color,
-                  int flipx,
-                  int start,
-                  int sx,
-                  int sy,
-                  struct rectangle *clip,
-                  int transparency,
-                  int transparent_color);
-*/
-/* common.h - end */
-
-
+extern char rom_name[MAX_ROM][MAX_PATH];
+extern char floppy_name[MAX_FLOPPY][MAX_PATH];
+extern char hard_name[MAX_HARD][MAX_PATH];
+extern char cassette_name[MAX_CASSETTE][MAX_PATH];
 
 /* driver.h - begin */
 #define IPT_SELECT1		IPT_COIN1

@@ -455,7 +455,7 @@ struct GameDriver apple2e_driver =
 	0,
 	"apple2e",
 	"Apple IIe",
-	"19??",
+	"1982",
 	"Apple Computer",
 	"Mike Balfour",
 	GAME_NOT_WORKING | GAME_COMPUTER,
@@ -501,7 +501,7 @@ ROM_END
 struct GameDriver apple2ee_driver =
 {
 	__FILE__,
-	0,
+	&apple2e_driver,
 	"apple2ee",
 	"Apple IIe (enhanced)",
 	"19??",
@@ -549,7 +549,7 @@ ROM_END
 struct GameDriver apple2ep_driver =
 {
 	__FILE__,
-	0,
+	&apple2e_driver,
 	"apple2ep",
 	"Apple IIe (Platinum)",
 	"19??",
@@ -597,7 +597,7 @@ struct GameDriver apple2c_driver =
 	0,
 	"apple2c",
 	"Apple IIc",
-	"19??",
+	"1984",
 	"Apple Computer",
 	"Mike Balfour",
 	GAME_COMPUTER,
@@ -639,7 +639,7 @@ ROM_END
 struct GameDriver apple2c0_driver =
 {
 	__FILE__,
-	0,
+	&apple2c_driver,
 	"apple2c0",
 	"Apple IIc (3.5 ROM)",
 	"19??",
@@ -673,7 +673,7 @@ struct GameDriver apple2c0_driver =
 	0,						/* hiscore save */
 };
 
-ROM_START(apl2cpls_rom)
+ROM_START(apple2cp_rom)
 	ROM_REGION(0x28000)
 	ROM_LOAD("a2cplus.mon", 0x20000, 0x8000, 0x0b996420)
 
@@ -681,11 +681,11 @@ ROM_START(apl2cpls_rom)
 	ROM_LOAD("a2cplus.vid", 0x0000, 0x1000, 0x2651014d)
 ROM_END
 
-struct GameDriver apl2cpls_driver =
+struct GameDriver apple2cp_driver =
 {
 	__FILE__,
-	0,
-	"apl2cpls",
+	&apple2c_driver,
+	"apple2cp",
 	"Apple IIc Plus",
 	"19??",
 	"Apple Computer",
@@ -694,7 +694,7 @@ struct GameDriver apl2cpls_driver =
 	&enhanced_machine_driver,
 	0,
 
-	apl2cpls_rom,
+	apple2cp_rom,
 	apple2ee_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
 	1,						/* number of ROM slots - in this case, a CMD binary */

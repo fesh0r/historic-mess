@@ -72,9 +72,15 @@ int coleco_load_rom (void)
 	}
 	else if (!(cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0)))
 	{
-		if (errorlog) fprintf(errorlog,"Coleco - Unable to locate cartridge: %s\n",rom_name[0]);
-		return 1;
+		/* try the parent directory */
+		if(!(cartfile = osd_fopen (Machine->gamedrv->clone_of->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0)))
+		{
+			if (errorlog)
+				fprintf(errorlog,"Coleco - Unable to locate cartridge: %s\n",rom_name[0]);
+			return 1;
+		}
 	}
+
 
 	coleco_cartridge_rom = &(ROM[0x8000]);
 

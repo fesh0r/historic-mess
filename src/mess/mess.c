@@ -4,18 +4,16 @@ It doesnt do much at the moment, but its here in case anyone
 needs it ;-)
 */
 
-//#include "msdos/mamalleg.h"
 #include "driver.h"
 #include "mame.h"
 #include "mess/mess.h"
 
-#ifdef MESS
-char rom_name[MAX_ROM][2048]; /* MESS */
-char floppy_name[MAX_FLOPPY][2048]; /* MESS */
-char hard_name[MAX_HARD][2048]; /* MESS */
-char cassette_name[MAX_CASSETTE][2048]; /* MESS */
-//unsigned int dispensed_tickets = 0; /* MESS */ in common.c
-#endif
+
+char rom_name[MAX_ROM][MAX_PATH]; /* MESS */
+char floppy_name[MAX_FLOPPY][MAX_PATH]; /* MESS */
+char hard_name[MAX_HARD][MAX_PATH]; /* MESS */
+char cassette_name[MAX_CASSETTE][MAX_PATH]; /* MESS */
+
 
 extern struct GameOptions options;
 static int num_roms = 0;
@@ -26,6 +24,8 @@ static char *mess_alpha = "";
 
 
 
+/* fileio.c */
+void get_alias(char *driver_name, char *argv, char *alias);
 
 void showmessdisclaimer(void)
 {
@@ -54,6 +54,7 @@ void showmessinfo(void)
 				"See mess.txt for a complete list of options.\n");
 
 }
+
 
 /**********************************************************/
 /* Functions called from MSDOS.C by MAME for running MESS */
@@ -101,67 +102,60 @@ int parse_image_types(char *arg)
 int load_image(int argc, char **argv, char *driver, int j)
 {
 
- 		/*
-	 	* Take all additional commandline arguments without "-" as image
-	 	* names. This is an ugly hack that will hopefully eventually be
-	 	* replaced with an online version that lets you "hot-swap" images.
-	 	* HJB 08/13/98 for now the hack is extended even more :-/
-	 	* Skip arguments to options starting with "-" too and accept
-	 	* aliases for a set of ROMs/images.
-      */
-      int i;
-      int res=0;
-		for (i = j+1; i < argc; i++)
-      {
-			//char * alias;
+	/*
+	* Take all additional commandline arguments without "-" as image
+	* names. This is an ugly hack that will hopefully eventually be
+	* replaced with an online version that lets you "hot-swap" images.
+	* HJB 08/13/98 for now the hack is extended even more :-/
+	* Skip arguments to options starting with "-" too and accept
+	* aliases for a set of ROMs/images.
+    */
+    int i;
+    int res=0;
+	char * alias;
 
-			/* skip options and their additional arguments */
-			if (argv[i][0] == '-')
-         {
-         /*
-            if (	!stricmp(argv[i],"-vgafreq") ||
-                	!stricmp(argv[i],"-depth") ||
-                	!stricmp(argv[i],"-skiplines") ||
-                	!stricmp(argv[i],"-skipcolumns") ||
-                	!stricmp(argv[i],"-beam") ||
-                	!stricmp(argv[i],"-flicker") ||
-                	!stricmp(argv[i],"-gamma") ||
-                	!stricmp(argv[i],"-frameskip") ||
-                	!stricmp(argv[i],"-soundcard") ||
-                	!stricmp(argv[i],"-samplerate") ||
-                	!stricmp(argv[i],"-sr") ||
-                	!stricmp(argv[i],"-samplebits") ||
-                	!stricmp(argv[i],"-sb") ||
-                	!stricmp(argv[i],"-joystick") ||
-						!stricmp(argv[i],"-joy") ||
-            		!stricmp(argv[i],"-resolution")) i++;
-			*/
 
-         }
-         else
-         {
-				/* check if this is an alias for a set of images */
 
-				//alias = get_config_string(driver, argv[i], "");
-				//if (alias && strlen(alias))
-            //{
-				//	char *arg;
-				//	if (errorlog) fprintf(errorlog,"Using alias %s for driver %s\n", argv[i], driver);
-				//	arg = strtok (alias, ",");
-				//	while (arg)
-            //   {
-				//		res = parse_image_types(arg);
-				//		arg = strtok(0, ",");
-				//	}
-				//}
-            //else
-            //{
-					res = parse_image_types(argv[i]);
-				//}
+	for (i = j+1; i < argc; i++)
+    {
+
+		alias=malloc(sizeof(char));
+
+        /* skip options and their additional arguments */
+		if (argv[i][0] == '-')
+        {
+			/* removed */
+        }
+        else
+        {
+			/* check if this is an alias for a set of images */
+
+			//alias = get_config_string(driver, argv[i], "");
+			get_alias(driver,argv[i],alias);
+			if (alias && strlen(alias))
+            {
+				char *arg;
+				if (errorlog)
+					fprintf(errorlog,"Using alias %s (%s) for driver %s\n", argv[i],alias, driver);
+				arg = strtok (alias, ",");
+				while (arg)
+            	{
+					res = parse_image_types(arg);
+					arg = strtok(0, ",");
+				}
 			}
-			/* If we had an error leave now */
-			if (res)
-				return res;
+            else
+            {
+			if (errorlog)
+				fprintf(errorlog,"NOTE: No alias found\n");
+				res = parse_image_types(argv[i]);
+			}
+			/* free up the alias - dont need it anymore */
+			free(alias);
 		}
-    		return res;
+		/* If we had an error leave now */
+		if (res)
+			return res;
+		}
+    return res;
 }

@@ -57,12 +57,28 @@ const struct GameDriver *drivers[] =
 
       DRIVER( a5200 )       /* Atari 5200                                     */
       DRIVER( a7800 )       /* Atari 7800                                     */
-      DRIVER( amstrad )     /* Amstrad CPC                                    */
+
+      DRIVER( amiga )       /* Commodore Amiga                                */
+
+      DRIVER( apple2c )     /* APPLE                                          */
+      DRIVER( apple2c0 )    /* APPLE                                          */
+      DRIVER( apple2cp )    /* APPLE                                          */
+      DRIVER( apple2e )     /* APPLE                                          */
+      DRIVER( apple2ee )    /* APPLE                                          */
+      DRIVER( apple2ep )    /* plus? - 1979                                   */
+
+
       DRIVER( astrocde )    /* Bally Astrocade                                */
 
       DRIVER( cgenie )      /* Color Genie                                    */
       DRIVER( coco )        /* Color Computer                                 */
       DRIVER( coleco )      /* ColecoVision (Original BIOS )                  */
+
+/* Please do not include these 2 in a distribution - Hacks */
+//    DRIVER( colecofb )    /* ColecoVision (Fast BIOS load)                  */
+//    DRIVER( coleconb )    /* ColecoVision (No BIOS load)                    */
+
+      DRIVER( cpc6128 )     /* Amstrad CPC                                    */
 
       DRIVER( dragon32 )    /* Dragon32                                       */
 
@@ -70,11 +86,15 @@ const struct GameDriver *drivers[] =
       DRIVER( gamegear )    /* Sega Game Gear Handheld                        */
       DRIVER( genesis )     /* Sega Genesis/MegaDrive                         */
 
+      DRIVER( kaypro )      /* APPLE KAYPRO                                   */
+
+      DRIVER( kim1 )        /* Commodore (MOS) KIM-1 1975                     */
+
       DRIVER( kccomp )      /* KC compact                                     */
 
       DRIVER( nes )         /* Nintendo Entertainment System                  */
 
-  TESTDRIVER( pc )          /* IBM PC  - parent Driver                        */
+  TESTDRIVER( pc )          /* IBM PC  - parent Driver, so no need            */
       DRIVER( pcmda )
       DRIVER( pccga )
 
@@ -86,7 +106,9 @@ const struct GameDriver *drivers[] =
 
       DRIVER( sms )         /* Sega Sega Master System                        */
 
-  TESTDRIVER( tandy1t )     /* Tandy                                          */
+      DRIVER( spectrum )    /* Sinclair 48k                                   */
+
+      DRIVER( tandy1t )     /* Tandy                                          */
 
       DRIVER( ti99 )        /* Texas Instruments TI/994a                      */
       DRIVER( trs80 )       /* TRS-80 Model I   - Radio Shack/Tandy           */
@@ -101,22 +123,10 @@ const struct GameDriver *drivers[] =
 
   /***********THESE DRIVERS EXISTS, BUT HAVE PROBLEMS OF SOME SORT*************/
 
-      DRIVER( apple2e )     /* APPLE                                          */
-      DRIVER( apple2ee )    /* APPLE                                          */
-      DRIVER( apple2ep )    /* plus? - 1979                                   */
-      DRIVER( apple2c )     /* APPLE                                          */
-      DRIVER( apple2c0 )    /* APPLE                                          */
-      DRIVER( apl2cpls )    /* APPLE                                          */
-      DRIVER( amiga )       /* Commodore Amiga                                */
 
   TESTDRIVER( a2600 )       /* Atari 2600                                     */
-      DRIVER( kaypro )      /* APPLE KAYPRO                                   */
-      DRIVER( spectrum )    /* Sinclair 48k                                   */
-
   TESTDRIVER( trs80m3 )     /* TRS-80 Model III - Radio Shack/Tandy           */
   TESTDRIVER( a800xl )      /* Atari 800 XL                                   */
-  TESTDRIVER( colecofb )    /* ColecoVision (Fast BIOS load)                  */
-  TESTDRIVER( coleconb )    /* ColecoVision (No BIOS load)                    */
 
 
 

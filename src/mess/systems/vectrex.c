@@ -186,7 +186,7 @@ struct GameDriver vectrex_driver =
 	"vectrex",
 	"GCE Vectrex",
 	"1982",
-	"GCE",
+	"General Consumer Electronics",
 	"Mathis Rosenhauer\n"
 	"Christopher Salomon (technical advice)\n"
 	VECTOR_TEAM,

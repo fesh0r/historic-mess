@@ -374,7 +374,7 @@ void genesis_ctrl_w (int offset, int data)
 				if (data == 0x00)
 				{
 			       	cpu_halt(1,HALT);
-					cpu_reset(1);
+					cpu_set_reset_line(1,PULSE_LINE);
 
 			   	  	cpu_halt(1,HALT);
 				  //	if (errorlog) fprintf(errorlog, "z80 reset, ram is %p\n", &genesis_soundram[0]);

@@ -6,6 +6,7 @@
 
 extern int dragon_cart_inserted;
 extern UINT8 *dragon_tape;
+extern int dragon_tapesize;
 UINT8 *dragon_ram;
 
 static void d_pia1_pb_w(int offset, int data);
@@ -33,7 +34,7 @@ static struct pia6821_interface dragon_pia_0_intf =
 static struct pia6821_interface dragon_pia_1_intf =
 {
 	/*inputs : A/B,CA/B1,CA/B2 */ d_pia1_pa_r, 0, 0, d_pia1_cb1_r, 0, 0,
-	/*outputs: A/B,CA/B2       */ d_pia1_pa_w, d_pia1_pb_w, d_pia1_ca2_w, d_pia0_cb2_w,
+	/*outputs: A/B,CA/B2       */ d_pia1_pa_w, d_pia1_pb_w, d_pia1_ca2_w, d_pia1_cb2_w,
 	/*irqs   : A/B             */ 0, 0
 };
 
@@ -43,44 +44,6 @@ static struct pia6821_interface coco_pia_1_intf =
 	/*outputs: A/B,CA/B2       */ d_pia1_pa_w, d_pia1_pb_w, coco_pia1_ca2_w, d_pia1_cb2_w,
 	/*irqs   : A/B             */ 0, 0
 };
-
-#if 0
-static pia6821_interface coco_pia_intf =
-{
-	2,                /* 2 chips */
-	{ PIA_DDRA, PIA_CTLA, PIA_DDRB, PIA_CTLB, PIA_DDRA, PIA_CTLA, PIA_DDRB, PIA_CTLB }, /* offsets */
-	{ d_pia1_pa_r, d_pia2_pa_r},            /* input port A  */
-	{ d_pia1_ca1_r, 0 },            /* input bit CA1 */
-	{ 0, 0 },            /* input bit CA2 */
-	{ 0, 0 },  /* input port B  */
-	{ 0, d_pia2_cb1_r },  /* input bit CB1 */
-	{ 0, 0 },            /* input bit CB2 */
-	{ 0, d_pia2_pa_w },  /* output port A */
-	{ d_pia1_pb_w, d_pia2_pb_w },  /* output port B */
-	{ d_pia1_ca2_w, coco_pia2_ca2_w },            /* output CA2    */
-	{ d_pia1_cb2_w, d_pia2_cb2_w },            /* output CB2    */
-	{ 0, 0 },      /* IRQ A         */
-	{ d_pia1_irq_b, 0 },      /* IRQ B         */
-};
-
-static pia6821_interface dragon_pia_intf =
-{
-	2,                /* 2 chips */
-	{ PIA_DDRA, PIA_CTLA, PIA_DDRB, PIA_CTLB, PIA_DDRA, PIA_CTLA, PIA_DDRB, PIA_CTLB }, /* offsets */
-	{ d_pia1_pa_r, d_pia2_pa_r},            /* input port A  */
-	{ d_pia1_ca1_r, 0 },            /* input bit CA1 */
-	{ 0, 0 },            /* input bit CA2 */
-	{ 0, 0 },  /* input port B  */
-	{ 0, d_pia2_cb1_r },  /* input bit CB1 */
-	{ 0, 0 },            /* input bit CB2 */
-	{ 0, d_pia2_pa_w },  /* output port A */
-	{ d_pia1_pb_w, d_pia2_pb_w },  /* output port B */
-	{ d_pia1_ca2_w, d_pia2_ca2_w },            /* output CA2    */
-	{ d_pia1_cb2_w, d_pia2_cb2_w },            /* output CB2    */
-	{ 0, 0 },      /* IRQ A         */
-	{ d_pia1_irq_b, 0 },      /* IRQ B         */
-};
-#endif
 
 static UINT8 pia1_pb, sound_mux, tape_motor;
 static UINT8 joystick_axis, joystick;
@@ -321,11 +284,11 @@ void dragon_vh_stop(void)
 
 void dragon_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
 {
-	int x, y, c, fg, bg, offset;
+	int x, y, c, fg, bg, offset, text_color;
 	UINT8 *vram, *p1, *p2, *db;
 	
 	/* clear vblank */
-	pia_1_cb1_w (0, 0);
+	pia_0_cb1_w (0, 0);
 	
 	if (full_refresh)
 		memset(dirtybuffer,1,MAX_VRAM);
@@ -464,6 +427,11 @@ void dragon_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
 		}
 		else
 		{
+            if (pia_vdg_mode & 0x08)
+                text_color = 8;
+            else
+                text_color = 1;
+
 			for (y=0; y<16; y++)
 				for (x=0; x<32; x++)
 				{
@@ -479,16 +447,17 @@ void dragon_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
 						}
 						else
 						{
-							if (*vram & 0x40)
-							{
-								dfont->colortable[0] = Machine->pens[0];
-								dfont->colortable[1] = Machine->pens[1];
-							}
-							else
-							{
-								dfont->colortable[0] = Machine->pens[1];
-								dfont->colortable[1] = Machine->pens[0];
-							}
+                            if (*vram & 0x40)
+                            {
+								dfont->colortable[1] = Machine->pens[text_color];
+                                dfont->colortable[0] = Machine->pens[0];
+                            }
+                            else
+                            {
+								dfont->colortable[0] = Machine->pens[text_color];
+                                dfont->colortable[1] = Machine->pens[0];
+                            }
+
 							drawgfx(bitmap,dfont,*vram & 0x3f,0,0,0,
 									x*8, y*12, 0,TRANSPARENCY_NONE,0);
 						}
@@ -504,7 +473,7 @@ void dragon_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
 
 int dragon_interrupt(void)
 {
-	pia_1_cb1_w (0, 1);
+	pia_0_cb1_w (0, 1);
 	return ignore_interrupt();
 }
 
@@ -539,28 +508,46 @@ static void d_pia1_cb2_w(int offset, int data)
 {
 	sound_mux = data;
 }
+
 static void d_pia0_cb2_w(int offset, int data)
 {
 	joystick = data;
 }
+
 static void d_pia1_ca2_w(int offset, int data)
 {
-	if((tape_motor = data) == 1)
-	{
+    if (tape_motor ^ data)
+    {
 		/* speed up tape reading */
 		dragon_ram[0x0093] = 2;  
 		dragon_ram[0x0092] = 3;
+
+        if (data == 0)
+        {
+            ptape--;
+            ptape[0] = 0x55; /* insert sync byte */
+        }
+        tape_motor = data;
 	}
 }
+
 static void coco_pia1_ca2_w(int offset, int data)
 {
-	if((tape_motor = data) == 1)
-	{
+    if (tape_motor ^ data)
+    {
 		/* speed up tape reading */
 		dragon_ram[0x008f] = 3;  
 		dragon_ram[0x0091] = 2;  
+
+        if (data == 0)
+        {
+            ptape--;
+            ptape[0] = 0x55; /* insert sync byte */
+        }
+        tape_motor = data;
 	}
 }
+
 static void d_pia0_ca2_w(int offset, int data)
 {
 	joystick_axis = data;
@@ -589,6 +576,7 @@ static int d_pia1_pa_r(int offset)
 	static int bit=7, bitc=0, *state;
 	static int lo[]={1,1,0,0};
 	static int hi[]={1,0};
+
 	if (ptape && tape_motor)
 	{
 		if (bitc == 0)
@@ -596,7 +584,8 @@ static int d_pia1_pa_r(int offset)
 			if (bit < 0)
 			{
 				bit = 7;
-				ptape++;
+                if (ptape - dragon_tape < dragon_tapesize)
+                    ptape++;
 			}
 
 			if ((*ptape >> (7-bit)) & 0x01)

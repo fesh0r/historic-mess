@@ -1,3 +1,83 @@
+0.36b7
+
+PLEASE NOTE:  .inp record/playback does not work currently.
+
+
+New drivers supported (in no particular order):
+-----------------------------------------------
+KIM 1                        [Juergen Buchmueller]
+Tandy 1000TX (PC clone)      [Juergen Buchmueller]
+
+
+
+These drivers have improved GRAPHICS:
+-------------------------------------
+
+
+
+These drivers have new or improved SOUND:
+-----------------------------------------
+- Sound now works in the Dragon32.  [Mathis Rosenhauer] 
+
+
+
+Other drivers changes:
+----------------------
+
+- amstrad driver (renamed to cpc6128) plays snapshots now!
+  This now plays game snapshots created with the CPCEMU emulator, 
+  or other CPC emulators.  [Kev Thacker]
+
+- merged all apple2e, and apple2c drivers (parents).
+
+- Fewer IO errors when loading tape images (dragon driver) 
+  [Mathis Rosenhauer]
+
+
+
+Changes to the main program:
+----------------------------
+
+  [thanx go to JOJO for excellent bug reports]
+- Fixed the -listinfo crash
+
+- Corrected the -listdetails output
+
+- listroms now produces correct output for all drivers 
+
+- All GUI instances of "GAME" replaced with "MACHINE"
+
+
+
+Source:
+-------
+- The core is based on MAME 0.36b7. This incorporates all features 
+  of the update to this core (such as sidewinder fixes).  [MAME team]
+
+- Aliases now supported again!  Just to remind everyone, it allows 
+  you to specify a set of ROMs or disk images with a short name in 
+  the mess.cfg file.
+  eg.:
+  [trs80]
+  arcade = boot.dsk,arcade1.dsk,arcade2.dsk,arcade3.dsk
+
+  You can then call 'mess trs80 arcade' and have all four disks 
+  inserted instead of typing the full command line.
+
+- You can now specify in MESS.CFG the *exact* directory a rom is 
+  which you want to run.  no longer necessray to have a directory with 
+  the same name as the system [Juergen Buchmueller] 
+  
+- 'clone' systems now supported.  The system BIOS is loaded from 
+  either the parent set (zipped) or the clone set (same as MAME).  
+  Roms/Images can reside in either the parent or clone subdirectory. 
+  [Ben Bruscella]
+
+
+
+
+
+------------------------------------------------------------------
 0.36b6
 
 PLEASE NOTE: MESS is now developed and distributed as a MAME source 
@@ -55,6 +135,8 @@ These drivers have new or improved SOUND:
 - Preliminary Mockingboard support for the Apple II. [Brad Oliver]
 
 - Genesis sound improvements. [Gareth Long]
+
+
 
 Other drivers changes:
 ----------------------

@@ -326,6 +326,27 @@ void *osd_fopen(const char *game,const char *filename,int filetype,int _write)
          for (indx=0;indx<pathc && !found; ++indx) {
 				const char* dir_name = pathv[indx];
 
+			#ifdef MESS	/* this section allows exact path from .cfg */
+				if (!found) {
+					sprintf(name,"%s",dir_name);
+					if (cache_stat(name,&stat_buffer)==0 && (stat_buffer.st_mode & S_IFDIR)) {
+						sprintf(name,"%s/%s",dir_name,filename);
+						if (filetype==OSD_FILETYPE_ROM)	{
+							if (checksum_file (name, &f->data, &f->length, &f->crc)==0) {
+								f->type = kRAMFile;
+								f->offset = 0;
+								found = 1;
+							}
+						}
+						else {
+							f->type = kPlainFile;
+							f->file = fopen(name,"rb");
+							found = f->file!=0;
+						}
+					}
+				}
+			#endif
+
 				if (!found) {
 					sprintf(name,"%s/%s",dir_name,gamename);
 					if (cache_stat(name,&stat_buffer)==0 && (stat_buffer.st_mode & S_IFDIR)) {
@@ -437,6 +458,16 @@ void *osd_fopen(const char *game,const char *filename,int filetype,int _write)
 				for (indx=0; indx < rompathc && !found; ++indx)
             {
 					const char* dir_name = rompathv[indx];
+
+					if (!found) {
+						sprintf(name, "%s", dir_name);
+						if(errorlog) fprintf(errorlog,"Trying %s\n", name);
+						if (cache_stat(name,&stat_buffer)==0 && (stat_buffer.st_mode & S_IFDIR)) {
+							sprintf(name,"%s/%s", dir_name, file);
+							f->file = fopen(name,_write ? "r+b" : "rb");
+							found = f->file!=0;
+						}
+					}
 
 					if (!found) {
 						sprintf(name, "%s/%s", dir_name, gamename);
@@ -925,12 +956,19 @@ int osd_fchecksum (const char *game, const char *filename, unsigned int *length,
 /* JB 980920 */
 int osd_fsize (void *file)
 {
-	FakeFileHandle	*f = (FakeFileHandle *)file;
+	FakeFileHandle  *f = (FakeFileHandle *)file;
+	int size = 0, offs;
 
 	if (f->type==kRAMFile || f->type==kZippedFile)
 		return f->length;
-
-	return 0;
+	if( f->file )
+	{
+		offs = ftell(f->file);
+		fseek(f->file, 0, SEEK_END);
+		size = ftell(f->file);
+		fseek(f->file, offs, SEEK_SET);
+	}
+	return size;
 }
 
 /* JB 980920 */
@@ -959,3 +997,13 @@ int osd_display_loading_rom_message(const char *name,int current,int total)
 
 	return 0;
 }
+
+
+
+#ifdef MESS
+/* Function to hadle Aliases in the MESS.CFG file */
+void get_alias(char *driver_name, char * arg, char *alias)
+{
+	strcpy(alias,get_config_string(driver_name, arg, ""));
+}
+#endif
