@@ -65,8 +65,6 @@ void sprint2_lamp2(int offset, int value);
 
 static struct MemoryReadAddress readmem[] =
 {
-	{ 0x0010, 0x0013, MRA_RAM, &sprint2_horiz_ram }, /* WRAM */
-	{ 0x0018, 0x001f, MRA_RAM, &sprint2_vert_car_ram }, /* WRAM */
 	{ 0x0000, 0x03ff, MRA_RAM }, /* WRAM */
 	{ 0x0400, 0x07ff, MRA_RAM }, /* DISPLAY RAM */
 	{ 0x0800, 0x083f, sprint2_read_ports }, /* SWITCH */
@@ -96,6 +94,8 @@ static struct MemoryReadAddress readmem[] =
 static struct MemoryWriteAddress writemem[] =
 {
 	{ 0x0000, 0x03ff, MWA_RAM }, /* WRAM */
+	{ 0x0010, 0x0013, MWA_RAM, &sprint2_horiz_ram }, /* WRAM */
+	{ 0x0018, 0x001f, MWA_RAM, &sprint2_vert_car_ram }, /* WRAM */
 	{ 0x0400, 0x07ff, videoram_w, &videoram, &videoram_size }, /* DISPLAY */
 	{ 0x0c00, 0x0c0f, MWA_RAM }, /* ATTRACT */
 	{ 0x0c10, 0x0c1f, MWA_RAM }, /* SKID1 */
@@ -116,8 +116,6 @@ static struct MemoryWriteAddress writemem[] =
 /* The only difference is that we use "sprint1_read_ports" */
 static struct MemoryReadAddress sprint1_readmem[] =
 {
-	{ 0x0010, 0x0013, MRA_RAM, &sprint2_horiz_ram }, /* WRAM */
-	{ 0x0018, 0x001f, MRA_RAM, &sprint2_vert_car_ram }, /* WRAM */
 	{ 0x0000, 0x03ff, MRA_RAM }, /* WRAM */
 	{ 0x0400, 0x07ff, MRA_RAM }, /* DISPLAY RAM */
 	{ 0x0800, 0x083f, sprint1_read_ports }, /* SWITCH */
@@ -144,7 +142,7 @@ static struct MemoryReadAddress sprint1_readmem[] =
 	{ -1 }	/* end of table */
 };
 
-INPUT_PORTS_START( sprint2_input_ports )
+INPUT_PORTS_START( sprint2 )
 	PORT_START      /* DSW - fake port, gets mapped to Sprint2 ports */
 	PORT_DIPNAME( 0x01, 0x00, "Tracks on Demo" )
 	PORT_DIPSETTING(    0x00, "Easy Track Only" )
@@ -204,7 +202,7 @@ INPUT_PORTS_START( sprint2_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( sprint1_input_ports )
+INPUT_PORTS_START( sprint1 )
 	PORT_START      /* DSW - fake port, gets mapped to Sprint2 ports */
 	PORT_DIPNAME( 0x01, 0x00, "Change Track" )
 	PORT_DIPSETTING(    0x01, "Every Lap" )
@@ -295,7 +293,6 @@ static unsigned char palette[] =
         0x80,0x80,0x80, /* LT GREY - grey cars */
         0xff,0xff,0xff, /* WHITE - track, text, white car */
 };
-
 static unsigned short colortable[] =
 {
         0x01, 0x00, /* Black playfield */
@@ -305,6 +302,11 @@ static unsigned short colortable[] =
         0x01, 0x02, /* Grey car 1 */
         0x01, 0x02  /* Grey car 2 */
 };
+static void init_palette(unsigned char *game_palette, unsigned short *game_colortable,const unsigned char *color_prom)
+{
+	memcpy(game_palette,palette,sizeof(palette));
+	memcpy(game_colortable,colortable,sizeof(colortable));
+}
 
 
 static struct MachineDriver machine_driver =
@@ -326,8 +328,8 @@ static struct MachineDriver machine_driver =
 	/* video hardware */
 	32*8, 32*8, { 0*8, 32*8-1, 0*8, 32*8-1 }, /* it's actually 32x28, but we'll leave room for our gear indicator */
 	gfxdecodeinfo,
-	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	sizeof(palette) / sizeof(palette[0]) / 3, sizeof(colortable) / sizeof(colortable[0]),
+	init_palette,
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -361,8 +363,8 @@ static struct MachineDriver sprint1_machine_driver =
 	/* video hardware */
 	32*8, 32*8, { 0*8, 32*8-1, 0*8, 32*8-1 }, /* it's actually 32x28, but we'll leave room for our gear indicator */
 	gfxdecodeinfo,
-	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	sizeof(palette) / sizeof(palette[0]) / 3, sizeof(colortable) / sizeof(colortable[0]),
+	init_palette,
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -388,7 +390,7 @@ static struct MachineDriver sprint1_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( sprint1_rom )
+ROM_START( sprint1 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "6290-01.b1",   0x2000, 0x0800, 0x41fc985e )
 	ROM_LOAD( "6291-01.c1",   0x2800, 0x0800, 0x07f7a920 )
@@ -404,7 +406,7 @@ ROM_START( sprint1_rom )
 	ROM_LOAD( "6399-01.j6",   0x0600, 0x0200, 0x63d685b2 )
 ROM_END
 
-ROM_START( sprint2_rom )
+ROM_START( sprint2 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "6290-01.b1",   0x2000, 0x0800, 0x41fc985e )
 	ROM_LOAD( "6291-01.c1",   0x2800, 0x0800, 0x07f7a920 )
@@ -471,7 +473,7 @@ static void sprint1_hisave(void)
 
 ***************************************************************************/
 
-struct GameDriver sprint1_driver =
+struct GameDriver driver_sprint1 =
 {
 	__FILE__,
 	0,
@@ -484,22 +486,23 @@ struct GameDriver sprint1_driver =
 	&sprint1_machine_driver,
 	0,
 
-	sprint1_rom,
+	rom_sprint1,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	sprint1_input_ports,
+	input_ports_sprint1,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
-	sprint1_hiload,sprint1_hisave
+
+	sprint1_hiload, sprint1_hisave
 };
 
-struct GameDriver sprint2_driver =
+struct GameDriver driver_sprint2 =
 {
 	__FILE__,
-	&sprint1_driver,
+	&driver_sprint1,
 	"sprint2",
 	"Sprint 2",
 	"1976",
@@ -509,14 +512,15 @@ struct GameDriver sprint2_driver =
 	&machine_driver,
 	0,
 
-	sprint2_rom,
+	rom_sprint2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	sprint2_input_ports,
+	input_ports_sprint2,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
-	0,0
+
+	0, 0
 };

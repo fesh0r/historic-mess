@@ -108,7 +108,7 @@ static struct MemoryWriteAddress writemem_sound[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( formatz )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -277,7 +277,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( formatz_rom )
+ROM_START( formatz )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "format_z.8",   0x4000, 0x4000, 0x81a2416c )
 	ROM_LOAD( "format_z.7",   0x8000, 0x4000, 0x986e6052 )
@@ -290,14 +290,14 @@ ROM_START( formatz_rom )
 	ROM_LOAD( "format_z.2",   0x5000, 0x1000, 0x3a821391 )	/* sprites */
 	ROM_LOAD( "format_z.3",   0x6000, 0x1000, 0x7d1aec79 )	/* sprites */
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	/* 10A, 10B, 10C - missing! */
 
 	ROM_REGION(0x10000)     /* 64k for sound CPU */
 	ROM_LOAD( "format_z.9",   0xf000, 0x1000, 0x6b9215ad )
 ROM_END
 
-ROM_START( aeroboto_rom )
+ROM_START( aeroboto )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "aeroboto.8",   0x4000, 0x4000, 0x4d3fc049 )
 	ROM_LOAD( "aeroboto.7",   0x8000, 0x4000, 0x522f51c1 )
@@ -310,7 +310,7 @@ ROM_START( aeroboto_rom )
 	ROM_LOAD( "aeroboto.2",   0x5000, 0x1000, 0xc7f81a3c )	/* sprites */
 	ROM_LOAD( "aeroboto.3",   0x6000, 0x1000, 0x5203ad04 )	/* sprites */
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	/* 10A, 10B, 10C - missing! */
 
 	ROM_REGION(0x10000)     /* 64k for sound CPU */
@@ -319,7 +319,7 @@ ROM_END
 
 
 
-struct GameDriver formatz_driver =
+struct GameDriver driver_formatz =
 {
 	__FILE__,
 	0,
@@ -328,45 +328,45 @@ struct GameDriver formatz_driver =
 	"1984",
 	"Jaleco",
 	"Carlos A. Lozano",
-	GAME_NOT_WORKING,
+	0,
 	&machine_driver,
 	0,
 
-	formatz_rom,
+	rom_formatz,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_formatz,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_DEFAULT,
+	0, 0, 0,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0, 0
 };
 
-struct GameDriver aeroboto_driver =
+struct GameDriver driver_aeroboto =
 {
 	__FILE__,
-	&formatz_driver,
+	&driver_formatz,
 	"aeroboto",
 	"Aeroboto",
 	"1984",
 	"[Jaleco] (Williams license)",
 	"Carlos A. Lozano",
-	GAME_NOT_WORKING,
+	0,
 	&machine_driver,
 	0,
 
-	aeroboto_rom,
+	rom_aeroboto,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_formatz,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_DEFAULT,
+	0, 0, 0,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0, 0
 };

@@ -475,6 +475,7 @@ Memory Map:
 
 #include "driver.h"
 #include "machine/6821pia.h"
+#include "sndhrdw/williams.h"
 #include "vidhrdw/generic.h"
 
 
@@ -511,13 +512,11 @@ extern struct pia6821_interface mysticm_pia_0_intf;
 extern struct pia6821_interface tshoot_pia_0_intf;
 extern struct pia6821_interface tshoot_snd_pia_intf;
 extern struct pia6821_interface joust2_pia_1_intf;
-extern struct pia6821_interface joust2_extsnd_pia_intf;
 
 /* banking variables */
 extern UINT8 *defender_bank_base;
 extern const UINT32 *defender_bank_list;
 extern UINT8 *williams_bank_base;
-extern UINT8 *blaster_bank2_base;
 
 /* initialization */
 void defender_init_machine(void);
@@ -538,10 +537,6 @@ void williams2_7segment(int offset, int data);
 /* Mayday protection */
 extern UINT8 *mayday_protection;
 int mayday_protection_r(int offset);
-
-/* Joust 2 audio board */
-void joust2_ym2151_int(int irq);
-void joust2_sound_bank_select_w(int offset, int data);
 
 
 
@@ -658,7 +653,7 @@ static struct MemoryWriteAddress defender_writemem[] =
 
 static struct MemoryReadAddress williams_readmem[] =
 {
-	{ 0x0000, 0x97ff, MRA_BANK1, &williams_bank_base },
+	{ 0x0000, 0x97ff, MRA_BANK1 },
 	{ 0x9800, 0xbfff, MRA_RAM },
 	{ 0xc804, 0xc807, pia_0_r },
 	{ 0xc80c, 0xc80f, pia_1_r },
@@ -671,7 +666,7 @@ static struct MemoryReadAddress williams_readmem[] =
 
 static struct MemoryWriteAddress williams_writemem[] =
 {
-	{ 0x0000, 0x97ff, williams_videoram_w, &videoram, &videoram_size },
+	{ 0x0000, 0x97ff, williams_videoram_w, &williams_bank_base, &videoram_size },
 	{ 0x9800, 0xbfff, MWA_RAM },
 	{ 0xc000, 0xc00f, paletteram_BBGGGRRR_w, &paletteram },
 	{ 0xc804, 0xc807, pia_0_w },
@@ -694,8 +689,8 @@ static struct MemoryWriteAddress williams_writemem[] =
 
 static struct MemoryReadAddress blaster_readmem[] =
 {
-	{ 0x0000, 0x3fff, MRA_BANK1, &williams_bank_base },
-	{ 0x4000, 0x96ff, MRA_BANK2, &blaster_bank2_base },
+	{ 0x0000, 0x3fff, MRA_BANK1 },
+	{ 0x4000, 0x96ff, MRA_BANK2 },
 	{ 0x9700, 0xbfff, MRA_RAM },
 	{ 0xc804, 0xc807, pia_0_r },
 	{ 0xc80c, 0xc80f, pia_1_r },
@@ -708,7 +703,7 @@ static struct MemoryReadAddress blaster_readmem[] =
 
 static struct MemoryWriteAddress blaster_writemem[] =
 {
-	{ 0x0000, 0x96ff, williams_videoram_w, &videoram, &videoram_size },
+	{ 0x0000, 0x96ff, williams_videoram_w, &williams_bank_base, &videoram_size },
 	{ 0x9700, 0xbaff, MWA_RAM },
 	{ 0xbb00, 0xbbff, MWA_RAM, &blaster_color_zero_table },
 	{ 0xbc00, 0xbcff, MWA_RAM, &blaster_color_zero_flags },
@@ -829,42 +824,11 @@ static struct MemoryWriteAddress williams2_sound_writemem[] =
 
 /*************************************
  *
- *	Joust 2 sound board memory handlers
- *
- *************************************/
-
-static struct MemoryReadAddress joust2_sound_readmem[] =
-{
-	{ 0x0000, 0x07ff, MRA_RAM },
-	{ 0x2000, 0x2001, YM2151_status_port_0_r },
-	{ 0x4000, 0x4003, pia_3_r },
-	{ 0x8000, 0xffff, MRA_BANK4 },
-	{ -1 }
-};
-
-
-static struct MemoryWriteAddress joust2_sound_writemem[] =
-{
-	{ 0x0000, 0x07ff, MWA_RAM },
-	{ 0x2000, 0x2000, YM2151_register_port_0_w },
-	{ 0x2001, 0x2001, YM2151_data_port_0_w },
-	{ 0x4000, 0x4003, pia_3_w },
-	{ 0x6000, 0x6000, hc55516_digit_clock_clear_w },
-	{ 0x6800, 0x6800, hc55516_clock_set_w },
-	{ 0x7800, 0x7800, joust2_sound_bank_select_w },
-	{ 0x8000, 0xffff, MWA_ROM },
-	{ -1 }
-};
-
-
-
-/*************************************
- *
  *	Port definitions
  *
  *************************************/
 
-INPUT_PORTS_START( defender_input_ports )
+INPUT_PORTS_START( defender )
 	PORT_START      /* IN0 */
 	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_BUTTON1, "Fire", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "Thrust", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
@@ -895,11 +859,11 @@ INPUT_PORTS_START( defender_input_ports )
 INPUT_PORTS_END
 
 
-#define defndjeu_input_ports defender_input_ports
-#define mayday_input_ports   defender_input_ports
+#define input_ports_defndjeu input_ports_defender
+#define input_ports_mayday   input_ports_defender
 
 
-INPUT_PORTS_START( colony7_input_ports )
+INPUT_PORTS_START( colony7 )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT )
@@ -926,7 +890,7 @@ INPUT_PORTS_START( colony7_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( stargate_input_ports )
+INPUT_PORTS_START( stargate )
 	PORT_START      /* IN0 */
 	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_BUTTON1, "Fire", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "Thrust", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
@@ -958,7 +922,7 @@ INPUT_PORTS_START( stargate_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( joust_input_ports )
+INPUT_PORTS_START( joust )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )
@@ -991,7 +955,7 @@ INPUT_PORTS_START( joust_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( robotron_input_ports )
+INPUT_PORTS_START( robotron )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_UP )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_DOWN )
@@ -1018,7 +982,7 @@ INPUT_PORTS_START( robotron_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( bubbles_input_ports )
+INPUT_PORTS_START( bubbles )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )
@@ -1041,7 +1005,7 @@ INPUT_PORTS_START( bubbles_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( splat_input_ports )
+INPUT_PORTS_START( splat )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_UP | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_DOWN | IPF_8WAY | IPF_PLAYER2 )
@@ -1083,7 +1047,7 @@ INPUT_PORTS_START( splat_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( sinistar_input_ports )
+INPUT_PORTS_START( sinistar )
 	PORT_START      /* IN0 */
 	/* pseudo analog joystick, see below */
 
@@ -1110,7 +1074,7 @@ INPUT_PORTS_START( sinistar_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( lottofun_input_ports )
+INPUT_PORTS_START( lottofun )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )
@@ -1134,7 +1098,7 @@ INPUT_PORTS_START( lottofun_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( blaster_input_ports )
+INPUT_PORTS_START( blaster )
 	PORT_START      /* IN0 */
 	/* pseudo analog joystick, see below */
 
@@ -1164,7 +1128,7 @@ INPUT_PORTS_START( blaster_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( mysticm_input_ports )
+INPUT_PORTS_START( mysticm )
 	PORT_START	/* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT )
@@ -1190,7 +1154,7 @@ INPUT_PORTS_START( mysticm_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( tshoot_input_ports )
+INPUT_PORTS_START( tshoot )
 	PORT_START	/* IN0 (muxed with IN3)*/
 	PORT_ANALOG(0x3F, 0x20, IPT_AD_STICK_Y, 25, 10, 0, 0, 0x3F)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1220,7 +1184,7 @@ INPUT_PORTS_START( tshoot_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( inferno_input_ports )
+INPUT_PORTS_START( inferno )
 	PORT_START	/* IN0 (muxed with IN3) */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICKLEFT_UP )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICKLEFT_LEFT )
@@ -1260,7 +1224,7 @@ INPUT_PORTS_START( inferno_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( joust2_input_ports )
+INPUT_PORTS_START( joust2 )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER1 )
@@ -1342,23 +1306,6 @@ static struct hc55516_interface sinistar_cvsd_interface =
 {
 	1,	/* 1 chip */
 	{ 80 },
-};
-
-
-static struct hc55516_interface joust2_cvsd_interface =
-{
-	1,			/* 1 chip */
-	{ 60 }
-};
-
-
-static struct YM2151interface ym2151_interface =
-{
-	1,			/* 1 chip */
-	3579545,	/* 3.579545 MHz? */
-	{ YM3012_VOL(20,MIXER_PAN_LEFT,20,MIXER_PAN_RIGHT) },
-	{ joust2_ym2151_int },
-	{ 0 }
 };
 
 
@@ -1626,13 +1573,7 @@ static struct MachineDriver joust2_machine_driver =
 			williams2_sound_readmem,williams2_sound_writemem,0,0,
 			ignore_interrupt,1
 		},
-		{
-			CPU_M6809 | CPU_AUDIO_CPU,
-			4000000,
-			3,
-			joust2_sound_readmem,joust2_sound_writemem,0,0,
-			ignore_interrupt,1
-		}
+		SOUND_CPU_WILLIAMS_CVSD(3)
 	},
 	60, DEFAULT_60HZ_VBLANK_DURATION,
 	1,
@@ -1654,18 +1595,7 @@ static struct MachineDriver joust2_machine_driver =
 	/* sound hardware */
 	0,0,0,0,
 	{
-		{
-			SOUND_DAC,
-			&dac_interface
-		},
-		{
-			SOUND_YM2151,
-			&ym2151_interface
-		},
-		{
-			SOUND_HC55516,
-			&joust2_cvsd_interface
-		}
+		SOUND_WILLIAMS_CVSD
 	}
 };
 
@@ -1947,7 +1877,14 @@ static void joust2_init(void)
 
 	/* PIA configuration */
 	CONFIGURE_PIAS(williams2_muxed_pia_0_intf, joust2_pia_1_intf, williams2_snd_pia_intf);
-	pia_config(3, PIA_STANDARD_ORDERING | PIA_8BIT, &joust2_extsnd_pia_intf);
+
+	/* expand the sound ROMs */
+	memcpy(&Machine->memory_region[3][0x18000], &Machine->memory_region[3][0x10000], 0x08000);
+	memcpy(&Machine->memory_region[3][0x20000], &Machine->memory_region[3][0x10000], 0x10000);
+	memcpy(&Machine->memory_region[3][0x38000], &Machine->memory_region[3][0x30000], 0x08000);
+	memcpy(&Machine->memory_region[3][0x40000], &Machine->memory_region[3][0x30000], 0x10000);
+	memcpy(&Machine->memory_region[3][0x58000], &Machine->memory_region[3][0x50000], 0x08000);
+	memcpy(&Machine->memory_region[3][0x60000], &Machine->memory_region[3][0x50000], 0x10000);
 }
 
 
@@ -1998,7 +1935,7 @@ static void inferno_init(void)
  *
  *************************************/
 
-ROM_START( defender_rom )
+ROM_START( defender )
 	ROM_REGION(0x14000)
 	ROM_LOAD( "defend.1",     0x0d000, 0x0800, 0xc3e52d7e )
 	ROM_LOAD( "defend.4",     0x0d800, 0x0800, 0x9a72348b )
@@ -2019,7 +1956,7 @@ ROM_START( defender_rom )
 ROM_END
 
 
-ROM_START( defendg_rom )
+ROM_START( defendg )
 	ROM_REGION(0x14000)
 	ROM_LOAD( "defeng01.bin", 0x0d000, 0x0800, 0x6111d74d )
 	ROM_LOAD( "defeng04.bin", 0x0d800, 0x0800, 0x3cfc04ce )
@@ -2040,7 +1977,7 @@ ROM_START( defendg_rom )
 ROM_END
 
 
-ROM_START( defndjeu_rom )
+ROM_START( defndjeu )
 	ROM_REGION(0x15000)
 	ROM_LOAD( "15", 0x0d000, 0x1000, 0x706a24bd )
 	ROM_LOAD( "16", 0x0e000, 0x1000, 0x03201532 )
@@ -2057,7 +1994,7 @@ ROM_START( defndjeu_rom )
 ROM_END
 
 
-ROM_START( defcmnd_rom )
+ROM_START( defcmnd )
 	ROM_REGION(0x15000)
 	ROM_LOAD( "defcmnda.1",   0x0d000, 0x1000, 0x68effc1d )
 	ROM_LOAD( "defcmnda.2",   0x0e000, 0x1000, 0x1126adc9 )
@@ -2076,7 +2013,7 @@ ROM_START( defcmnd_rom )
 ROM_END
 
 
-ROM_START( defence_rom )
+ROM_START( defence )
 	ROM_REGION(0x15000)
 	ROM_LOAD( "1",            0x0d000, 0x1000, 0xebc93622 )
 	ROM_LOAD( "2",            0x0e000, 0x1000, 0x2a4f4f44 )
@@ -2095,7 +2032,7 @@ ROM_START( defence_rom )
 ROM_END
 
 
-ROM_START( defcomnd_rom )
+ROM_START( defcomnd )
 	ROM_REGION(0x15000)
 	ROM_LOAD( "dfndr-c.rom", 0x0d000, 0x1000, 0x2a256b93 )
 	ROM_LOAD( "dfndr-b.rom", 0x0e000, 0x1000, 0xe34e87fc )
@@ -2112,7 +2049,7 @@ ROM_START( defcomnd_rom )
 ROM_END
 
 
-ROM_START( mayday_rom )
+ROM_START( mayday )
 	ROM_REGION(0x15000)
 	ROM_LOAD( "ic03-3.bin",  0x0d000, 0x1000, 0xa1ff6e62 )
 	ROM_LOAD( "ic02-2.bin",  0x0e000, 0x1000, 0x62183aea )
@@ -2130,7 +2067,7 @@ ROM_START( mayday_rom )
 ROM_END
 
 
-ROM_START( maydaya_rom )
+ROM_START( maydaya )
 	ROM_REGION(0x15000)
 	ROM_LOAD( "mayday.c", 0x0d000, 0x1000, 0x872a2f2d )
 	ROM_LOAD( "mayday.b", 0x0e000, 0x1000, 0xc4ab5e22 )
@@ -2147,7 +2084,7 @@ ROM_START( maydaya_rom )
 ROM_END
 
 
-ROM_START( colony7_rom )
+ROM_START( colony7 )
 	ROM_REGION(0x14000)
 	ROM_LOAD( "cs03.bin",     0x0d000, 0x1000, 0x7ee75ae5 )
 	ROM_LOAD( "cs02.bin",     0x0e000, 0x1000, 0xc60b08cb )
@@ -2165,7 +2102,7 @@ ROM_START( colony7_rom )
 ROM_END
 
 
-ROM_START( colony7a_rom )
+ROM_START( colony7a )
 	ROM_REGION(0x14000)
 	ROM_LOAD( "cs03a.bin",    0x0d000, 0x1000, 0xe0b0d23b )
 	ROM_LOAD( "cs02a.bin",    0x0e000, 0x1000, 0x370c6f41 )
@@ -2183,7 +2120,7 @@ ROM_START( colony7a_rom )
 ROM_END
 
 
-ROM_START( stargate_rom )
+ROM_START( stargate )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "01",           0x0000, 0x1000, 0x88824d18 )
 	ROM_LOAD( "02",           0x1000, 0x1000, 0xafc614c5 )
@@ -2203,7 +2140,7 @@ ROM_START( stargate_rom )
 ROM_END
 
 
-ROM_START( joust_rom )
+ROM_START( joust )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "joust.wg1",    0x0000, 0x1000, 0xfe41b2af )
 	ROM_LOAD( "joust.wg2",    0x1000, 0x1000, 0x501c143c )
@@ -2223,7 +2160,7 @@ ROM_START( joust_rom )
 ROM_END
 
 
-ROM_START( joustwr_rom )
+ROM_START( joustwr )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "joust.wg1",    0x0000, 0x1000, 0xfe41b2af )
 	ROM_LOAD( "joust.wg2",    0x1000, 0x1000, 0x501c143c )
@@ -2243,7 +2180,7 @@ ROM_START( joustwr_rom )
 ROM_END
 
 
-ROM_START( joustr_rom )
+ROM_START( joustr )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "joust.wg1",    0x0000, 0x1000, 0xfe41b2af )
 	ROM_LOAD( "joust.wg2",    0x1000, 0x1000, 0x501c143c )
@@ -2263,7 +2200,7 @@ ROM_START( joustr_rom )
 ROM_END
 
 
-ROM_START( robotron_rom )
+ROM_START( robotron )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "robotron.sb1", 0x0000, 0x1000, 0x66c7d3ef )
 	ROM_LOAD( "robotron.sb2", 0x1000, 0x1000, 0x5bc6c614 )
@@ -2283,7 +2220,7 @@ ROM_START( robotron_rom )
 ROM_END
 
 
-ROM_START( robotryo_rom )
+ROM_START( robotryo )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "robotron.sb1", 0x0000, 0x1000, 0x66c7d3ef )
 	ROM_LOAD( "robotron.sb2", 0x1000, 0x1000, 0x5bc6c614 )
@@ -2303,7 +2240,7 @@ ROM_START( robotryo_rom )
 ROM_END
 
 
-ROM_START( bubbles_rom )
+ROM_START( bubbles )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "bubbles.1b",   0x0000, 0x1000, 0x8234f55c )
 	ROM_LOAD( "bubbles.2b",   0x1000, 0x1000, 0x4a188d6a )
@@ -2323,7 +2260,7 @@ ROM_START( bubbles_rom )
 ROM_END
 
 
-ROM_START( bubblesr_rom )
+ROM_START( bubblesr )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "bubblesr.1b",  0x0000, 0x1000, 0xdda4e782 )
 	ROM_LOAD( "bubblesr.2b",  0x1000, 0x1000, 0x3c8fa7f5 )
@@ -2343,7 +2280,7 @@ ROM_START( bubblesr_rom )
 ROM_END
 
 
-ROM_START( splat_rom )
+ROM_START( splat )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "splat.01",     0x0000, 0x1000, 0x1cf26e48 )
 	ROM_LOAD( "splat.02",     0x1000, 0x1000, 0xac0d4276 )
@@ -2363,7 +2300,7 @@ ROM_START( splat_rom )
 ROM_END
 
 
-ROM_START( sinistar_rom )
+ROM_START( sinistar )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "sinistar.01",  0x0000, 0x1000, 0xf6f3a22c )
 	ROM_LOAD( "sinistar.02",  0x1000, 0x1000, 0xcab3185c )
@@ -2386,7 +2323,7 @@ ROM_START( sinistar_rom )
 ROM_END
 
 
-ROM_START( sinista1_rom )
+ROM_START( sinista1 )
 	ROM_REGION(0x10000) /* 64k for code */
 	ROM_LOAD( "sinrev1.01",   0x0000, 0x1000, 0x3810d7b8 )
 	ROM_LOAD( "sinistar.02",  0x1000, 0x1000, 0xcab3185c )
@@ -2409,7 +2346,7 @@ ROM_START( sinista1_rom )
 ROM_END
 
 
-ROM_START( sinista2_rom )
+ROM_START( sinista2 )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "sinistar.01",  0x0000, 0x1000, 0xf6f3a22c )
 	ROM_LOAD( "sinistar.02",  0x1000, 0x1000, 0xcab3185c )
@@ -2432,7 +2369,7 @@ ROM_START( sinista2_rom )
 ROM_END
 
 
-ROM_START( lottofun_rom )
+ROM_START( lottofun )
 	ROM_REGION(0x10000) 	/* 64k for code */
 	ROM_LOAD( "vl4e.dat",     0x0000, 0x1000, 0x5e9af236 )
 	ROM_LOAD( "vl4c.dat",     0x1000, 0x1000, 0x4b134ae2 )
@@ -2452,7 +2389,7 @@ ROM_START( lottofun_rom )
 ROM_END
 
 
-ROM_START( blaster_rom )
+ROM_START( blaster )
 	ROM_REGION(0x3c000)
 	ROM_LOAD( "blaster.11",   0x04000, 0x2000, 0x6371e62f )
 	ROM_LOAD( "blaster.12",   0x06000, 0x2000, 0x9804faac )
@@ -2481,7 +2418,7 @@ ROM_START( blaster_rom )
 ROM_END
 
 
-ROM_START( tshoot_rom )
+ROM_START( tshoot )
 	ROM_REGION(0x48000)
 	ROM_LOAD( "rom18.cpu", 0x0D000, 0x1000, 0xeffc33f1 )	/* IC55 */
 	ROM_LOAD( "rom2.cpu",  0x0E000, 0x1000, 0xfd982687 )	/* IC9	*/
@@ -2516,7 +2453,7 @@ ROM_START( tshoot_rom )
 ROM_END
 
 
-ROM_START( joust2_rom )
+ROM_START( joust2 )
 	ROM_REGION(0x48000)
 	ROM_LOAD( "ic55_r1.cpu", 0x0D000, 0x1000, 0x08b0d5bd )	/* IC55 ROM02 */
 	ROM_LOAD( "ic09_r2.cpu", 0x0E000, 0x1000, 0x951175ce )	/* IC09 ROM03 */
@@ -2551,14 +2488,14 @@ ROM_START( joust2_rom )
 	ROM_LOAD( "ic41_r1.vid", 0x08000, 0x4000, 0xc41e3daa )	/* IC41 ROM22 */
 
 	/* sound board */
-	ROM_REGION(0x20000)
-	ROM_LOAD( "u04_r1.snd", 0x08000, 0x8000, 0x3af6b47d )	/* IC04 ROM23 */
-	ROM_LOAD( "u19_r1.snd", 0x10000, 0x8000, 0xe7f9ed2e )	/* IC19 ROM24 */
-	ROM_LOAD( "u20_r1.snd", 0x18000, 0x8000, 0xc85b29f7 )	/* IC20 ROM25 */
+	ROM_REGION(0x70000)
+	ROM_LOAD( "u04_r1.snd", 0x10000, 0x8000, 0x3af6b47d )	/* IC04 ROM23 */
+	ROM_LOAD( "u19_r1.snd", 0x30000, 0x8000, 0xe7f9ed2e )	/* IC19 ROM24 */
+	ROM_LOAD( "u20_r1.snd", 0x50000, 0x8000, 0xc85b29f7 )	/* IC20 ROM25 */
 ROM_END
 
 
-ROM_START( mysticm_rom )
+ROM_START( mysticm )
 	ROM_REGION(0x48000)
 	ROM_LOAD( "mm02_2.a09", 0x0E000, 0x1000, 0x3a776ea8 )	/* IC9	*/
 	ROM_LOAD( "mm03_2.a10", 0x0F000, 0x1000, 0x6e247c75 )	/* IC10 */
@@ -2593,7 +2530,7 @@ ROM_START( mysticm_rom )
 ROM_END
 
 
-ROM_START( inferno_rom )
+ROM_START( inferno )
 	ROM_REGION(0x48000)
 	ROM_LOAD( "ic9.inf", 0x0E000, 0x1000, 0x1a013185 )		/* IC9	*/
 	ROM_LOAD( "ic10.inf", 0x0F000, 0x1000, 0xdbf64a36 ) 	/* IC10 */
@@ -2632,7 +2569,7 @@ ROM_END
  *************************************/
 
 #define EXTERNAL_DRIVER(name,machine,year,orientation,fullname,company) \
-	struct GameDriver name##_driver =			\
+	struct GameDriver driver_##name =			\
 	{											\
 		__FILE__,								\
 		NULL,									\
@@ -2647,12 +2584,12 @@ ROM_END
 		&machine##_machine_driver,				\
 		name##_init,							\
 												\
-		name##_rom,								\
+		rom_##name,								\
 		0, 0,									\
 		0,										\
 		0,	/* sound_prom */					\
 												\
-		name##_input_ports,						\
+		input_ports_##name,						\
 												\
 		0,0,0,									\
 		orientation,							\
@@ -2660,11 +2597,11 @@ ROM_END
 		cmos_load,cmos_save						\
 	};
 
-#define EXTERNAL_CLONE_DRIVER(name,machine,year,orientation,fullname,company,cloneof,initports,state) \
-	struct GameDriver name##_driver =			\
+#define EXTERNAL_CLONE_DRIVER(name,machine,year,orientation,fullname,company,cloneof,initports) \
+	struct GameDriver driver_##name =			\
 	{											\
 		__FILE__,								\
-		&cloneof##_driver,						\
+		&driver_##cloneof,						\
 		#name,									\
 		fullname,								\
 		#year,									\
@@ -2672,16 +2609,16 @@ ROM_END
 		"Marc Lafontaine\nSteven Hugg\n"		\
 		"Mirko Buffoni\nAaron Giles"			\
 		"Michael J. Soderstrom",				\
-		state,									\
+		0,										\
 		&machine##_machine_driver,				\
 		initports##_init,						\
 												\
-		name##_rom,								\
+		rom_##name,								\
 		0, 0,									\
 		0,										\
 		0,	/* sound_prom */					\
 												\
-		initports##_input_ports,				\
+		input_ports_##initports,				\
 												\
 		0,0,0,									\
 		orientation,							\
@@ -2692,20 +2629,20 @@ ROM_END
 #define WILLIAMS_DRIVER(name,machine,year,orientation,fullname) \
 	EXTERNAL_DRIVER(name,machine,year,orientation,fullname,"Williams")
 #define WILLIAMS_CLONE_DRIVER(name,machine,year,orientation,fullname,cloneof) \
-	EXTERNAL_CLONE_DRIVER(name,machine,year,orientation,fullname,"Williams",cloneof,cloneof,0)
+	EXTERNAL_CLONE_DRIVER(name,machine,year,orientation,fullname,"Williams",cloneof,cloneof)
 
 WILLIAMS_DRIVER      (defender, defender, 1980, ORIENTATION_DEFAULT,    "Defender (Red label)")
 WILLIAMS_CLONE_DRIVER(defendg,  defender, 1980, ORIENTATION_DEFAULT,    "Defender (Green label)", defender)
-EXTERNAL_CLONE_DRIVER(defndjeu, defender, 1980, ORIENTATION_DEFAULT,    "Defender ? (bootleg)", "Jeutel", defender, defndjeu, GAME_NOT_WORKING)
-EXTERNAL_CLONE_DRIVER(defcmnd,  defender, 1980, ORIENTATION_DEFAULT,    "Defense Command (set 1)", "bootleg", defender, defender, 0)
-EXTERNAL_CLONE_DRIVER(defcomnd, defender, 1980, ORIENTATION_DEFAULT,    "Defense Command (set 2)", "???", defender, defender, GAME_NOT_WORKING)
-EXTERNAL_CLONE_DRIVER(defence,  defender, 1981, ORIENTATION_DEFAULT,    "Defence Command", "Outer Limits", defender, defender, 0)
+EXTERNAL_CLONE_DRIVER(defndjeu, defender, 1980, ORIENTATION_DEFAULT | GAME_NOT_WORKING,    "Defender ? (bootleg)", "Jeutel", defender, defndjeu)
+EXTERNAL_CLONE_DRIVER(defcmnd,  defender, 1980, ORIENTATION_DEFAULT,    "Defense Command (set 1)", "bootleg", defender, defender)
+EXTERNAL_CLONE_DRIVER(defcomnd, defender, 1980, ORIENTATION_DEFAULT | GAME_NOT_WORKING,    "Defense Command (set 2)", "???", defender, defender)
+EXTERNAL_CLONE_DRIVER(defence,  defender, 1981, ORIENTATION_DEFAULT,    "Defence Command", "Outer Limits", defender, defender)
 
 EXTERNAL_DRIVER      (mayday,   defender, 1980, ORIENTATION_DEFAULT,    "Mayday (set 1)", "???")
-EXTERNAL_CLONE_DRIVER(maydaya,  defender, 1980, ORIENTATION_DEFAULT,    "Mayday (set 2)", "???", mayday, mayday, 0)
+EXTERNAL_CLONE_DRIVER(maydaya,  defender, 1980, ORIENTATION_DEFAULT,    "Mayday (set 2)", "???", mayday, mayday)
 
 EXTERNAL_DRIVER      (colony7,  defender, 1981, ORIENTATION_ROTATE_270, "Colony 7 (set 1)", "Taito")
-EXTERNAL_CLONE_DRIVER(colony7a, defender, 1981, ORIENTATION_ROTATE_270, "Colony 7 (set 2)", "Taito", colony7, colony7, 0)
+EXTERNAL_CLONE_DRIVER(colony7a, defender, 1981, ORIENTATION_ROTATE_270, "Colony 7 (set 2)", "Taito", colony7, colony7)
 
 WILLIAMS_DRIVER      (stargate, williams, 1981, ORIENTATION_DEFAULT,    "Stargate")
 

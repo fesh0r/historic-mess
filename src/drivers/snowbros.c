@@ -76,7 +76,7 @@ static void snowbros_68000_sound_w(int offset, int data)
 static struct MemoryReadAddress readmem[] =
 {
 	{ 0x000000, 0x03ffff, MRA_ROM },
-	{ 0x100000, 0x103fff, MRA_BANK1, &ram },
+	{ 0x100000, 0x103fff, MRA_BANK1 },
 	{ 0x300000, 0x300001, snowbros_68000_sound_r },
 	{ 0x500000, 0x500005, snowbros_input_r },
 	{ 0x600000, 0x6001ff, paletteram_word_r },
@@ -87,7 +87,7 @@ static struct MemoryReadAddress readmem[] =
 static struct MemoryWriteAddress writemem[] =
 {
 	{ 0x000000, 0x03ffff, MWA_ROM },
-	{ 0x100000, 0x103fff, MWA_BANK1 },
+	{ 0x100000, 0x103fff, MWA_BANK1, &ram },
 	{ 0x200000, 0x200001, watchdog_reset_w },
 	{ 0x300000, 0x300001, snowbros_68000_sound_w },
 //	{ 0x400000, 0x400001, snowbros_interrupt_enable_w },
@@ -130,7 +130,7 @@ static struct IOWritePort sound_writeport[] =
 
 
 
-INPUT_PORTS_START( snowbros_input_ports )
+INPUT_PORTS_START( snowbros )
 	PORT_START	/* 500001 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -305,7 +305,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( snowbros_rom )
+ROM_START( snowbros )
 	ROM_REGION(0x40000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "sn6.bin",  0x00000, 0x20000, 0x4899ddcf )
 	ROM_LOAD_ODD ( "sn5.bin",  0x00000, 0x20000, 0xad310d3f )
@@ -320,7 +320,7 @@ ROM_START( snowbros_rom )
 	ROM_LOAD( "snowbros.4",   0x0000, 0x8000, 0xe6eab4e4 )
 ROM_END
 
-ROM_START( snowbroa_rom )
+ROM_START( snowbroa )
 	ROM_REGION(0x40000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "snowbros.3a",  0x00000, 0x20000, 0x10cb37e1 )
 	ROM_LOAD_ODD ( "snowbros.2a",  0x00000, 0x20000, 0xab91cc1e )
@@ -335,7 +335,7 @@ ROM_START( snowbroa_rom )
 	ROM_LOAD( "snowbros.4",   0x0000, 0x8000, 0xe6eab4e4 )
 ROM_END
 
-ROM_START( snowbrob_rom )
+ROM_START( snowbrob )
 	ROM_REGION(0x40000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "sbros3-a",     0x00000, 0x20000, 0x301627d6 )
 	ROM_LOAD_ODD ( "sbros2-a",     0x00000, 0x20000, 0xf6689f41 )
@@ -350,7 +350,7 @@ ROM_START( snowbrob_rom )
 	ROM_LOAD( "snowbros.4",   0x0000, 0x8000, 0xe6eab4e4 )
 ROM_END
 
-ROM_START( snowbroj_rom )
+ROM_START( snowbroj )
 	ROM_REGION(0x40000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "snowbros.3",   0x00000, 0x20000, 0x3f504f9e )
 	ROM_LOAD_ODD ( "snowbros.2",   0x00000, 0x20000, 0x854b02bc )
@@ -401,7 +401,7 @@ static void hisave(void)
 
 
 
-struct GameDriver snowbros_driver =
+struct GameDriver driver_snowbros =
 {
 	__FILE__,
 	0,
@@ -414,22 +414,22 @@ struct GameDriver snowbros_driver =
 	&machine_driver,
 	0,
 
-	snowbros_rom,
+	rom_snowbros,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	snowbros_input_ports,
+	input_ports_snowbros,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver snowbroa_driver =
+struct GameDriver driver_snowbroa =
 {
 	__FILE__,
-	&snowbros_driver,
+	&driver_snowbros,
 	"snowbroa",
 	"Snow Bros. - Nick & Tom (set 2)",
 	"1990",
@@ -439,22 +439,22 @@ struct GameDriver snowbroa_driver =
 	&machine_driver,
 	0,
 
-	snowbroa_rom,
+	rom_snowbroa,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	snowbros_input_ports,
+	input_ports_snowbros,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver snowbrob_driver =
+struct GameDriver driver_snowbrob =
 {
 	__FILE__,
-	&snowbros_driver,
+	&driver_snowbros,
 	"snowbrob",
 	"Snow Bros. - Nick & Tom (set 3)",
 	"1990",
@@ -464,22 +464,22 @@ struct GameDriver snowbrob_driver =
 	&machine_driver,
 	0,
 
-	snowbrob_rom,
+	rom_snowbrob,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	snowbros_input_ports,
+	input_ports_snowbros,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver snowbroj_driver =
+struct GameDriver driver_snowbroj =
 {
 	__FILE__,
-	&snowbros_driver,
+	&driver_snowbros,
 	"snowbroj",
 	"Snow Bros. - Nick & Tom (Japan)",
 	"1990",
@@ -489,12 +489,12 @@ struct GameDriver snowbroj_driver =
 	&machine_driver,
 	0,
 
-	snowbroj_rom,
+	rom_snowbroj,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	snowbros_input_ports,
+	input_ports_snowbros,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

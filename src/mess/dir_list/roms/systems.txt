@@ -1,4 +1,5 @@
-All SYSTEM BIOS files go in this Directory if they are zipped! ;-)
+All SYSTEM BIOS files (ROMS) go in this Directory if they are 
+zipped! ;-)
 
 eg.  coleco.zip
      a7800.zip

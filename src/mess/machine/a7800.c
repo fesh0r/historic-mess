@@ -68,11 +68,11 @@ int a7800_id_rom (const char *name, const char *gamename)
 	/* If no file was specified, don't bother */
     if (strlen(gamename)==0) return 1;
 
-	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_ROM_CART, 0))) return 0;
+	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_IMAGE_R, 0))) return 0;
     osd_fread(romfile,header,128);
 	osd_fclose (romfile);
 
-    if (memcmp(&tag[0],&header[1],9) == -1) return 0;    
+    if (memcmp(&tag[0],&header[1],9) == -1) return 0;
     return 1;
 }
 
@@ -92,10 +92,10 @@ int a7800_load_rom (void)
 	/* A cartridge isn't strictly mandatory, but it's recommended */
 	cartfile = NULL;
 	if (strlen(rom_name[0])==0)
-    {      
+    {
         if (errorlog) fprintf(errorlog,"A7800 - warning: no cartridge specified!\n");
 	}
-	else if (!(cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0)))
+	else if (!(cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0)))
 	{
         if (errorlog) fprintf(errorlog,"A7800 - Unable to locate cartridge: %s\n",rom_name[0]);
 		return 1;
@@ -161,7 +161,7 @@ int a7800_TIA_r(int offset) {
                 return 0x80;
         default:
             if (errorlog) fprintf(errorlog,"undefined TIA read %x\n",offset);
-            
+
     }
     return 0xFF;
 }
@@ -178,7 +178,7 @@ void a7800_TIA_w(int offset, int data) {
                 if (data & 0x04)
                     memcpy(&(ROM[0xF000]),a7800_cart_f000,0x1000);
                 else
-                    memcpy(&(ROM[0xF000]),a7800_bios_f000,0x1000);                                        
+                    memcpy(&(ROM[0xF000]),a7800_bios_f000,0x1000);
             }
         break;
     }
@@ -231,4 +231,4 @@ void a7800_RAM1_w(int offset, int data) {
 }
 
 
-      
+

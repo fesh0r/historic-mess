@@ -46,7 +46,7 @@ static struct IOWritePort writeport[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( pkunwar )
 	PORT_START	/* IN0 */
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY )
     PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY )
@@ -169,7 +169,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static struct AY8910interface ay8910_interface = {
 	2,		/* 2 chips */
-	1250000,	/* 1.25 MHz? */
+	3072000/2, // lax 11/03/1999  (1250000 -> 1536000 ???)
 	{ 25, 25 },
 	AY8910_DEFAULT_GAIN,
 	{ input_port_0_r, input_port_2_r },
@@ -226,7 +226,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( pkunwar_rom )
+ROM_START( pkunwar )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "pkwar.01r",    0x0000, 0x4000, 0xce2d2c7b )
 	ROM_LOAD( "pkwar.02r",    0x4000, 0x4000, 0xabc1f661 )
@@ -238,11 +238,11 @@ ROM_START( pkunwar_rom )
 	ROM_LOAD( "pkwar.03y",    0x8000, 0x4000, 0x63204400 )
 	ROM_LOAD( "pkwar.04y",    0xC000, 0x4000, 0x061dfca8 )
 
-	ROM_REGION(0x0020)	/* color PROMs */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "pkwar.col",    0x0000, 0x0020, 0xaf0fc5e2 )
 ROM_END
 
-ROM_START( pkunwarj_rom )
+ROM_START( pkunwarj )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "pgunwar.6",    0x0000, 0x4000, 0x357f3ef3 )
 	ROM_LOAD( "pgunwar.5",    0x4000, 0x4000, 0x0092e49e )
@@ -254,7 +254,7 @@ ROM_START( pkunwarj_rom )
 	ROM_LOAD( "pgunwar.2",    0x8000, 0x4000, 0xa2a43443 )
 	ROM_LOAD( "pkwar.04y",    0xC000, 0x4000, 0x061dfca8 )
 
-	ROM_REGION(0x0020)	/* color PROMs */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "pkwar.col",    0x0000, 0x0020, 0xaf0fc5e2 )
 ROM_END
 
@@ -299,7 +299,7 @@ static void pkunwar_hisave(void)
 
 
 
-struct GameDriver pkunwar_driver =
+struct GameDriver driver_pkunwar =
 {
 	__FILE__,
 	0,
@@ -312,23 +312,23 @@ struct GameDriver pkunwar_driver =
 	&machine_driver,
 	0,
 
-	pkunwar_rom,
+	rom_pkunwar,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pkunwar,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	pkunwar_hiload, pkunwar_hisave
 };
 
-struct GameDriver pkunwarj_driver =
+struct GameDriver driver_pkunwarj =
 {
 	__FILE__,
-	&pkunwar_driver,
+	&driver_pkunwar,
 	"pkunwarj",
 	"Penguin-Kun Wars (Japan)",
 	"1985?",
@@ -338,14 +338,14 @@ struct GameDriver pkunwarj_driver =
 	&machine_driver,
 	0,
 
-	pkunwarj_rom,
+	rom_pkunwarj,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pkunwar,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	pkunwar_hiload, pkunwar_hisave

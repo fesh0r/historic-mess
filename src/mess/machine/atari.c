@@ -105,7 +105,7 @@ int a800_load_rom(void)
 
 	/* load an optional monitor.rom */
 	sprintf(filename, "monitor.rom");
-	file = osd_fopen(Machine->gamedrv->name, "monitor.rom", OSD_FILETYPE_ROM_CART, 0);
+	file = osd_fopen(Machine->gamedrv->name, "monitor.rom", OSD_FILETYPE_IMAGE_R, 0);
 	if (file)
 	{
 		LOG((errorlog,"%s loading optional image '%s' to C000-CFFF\n", Machine->gamedrv->name, filename));
@@ -121,7 +121,7 @@ int a800_load_rom(void)
 	if( strlen(rom_name[0]) )
 	{
 		strcpy(filename, rom_name[0]);
-		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
+		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_R, 0);
 		if( file )
 		{
 			size = osd_fread(file, ROM + 0x10000, 0x2000);
@@ -136,7 +136,7 @@ int a800_load_rom(void)
 			if( strlen(rom_name[1]) )
 			{
 				strcpy(filename, rom_name[1]);
-				file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
+				file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_R, 0);
 				if( file )
 				{
 					size = osd_fread(file, ROM + 0x12000, 0x2000);
@@ -216,7 +216,7 @@ int a800xl_load_rom(void)
 	if( strlen(rom_name[0]) )
     {
         strcpy(filename, rom_name[0]);
-        file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
+        file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_R, 0);
         if( file )
         {
 			size = osd_fread(file, ROM + 0x14000, 0x2000);
@@ -266,7 +266,7 @@ int a5200_load_rom(void)
 	if( strlen(rom_name[0]) )
 	{
 		strcpy(filename, rom_name[0]);
-		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
+		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_R, 0);
 		if (file)
 		{
 			size = osd_fread(file, ROM + 0x4000, 0x8000);
@@ -435,12 +435,12 @@ static  void open_floppy(int drive)
             return;
         /* try to open the image read/write */
 		drv[drive].mode = 1;
-        file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE, 1);
+        file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE_RW, 1);
         if (!file)
         {
             /* if this fails, try to open it read only */
 			drv[drive].mode = 0;
-            file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE, 0);
+            file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE_RW, 0);
         }
         /* still failed: no chance to access image */
         if (!file)

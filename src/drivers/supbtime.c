@@ -140,7 +140,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /******************************************************************************/
 
-INPUT_PORTS_START( supbtime_input_ports )
+INPUT_PORTS_START( supbtime )
 	PORT_START	/* Player 1 controls */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -345,7 +345,7 @@ static struct MachineDriver supbtime_machine_driver =
 
 /******************************************************************************/
 
-ROM_START( supbtime_rom )
+ROM_START( supbtime )
 	ROM_REGION(0x40000) /* 68000 code */
 	ROM_LOAD_EVEN( "gc03.bin", 0x00000, 0x20000, 0xb5621f6a )
 	ROM_LOAD_ODD ( "gc04.bin", 0x00000, 0x20000, 0x551b2a0c )
@@ -378,7 +378,7 @@ static void custom_memory(void)
 
 /******************************************************************************/
 
-struct GameDriver supbtime_driver =
+struct GameDriver driver_supbtime =
 {
 	__FILE__,
 	0,
@@ -391,12 +391,12 @@ struct GameDriver supbtime_driver =
 	&supbtime_machine_driver,
 	custom_memory,
 
-	supbtime_rom,
+	rom_supbtime,
 	0, 0,
 	0,
 	0,
 
-	supbtime_input_ports,
+	input_ports_supbtime,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

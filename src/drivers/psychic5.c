@@ -409,7 +409,7 @@ static struct IOWritePort sound_writeport[] =
 	{ -1 }
 };
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( psychic5 )
     PORT_START
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
     PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
@@ -597,7 +597,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( psychic5_rom )
+ROM_START( psychic5 )
 	ROM_REGION( 0x20000 ) 				/* 2*64K for main CPU, Z80 */
 	ROM_LOAD( "p5d",          0x00000, 0x08000, 0x90259249 )
 	ROM_LOAD( "p5e",          0x10000, 0x10000, 0x72298f34 )
@@ -653,7 +653,7 @@ static void hisave(void)
 	}
 }
 
-struct GameDriver psychic5_driver =
+struct GameDriver driver_psychic5 =
 {
 	__FILE__,
 	0,
@@ -666,12 +666,12 @@ struct GameDriver psychic5_driver =
 	&machine_driver,
 	0,
 
-	psychic5_rom,
+	rom_psychic5,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_psychic5,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,

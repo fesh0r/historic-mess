@@ -496,7 +496,7 @@ static struct IOWritePort outzone_sound_writeport[] =
 
 
 
-INPUT_PORTS_START( rallybik_input_ports )
+INPUT_PORTS_START( rallybik )
 	PORT_START		/* (0) DSWA */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
@@ -581,7 +581,7 @@ INPUT_PORTS_START( rallybik_input_ports )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( truxton_input_ports )
+INPUT_PORTS_START( truxton )
 	PORT_START		/* (0) DSWA */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
@@ -692,7 +692,7 @@ INPUT_PORTS_START( truxton_input_ports )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( hellfire_input_ports )
+INPUT_PORTS_START( hellfire )
 	PORT_START		/* PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
@@ -787,7 +787,7 @@ INPUT_PORTS_START( hellfire_input_ports )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( zerowing_input_ports )
+INPUT_PORTS_START( zerowing )
 	PORT_START		/* PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -882,7 +882,7 @@ INPUT_PORTS_START( zerowing_input_ports )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( demonwld_input_ports )
+INPUT_PORTS_START( demonwld )
 	PORT_START		/* (0) DSWA */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
@@ -979,7 +979,7 @@ INPUT_PORTS_START( demonwld_input_ports )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( outzone_input_ports )
+INPUT_PORTS_START( outzone )
 	PORT_START		/* (0) PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
@@ -1070,7 +1070,7 @@ INPUT_PORTS_START( outzone_input_ports )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( vimana_input_ports )
+INPUT_PORTS_START( vimana )
 	PORT_START		/* (0) PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
@@ -1571,7 +1571,7 @@ static struct MachineDriver vm_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( rallybik_rom )
+ROM_START( rallybik )
 	ROM_REGION(0x80000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "rb_02.bin",   0x00000, 0x08000, 0x383386d7 )
 	ROM_LOAD_ODD ( "rb_01.bin",   0x00000, 0x08000, 0x7602f6a7 )
@@ -1599,7 +1599,7 @@ ROM_START( rallybik_rom )
 	ROM_LOAD( "rb_05.bin",  0x00000, 0x04000, 0x10814601 )
 ROM_END
 
-ROM_START( truxton_rom )
+ROM_START( truxton )
 	ROM_REGION(0x40000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "b65_11.bin",  0x00000, 0x20000, 0x1a62379a )
 	ROM_LOAD_ODD ( "b65_10.bin",  0x00000, 0x20000, 0xaff5195d )
@@ -1619,7 +1619,7 @@ ROM_START( truxton_rom )
 	ROM_LOAD( "b65_09.bin",  0x0000, 0x8000, 0xf1c0f410 )
 ROM_END
 
-ROM_START( hellfire_rom )
+ROM_START( hellfire )
 	ROM_REGION(0x40000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "b90-14.bin",  0x00000, 0x20000, 0x101df9f5 )
 	ROM_LOAD_ODD ( "b90-15.bin",  0x00000, 0x20000, 0xe67fd452 )
@@ -1639,7 +1639,7 @@ ROM_START( hellfire_rom )
 	ROM_LOAD( "b90-03.bin",  0x0000, 0x8000, 0x4058fa67 )
 ROM_END
 
-ROM_START( zerowing_rom )
+ROM_START( zerowing )
 	ROM_REGION(0x80000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "o15-11.rom",  0x00000, 0x08000, 0x6ff2b9a0 )
 	ROM_LOAD_ODD ( "o15-12.rom",  0x00000, 0x08000, 0x9773e60b )
@@ -1661,7 +1661,7 @@ ROM_START( zerowing_rom )
 	ROM_LOAD( "o15-13.rom",  0x0000, 0x8000, 0xe7b72383 )
 ROM_END
 
-ROM_START( demonwld_rom )
+ROM_START( demonwld )
 	ROM_REGION(0x40000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "rom10",  0x00000, 0x20000, 0x036ee46c )
 	ROM_LOAD_ODD ( "rom09",  0x00000, 0x20000, 0xbed746e3 )
@@ -1681,7 +1681,7 @@ ROM_START( demonwld_rom )
 	ROM_LOAD( "rom11",  0x00000, 0x08000, 0x397eca1b )
 ROM_END
 
-ROM_START( outzone_rom )
+ROM_START( outzone )
 	ROM_REGION(0x40000)		/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "rom7.bin",  0x00000, 0x20000, 0x936e25d8 )
 	ROM_LOAD_ODD ( "rom8.bin",  0x00000, 0x20000, 0xd19b3ecf )
@@ -1699,7 +1699,7 @@ ROM_START( outzone_rom )
 	ROM_LOAD( "rom9.bin",  0x0000, 0x8000, 0x73d8e235 )
 ROM_END
 
-ROM_START( outzonep_rom )
+ROM_START( outzonep )
 	ROM_REGION(0x40000)		/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "18.bin",  0x00000, 0x20000, 0x31a171bb )
 	ROM_LOAD_ODD ( "19.bin",  0x00000, 0x20000, 0x804ecfd1 )
@@ -1736,7 +1736,7 @@ ROM_START( outzonep_rom )
 	ROM_LOAD( "rom9.bin",  0x0000, 0x8000, 0x73d8e235 )
 ROM_END
 
-ROM_START( vimana_rom )
+ROM_START( vimana )
 	ROM_REGION(0x40000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "vim07.bin",  0x00000, 0x20000, 0x1efaea84 )
 	ROM_LOAD_ODD ( "vim08.bin",  0x00000, 0x20000, 0xe45b7def )
@@ -1755,7 +1755,7 @@ ROM_START( vimana_rom )
 	ROM_LOAD( "hd647180.snd",  0x00000, 0x08000, 0x00000000 )
 ROM_END
 
-ROM_START( vimana2_rom )
+ROM_START( vimana2 )
 	ROM_REGION(0x40000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "vimana07.bin",  0x00000, 0x20000, 0x5a4bf73e )
 	ROM_LOAD_ODD ( "vimana08.bin",  0x00000, 0x20000, 0x03ba27e8 )
@@ -1779,7 +1779,7 @@ ROM_END
 
 /****************************************************************************/
 
-struct GameDriver rallybik_driver =
+struct GameDriver driver_rallybik =
 {
 	__FILE__,
 	0,
@@ -1792,19 +1792,19 @@ struct GameDriver rallybik_driver =
 	&rallybik_machine_driver,
 	0,
 
-	rallybik_rom,
+	rom_rallybik,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	rallybik_input_ports,
+	input_ports_rallybik,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver truxton_driver =
+struct GameDriver driver_truxton =
 {
 	__FILE__,
 	0,
@@ -1817,19 +1817,19 @@ struct GameDriver truxton_driver =
 	&truxton_machine_driver,
 	0,
 
-	truxton_rom,
+	rom_truxton,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	truxton_input_ports,
+	input_ports_truxton,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver hellfire_driver =
+struct GameDriver driver_hellfire =
 {
 	__FILE__,
 	0,
@@ -1842,19 +1842,19 @@ struct GameDriver hellfire_driver =
 	&hf_machine_driver,
 	0,
 
-	hellfire_rom,
+	rom_hellfire,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	hellfire_input_ports,
+	input_ports_hellfire,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver zerowing_driver =
+struct GameDriver driver_zerowing =
 {
 	__FILE__,
 	0,
@@ -1867,19 +1867,19 @@ struct GameDriver zerowing_driver =
 	&zw_machine_driver,
 	0,
 
-	zerowing_rom,
+	rom_zerowing,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	zerowing_input_ports,
+	input_ports_zerowing,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver demonwld_driver =
+struct GameDriver driver_demonwld =
 {
 	__FILE__,
 	0,
@@ -1891,19 +1891,19 @@ struct GameDriver demonwld_driver =
 	0,
 	&demonwld_machine_driver,
 	0,
-	demonwld_rom,
+	rom_demonwld,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	demonwld_input_ports,
+	input_ports_demonwld,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver outzone_driver =
+struct GameDriver driver_outzone =
 {
 	__FILE__,
 	0,
@@ -1916,22 +1916,22 @@ struct GameDriver outzone_driver =
 	&outzone_machine_driver,
 	0,
 
-	outzone_rom,
+	rom_outzone,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	outzone_input_ports,
+	input_ports_outzone,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver outzonep_driver =
+struct GameDriver driver_outzonep =
 {
 	__FILE__,
-	&outzone_driver,
+	&driver_outzone,
 	"outzonep",
 	"Out Zone (bootleg)",
 	"1990",
@@ -1941,19 +1941,19 @@ struct GameDriver outzonep_driver =
 	&outzone_machine_driver,
 	0,
 
-	outzonep_rom,
+	rom_outzonep,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	outzone_input_ports,
+	input_ports_outzone,
 
 	0, 0, 0,	/* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver vimana_driver =
+struct GameDriver driver_vimana =
 {
 	__FILE__,
 	0,
@@ -1962,44 +1962,44 @@ struct GameDriver vimana_driver =
 	"1991",
 	"Toaplan",
 	"Darren Olafson (MAME driver)\nCarl-Henrik Skårstedt (Technical)\nMagnus Danielsson (Technical)\n",
-	GAME_NO_SOUND,
+	0,
 	&vm_machine_driver,
 	0,
 
-	vimana_rom,
+	rom_vimana,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	vimana_input_ports,
+	input_ports_vimana,
 
 	0, 0, 0,	/* colors, palette, colortable */
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_NO_SOUND,
 	toaplan1_hiload, toaplan1_hisave
 };
 
-struct GameDriver vimana2_driver =
+struct GameDriver driver_vimana2 =
 {
 	__FILE__,
-	&vimana_driver,
+	&driver_vimana,
 	"vimana2",
 	"Vimana (set 2)",
 	"1991",
 	"Toaplan",
 	"Darren Olafson (MAME driver)\nCarl-Henrik Skårstedt (Technical)\nMagnus Danielsson (Technical)\n",
-	GAME_NO_SOUND,
+	0,
 	&vm_machine_driver,
 	0,
 
-	vimana2_rom,
+	rom_vimana2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	vimana_input_ports,
+	input_ports_vimana,
 
 	0, 0, 0,	/* colors, palette, colortable */
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_NO_SOUND,
 	toaplan1_hiload, toaplan1_hisave
 };
 

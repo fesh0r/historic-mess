@@ -186,7 +186,7 @@ static struct MemoryWriteAddress gbusters_writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( gbusters )
 	PORT_START	/* DSW #1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
@@ -377,7 +377,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( gbusters_rom )
+ROM_START( gbusters )
 	ROM_REGION( 0x30800 ) /* code + banked roms + space for banked RAM */
 	ROM_LOAD( "878n02.rom", 0x10000, 0x08000, 0x51697aaa )	/* ROM K13 */
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -447,7 +447,7 @@ static void gfx_untangle(void)
 
 
 
-struct GameDriver gbusters_driver =
+struct GameDriver driver_gbusters =
 {
 	__FILE__,
 	0,
@@ -460,12 +460,12 @@ struct GameDriver gbusters_driver =
 	&machine_driver,
 	0,
 
-	gbusters_rom,
+	rom_gbusters,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_gbusters,
 
 	0, 0, 0,
     ORIENTATION_ROTATE_90,

@@ -260,7 +260,7 @@ static struct IOWritePort sound_writeport[] =
 
 
 
-INPUT_PORTS_START( tigeroad_input_ports )
+INPUT_PORTS_START( tigeroad )
 	PORT_START  /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -342,7 +342,7 @@ INPUT_PORTS_START( tigeroad_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( f1dream_input_ports )
+INPUT_PORTS_START( f1dream )
 	PORT_START  /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -499,7 +499,7 @@ static void irqhandler(int irq)
 static struct YM2203interface ym2203_interface =
 {
 	2,          /* 2 chips */
-	3500000,    /* 3.5 MHz ? */
+	3579545,    /* 3.579 MHz ? */
 	{ YM2203_VOL(25,25), YM2203_VOL(25,25) },
 	AY8910_DEFAULT_GAIN,
 	{ 0 },
@@ -565,7 +565,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( tigeroad_rom )
+ROM_START( tigeroad )
 	ROM_REGION(0x40000) /* 256K for 68000 code */
 	ROM_LOAD_EVEN( "tru02.bin",    0x00000, 0x20000, 0x8d283a95 )
 	ROM_LOAD_ODD( "tru04.bin",    0x00000, 0x20000, 0x72e2ef20 )
@@ -592,7 +592,7 @@ ROM_START( tigeroad_rom )
 	ROM_LOAD( "tru05.bin",    0x0000, 0x8000, 0xf9a7c9bf )
 ROM_END
 
-ROM_START( f1dream_rom )
+ROM_START( f1dream )
 	ROM_REGION(0x40000) /* 256K for 68000 code */
 	ROM_LOAD_EVEN( "06j_02.bin",   0x00000, 0x20000, 0x3c2ec697 )
 	ROM_LOAD_ODD( "06k_03.bin",   0x00000, 0x20000, 0x85ebad91 )
@@ -623,7 +623,7 @@ ROM_START( f1dream_rom )
 	ROM_LOAD( "12k_04.bin",   0x0000, 0x8000, 0x4b9a7524 )
 ROM_END
 
-ROM_START( f1dreamb_rom )
+ROM_START( f1dreamb )
 	ROM_REGION(0x40000) /* 256K for 68000 code */
 	ROM_LOAD_EVEN( "f1d_04.bin",   0x00000, 0x10000, 0x903febad )
 	ROM_LOAD_ODD( "f1d_05.bin",   0x00000, 0x10000, 0x666fa2a7 )
@@ -731,7 +731,7 @@ static void f1dream_hisave(void)
 
 
 
-struct GameDriver tigeroad_driver =
+struct GameDriver driver_tigeroad =
 {
 	__FILE__,
 	0,
@@ -744,10 +744,10 @@ struct GameDriver tigeroad_driver =
 	&machine_driver,
 	tigeroad_driver_init,
 
-	tigeroad_rom,
+	rom_tigeroad,
 	0,0,0,0,
 
-	tigeroad_input_ports,
+	input_ports_tigeroad,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -755,7 +755,7 @@ struct GameDriver tigeroad_driver =
 };
 
 /* F1 Dream has an Intel 8751 microcontroller for protection */
-struct GameDriver f1dream_driver =
+struct GameDriver driver_f1dream =
 {
 	__FILE__,
 	0,
@@ -768,20 +768,20 @@ struct GameDriver f1dream_driver =
 	&machine_driver,
 	f1dream_driver_init,
 
-	f1dream_rom,
+	rom_f1dream,
 	0,0,0,0,
 
-	f1dream_input_ports,
+	input_ports_f1dream,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	f1dream_hiload, f1dream_hisave
 };
 
-struct GameDriver f1dreamb_driver =
+struct GameDriver driver_f1dreamb =
 {
 	__FILE__,
-	&f1dream_driver,
+	&driver_f1dream,
 	"f1dreamb",
 	"F-1 Dream (bootleg)",
 	"1988",
@@ -791,10 +791,10 @@ struct GameDriver f1dreamb_driver =
 	&machine_driver,
 	tigeroad_driver_init,
 
-	f1dreamb_rom,
+	rom_f1dreamb,
 	0,0,0,0,
 
-	f1dream_input_ports,
+	input_ports_f1dream,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

@@ -221,7 +221,7 @@ static struct IOWritePort sound_writeport[] =
 
 
 
-INPUT_PORTS_START( senjyo_input_ports )
+INPUT_PORTS_START( senjyo )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -303,7 +303,7 @@ INPUT_PORTS_START( senjyo_input_ports )
 	PORT_DIPSETTING(    0x80, "Always come at you" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( starforc_input_ports )
+INPUT_PORTS_START( starforc )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -561,7 +561,7 @@ MACHINE_DRV(starforc);
 
 ***************************************************************************/
 
-ROM_START( senjyo_rom )
+ROM_START( senjyo )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "08m_05t.bin", 0x0000, 0x2000, 0xb1f3544d )
 	ROM_LOAD( "08k_04t.bin", 0x2000, 0x2000, 0xe34468a8 )
@@ -592,7 +592,7 @@ ROM_START( senjyo_rom )
     ROM_LOAD( "07b.bin",    0x0000, 0x0020, 0x68db8300 )	/* unknown - timing? */
 ROM_END
 
-ROM_START( starforc_rom )
+ROM_START( starforc )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "starforc.3",   0x0000, 0x4000, 0x8ba27691 )
 	ROM_LOAD( "starforc.2",   0x4000, 0x4000, 0x0fc4d2d6 )
@@ -621,7 +621,7 @@ ROM_START( starforc_rom )
     ROM_LOAD( "07b.bin",    0x0000, 0x0020, 0x68db8300 )	/* unknown - timing? */
 ROM_END
 
-ROM_START( starfore_rom )
+ROM_START( starfore )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "starfore.005", 0x0000, 0x2000, 0x825f7ebe )
 	ROM_LOAD( "starfore.004", 0x2000, 0x2000, 0xfbcecb65 )
@@ -652,7 +652,7 @@ ROM_START( starfore_rom )
     ROM_LOAD( "07b.bin",    0x0000, 0x0020, 0x68db8300 )	/* unknown - timing? */
 ROM_END
 
-ROM_START( megaforc_rom )
+ROM_START( megaforc )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "mf3.bin",      0x0000, 0x4000, 0xd3ea82ec )
 	ROM_LOAD( "mf2.bin",      0x4000, 0x4000, 0xaa320718 )
@@ -757,7 +757,7 @@ static void starforc_hisave(void)
 
 
 
-struct GameDriver senjyo_driver =
+struct GameDriver driver_senjyo =
 {
 	__FILE__,
 	0,
@@ -770,12 +770,12 @@ struct GameDriver senjyo_driver =
 	&senjyo_machine_driver,
 	senjyo_init,
 
-	senjyo_rom,
+	rom_senjyo,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	senjyo_input_ports,
+	input_ports_senjyo,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -783,7 +783,7 @@ struct GameDriver senjyo_driver =
 	0, 0
 };
 
-struct GameDriver starforc_driver =
+struct GameDriver driver_starforc =
 {
 	__FILE__,
 	0,
@@ -796,12 +796,12 @@ struct GameDriver starforc_driver =
 	&starforc_machine_driver,
 	starforc_init,
 
-	starforc_rom,
+	rom_starforc,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	starforc_input_ports,
+	input_ports_starforc,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -809,10 +809,10 @@ struct GameDriver starforc_driver =
 	starforc_hiload, starforc_hisave
 };
 
-struct GameDriver starfore_driver =
+struct GameDriver driver_starfore =
 {
 	__FILE__,
-	&starforc_driver,
+	&driver_starforc,
 	"starfore",
 	"Star Force (encrypted)",
 	"1984",
@@ -822,12 +822,12 @@ struct GameDriver starfore_driver =
 	&starforc_machine_driver,
 	starfore_init,
 
-	starfore_rom,
+	rom_starfore,
 	0, suprloco_decode,
 	0,
 	0,      /* sound_prom */
 
-	starforc_input_ports,
+	input_ports_starforc,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -835,10 +835,10 @@ struct GameDriver starfore_driver =
 	starforc_hiload, starforc_hisave
 };
 
-struct GameDriver megaforc_driver =
+struct GameDriver driver_megaforc =
 {
 	__FILE__,
-	&starforc_driver,
+	&driver_starforc,
 	"megaforc",
 	"Mega Force",
 	"1985",
@@ -848,12 +848,12 @@ struct GameDriver megaforc_driver =
 	&starforc_machine_driver,
 	starforc_init,
 
-	megaforc_rom,
+	rom_megaforc,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	starforc_input_ports,
+	input_ports_starforc,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,

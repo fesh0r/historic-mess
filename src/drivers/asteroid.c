@@ -176,63 +176,63 @@ void llander_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 static struct MemoryReadAddress asteroid_readmem[] =
 {
 	{ 0x0000, 0x03ff, MRA_RAM },
-	{ 0x6800, 0x7fff, MRA_ROM },
-	{ 0x5000, 0x57ff, MRA_ROM }, /* vector rom */
-	{ 0xf800, 0xffff, MRA_ROM }, /* for the reset / interrupt vectors */
-	{ 0x4000, 0x47ff, MRA_RAM, &vectorram, &vectorram_size },
 	{ 0x2000, 0x2007, asteroid_IN0_r }, /* IN0 */
 	{ 0x2400, 0x2407, asteroid_IN1_r }, /* IN1 */
 	{ 0x2800, 0x2803, asteroid_DSW1_r }, /* DSW1 */
+	{ 0x4000, 0x47ff, MRA_RAM },
+	{ 0x5000, 0x57ff, MRA_ROM }, /* vector rom */
+	{ 0x6800, 0x7fff, MRA_ROM },
+	{ 0xf800, 0xffff, MRA_ROM }, /* for the reset / interrupt vectors */
 	{ -1 }	/* end of table */
 };
 
 static struct MemoryWriteAddress asteroid_writemem[] =
 {
 	{ 0x0000, 0x03ff, MWA_RAM },
-	{ 0x4000, 0x47ff, MWA_RAM },
 	{ 0x3000, 0x3000, avgdvg_go },
 	{ 0x3200, 0x3200, asteroid_bank_switch_w },
 	{ 0x3400, 0x3400, watchdog_reset_w },
 	{ 0x3600, 0x3600, asteroid_explode_w },
 	{ 0x3a00, 0x3a00, asteroid_thump_w },
 	{ 0x3c00, 0x3c05, asteroid_sounds_w },
-	{ 0x6800, 0x7fff, MWA_ROM },
+	{ 0x4000, 0x47ff, MWA_RAM, &vectorram, &vectorram_size },
 	{ 0x5000, 0x57ff, MWA_ROM }, /* vector rom */
+	{ 0x6800, 0x7fff, MWA_ROM },
 	{ -1 }	/* end of table */
 };
 
 static struct MemoryReadAddress astdelux_readmem[] =
 {
 	{ 0x0000, 0x03ff, MRA_RAM },
-	{ 0x6000, 0x7fff, MRA_ROM },
-	{ 0x4800, 0x57ff, MRA_ROM }, /* vector rom */
-	{ 0xf800, 0xffff, MRA_ROM }, /* for the reset / interrupt vectors */
-	{ 0x4000, 0x47ff, MRA_RAM, &vectorram, &vectorram_size },
 	{ 0x2000, 0x2007, asteroid_IN0_r }, /* IN0 */
 	{ 0x2400, 0x2407, asteroid_IN1_r }, /* IN1 */
 	{ 0x2800, 0x2803, asteroid_DSW1_r }, /* DSW1 */
 	{ 0x2c00, 0x2c0f, pokey1_r },
 	{ 0x2c40, 0x2c7f, atari_vg_earom_r },
+	{ 0x4000, 0x47ff, MRA_RAM },
+	{ 0x4800, 0x57ff, MRA_ROM }, /* vector rom */
+	{ 0x6000, 0x7fff, MRA_ROM },
+	{ 0xf800, 0xffff, MRA_ROM }, /* for the reset / interrupt vectors */
 	{ -1 }	/* end of table */
 };
 
 static struct MemoryWriteAddress astdelux_writemem[] =
 {
 	{ 0x0000, 0x03ff, MWA_RAM },
-	{ 0x4000, 0x47ff, MWA_RAM },
-	{ 0x3000, 0x3000, avgdvg_go },
+	{ 0x2405, 0x2405, astdelux_sounds_w }, /* thrust sound */
 	{ 0x2c00, 0x2c0f, pokey1_w },
+	{ 0x3000, 0x3000, avgdvg_go },
 	{ 0x3200, 0x323f, atari_vg_earom_w },
 	{ 0x3400, 0x3400, watchdog_reset_w },
 	{ 0x3600, 0x3600, asteroid_explode_w },
-	{ 0x2405, 0x2405, astdelux_sounds_w }, /* thrust sound */
 	{ 0x3a00, 0x3a00, atari_vg_earom_ctrl },
 /*	{ 0x3c00, 0x3c03, astdelux_led_w },*/ /* P1 LED, P2 LED, unknown, thrust? */
 	{ 0x3c00, 0x3c03, MWA_NOP }, /* P1 LED, P2 LED, unknown, thrust? */
 	{ 0x3c04, 0x3c04, astdelux_bank_switch_w },
 	{ 0x3c05, 0x3c07, coin_counter_w },
-	{ 0x6000, 0x7fff, MWA_ROM },
+	{ 0x4000, 0x47ff, MWA_RAM, &vectorram, &vectorram_size },
 	{ 0x4800, 0x57ff, MWA_ROM }, /* vector rom */
+	{ 0x6000, 0x7fff, MWA_ROM },
 	{ -1 }	/* end of table */
 };
 
@@ -244,14 +244,14 @@ static struct MemoryReadAddress llander_readmem[] =
 /*	{ 0x0000, 0x01ff, MRA_RAM }, */
 	{ 0x0000, 0x00ff, llander_zeropage_r },
 	{ 0x0100, 0x01ff, MRA_RAM },
-	{ 0x6000, 0x7fff, MRA_ROM },
-	{ 0x4800, 0x5fff, MRA_ROM }, /* vector rom */
-	{ 0xf800, 0xffff, MRA_ROM }, /* for the reset / interrupt vectors */
-	{ 0x4000, 0x47ff, MRA_RAM, &vectorram, &vectorram_size },
 	{ 0x2000, 0x2000, llander_IN0_r }, /* IN0 */
 	{ 0x2400, 0x2407, asteroid_IN1_r }, /* IN1 */
 	{ 0x2800, 0x2803, asteroid_DSW1_r }, /* DSW1 */
 	{ 0x2c00, 0x2c00, input_port_3_r }, /* IN3 */
+	{ 0x4000, 0x47ff, MRA_RAM },
+	{ 0x4800, 0x5fff, MRA_ROM }, /* vector rom */
+	{ 0x6000, 0x7fff, MRA_ROM },
+	{ 0xf800, 0xffff, MRA_ROM }, /* for the reset / interrupt vectors */
 	{ -1 }  /* end of table */
 };
 
@@ -260,18 +260,18 @@ static struct MemoryWriteAddress llander_writemem[] =
 /*	{ 0x0000, 0x01ff, MWA_RAM }, */
 	{ 0x0000, 0x00ff, llander_zeropage_w },
 	{ 0x0100, 0x01ff, MWA_RAM },
-	{ 0x4000, 0x47ff, MWA_RAM },
 	{ 0x3000, 0x3000, avgdvg_go },
 	{ 0x3200, 0x3200, llander_led_w },
 	{ 0x3400, 0x3400, watchdog_reset_w },
 	{ 0x3c00, 0x3c00, llander_sounds_w },
 	{ 0x3e00, 0x3e00, llander_snd_reset_w },
-	{ 0x6000, 0x7fff, MWA_ROM },
+	{ 0x4000, 0x47ff, MWA_RAM, &vectorram, &vectorram_size },
 	{ 0x4800, 0x5fff, MWA_ROM }, /* vector rom */
+	{ 0x6000, 0x7fff, MWA_ROM },
 	{ -1 }  /* end of table */
 };
 
-INPUT_PORTS_START ( asteroid_input_ports )
+INPUT_PORTS_START( asteroid )
 	PORT_START /* IN0 */
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	/* Bit 2 and 3 are handled in the machine dependent part. */
@@ -319,7 +319,7 @@ INPUT_PORTS_START ( asteroid_input_ports )
 	PORT_DIPSETTING (   0x00, DEF_STR( Free_Play ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START ( astdelux_input_ports )
+INPUT_PORTS_START( astdelux )
 	PORT_START /* IN0 */
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	/* Bit 2 and 3 are handled in the machine dependent part. */
@@ -387,7 +387,7 @@ INPUT_PORTS_START ( astdelux_input_ports )
 	PORT_DIPSETTING (   0xe0, "None" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START ( llander_input_ports )
+INPUT_PORTS_START( llander )
 	PORT_START /* IN0 */
 	/* Bit 0 is VG_HALT, handled in the machine dependant part */
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -436,7 +436,7 @@ INPUT_PORTS_START ( llander_input_ports )
 	PORT_ANALOGX( 0xff, 0x00, IPT_PADDLE|IPF_REVERSE, 100, 10, 0, 0, 255, KEYCODE_UP, KEYCODE_DOWN, JOYCODE_1_UP, JOYCODE_1_DOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START ( llander1_input_ports )
+INPUT_PORTS_START( llander1 )
 	PORT_START /* IN0 */
 	/* Bit 0 is VG_HALT, handled in the machine dependant part */
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -480,28 +480,6 @@ INPUT_PORTS_START ( llander1_input_ports )
 	PORT_START /* IN3 */
 	PORT_ANALOGX( 0xff, 0x00, IPT_PADDLE|IPF_REVERSE, 100, 10, 0, 0, 255, KEYCODE_UP, KEYCODE_DOWN, JOYCODE_1_UP, JOYCODE_1_DOWN )
 INPUT_PORTS_END
-
-static struct GfxLayout fakelayout =
-{
-	1,1,
-	0,
-	1,
-	{ 0 },
-	{ 0 },
-	{ 0 },
-	0
-};
-
-static struct GfxDecodeInfo gfxdecodeinfo[] =
-{
-	{ 0, 0,      &fakelayout,     0, 256 },
-	{ -1 } /* end of array */
-};
-
-
-
-static unsigned char asteroid_color_prom[] = { VEC_PAL_BW        };
-static unsigned char astdelux_color_prom[] = { VEC_PAL_MONO_AQUA };
 
 
 
@@ -588,10 +566,30 @@ static void asteroid_hisave(void)
  *		osd_fwrite(f,&RAM[0x0023],3*10+3*11);
  */
 
+
+
+static const char *asteroid_sample_names[] =
+{
+	"*asteroid",
+	"explode1.wav",
+	"explode2.wav",
+	"explode3.wav",
+	"thrust.wav",
+	"thumphi.wav",
+	"thumplo.wav",
+	"fire.wav",
+	"lsaucer.wav",
+	"ssaucer.wav",
+	"sfire.wav",
+	"life.wav",
+    0	/* end of array */
+};
+
 static struct Samplesinterface asteroid_samples_interface =
 {
 	7,	/* 7 channels */
-	25	/* volume */
+	25,	/* volume */
+	asteroid_sample_names
 };
 
 static struct MachineDriver asteroid_machine_driver =
@@ -612,9 +610,9 @@ static struct MachineDriver asteroid_machine_driver =
 
 	/* video hardware */
 	400, 300, { 0, 1040, 70, 950 },
-	gfxdecodeinfo,
+	0,
 	256, 256,
-	avg_init_colors,
+	avg_init_palette_white,
 
 	VIDEO_TYPE_VECTOR,
 	0,
@@ -654,10 +652,20 @@ static struct POKEYinterface pokey_interface =
 	{ input_port_3_r }
 };
 
+static const char *astdelux_sample_names[] =
+{
+	"explode1.wav",
+	"explode2.wav",
+	"explode3.wav",
+	"thrust.wav",
+	0
+};
+
 static struct Samplesinterface astdelux_samples_interface =
 {
 	3,	/* 3 channels */
-	25	/* volume */
+	25,	/* volume */
+	astdelux_sample_names
 };
 
 
@@ -679,9 +687,9 @@ static struct MachineDriver astdelux_machine_driver =
 
 	/* video hardware */
 	400, 300, { 0, 1040, 70, 950 },
-	gfxdecodeinfo,
+	0,
 	256, 256,
-	avg_init_colors,
+	avg_init_palette_aqua,
 
 	VIDEO_TYPE_VECTOR,
 	0,
@@ -730,7 +738,7 @@ static struct MachineDriver llander_machine_driver =
 
 	/* video hardware */
 	400, 300, { 0, 1050, 0, 900 },
-	gfxdecodeinfo,
+	0,
 	256, 256,
 	llander_init_colors,
 
@@ -756,24 +764,7 @@ static struct MachineDriver llander_machine_driver =
 
 ***************************************************************************/
 
-static const char *asteroid_sample_names[] =
-{
-	"*asteroid",
-	"explode1.wav",
-	"explode2.wav",
-	"explode3.wav",
-	"thrust.wav",
-	"thumphi.wav",
-	"thumplo.wav",
-	"fire.wav",
-	"lsaucer.wav",
-	"ssaucer.wav",
-	"sfire.wav",
-	"life.wav",
-    0	/* end of array */
-};
-
-ROM_START( asteroi1_rom )
+ROM_START( asteroi1 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "035145.01",    0x6800, 0x0800, 0xe9bfda64 )
 	ROM_LOAD( "035144.01",    0x7000, 0x0800, 0xe53c28a9 )
@@ -783,7 +774,7 @@ ROM_START( asteroi1_rom )
 	ROM_LOAD( "035127.01",    0x5000, 0x0800, 0x99699366 )
 ROM_END
 
-ROM_START( asteroid_rom )
+ROM_START( asteroid )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "035145.02",    0x6800, 0x0800, 0x0cc75459 )
 	ROM_LOAD( "035144.02",    0x7000, 0x0800, 0x096ed35c )
@@ -795,7 +786,7 @@ ROM_END
 
 
 
-struct GameDriver asteroid_driver =
+struct GameDriver driver_asteroid =
 {
 	__FILE__,
 	0,
@@ -808,23 +799,23 @@ struct GameDriver asteroid_driver =
 	&asteroid_machine_driver,
 	0,
 
-	asteroid_rom,
+	rom_asteroid,
 	0, 0,
-	asteroid_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	asteroid_input_ports,
+	input_ports_asteroid,
 
-	asteroid_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	asteroid_hiload, asteroid_hisave
 };
 
-struct GameDriver asteroi1_driver =
+struct GameDriver driver_asteroi1 =
 {
 	__FILE__,
-	&asteroid_driver,
+	&driver_asteroid,
 	"asteroi1",
 	"Asteroids (rev 1)",
 	"1979",
@@ -834,20 +825,20 @@ struct GameDriver asteroi1_driver =
 	&asteroid_machine_driver,
 	0,
 
-	asteroi1_rom,
+	rom_asteroi1,
 	0, 0,
-	asteroid_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	asteroid_input_ports,
+	input_ports_asteroid,
 
-	asteroid_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	asteroid1_hiload, asteroid1_hisave
 };
 
-ROM_START( astdelux_rom )
+ROM_START( astdelux )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "036430.02",    0x6000, 0x0800, 0xa4d7a525 )
 	ROM_LOAD( "036431.02",    0x6800, 0x0800, 0xd4004aae )
@@ -859,7 +850,7 @@ ROM_START( astdelux_rom )
 	ROM_LOAD( "036799.01",    0x5000, 0x0800, 0x7d511572 )
 ROM_END
 
-ROM_START( astdelu1_rom )
+ROM_START( astdelu1 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "036430.01",    0x6000, 0x0800, 0x8f5dabc6 )
 	ROM_LOAD( "036431.01",    0x6800, 0x0800, 0x157a8516 )
@@ -873,16 +864,7 @@ ROM_END
 
 
 
-static const char *astdelux_sample_names[] =
-{
-	"explode1.wav",
-	"explode2.wav",
-	"explode3.wav",
-	"thrust.wav",
-	0
-};
-
-struct GameDriver astdelux_driver =
+struct GameDriver driver_astdelux =
 {
 	__FILE__,
 	0,
@@ -895,23 +877,23 @@ struct GameDriver astdelux_driver =
 	&astdelux_machine_driver,
 	0,
 
-	astdelux_rom,
+	rom_astdelux,
 	0, 0,
-	astdelux_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	astdelux_input_ports,
+	input_ports_astdelux,
 
-	astdelux_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	atari_vg_earom_load, atari_vg_earom_save
 };
 
-struct GameDriver astdelu1_driver =
+struct GameDriver driver_astdelu1 =
 {
 	__FILE__,
-	&astdelux_driver,
+	&driver_astdelux,
 	"astdelu1",
 	"Asteroids Deluxe (rev 1)",
 	"1980",
@@ -921,21 +903,21 @@ struct GameDriver astdelu1_driver =
 	&astdelux_machine_driver,
 	0,
 
-	astdelu1_rom,
+	rom_astdelu1,
 	0, 0,
-	asteroid_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	astdelux_input_ports,
+	input_ports_astdelux,
 
-	astdelux_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	atari_vg_earom_load, atari_vg_earom_save
 };
 
 
-ROM_START( llander_rom )
+ROM_START( llander )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "034572.02",    0x6000, 0x0800, 0xb8763eea )
 	ROM_LOAD( "034571.02",    0x6800, 0x0800, 0x77da4b2f )
@@ -950,7 +932,7 @@ ROM_START( llander_rom )
 	ROM_LOAD( "034597.01",    0x5800, 0x0800, 0x00000000 )
 ROM_END
 
-ROM_START( llander1_rom )
+ROM_START( llander1 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "034572.01",    0x6000, 0x0800, 0x2aff3140 )
 	ROM_LOAD( "034571.01",    0x6800, 0x0800, 0x493e24b7 )
@@ -965,7 +947,7 @@ ROM_START( llander1_rom )
 	ROM_LOAD( "034597.01",    0x5800, 0x0800, 0x00000000 )
 ROM_END
 
-struct GameDriver llander_driver =
+struct GameDriver driver_llander =
 {
 	__FILE__,
 	0,
@@ -978,23 +960,23 @@ struct GameDriver llander_driver =
 	&llander_machine_driver,
 	0,
 
-	llander_rom,
+	rom_llander,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	llander_input_ports,
+	input_ports_llander,
 
-	asteroid_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0
 };
 
-struct GameDriver llander1_driver =
+struct GameDriver driver_llander1 =
 {
 	__FILE__,
-	&llander_driver,
+	&driver_llander,
 	"llander1",
 	"Lunar Lander (rev 1)",
 	"1979",
@@ -1004,14 +986,14 @@ struct GameDriver llander1_driver =
 	&llander_machine_driver,
 	0,
 
-	llander1_rom,
+	rom_llander1,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	llander1_input_ports,
+	input_ports_llander1,
 
-	asteroid_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0

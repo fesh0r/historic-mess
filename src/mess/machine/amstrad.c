@@ -49,7 +49,7 @@ extern unsigned char *Amstrad_Memory;
 int amstrad_opbaseoverride(int pc)
 {
   /* clear op base override */
-  cpu_setOPbaseoverride(1,0);
+  cpu_setOPbaseoverride(0,0);
 
   if (snapshot_loaded)
   {
@@ -73,14 +73,13 @@ void    amstrad_init_machine(void)
                 if (memcmp(&file_loaded[0],"MV - SNA",8)==0)
                 {
                    snapshot_loaded = 1;
-
-                   cpu_setOPbaseoverride(1,amstrad_opbaseoverride);
+                   cpu_setOPbaseoverride(0,amstrad_opbaseoverride);
                 }
         }
 
         if (!snapshot_loaded)
         {
-                Amstrad_Reset();
+              Amstrad_Reset();
         }
 }
 
@@ -154,7 +153,7 @@ void    amstrad_handle_snapshot(unsigned char *pSnapshot)
         RegData = (pSnapshot[0x023] & 0x0ff) | ((pSnapshot[0x024] & 0x0ff)<<8);
 
         cpu_set_reg(Z80_PC, RegData);
-        cpu_set_pc(RegData);
+//        cpu_set_pc(RegData);
 
         RegData = (pSnapshot[0x025] & 0x0ff);
         cpu_set_reg(Z80_IM, RegData);
@@ -170,8 +169,6 @@ void    amstrad_handle_snapshot(unsigned char *pSnapshot)
 
         RegData = (pSnapshot[0x02c] & 0x0ff) | ((pSnapshot[0x02d] & 0x0ff)<<8);
         cpu_set_reg(Z80_HL2, RegData);
-
-
 
         /* init GA */
         for (i=0; i<17; i++)
@@ -243,42 +240,46 @@ int	amstrad_rom_load()
 {
         void *file;
 
-        file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0);
-
-        if (file)
+        if (strlen(rom_name[0]))
         {
-                int datasize;
-                unsigned char *data;
+                file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, 0);
 
-                /* get file size */
-                datasize = osd_fsize(file);
-
-                if (datasize!=0)
+                if (file)
                 {
-                        /* malloc memory for this data */
-                        data = malloc(datasize);
+                        int datasize;
+                        unsigned char *data;
 
-                        if (data!=NULL)
+                        /* get file size */
+                        datasize = osd_fsize(file);
+
+                        if (datasize!=0)
                         {
-                                /* read whole file */
-                                osd_fread(file, data, datasize);
+                                /* malloc memory for this data */
+                                data = malloc(datasize);
 
-                                file_loaded = data;
+                                if (data!=NULL)
+                                {
+                                        /* read whole file */
+                                        osd_fread(file, data, datasize);
 
-                                /* close file */
+                                        file_loaded = data;
+
+                                        /* close file */
+                                        osd_fclose(file);
+
+                                        if (errorlog) fprintf(errorlog,"File loaded!\r\n");
+
+                                        /* ok! */
+                                        return 0;
+                                }
                                 osd_fclose(file);
 
-                                /* ok! */
-                                return 0;
                         }
-                        osd_fclose(file);
 
+
+                        return 1;
                 }
-
-
-                return 1;
         }
-
         return 0;
 }
 

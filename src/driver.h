@@ -48,6 +48,9 @@ struct MachineCPU
 enum
 {
 	CPU_DUMMY,
+#if (HAS_GENSYNC)
+	CPU_GENSYNC,
+#endif
 #if (HAS_Z80)
 	CPU_Z80,
 #endif
@@ -126,11 +129,14 @@ enum
 #if (HAS_HD63705)
 	CPU_HD63705,	/* M6805 family but larger address space, different stack size */
 #endif
-#if (HAS_M6309)
-	CPU_M6309,		/* same as CPU_M6809 (actually it's not 100% compatible) */
+#if (HAS_HD6309)
+	CPU_HD6309,		/* same as CPU_M6809 (actually it's not 100% compatible) */
 #endif
 #if (HAS_M6809)
 	CPU_M6809,
+#endif
+#if (HAS_KONAMI)
+	CPU_KONAMI,
 #endif
 #if (HAS_M68000)
 	CPU_M68000,
@@ -164,9 +170,6 @@ enum
 #endif
 #if (HAS_PDP1)
 	CPU_PDP1,
-#endif
-#if (HAS_KONAMI)
-	CPU_KONAMI,
 #endif
 	CPU_COUNT
 };
@@ -214,7 +217,7 @@ struct MachineDriver
 	struct GfxDecodeInfo *gfxdecodeinfo;
 	unsigned int total_colors;	/* palette is 3*total_colors bytes long */
 	unsigned int color_table_len;	/* length in shorts of the color lookup table */
-	void (*vh_convert_color_prom)(unsigned char *palette, unsigned short *colortable,const unsigned char *color_prom);
+	void (*vh_init_palette)(unsigned char *palette, unsigned short *colortable,const unsigned char *color_prom);
 
 	int video_attributes;	/* ASG 081897 */
 
@@ -228,9 +231,9 @@ struct MachineDriver
 
 	/* sound hardware */
 	int sound_attributes;
+	int obsolete1;
 	int obsolete2;
 	int obsolete3;
-	int obsolete4;
 	struct MachineSound sound[MAX_SOUND];
 };
 
@@ -270,10 +273,6 @@ struct MachineDriver
 /* bit 2 of the video attributes indicates whether or not the driver modifies the palette */
 #define	VIDEO_MODIFIES_PALETTE	0x0004
 
-/* ASG 980209 - added: */
-/* bit 3 of the video attributes indicates whether or not the driver wants 16-bit color */
-#define	VIDEO_SUPPORTS_16BIT		0x0008
-
 /* ASG 980417 - added: */
 /* bit 4 of the video attributes indicates that the driver wants its refresh after */
 /*       the VBLANK instead of before. */
@@ -296,6 +295,11 @@ struct MachineDriver
 
 
 
+struct obsolete
+{
+	int fake;
+};
+
 struct GameDriver
 {
 	const char *source_file;	/* set this to __FILE__ */
@@ -305,8 +309,8 @@ struct GameDriver
 	const char *description;
 	const char *year;
 	const char *manufacturer;
-	const char *obsolete;
-	int flags;	/* see defines below */
+	const char *obsolete1;
+	struct obsolete *obsolete2;
 	const struct MachineDriver *drv;
 	void (*driver_init)(void);	/* optional function to be called during initialization */
 								/* This is called ONCE, unlike Machine->init_machine */
@@ -316,6 +320,7 @@ struct GameDriver
    #ifdef MESS
    int (*rom_load)(void); /* used to load the ROM and set up memory regions */
 	int (*rom_id)(const char *name, const char *gamename); /* returns 1 if the ROM will work with this driver */
+	const char **file_extension;    /* default file extensions for the system. */
 	int num_of_rom_slots;
 	int num_of_floppy_drives;
 	int num_of_hard_drives;
@@ -325,21 +330,15 @@ struct GameDriver
 	void (*rom_decode)(void);		/* used to decrypt the ROMs after loading them */
 	void (*opcode_decode)(void);	/* used to decrypt the CPU opcodes in the ROMs, */
 									/* if the encryption is different from the above. */
-	const char **samplenames;		/* optional array of names of samples to load. */
-									/* drivers can retrieve them in Machine->samples */
-	struct ADPCMsample *adpcm_sample_list;	/* was sound_prom */
+	struct obsolete *obsolete3;
+	struct obsolete *obsolete4;
 
 	struct InputPort *input_ports;
 
-	/* if they are available, provide a dump of the color proms, or even */
-	/* better load them from disk like the other ROMs. */
-	/* If you load them from disk, you must place them in a memory region by */
-	/* itself, and use the PROM_MEMORY_REGION macro below to say in which */
-	/* region they are. */
-	const unsigned char *color_prom;
-	const unsigned char *palette;
-	const unsigned short *colortable;
-	int orientation;	/* orientation of the monitor; see defines below */
+	struct obsolete *obsolete5;
+	struct obsolete *obsolete6;
+	struct obsolete *obsolete7;
+	UINT32 flags;	/* orientation and other flags; see defines below */
 
 	int (*hiscore_load)(void);	/* will be called every vblank until it */
 						/* returns nonzero */
@@ -349,31 +348,30 @@ struct GameDriver
 
 
 /* values for the flags field */
-#define GAME_NOT_WORKING		0x0001
-#define GAME_WRONG_COLORS		0x0002	/* colors are totally wrong */
-#define GAME_IMPERFECT_COLORS	0x0004	/* colors are not 100% accurate, but close */
-#define GAME_NO_SOUND			0x0008	/* sound is missing */
-#define GAME_IMPERFECT_SOUND	0x0010	/* sound is known to be wrong */
+
+#define ORIENTATION_MASK        0x0007
+#define	ORIENTATION_DEFAULT		0x0000
+#define	ORIENTATION_FLIP_X		0x0001	/* mirror everything in the X direction */
+#define	ORIENTATION_FLIP_Y		0x0002	/* mirror everything in the Y direction */
+#define ORIENTATION_SWAP_XY		0x0004	/* mirror along the top-left/bottom-right diagonal */
+#define	ORIENTATION_ROTATE_90	(ORIENTATION_SWAP_XY|ORIENTATION_FLIP_X)	/* rotate clockwise 90 degrees */
+#define	ORIENTATION_ROTATE_180	(ORIENTATION_FLIP_X|ORIENTATION_FLIP_Y)		/* rotate 180 degrees */
+#define	ORIENTATION_ROTATE_270	(ORIENTATION_SWAP_XY|ORIENTATION_FLIP_Y)	/* rotate counter-clockwise 90 degrees */
+/* IMPORTANT: to perform more than one transformation, DO NOT USE |, use ^ instead. */
+/* For example, to rotate 90 degrees counterclockwise and flip horizontally, use: */
+/* ORIENTATION_ROTATE_270 ^ ORIENTATION_FLIP_X */
+/* Always remember that FLIP is performed *after* SWAP_XY. */
+
+#define GAME_NOT_WORKING		0x0008
+#define GAME_WRONG_COLORS		0x0010	/* colors are totally wrong */
+#define GAME_IMPERFECT_COLORS	0x0020	/* colors are not 100% accurate, but close */
+#define GAME_NO_SOUND			0x0040	/* sound is missing */
+#define GAME_IMPERFECT_SOUND	0x0080	/* sound is known to be wrong */
+#define	GAME_REQUIRES_16BIT		0x0100	/* cannot fit in 256 colors */
 
 #ifdef MESS
  #define GAME_COMPUTER			0x8000	/* Driver is a computer (needs full keyboard) */
 #endif
-
-#define PROM_MEMORY_REGION(region) ((const unsigned char *)((-(region))-1))
-
-
-#define	ORIENTATION_DEFAULT		0x00
-#define	ORIENTATION_FLIP_X		0x01	/* mirror everything in the X direction */
-#define	ORIENTATION_FLIP_Y		0x02	/* mirror everything in the Y direction */
-#define ORIENTATION_SWAP_XY		0x04	/* mirror along the top-left/bottom-right diagonal */
-#define	ORIENTATION_ROTATE_90	(ORIENTATION_SWAP_XY|ORIENTATION_FLIP_X)	/* rotate clockwise 90 degrees */
-#define	ORIENTATION_ROTATE_180	(ORIENTATION_FLIP_X|ORIENTATION_FLIP_Y)	/* rotate 180 degrees */
-#define	ORIENTATION_ROTATE_270	(ORIENTATION_SWAP_XY|ORIENTATION_FLIP_Y)	/* rotate counter-clockwise 90 degrees */
-/* IMPORTANT: to perform more than one transformation, DO NOT USE |, use ^ instead. */
-/* For example, to rotate 90 degrees counterclockwise and flip horizontally, use: */
-/* ORIENTATION_ROTATE_270 ^ ORIENTATION_FLIP_X*/
-/* Always remember that FLIP is performed *after* SWAP_XY. */
-
 
 extern const struct GameDriver *drivers[];
 

@@ -4,7 +4,7 @@
 
   see machine/ti99.c for some details and references
 
-  NOTE!!!!!!!!!!  Until Nicola adds the new TMS5220 drivers, you should uncomment two lines
+  NOTE!!!!!!!!!!  Until the new TMS5220 drivers are added, you should uncomment two lines
   in tms5220interface like this :
 
   static struct TMS5220interface tms5220interface =
@@ -13,13 +13,13 @@
     10000,     Volume.  I don't know the best value.
     NULL,      no IRQ callback
     //2,         memory region where the speech ROM is.  -1 means no speech ROM
-    //0,         memory size of speech rom (0 -> take memory region length)
+    //0          memory size of speech rom (0 -> take memory region length)
   };
 */
 
 #include "driver.h"
-
 #include "mess/vidhrdw/tms9928a.h"
+
 
 /* protos for support code in machine/ti99.c */
 
@@ -79,7 +79,7 @@ static struct MemoryReadAddress readmem[] =
   { 0x0000, 0x1fff, MRA_ROM },          /*system ROM*/
   { 0x2000, 0x3fff, MRA_RAM },          /*lower 8kb of RAM extension*/
   { 0x4000, 0x5fff, ti99_rb_disk },     /*DSR ROM... only disk is emulated */
-  { 0x6000, 0x7fff, MRA_ROM },          /*cartidge memory... some RAM is actually possible*/
+  { 0x6000, 0x7fff, /*MRA_ROM*/MRA_BANK1 },          /*cartidge memory... some RAM is actually possible*/
   { 0x8000, 0x82ff, ti99_rb_scratchpad },   /*RAM PAD, mapped to 0x8300-0x83ff*/
   { 0x8300, 0x83ff, MRA_RAM },          /*RAM PAD*/
   { 0x8400, 0x87ff, MRA_NOP },          /*soundchip write*/
@@ -160,7 +160,7 @@ static struct IOReadPort readport[] =
 /*
   Input ports, used by machine code for TI keyboard and joystick emulation.
 */
-INPUT_PORTS_START(ti99_input_ports)
+INPUT_PORTS_START(ti99)
 
   PORT_START    /* col 0 */
     PORT_BITX(0x88, IP_ACTIVE_LOW, IPT_UNUSED, "unused", IP_KEY_NONE, IP_JOY_NONE)
@@ -316,9 +316,9 @@ static struct TMS5220interface tms5220interface =
 {
 	640000L,  /* 640kHz -> 8kHz output */
 	10000,    /* Volume.  I don't know the best value. */
-	NULL,     /* no IRQ callback */
-	//2,        /* memory region where the speech ROM is.  -1 means no speech ROM */
-	//0,        /* memory size of speech rom (0 -> take memory region length) */
+	NULL/*,*/     /* no IRQ callback */
+/*	2,*/        /* memory region where the speech ROM is.  -1 means no speech ROM */
+/*	0*/        /* memory size of speech rom (0 -> take memory region length) */
 };
 
 /*
@@ -361,8 +361,8 @@ static struct MachineDriver machine_driver =
 	192,                    /* screen height */
 	{ 0, 256-1, 0, 192-1},  /* visible_area */
 	gfxdecodeinfo,          /* graphics decode info (???)*/
-	TMS9928A_PALETTE_SIZE,TMS9928A_COLORTABLE_SIZE/sizeof(unsigned short),
-	0,
+	TMS9928A_PALETTE_SIZE,TMS9928A_COLORTABLE_SIZE,
+	tms9928A_init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
 	0,
@@ -392,7 +392,7 @@ static struct MachineDriver machine_driver =
 /*
   ROM loading
 */
-ROM_START(ti99_rom)
+ROM_START(ti99)
 	/*CPU memory space*/
 	ROM_REGION(0x10000)
 	ROM_LOAD("994arom.bin",  0x0000, 0x2000, 0xdb8f33e5)    /* system ROMs */
@@ -417,14 +417,15 @@ struct GameDriver ti99_driver =
 	"1999",
 	"Texas Instrument",
 	"R Nabet, based on Ed Swartz's V9T9.",
-	/*GAME_COMPUTER*/0, /*we don't need it (hopefully)*/
+	0,
 	&machine_driver,
 	0,
 
-	ti99_rom,
+	rom_ti99,
 	ti99_load_rom,  /* load rom_file images */
 	ti99_id_rom,    /* identify rom images */
-	3,              /* number of ROM slots */
+	0,
+    3,              /* number of ROM slots */
 	/* a TI99 console only had one cartidge slot, but cutting the ROMs in 3 files seems to be
 	the only way to handle cartidge until I use a header format.
 	Note that there sometimes was a speech ROM slot in the speech synthesizer, and you could plug
@@ -438,13 +439,13 @@ struct GameDriver ti99_driver =
 	0,            /* pointer to sample names */
 	0,            /* sound_prom */
 
-	ti99_input_ports,
+	input_ports_ti99,
 
-	0,            /* color_prom */
-	TMS9928A_palette,     /* color palette */
-	TMS9928A_colortable,  /* color lookup table */
+	0,
+	0,
+	0,
 
-	ORIENTATION_DEFAULT,  /* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,  /* orientation */
 
 	0,            /* hiscore load */
 	0,            /* hiscore save */

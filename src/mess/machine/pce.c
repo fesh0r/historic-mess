@@ -25,7 +25,7 @@ int pce_load_rom(void)
     if(errorlog) fprintf(errorlog, "*** pce_load_rom : %s\n", rom_name[0]);
 
     /* open file to get size */
-    fp = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0);
+    fp = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0);
     if(!fp) return 1;
     ROM = malloc(PCE_ROM_MAXSIZE);
     if(!ROM) return 1;

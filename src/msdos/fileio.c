@@ -162,12 +162,24 @@ static void cache_allocate (unsigned entries)
 
 #endif
 
+/* This function can be called several times with different parameters,
+ * for example by "mame -verifyroms *". */
 void decompose_rom_sample_path (char *rompath, char *samplepath)
 {
-    char *token;
+	char *token;
 
-    roms = malloc( strlen(rompath) + 1);
-    samples = malloc( strlen(samplepath) + 1);
+	/* start with zero path components */
+	rompathc = samplepathc = 0;
+
+	if (!roms)
+		roms = malloc( strlen(rompath) + 1);
+	else
+		roms = realloc( roms, strlen(rompath) + 1);
+
+	if (!samples)
+		samples = malloc( strlen(samplepath) + 1);
+	else
+		samples = realloc( samples, strlen(samplepath) + 1);
 
 	if( !roms || !samples )
 	{
@@ -248,8 +260,8 @@ int osd_faccess (const char *newfilename, int filetype)
 
 #ifdef MESS
 	if( filetype == OSD_FILETYPE_ROM ||
-		filetype == OSD_FILETYPE_ROM_CART ||
-		filetype == OSD_FILETYPE_IMAGE )
+		filetype == OSD_FILETYPE_IMAGE_R ||
+		filetype == OSD_FILETYPE_IMAGE_RW )
 #else
 	if( filetype == OSD_FILETYPE_ROM )
 #endif
@@ -343,7 +355,7 @@ void *osd_fopen (const char *game, const char *filename, int filetype, int _writ
 	case OSD_FILETYPE_ROM:
 	case OSD_FILETYPE_SAMPLE:
 #ifdef MESS
-	case OSD_FILETYPE_ROM_CART:
+	case OSD_FILETYPE_IMAGE_R:
 #endif
 
 		/* only for reading */
@@ -419,7 +431,7 @@ void *osd_fopen (const char *game, const char *filename, int filetype, int _writ
 
 #ifdef MESS
 			/* Zip cart support for MESS */
-			if( !found && filetype == OSD_FILETYPE_ROM_CART )
+			if( !found && filetype == OSD_FILETYPE_IMAGE_R )
 			{
 				char *extension = strrchr (name, '.');    /* find extension */
 				if( extension )
@@ -489,7 +501,7 @@ void *osd_fopen (const char *game, const char *filename, int filetype, int _writ
 
 #ifdef MESS
 		 /* get the crc to database-match name */
-		 if (found && filetype==OSD_FILETYPE_ROM_CART)
+		 if (found && filetype==OSD_FILETYPE_IMAGE_R)
 		 {
 			/* Re-Get CRC */
 			if(f->type==2) /* zipped */
@@ -504,11 +516,10 @@ void *osd_fopen (const char *game, const char *filename, int filetype, int _writ
 			if(f->crc!=0) check_crc(f->crc, f->length, gamename);
 		 }
 #endif
-
 		break;
 
 #ifdef MESS
-	case OSD_FILETYPE_IMAGE:
+	case OSD_FILETYPE_IMAGE_RW:
 		{
 			char file[256];
 			char *extension;
@@ -1223,4 +1234,3 @@ int check_crc(int crc, int length, char * driver)
 }
 
 #endif
-

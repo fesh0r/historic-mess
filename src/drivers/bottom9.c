@@ -180,7 +180,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( bottom9 )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
@@ -308,7 +308,7 @@ static struct MachineDriver machine_driver =
 	{
 		{
 			CPU_M6809,
-			3000000, /* ? */
+			2000000, /* ? */
 			0,
 			readmem,writemem,0,0,
 			bottom9_interrupt,1
@@ -355,7 +355,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( bottom9_rom )
+ROM_START( bottom9 )
 	ROM_REGION( 0x28000 ) /* code + banked roms + space for banked ram */
 	ROM_LOAD( "891n03.k17",   0x10000, 0x10000, 0x8b083ff3 )
     ROM_LOAD( "891-t02.k15",  0x20000, 0x08000, 0x2c10ced2 )
@@ -412,7 +412,7 @@ ROM_START( bottom9_rom )
 	ROM_LOAD( "891b11.f23",   0x0000, 0x0100, 0xecb854aa )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( bottom9n_rom )
+ROM_START( bottom9n )
 	ROM_REGION( 0x28000 ) /* code + banked roms + space for banked ram */
 	ROM_LOAD( "891n03.k17",   0x10000, 0x10000, 0x8b083ff3 )
     ROM_LOAD( "891n02.k15",   0x20000, 0x08000, 0xd44d9ed4 )
@@ -479,7 +479,7 @@ static void gfx_untangle(void)
 
 
 
-struct GameDriver bottom9_driver =
+struct GameDriver driver_bottom9 =
 {
 	__FILE__,
 	0,
@@ -492,12 +492,12 @@ struct GameDriver bottom9_driver =
 	&machine_driver,
 	0,
 
-	bottom9_rom,
+	rom_bottom9,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_bottom9,
 
 	0, 0, 0,
     ORIENTATION_DEFAULT,
@@ -505,10 +505,10 @@ struct GameDriver bottom9_driver =
 	0, 0
 };
 
-struct GameDriver bottom9n_driver =
+struct GameDriver driver_bottom9n =
 {
 	__FILE__,
-	&bottom9_driver,
+	&driver_bottom9,
 	"bottom9n",
 	"Bottom of the Ninth (version N)",
 	"1989",
@@ -518,12 +518,12 @@ struct GameDriver bottom9n_driver =
 	&machine_driver,
 	0,
 
-	bottom9n_rom,
+	rom_bottom9n,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_bottom9,
 
 	0, 0, 0,
     ORIENTATION_DEFAULT,

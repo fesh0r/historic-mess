@@ -1,10 +1,10 @@
-==================================================================
-MESS info - modified/added MAME core files (see below for details)
-==================================================================
+==============
+MESS misc info 
+==============
 
 [general]
 -> MAKEFILE changes:
-1.  EMULATOR_EXE = mess.exe
+1.  EMULATOR_EXE = mess.exe (also K6 and I686 versions?)
 2.  DEBUG = 1 (optional)
 3.  NEOFREE = 1
 4.  uncomment all the required CPU cores (use all is ok) see below
@@ -18,24 +18,28 @@ MESS info - modified/added MAME core files (see below for details)
 12. add messdir:
 
 # uncomment the following lines to include a CPU core
- CPUS+=Z80@
- CPUS+=M6502@
- CPUS+=M65C02@
- CPUS+=M6510@
- CPUS+=H6280@
- CPUS+=I86@
- CPUS+=M6809@
- CPUS+=M68000@
- CPUS+=TMS9900@
- CPUS+=PDP1@
+CPUS+=Z80@
+CPUS+=M6502@
+CPUS+=M65C02@
+CPUS+=M6510@
+CPUS+=H6280@
+CPUS+=I86@
+CPUS+=M6809@
+CPUS+=M68000@
+CPUS+=TMS9900@
+CPUS+=PDP1@
 
 # uncomment the following lines to include a sound core
- SOUNDS+=DAC@
- SOUNDS+=AY8910@
- SOUNDS+=YM2612@
- SOUNDS+=SN76496@
- SOUNDS+=POKEY@
- SOUNDS+=TIA@
- SOUNDS+=NES@
- SOUNDS+=ASTROCADE@
- SOUNDS+=TMS5220@
+SOUNDS+=CUSTOM@
+SOUNDS+=SAMPLES@ <----work around for bug ;-)
+SOUNDS+=DAC@
+SOUNDS+=AY8910@
+SOUNDS+=YM2612@
+SOUNDS+=YM3812@
+SOUNDS+=SN76496@
+SOUNDS+=POKEY@
+SOUNDS+=TIA@
+SOUNDS+=NES@
+SOUNDS+=ASTROCADE@
+SOUNDS+=TMS5220@
+

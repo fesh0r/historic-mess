@@ -140,7 +140,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( blktiger )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
@@ -270,7 +270,7 @@ static void irqhandler(int irq)
 static struct YM2203interface ym2203_interface =
 {
 	2,			/* 2 chips */
-	3500000,	/* 3.5 MHz ? (hand tuned) */
+	3579545,	/* 3.579 MHz ? (hand tuned) */
 	{ YM2203_VOL(15,15), YM2203_VOL(15,15) },
 	AY8910_DEFAULT_GAIN,
 	{ 0 },
@@ -334,7 +334,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( blktiger_rom )
+ROM_START( blktiger )
 	ROM_REGION(0x50000)	/* 64k for code + banked ROMs images */
 	ROM_LOAD( "blktiger.5e",  0x00000, 0x08000, 0xa8f98f22 )	/* CODE */
 	ROM_LOAD( "blktiger.6e",  0x10000, 0x10000, 0x7bef96e8 )	/* 0+1 */
@@ -363,7 +363,7 @@ ROM_START( blktiger_rom )
 	ROM_LOAD( "mb7114e.11l",  0x0300, 0x0100, 0xe5490b68 )
 ROM_END
 
-ROM_START( bktigerb_rom )
+ROM_START( bktigerb )
 	ROM_REGION(0x50000)	/* 64k for code + banked ROMs images */
 	ROM_LOAD( "btiger1.f6",   0x00000, 0x08000, 0x9d8464e8 )	/* CODE */
 	ROM_LOAD( "blktiger.6e",  0x10000, 0x10000, 0x7bef96e8 )	/* 0+1 */
@@ -392,7 +392,7 @@ ROM_START( bktigerb_rom )
 	ROM_LOAD( "mb7114e.11l",  0x0300, 0x0100, 0xe5490b68 )
 ROM_END
 
-ROM_START( blkdrgon_rom )
+ROM_START( blkdrgon )
 	ROM_REGION(0x50000)	/* 64k for code + banked ROMs images */
 	ROM_LOAD( "blkdrgon.5e",  0x00000, 0x08000, 0x27ccdfbc )	/* CODE */
 	ROM_LOAD( "blkdrgon.6e",  0x10000, 0x10000, 0x7d39c26f )	/* 0+1 */
@@ -421,7 +421,7 @@ ROM_START( blkdrgon_rom )
 	ROM_LOAD( "mb7114e.11l",  0x0300, 0x0100, 0xe5490b68 )
 ROM_END
 
-ROM_START( blkdrgnb_rom )
+ROM_START( blkdrgnb )
 	ROM_REGION(0x50000)	/* 64k for code + banked ROMs images */
 	ROM_LOAD( "j1-5e",        0x00000, 0x08000, 0x97e84412 )	/* CODE */
 	ROM_LOAD( "blkdrgon.6e",  0x10000, 0x10000, 0x7d39c26f )	/* 0+1 */
@@ -493,7 +493,7 @@ static void hisave(void)
 
 
 
-struct GameDriver blktiger_driver =
+struct GameDriver driver_blktiger =
 {
 	__FILE__,
 	0,
@@ -506,12 +506,12 @@ struct GameDriver blktiger_driver =
 	&machine_driver,
 	0,
 
-	blktiger_rom,
+	rom_blktiger,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_blktiger,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -519,10 +519,10 @@ struct GameDriver blktiger_driver =
 	hiload, hisave
 };
 
-struct GameDriver bktigerb_driver =
+struct GameDriver driver_bktigerb =
 {
 	__FILE__,
-	&blktiger_driver,
+	&driver_blktiger,
 	"bktigerb",
 	"Black Tiger (bootleg)",
 	"1987",
@@ -532,12 +532,12 @@ struct GameDriver bktigerb_driver =
 	&machine_driver,
 	0,
 
-	bktigerb_rom,
+	rom_bktigerb,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_blktiger,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -545,10 +545,10 @@ struct GameDriver bktigerb_driver =
 	hiload, hisave
 };
 
-struct GameDriver blkdrgon_driver =
+struct GameDriver driver_blkdrgon =
 {
 	__FILE__,
-	&blktiger_driver,
+	&driver_blktiger,
 	"blkdrgon",
 	"Black Dragon",
 	"1987",
@@ -558,12 +558,12 @@ struct GameDriver blkdrgon_driver =
 	&machine_driver,
 	0,
 
-	blkdrgon_rom,
+	rom_blkdrgon,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_blktiger,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -571,10 +571,10 @@ struct GameDriver blkdrgon_driver =
 	hiload, hisave
 };
 
-struct GameDriver blkdrgnb_driver =
+struct GameDriver driver_blkdrgnb =
 {
 	__FILE__,
-	&blktiger_driver,
+	&driver_blktiger,
 	"blkdrgnb",
 	"Black Dragon (bootleg)",
 	"1987",
@@ -584,12 +584,12 @@ struct GameDriver blkdrgnb_driver =
 	&machine_driver,
 	0,
 
-	blkdrgnb_rom,
+	rom_blkdrgnb,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_blktiger,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

@@ -286,7 +286,7 @@ int cgenie_rom_load(void)
 		memset(gfx + i * 8, i, 8);
 
 	strcpy(filename, "newe000.rom");
-	rom = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
+	rom = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_R, 0);
 	if (rom)
 	{
 		if (errorlog)
@@ -303,7 +303,7 @@ int cgenie_rom_load(void)
 	/* if a CAS or CMD name is given */
 	if( rom_name[0] )
 	{
-		cmd = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE, 0);
+		cmd = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, 0);
 		if (cmd)
 		{
 			result = cgenie_cmd_load(cmd);
@@ -344,7 +344,7 @@ static void tape_put_byte(UINT8 value)
 			{
 				char filename[12 + 1];
 				sprintf(filename, "basic%c.cas", tape_buffer[1]);
-				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE, 2);
+				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 2);
 				osd_fwrite(tape_put_file, tape_buffer, 9);
 			}
 			else
@@ -353,7 +353,7 @@ static void tape_put_byte(UINT8 value)
 			{
 				char filename[12 + 1];
 				sprintf(filename, "%-6.6s.cas", tape_buffer + 2);
-				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE, 2);
+				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 2);
 				osd_fwrite(tape_put_file, tape_buffer, 9);
 			}
 		}
@@ -560,7 +560,7 @@ static void tape_get_open(void)
 		sprintf(filename, "%-6.6s.cas", RAM + 0x41e8);
 		if( errorlog )
 			fprintf(errorlog, "tape_get_open filename %s\n", filename);
-		tape_get_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE, 0);
+		tape_get_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 0);
 		if( tape_get_file )
 		{
 			osd_fread(tape_get_file, buffer, sizeof(TAPE_HEADER));

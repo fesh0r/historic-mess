@@ -18,7 +18,7 @@ extern int ignorecfg;
 extern int frameskip,autoframeskip;
 extern int scanlines, use_tweaked, video_sync, wait_vsync, use_triplebuf;
 extern int stretch;
-extern int vgafreq, always_synced, color_depth, skiplines, skipcolumns;
+extern int vgafreq, always_synced, skiplines, skipcolumns;
 extern float osd_gamma_correction;
 extern int gfx_mode, gfx_width, gfx_height;
 
@@ -70,7 +70,7 @@ extern char *hidir, *cfgdir, *inpdir, *stadir, *memcarddir;
 extern char *artworkdir, *screenshotdir, *alternate_name;
 
 #ifdef MESS
-extern char *crcdir;
+  extern char *crcdir;
 #endif
 
 /* from video.c, for centering tweaked modes */
@@ -364,8 +364,11 @@ void parse_cmdline (int argc, char **argv, int game_index)
 
 	vgafreq     = get_int    ("config", "vgafreq",      NULL,  -1);
 	always_synced = get_bool ("config", "alwayssynced", NULL, 0);
-	color_depth = get_int    ("config", "depth",        NULL, 16);
-	if (color_depth != 8) color_depth = 16;
+
+	tmpstr             = get_string ("config", "depth", NULL, "auto");
+	options.color_depth = atoi(tmpstr);
+	if (options.color_depth != 8 && options.color_depth != 16) options.color_depth = 0;	/* auto */
+
 	skiplines   = get_int    ("config", "skiplines",    NULL, 0);
 	skipcolumns = get_int    ("config", "skipcolumns",  NULL, 0);
 	f_beam      = get_float  ("config", "beam",         NULL, 1.0);
@@ -417,7 +420,13 @@ void parse_cmdline (int argc, char **argv, int game_index)
 	options.cheat      = get_bool ("config", "cheat", NULL, 0);
 	options.mame_debug = get_bool ("config", "debug", NULL, 0);
 	cheatfile  = get_string ("config", "cheatfile", "cf", "CHEAT.DAT");    /* JCK 980917 */
-	history_filename  = get_string ("config", "historyfile", NULL, "HISTORY.DAT");    /* JCK 980917 */
+
+ 	#ifndef MESS
+ 	history_filename  = get_string ("config", "historyfile", NULL, "HISTORY.DAT");    /* JCK 980917 */
+ 	#else
+ 	history_filename  = get_string ("config", "historyfile", NULL, "SYSINFO.DAT");
+ 	#endif
+
 	mameinfo_filename  = get_string ("config", "mameinfofile", NULL, "MAMEINFO.DAT");    /* JCK 980917 */
 
 	/* get resolution */
@@ -430,14 +439,13 @@ void parse_cmdline (int argc, char **argv, int game_index)
 	memcarddir = get_string ("directory", "memcard", NULL, "MEMCARD");
 	stadir     = get_string ("directory", "sta",     NULL, "STA");
 	artworkdir = get_string ("directory", "artwork", NULL, "ARTWORK");
-
-	#ifdef MESS
-		crcdir = get_string ("directory", "crc", NULL, "CRC");
-	#endif
+ 	#ifdef MESS
+ 		crcdir = get_string ("directory", "crc", NULL, "CRC");
+ 	#endif
 
 	/* get tweaked modes info */
 	tw224x288_h			= get_int ("tweaked", "224x288_h",              NULL, 0x5f);
-	tw224x288_v     	= get_int ("tweaked", "224x288_v",              NULL, 0x53);
+	tw224x288_v     	= get_int ("tweaked", "224x288_v",              NULL, 0x54);
 	tw240x256_h     = get_int ("tweaked", "240x256_h",              NULL, 0x67);
 	tw240x256_v     = get_int ("tweaked", "240x256_v",              NULL, 0x23);
 	tw256x240_h     = get_int ("tweaked", "256x240_h",              NULL, 0x55);

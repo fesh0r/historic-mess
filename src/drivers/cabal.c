@@ -147,9 +147,9 @@ static struct MemoryReadAddress readmem_cpu[] = {
 	{ 0x00000, 0x3ffff, MRA_ROM },
 	{ 0x40000, 0x437ff, MRA_RAM },
 	{ 0x43c00, 0x4ffff, MRA_RAM },
-	{ 0x43800, 0x43bff, MRA_RAM, &spriteram, &spriteram_size },
-	{ 0x60000, 0x607ff, MRA_BANK1,&colorram },  /* text layer */
-	{ 0x80000, 0x801ff, cabal_background_r, &videoram, &videoram_size }, /* background layer */
+	{ 0x43800, 0x43bff, MRA_RAM },
+	{ 0x60000, 0x607ff, MRA_BANK1 },  /* text layer */
+	{ 0x80000, 0x801ff, cabal_background_r }, /* background layer */
 	{ 0x80200, 0x803ff, MRA_BANK2 },
 	{ 0xa0000, 0xa0012, cabal_io_r },
 	{ 0xe0000, 0xe07ff, paletteram_word_r },
@@ -158,10 +158,11 @@ static struct MemoryReadAddress readmem_cpu[] = {
 };
 static struct MemoryWriteAddress writemem_cpu[] = {
 	{ 0x00000, 0x3ffff, MWA_ROM },
-	{ 0x40000, 0x43bff, MWA_RAM },
+	{ 0x40000, 0x437ff, MWA_RAM },
+	{ 0x43800, 0x43bff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x43c00, 0x4ffff, MWA_RAM },
-	{ 0x60000, 0x607ff, MWA_BANK1 },
-	{ 0x80000, 0x801ff, cabal_background_w },
+	{ 0x60000, 0x607ff, MWA_BANK1, &colorram },
+	{ 0x80000, 0x801ff, cabal_background_w, &videoram, &videoram_size },
 	{ 0x80200, 0x803ff, MWA_BANK2 },
 	{ 0xc0040, 0xc0041, MWA_NOP }, /* ??? */
 	{ 0xc0080, 0xc0081, MWA_NOP }, /* ??? */
@@ -247,7 +248,7 @@ static struct MemoryWriteAddress cabalbl_writemem_adpcm[] = {
 
 /***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( cabal )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY)
@@ -469,7 +470,7 @@ static struct MachineDriver cabalbl_machine_driver =
 	}
 };
 
-ROM_START( cabal_rom )
+ROM_START( cabal )
 	ROM_REGION(0x50000)	/* 64k for cpu code */
 	ROM_LOAD_EVEN( "h7_512.bin",      0x00000, 0x10000, 0x8fe16fb4 )
 	ROM_LOAD_ODD ( "h6_512.bin",      0x00000, 0x10000, 0x6968101c )
@@ -506,7 +507,7 @@ ROM_START( cabal_rom )
 	ROM_LOAD( "1-1u",            0x10000, 0x10000, 0x8b3e0789 )
 ROM_END
 
-ROM_START( cabal2_rom )
+ROM_START( cabal2 )
 	ROM_REGION(0x50000)	/* 64k for cpu code */
 	ROM_LOAD_EVEN( "9-7h",            0x00000, 0x10000, 0xebbb9484 )
 	ROM_LOAD_ODD ( "7-6h",            0x00000, 0x10000, 0x51aeb49e )
@@ -543,7 +544,7 @@ ROM_START( cabal2_rom )
 	ROM_LOAD( "1-1u",            0x10000, 0x10000, 0x8b3e0789 )
 ROM_END
 
-ROM_START( cabalbl_rom )
+ROM_START( cabalbl )
 	ROM_REGION(0x50000)	/* 64k for cpu code */
 	ROM_LOAD_EVEN( "cabal_24.bin",    0x00000, 0x10000, 0x00abbe0c )
 	ROM_LOAD_ODD ( "cabal_22.bin",    0x00000, 0x10000, 0x78c4af27 )
@@ -579,7 +580,7 @@ ROM_END
 
 
 
-struct GameDriver cabal_driver =
+struct GameDriver driver_cabal =
 {
 	__FILE__,
 	0,
@@ -588,53 +589,53 @@ struct GameDriver cabal_driver =
 	"1988",
 	"Tad (Fabtek license)",
 	"Carlos A. Lozano Baides\nPhil Stroffolino\nRichard Bush\nErnesto Corvi\n",
-	GAME_NOT_WORKING,
+	0,
 	&cabal_machine_driver,
 	0,
 
-	cabal_rom,
+	rom_cabal,
 	0,0,
 	0,
 	0, /* sound_prom */
 
-	input_ports,
+	input_ports_cabal,
 
 	0,0,0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0,0
 };
 
-struct GameDriver cabal2_driver =
+struct GameDriver driver_cabal2 =
 {
 	__FILE__,
-	&cabal_driver,
+	&driver_cabal,
 	"cabal2",
 	"Cabal (US set 2)",
 	"1988",
 	"Tad (Fabtek license)",
 	"Carlos A. Lozano Baides\nPhil Stroffolino\nRichard Bush\nErnesto Corvi\n",
-	GAME_NOT_WORKING,
+	0,
 	&cabal_machine_driver,
 	0,
 
-	cabal2_rom,
+	rom_cabal2,
 	0,0,
 	0,
 	0, /* sound_prom */
 
-	input_ports,
+	input_ports_cabal,
 
 	0,0,0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0,0
 };
 
-struct GameDriver cabalbl_driver =
+struct GameDriver driver_cabalbl =
 {
 	__FILE__,
-	&cabal_driver,
+	&driver_cabal,
 	"cabalbl",
 	"Cabal (bootleg)",
 	"1988",
@@ -644,12 +645,12 @@ struct GameDriver cabalbl_driver =
 	&cabalbl_machine_driver,
 	0,
 
-	cabalbl_rom,
+	rom_cabalbl,
 	0,0,
 	0,
 	0, /* sound_prom */
 
-	input_ports,
+	input_ports_cabal,
 
 	0,0,0,
 	ORIENTATION_DEFAULT,

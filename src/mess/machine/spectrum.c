@@ -20,7 +20,7 @@ void    spectrum_init_machine(void)
 {
         if (pSnapshotData!=NULL)
         {
-                cpu_setOPbaseoverride(1, spectrum_opbaseoverride);
+                cpu_setOPbaseoverride(0, spectrum_opbaseoverride);
         }
 }
 
@@ -31,7 +31,9 @@ int     spectrum_rom_load(void)
 {
         void *file;
 
-        file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0);
+        file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, 0);
+
+        if (errorlog) fprintf(errorlog,"hmm!\r\n");
 
         if (file)
         {
@@ -53,6 +55,8 @@ int     spectrum_rom_load(void)
 
                         osd_fclose(file);
 
+                        if (errorlog) fprintf(errorlog, "File loaded!\r\n");
+
                         return 0;
                 }
 
@@ -69,7 +73,7 @@ int     spectrum_rom_load(void)
 int spectrum_opbaseoverride(int pc)
 {
         /* clear op base override */
-        cpu_setOPbaseoverride(1,0);
+        cpu_setOPbaseoverride(0,0);
 
         if (pSnapshotData)
         {
@@ -77,7 +81,7 @@ int spectrum_opbaseoverride(int pc)
                 spectrum_setup_snapshot(pSnapshotData,SnapshotDataSize);
         }
 
-        return (cpu_get_pc() & 0x0ffff);
+        return (cpu_get_reg(Z80_PC) & 0x0ffff);
 }
 
 void    spectrum_setup_snapshot(unsigned char *pSnapshot, unsigned long SnapshotSize)
@@ -148,7 +152,7 @@ void    spectrum_setup_snapshot(unsigned char *pSnapshot, unsigned long Snapshot
         /* get pc from stack */
         addr = cpu_geturnpc();
         cpu_set_reg(Z80_PC, (addr & 0x0ffff));
-        cpu_set_pc((addr & 0x0ffff));
+        //cpu_set_pc((addr & 0x0ffff));
 
         addr = cpu_get_reg(Z80_SP);
         addr+=2;

@@ -136,7 +136,7 @@ static int dd_adpcm_status_r( int offset )
 static struct MemoryReadAddress readmem[] =
 {
 	{ 0x0000, 0x1fff, MRA_RAM },
-	{ 0x2000, 0x2fff, dd_spriteram_r, &dd_spriteram },
+	{ 0x2000, 0x2fff, dd_spriteram_r },
 	{ 0x3000, 0x37ff, MRA_RAM },
 	{ 0x3800, 0x3800, input_port_0_r },
 	{ 0x3801, 0x3801, input_port_1_r },
@@ -156,7 +156,7 @@ static struct MemoryWriteAddress writemem[] =
 	{ 0x1200, 0x13ff, paletteram_xxxxBBBBGGGGRRRR_split2_w, &paletteram_2 },
 	{ 0x1400, 0x17ff, MWA_RAM },
 	{ 0x1800, 0x1fff, MWA_RAM, &videoram },
-	{ 0x2000, 0x2fff, dd_spriteram_w },
+	{ 0x2000, 0x2fff, dd_spriteram_w, &dd_spriteram },
 	{ 0x3000, 0x37ff, dd_background_w, &dd_videoram },
 	{ 0x3800, 0x3807, MWA_RAM },
 	{ 0x3808, 0x3808, dd_bankswitch_w },
@@ -319,7 +319,7 @@ static struct MemoryWriteAddress dd2_sound_writemem[] =
 	PORT_DIPSETTING(    0x80, DEF_STR( Off )) \
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-INPUT_PORTS_START( dd1_input_ports )
+INPUT_PORTS_START( dd1 )
 	COMMON_INPUT_PORTS
 
     PORT_START      /* DSW1 */
@@ -346,7 +346,7 @@ INPUT_PORTS_START( dd1_input_ports )
     COMMON_PORT4
 INPUT_PORTS_END
 
-INPUT_PORTS_START( dd2_input_ports )
+INPUT_PORTS_START( dd2 )
 	COMMON_INPUT_PORTS
 
   PORT_START      /* DSW1 */
@@ -436,7 +436,7 @@ static void dd_irq_handler(int irq) {
 static struct YM2151interface ym2151_interface =
 {
 	1,			/* 1 chip */
-	3582071,	/* seems to be the standard */
+	3579545,	/* ??? */
 	{ YM3012_VOL(60,MIXER_PAN_LEFT,60,MIXER_PAN_RIGHT) },
 	{ dd_irq_handler }
 };
@@ -472,7 +472,7 @@ static struct MachineDriver ddragon_machine_driver =
 	/* basic machine hardware */
 	{
 		{
- 			CPU_M6309,
+ 			CPU_HD6309,
 			3579545,	/* 3.579545 Mhz */
 			0,
 			readmem,writemem,0,0,
@@ -486,7 +486,7 @@ static struct MachineDriver ddragon_machine_driver =
 			ignore_interrupt,0
 		},
 		{
- 			CPU_M6809 | CPU_AUDIO_CPU,
+ 			CPU_HD6309 | CPU_AUDIO_CPU,	/* ? */
 			3579545,	/* 3.579545 Mhz */
 			3,
 			sound_readmem,sound_writemem,0,0,
@@ -527,21 +527,21 @@ static struct MachineDriver ddragonb_machine_driver =
 	/* basic machine hardware */
 	{
 		{
- 			CPU_M6309,
+ 			CPU_HD6309,
 			3579545,	/* 3.579545 Mhz */
 			0,
 			readmem,writemem,0,0,
 			dd_interrupt,1
 		},
 		{
- 			CPU_M6809,
+ 			CPU_HD6309,	/* ? */
 			12000000 / 3, /* 4 Mhz */
 			2,
 			sub_readmem,sub_writemem,0,0,
 			ignore_interrupt,0
 		},
 		{
- 			CPU_M6809 | CPU_AUDIO_CPU,
+ 			CPU_HD6309 | CPU_AUDIO_CPU,	/* ? */
 			3579545,	/* 3.579545 Mhz */
 			3,
 			sound_readmem,sound_writemem,0,0,
@@ -582,7 +582,7 @@ static struct MachineDriver ddragon2_machine_driver =
 	/* basic machine hardware */
 	{
 		{
- 			CPU_M6309,
+ 			CPU_HD6309,
 			3579545,	/* 3.579545 Mhz */
 			0,
 			readmem,dd2_writemem,0,0,
@@ -640,7 +640,7 @@ static struct MachineDriver ddragon2_machine_driver =
 ***************************************************************************/
 
 
-ROM_START( ddragon_rom )
+ROM_START( ddragon )
 	ROM_REGION(0x28000)	/* 64k for code + bankswitched memory */
 	ROM_LOAD( "a_m2_d02.bin", 0x08000, 0x08000, 0x668dfa19 )
 	ROM_LOAD( "a_k2_d03.bin", 0x10000, 0x08000, 0x5779705e ) /* banked at 0x4000-0x8000 */
@@ -674,7 +674,7 @@ ROM_START( ddragon_rom )
 	ROM_LOAD( "a_r6_d08.bin", 0x10000, 0x10000, 0x904de6f8 )
 ROM_END
 
-ROM_START( ddragonb_rom )
+ROM_START( ddragonb )
 	ROM_REGION(0x28000)	/* 64k for code + bankswitched memory */
 	ROM_LOAD( "ic26",         0x08000, 0x08000, 0xae714964 )
 	ROM_LOAD( "a_k2_d03.bin", 0x10000, 0x08000, 0x5779705e ) /* banked at 0x4000-0x8000 */
@@ -707,7 +707,7 @@ ROM_START( ddragonb_rom )
 	ROM_LOAD( "a_r6_d08.bin", 0x10000, 0x10000, 0x904de6f8 )
 ROM_END
 
-ROM_START( ddragon2_rom )
+ROM_START( ddragon2 )
 	ROM_REGION(0x28000)	/* region#0: 64k for code */
 	ROM_LOAD( "26a9-04.bin",  0x08000, 0x8000, 0xf2cfc649 )
 	ROM_LOAD( "26aa-03.bin",  0x10000, 0x8000, 0x44dd5d4b )
@@ -818,7 +818,7 @@ static void ddragon2_hisave(void)
 
 
 
-struct GameDriver ddragon_driver =
+struct GameDriver driver_ddragon =
 {
 	__FILE__,
 	0,
@@ -827,27 +827,27 @@ struct GameDriver ddragon_driver =
 	"1987",
 	"bootleg?",
 	"Carlos A. Lozano\nRob Rosenbrock\nChris Moore\nPhil Stroffolino\nErnesto Corvi",
-	GAME_NOT_WORKING,
+	0,
 	&ddragon_machine_driver,
 	0,
 
-	ddragon_rom,
+	rom_ddragon,
 	0, 0,
 	0,
 	0,
 
-	dd1_input_ports,
+	input_ports_dd1,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	ddragonb_hiload, ddragonb_hisave
 };
 
-struct GameDriver ddragonb_driver =
+struct GameDriver driver_ddragonb =
 {
 	__FILE__,
-	&ddragon_driver,
+	&driver_ddragon,
 	"ddragonb",
 	"Double Dragon (bootleg)",
 	"1987",
@@ -857,12 +857,12 @@ struct GameDriver ddragonb_driver =
 	&ddragonb_machine_driver,
 	0,
 
-	ddragonb_rom,
+	rom_ddragonb,
 	0, 0,
 	0,
 	0,
 
-	dd1_input_ports,
+	input_ports_dd1,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -870,7 +870,7 @@ struct GameDriver ddragonb_driver =
 	ddragonb_hiload, ddragonb_hisave
 };
 
-struct GameDriver ddragon2_driver =
+struct GameDriver driver_ddragon2 =
 {
 	__FILE__,
 	0,
@@ -883,12 +883,12 @@ struct GameDriver ddragon2_driver =
 	&ddragon2_machine_driver,
 	0,
 
-	ddragon2_rom,
+	rom_ddragon2,
 	0, 0,
 	0,
 	0,
 
-	dd2_input_ports,
+	input_ports_dd2,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

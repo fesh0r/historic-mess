@@ -16,7 +16,7 @@ int sms_load_rom(void)
     int size, i;
 
     if(strlen(rom_name[0]) == 0) return 1;
-    fp = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0);
+    fp = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0);
     if(!fp) return 1;
     for(i=0;i<MAX_MEMORY_REGIONS;i++) Machine->memory_region[i] = 0;
     ROM = malloc(0x10000);
@@ -77,7 +77,7 @@ int sms_id_rom (const char *name, const char *gamename)
 	unsigned char extra;
 	int retval;
 
-	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_ROM_CART, 0))) return 0;
+	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_IMAGE_R, 0))) return 0;
 
 	retval = 0;
 
@@ -121,7 +121,7 @@ int gamegear_id_rom (const char *name, const char *gamename)
 	unsigned char extra;
 	int retval;
 
-	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_ROM_CART, 0))) return 0;
+	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_IMAGE_R, 0))) return 0;
 
 	retval = 0;
 

@@ -99,7 +99,7 @@ static struct MemoryWriteAddress writemem[] =
 };
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( milliped )
 	PORT_START	/* IN0 $2000 */	/* see port 6 for x trackball */
 	PORT_DIPNAME(0x03, 0x00, "Language" )
 	PORT_DIPSETTING (   0x00, "English" )
@@ -306,7 +306,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( milliped_rom )
+ROM_START( milliped )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "milliped.104", 0x4000, 0x1000, 0x40711675 )
 	ROM_LOAD( "milliped.103", 0x5000, 0x1000, 0xfb01baf2 )
@@ -321,7 +321,7 @@ ROM_END
 
 
 
-struct GameDriver milliped_driver =
+struct GameDriver driver_milliped =
 {
 	__FILE__,
 	0,
@@ -334,12 +334,12 @@ struct GameDriver milliped_driver =
 	&machine_driver,
 	0,
 
-	milliped_rom,
+	rom_milliped,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_milliped,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,

@@ -465,7 +465,7 @@ static struct MachineDriver madgear_machine_driver =
 
 /******************************************************************************/
 
-INPUT_PORTS_START( lastduel_input_ports )
+INPUT_PORTS_START( lastduel )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
@@ -572,7 +572,7 @@ INPUT_PORTS_START( lastduel_input_ports )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( madgear_input_ports )
+INPUT_PORTS_START( madgear )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -690,7 +690,7 @@ INPUT_PORTS_END
 
 /******************************************************************************/
 
-ROM_START( lastduel_rom )
+ROM_START( lastduel )
 	ROM_REGION(0x60000)	/* 68000 code */
 	ROM_LOAD_EVEN( "ldu-06.rom",   0x00000, 0x20000, 0x4228a00b )
 	ROM_LOAD_ODD ( "ldu-05.rom",   0x00000, 0x20000, 0x7260434f )
@@ -724,7 +724,7 @@ ROM_START( lastduel_rom )
 	ROM_LOAD( "ld_02.bin",    0x0000, 0x10000, 0x91834d0c )
 ROM_END
 
-ROM_START( lstduela_rom )
+ROM_START( lstduela )
 	ROM_REGION(0x60000)	/* 68000 code */
 	ROM_LOAD_EVEN( "06",   0x00000, 0x20000, 0x0e71acaf )
 	ROM_LOAD_ODD ( "05",   0x00000, 0x20000, 0x47a85bea )
@@ -758,7 +758,7 @@ ROM_START( lstduela_rom )
 	ROM_LOAD( "ld_02.bin",    0x0000, 0x10000, 0x91834d0c )
 ROM_END
 
-ROM_START( lstduelb_rom )
+ROM_START( lstduelb )
 	ROM_REGION(0x60000)	/* 68000 code */
 	ROM_LOAD_EVEN( "ld_08.bin",    0x00000, 0x10000, 0x43811a96 )
 	ROM_LOAD_ODD ( "ld_07.bin",    0x00000, 0x10000, 0x63c30946 )
@@ -794,7 +794,7 @@ ROM_START( lstduelb_rom )
 	ROM_LOAD( "ld_02.bin",    0x0000, 0x10000, 0x91834d0c )
 ROM_END
 
-ROM_START( madgear_rom )
+ROM_START( madgear )
 	ROM_REGION(0x80000)	/* 256K for 68000 code */
 	ROM_LOAD_EVEN( "mg_04.rom",    0x00000, 0x20000, 0xb112257d )
 	ROM_LOAD_ODD ( "mg_03.rom",    0x00000, 0x20000, 0xb2672465 )
@@ -823,7 +823,7 @@ ROM_START( madgear_rom )
 	ROM_LOAD( "ls-05",        0x20000, 0x20000, 0xb06e03b5 )
 ROM_END
 
-ROM_START( ledstorm_rom )
+ROM_START( ledstorm )
 	ROM_REGION(0x80000)	/* 256K for 68000 code */
 	ROM_LOAD_EVEN( "mdu.04",    0x00000, 0x20000, 0x7f7f8329 )
 	ROM_LOAD_ODD ( "mdu.03",    0x00000, 0x20000, 0x11fa542f )
@@ -981,7 +981,7 @@ static void madgear_hisave(void)
 
 /************************************************************************************/
 
-struct GameDriver lastduel_driver =
+struct GameDriver driver_lastduel =
 {
 	__FILE__,
 	0,
@@ -994,20 +994,20 @@ struct GameDriver lastduel_driver =
 	&lastduel_machine_driver,
 	0,
 
-	lastduel_rom,
+	rom_lastduel,
 	0,0,0,0,
 
-	lastduel_input_ports,
+	input_ports_lastduel,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	hiload,hisave
 };
 
-struct GameDriver lstduela_driver =
+struct GameDriver driver_lstduela =
 {
 	__FILE__,
-	&lastduel_driver,
+	&driver_lastduel,
 	"lstduela",
 	"Last Duel (US set 2)",
 	"1988",
@@ -1017,20 +1017,20 @@ struct GameDriver lstduela_driver =
 	&lastduel_machine_driver,
 	0,
 
-	lstduela_rom,
+	rom_lstduela,
 	0,0,0,0,
 
-	lastduel_input_ports,
+	input_ports_lastduel,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	hiload,hisave
 };
 
-struct GameDriver lstduelb_driver =
+struct GameDriver driver_lstduelb =
 {
 	__FILE__,
-	&lastduel_driver,
+	&driver_lastduel,
 	"lstduelb",
 	"Last Duel (bootleg)",
 	"1988",
@@ -1040,17 +1040,17 @@ struct GameDriver lstduelb_driver =
 	&lastduel_machine_driver,
 	0,
 
-	lstduelb_rom,
+	rom_lstduelb,
 	0,0,0,0,
 
-	lastduel_input_ports,
+	input_ports_lastduel,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	hiload, hisave
 };
 
-struct GameDriver madgear_driver =
+struct GameDriver driver_madgear =
 {
 	__FILE__,
 	0,
@@ -1063,20 +1063,20 @@ struct GameDriver madgear_driver =
 	&madgear_machine_driver,
 	0,
 
-	madgear_rom,
+	rom_madgear,
 	0,0,0,0,
 
-	madgear_input_ports,
+	input_ports_madgear,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	madgear_hiload, madgear_hisave
 };
 
-struct GameDriver ledstorm_driver =
+struct GameDriver driver_ledstorm =
 {
 	__FILE__,
-	&madgear_driver,
+	&driver_madgear,
 	"ledstorm",
 	"Led Storm (US)",
 	"1988",
@@ -1086,10 +1086,10 @@ struct GameDriver ledstorm_driver =
 	&madgear_machine_driver,
 	0,
 
-	ledstorm_rom,
+	rom_ledstorm,
 	0,0,0,0,
 
-	madgear_input_ports,
+	input_ports_madgear,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,

@@ -160,7 +160,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /******************************************************************************/
 
-INPUT_PORTS_START( darkseal_input_ports )
+INPUT_PORTS_START( darkseal )
 	PORT_START	/* Player 1 controls */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -381,7 +381,7 @@ static struct MachineDriver darkseal_machine_driver =
 
 /******************************************************************************/
 
-ROM_START( darkseal_rom )
+ROM_START( darkseal )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "ga04-3.rom",   0x00000, 0x20000, 0xbafad556 )
 	ROM_LOAD_ODD ( "ga01-3.rom",   0x00000, 0x20000, 0xf409050e )
@@ -407,7 +407,7 @@ ROM_START( darkseal_rom )
 	ROM_LOAD( "fz-07.rom",    0x00000, 0x20000, 0x588dd3cb )
 ROM_END
 
-ROM_START( darksea1_rom )
+ROM_START( darksea1 )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "ga-04.rom",    0x00000, 0x20000, 0xa1a985a9 )
 	ROM_LOAD_ODD ( "ga-01.rom",    0x00000, 0x20000, 0x98bd2940 )
@@ -433,7 +433,7 @@ ROM_START( darksea1_rom )
 	ROM_LOAD( "fz-07.rom",    0x00000, 0x20000, 0x588dd3cb )
 ROM_END
 
-ROM_START( gatedoom_rom )
+ROM_START( gatedoom )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "gb04-4",       0x00000, 0x20000, 0x8e3a0bfd )
 	ROM_LOAD_ODD ( "gb01-4",       0x00000, 0x20000, 0x8d0fd383 )
@@ -459,7 +459,7 @@ ROM_START( gatedoom_rom )
 	ROM_LOAD( "fz-07.rom",    0x00000, 0x20000, 0x588dd3cb )
 ROM_END
 
-ROM_START( gatedom1_rom )
+ROM_START( gatedom1 )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "gb04.bin",     0x00000, 0x20000, 0x4c3bbd2b )
 	ROM_LOAD_ODD ( "gb01.bin",     0x00000, 0x20000, 0x59e367f4 )
@@ -533,7 +533,7 @@ static void hisave(void)
 
 /******************************************************************************/
 
-struct GameDriver darkseal_driver =
+struct GameDriver driver_darkseal =
 {
 	__FILE__,
 	0,
@@ -546,22 +546,22 @@ struct GameDriver darkseal_driver =
 	&darkseal_machine_driver,
 	0,
 
-	darkseal_rom,
+	rom_darkseal,
 	darkseal_decrypt, 0,
 	0,
 	0,
 
-	darkseal_input_ports,
+	input_ports_darkseal,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hiload , hisave  /* hsc 12/02/98 */
 };
 
-struct GameDriver darksea1_driver =
+struct GameDriver driver_darksea1 =
 {
 	__FILE__,
-	&darkseal_driver,
+	&driver_darkseal,
 	"darksea1",
 	"Dark Seal (World revision 1)",
 	"1990",
@@ -571,22 +571,22 @@ struct GameDriver darksea1_driver =
 	&darkseal_machine_driver,
 	0,
 
-	darksea1_rom,
+	rom_darksea1,
 	darkseal_decrypt, 0,
 	0,
 	0,
 
-	darkseal_input_ports,
+	input_ports_darkseal,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hiload , hisave  /* hsc 12/02/98 */
 };
 
-struct GameDriver gatedoom_driver =
+struct GameDriver driver_gatedoom =
 {
 	__FILE__,
-	&darkseal_driver,
+	&driver_darkseal,
 	"gatedoom",
 	"Gate of Doom (US revision 4)",
 	"1990",
@@ -596,22 +596,22 @@ struct GameDriver gatedoom_driver =
 	&darkseal_machine_driver,
 	0,
 
-	gatedoom_rom,
+	rom_gatedoom,
 	darkseal_decrypt, 0,
 	0,
 	0,
 
-	darkseal_input_ports,
+	input_ports_darkseal,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver gatedom1_driver =
+struct GameDriver driver_gatedom1 =
 {
 	__FILE__,
-	&darkseal_driver,
+	&driver_darkseal,
 	"gatedom1",
 	"Gate of Doom (US revision 1)",
 	"1990",
@@ -621,12 +621,12 @@ struct GameDriver gatedom1_driver =
 	&darkseal_machine_driver,
 	0,
 
-	gatedom1_rom,
+	rom_gatedom1,
 	darkseal_decrypt, 0,
 	0,
 	0,
 
-	darkseal_input_ports,
+	input_ports_darkseal,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

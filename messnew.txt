@@ -1,3 +1,121 @@
+0.36b10
+
+Important: due to changes in the MAME palette system, there might be  
+           systems that had correct colors before, and wrong now. 
+           Please let us know if you find any. ;-)
+
+Also note: .inp record/playback does still not work currently.
+
+
+New drivers supported (in no particular order):
+-----------------------------------------------
+- n/a
+
+
+These drivers have improved GRAPHICS:
+-------------------------------------
+- palette fixed in TI99 [Ben Bruscella]
+
+
+These drivers have new or improved SOUND:
+-----------------------------------------
+- n/a
+
+Other drivers changes:
+----------------------
+- n/a
+
+Changes to the main program:
+----------------------------
+- n/a
+
+
+Source:
+-------
+- The core is based on MAME 0.36b10. This incorporates all features 
+  of the update to this core.  [MAME team]
+
+
+Other:
+------
+- n/a
+
+--------------------------------------------------------------------
+
+0.36b9.1
+
+Important: due to changes in the MAME palette system, there might be  
+           systems that had correct colors before, and wrong now. 
+           Please let us know if you find any. ;-)
+
+Also note: .inp record/playback does still not work currently.
+
+
+New drivers supported (in no particular order):
+-----------------------------------------------
+- n/a
+
+
+These drivers have improved GRAPHICS:
+-------------------------------------
+- n/a
+
+
+These drivers have new or improved SOUND:
+-----------------------------------------
+- PCSpeaker changed into custom sound driver and activated Adlib 
+  soundcard (YM3812 chip) implemented in PC driver. [Peter]
+
+
+Other drivers changes:
+----------------------
+- slight changes to the PDP1 driver.
+
+- [DOS] TI99 keyboard fix! [Raphael Nabet]
+
+- Various fixes to the amstrad, enterprise and spectrum 
+  drivers [Kev Thacker]
+
+- Corrected and extended recognition of sectors/track, heads,
+  bytes/sector parameters in PC driver. Common formats in images 
+  are now detected without looking at DOS boot sector 
+  structures. [Peter]
+
+
+Changes to the main program:
+----------------------------
+- n/a
+
+
+Source:
+-------
+- [DOS] Now compiled with Allegro 3.9.27 WIP. 
+
+- The core is based on MAME 0.36b9. This incorporates all features 
+  of the update to this core.  [MAME team]
+
+- New field in the MachineDriver struct:
+  const char **default_extension.  
+  Use this to specify the default file extension for images which 
+  can be used with the system (examples are coleco = "rom", 
+  genesis = "bin" or "smd", etc.). 
+
+- Filetype definitions for files used in MESS is now IMAGE_R or  
+  IMAGE_RW.   Note that IMAGE_R replaces ROM_CART, and IMAGE_RW 
+  replaces IMAGE.
+
+
+Other:
+------
+- Updated CRC database files for a7800, coleco and nes.  Added SMS and 
+  Gamegear database files.  Added System History file (sysinfo.dat).  
+  The official maintainer is Chris Henry (battlepriest@hotmail.com). 
+  Please send all CRC/History contributions to him.
+
+
+--------------------------------------------------------------------
+
+
 0.36b8
 
 PLEASE NOTE:  .inp record/playback does not work currently.

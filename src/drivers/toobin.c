@@ -201,7 +201,7 @@ static struct MemoryWriteAddress main_writemem[] =
  *
  *************************************/
 
-INPUT_PORTS_START( toobin_ports )
+INPUT_PORTS_START( toobin )
 	PORT_START	/* ff8800 */
 	PORT_BITX(0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2, "P2 R Paddle Forward", KEYCODE_L, IP_JOY_DEFAULT )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2, "P2 L Paddle Forward", KEYCODE_J, IP_JOY_DEFAULT )
@@ -332,7 +332,7 @@ static struct MachineDriver machine_driver =
  *
  *************************************/
 
-ROM_START( toobin_rom )
+ROM_START( toobin )
 	ROM_REGION(0x80000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "061-3133.bin", 0x00000, 0x10000, 0x79a92d02 )
 	ROM_LOAD_ODD ( "061-3137.bin", 0x00000, 0x10000, 0xe389ef60 )
@@ -384,7 +384,7 @@ ROM_START( toobin_rom )
 ROM_END
 
 
-ROM_START( toobin2_rom )
+ROM_START( toobin2 )
 	ROM_REGION(0x80000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "061-2133.1j",  0x00000, 0x10000, 0x2c3382e4 )
 	ROM_LOAD_ODD ( "061-2137.1f",  0x00000, 0x10000, 0x891c74b1 )
@@ -436,7 +436,7 @@ ROM_START( toobin2_rom )
 ROM_END
 
 
-ROM_START( toobinp_rom )
+ROM_START( toobinp )
 	ROM_REGION(0x80000)	/* 8*64k for 68000 code */
 	ROM_LOAD_EVEN( "pg-0-up.1j",   0x00000, 0x10000, 0xcaeb5d1b )
 	ROM_LOAD_ODD ( "pg-0-lo.1f",   0x00000, 0x10000, 0x9713d9d3 )
@@ -516,7 +516,7 @@ static void toobin_init(void)
  *
  *************************************/
 
-struct GameDriver toobin_driver =
+struct GameDriver driver_toobin =
 {
 	__FILE__,
 	0,
@@ -529,13 +529,13 @@ struct GameDriver toobin_driver =
 	&machine_driver,
 	toobin_init,
 
-	toobin_rom,
+	rom_toobin,
 	0,
 	0,
 	0,
 	0,	/* sound_prom */
 
-	toobin_ports,
+	input_ports_toobin,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
@@ -543,10 +543,10 @@ struct GameDriver toobin_driver =
 };
 
 
-struct GameDriver toobin2_driver =
+struct GameDriver driver_toobin2 =
 {
 	__FILE__,
-	&toobin_driver,
+	&driver_toobin,
 	"toobin2",
 	"Toobin' (version 2)",
 	"1988",
@@ -556,13 +556,13 @@ struct GameDriver toobin2_driver =
 	&machine_driver,
 	toobin_init,
 
-	toobin2_rom,
+	rom_toobin2,
 	0,
 	0,
 	0,
 	0,	/* sound_prom */
 
-	toobin_ports,
+	input_ports_toobin,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
@@ -570,10 +570,10 @@ struct GameDriver toobin2_driver =
 };
 
 
-struct GameDriver toobinp_driver =
+struct GameDriver driver_toobinp =
 {
 	__FILE__,
-	&toobin_driver,
+	&driver_toobin,
 	"toobinp",
 	"Toobin' (Prototype)",
 	"1988",
@@ -583,13 +583,13 @@ struct GameDriver toobinp_driver =
 	&machine_driver,
 	toobin_init,
 
-	toobinp_rom,
+	rom_toobinp,
 	0,
 	0,
 	0,
 	0,	/* sound_prom */
 
-	toobin_ports,
+	input_ports_toobin,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,

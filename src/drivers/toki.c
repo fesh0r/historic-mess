@@ -90,7 +90,7 @@ static int pip(int offset)
 static struct MemoryReadAddress readmem[] =
 {
 	{ 0x000000, 0x05ffff, MRA_ROM },
-	{ 0x060000, 0x06dfff, MRA_BANK2, &ram },
+	{ 0x060000, 0x06dfff, MRA_BANK2 },
 	{ 0x06e000, 0x06e7ff, paletteram_word_r },
 	{ 0x06e800, 0x06efff, toki_background1_videoram_r },
 	{ 0x06f000, 0x06f7ff, toki_background2_videoram_r },
@@ -106,7 +106,7 @@ static struct MemoryReadAddress readmem[] =
 static struct MemoryWriteAddress writemem[] =
 {
 	{ 0x000000, 0x05ffff, MWA_ROM },
-	{ 0x060000, 0x06dfff, MWA_BANK2 },
+	{ 0x060000, 0x06dfff, MWA_BANK2, &ram },
 	{ 0x06e000, 0x06e7ff, paletteram_xxxxBBBBGGGGRRRR_word_w, &paletteram },
 	{ 0x06e800, 0x06efff, toki_background1_videoram_w, &toki_background1_videoram, &toki_background1_videoram_size },
 	{ 0x06f000, 0x06f7ff, toki_background2_videoram_w, &toki_background2_videoram, &toki_background2_videoram_size },
@@ -146,7 +146,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( toki )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -459,7 +459,7 @@ static struct MachineDriver tokib_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( toki_rom )
+ROM_START( toki )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "tokijp.006",   0x00000, 0x20000, 0x03d726b1 )
 	ROM_LOAD_ODD ( "tokijp.004",   0x00000, 0x20000, 0x54a45e12 )
@@ -485,7 +485,7 @@ ROM_START( toki_rom )
 	ROM_LOAD( "tokijp.007",   0x00000, 0x10000, 0xa67969c4 )
 ROM_END
 
-ROM_START( toki2_rom )
+ROM_START( toki2 )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "tokijp.006",   0x00000, 0x20000, 0x03d726b1 )
 	ROM_LOAD_ODD ( "4c.10k",       0x00000, 0x20000, 0xb2c345c5 )
@@ -511,7 +511,7 @@ ROM_START( toki2_rom )
 	ROM_LOAD( "tokijp.007",   0x00000, 0x10000, 0xa67969c4 )
 ROM_END
 
-ROM_START( toki3_rom )
+ROM_START( toki3 )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "l10_6.bin",    0x00000, 0x20000, 0x94015d91 )
 	ROM_LOAD_ODD ( "k10_4e.bin",   0x00000, 0x20000, 0x531bd3ef )
@@ -537,7 +537,7 @@ ROM_START( toki3_rom )
 	ROM_LOAD( "tokijp.007",   0x00000, 0x10000, 0xa67969c4 )
 ROM_END
 
-ROM_START( tokiu_rom )
+ROM_START( tokiu )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "6b.10m",       0x00000, 0x20000, 0x3674d9fe )
 	ROM_LOAD_ODD ( "14.10k",       0x00000, 0x20000, 0xbfdd48af )
@@ -563,7 +563,7 @@ ROM_START( tokiu_rom )
 	ROM_LOAD( "tokijp.007",   0x00000, 0x10000, 0xa67969c4 )
 ROM_END
 
-ROM_START( tokib_rom )
+ROM_START( tokib )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "toki.e3",      0x00000, 0x20000, 0xae9b3da4 )
 	ROM_LOAD_ODD ( "toki.e5",      0x00000, 0x20000, 0x66a5a1d6 )
@@ -669,7 +669,7 @@ void tokib_rom_decode (void)
 
 
 
-struct GameDriver toki_driver =
+struct GameDriver driver_toki =
 {
 	__FILE__,
 	0,
@@ -678,93 +678,93 @@ struct GameDriver toki_driver =
 	"1989",
 	"Tad",
 	"Jarek Parchanski (MAME driver)\nRichard Bush (hardware info)", //Game authors:\n\nKitahara Haruki\nNishizawa Takashi\nSakuma Akira\nAoki Tsukasa\nKakiuchi Hiroyuki",
-	GAME_NOT_WORKING,
+	0,
 	&toki_machine_driver,
 	0,
 
-	toki_rom,
+	rom_toki,
 	0, 0,
 	0,
 	0,			/* sound_prom */
-	input_ports,
+	input_ports_toki,
 	0, 0, 0, 	  	/* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	hiload, hisave
 };
 
-struct GameDriver toki2_driver =
+struct GameDriver driver_toki2 =
 {
 	__FILE__,
-	&toki_driver,
+	&driver_toki,
 	"toki2",
 	"Toki (set 2)",
 	"1989",
 	"Tad",
 	"Jarek Parchanski (MAME driver)\nRichard Bush (hardware info)", //Game authors:\n\nKitahara Haruki\nNishizawa Takashi\nSakuma Akira\nAoki Tsukasa\nKakiuchi Hiroyuki",
-	GAME_NOT_WORKING,
+	0,
 	&toki_machine_driver,
 	0,
 
-	toki2_rom,
+	rom_toki2,
 	0, 0,
 	0,
 	0,			/* sound_prom */
-	input_ports,
+	input_ports_toki,
 	0, 0, 0, 	  	/* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	hiload, hisave
 };
 
-struct GameDriver toki3_driver =
+struct GameDriver driver_toki3 =
 {
 	__FILE__,
-	&toki_driver,
+	&driver_toki,
 	"toki3",
 	"Toki (set 3)",
 	"1989",
 	"Tad",
 	"Jarek Parchanski (MAME driver)\nRichard Bush (hardware info)", //Game authors:\n\nKitahara Haruki\nNishizawa Takashi\nSakuma Akira\nAoki Tsukasa\nKakiuchi Hiroyuki",
-	GAME_NOT_WORKING,
+	0,
 	&toki_machine_driver,
 	0,
 
-	toki3_rom,
+	rom_toki3,
 	0, 0,
 	0,
 	0,			/* sound_prom */
-	input_ports,
+	input_ports_toki,
 	0, 0, 0, 	  	/* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	hiload, hisave
 };
 
-struct GameDriver tokiu_driver =
+struct GameDriver driver_tokiu =
 {
 	__FILE__,
-	&toki_driver,
+	&driver_toki,
 	"tokiu",
 	"Toki (US)",
 	"1989",
 	"Tad (Fabtek license)",
 	"Jarek Parchanski (MAME driver)\nRichard Bush (hardware info)", //Game authors:\n\nKitahara Haruki\nNishizawa Takashi\nSakuma Akira\nAoki Tsukasa\nKakiuchi Hiroyuki",
-	GAME_NOT_WORKING,
+	0,
 	&toki_machine_driver,
 	0,
 
-	tokiu_rom,
+	rom_tokiu,
 	0, 0,
 	0,
 	0,			/* sound_prom */
-	input_ports,
+	input_ports_toki,
 	0, 0, 0, 	  	/* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	hiload, hisave
 };
 
-struct GameDriver tokib_driver =
+struct GameDriver driver_tokib =
 {
 	__FILE__,
-	&toki_driver,
+	&driver_toki,
 	"tokib",
 	"Toki (bootleg)",
 	"1989",
@@ -774,11 +774,11 @@ struct GameDriver tokib_driver =
 	&tokib_machine_driver,
 	0,
 
-	tokib_rom,
+	rom_tokib,
 	tokib_rom_decode, 0,
 	0,
 	0,			/* sound_prom */
-	input_ports,
+	input_ports_toki,
 	0, 0, 0, 	  	/* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave

@@ -146,7 +146,7 @@ static struct MemoryWriteAddress writemem[] =
 };
 
 
-INPUT_PORTS_START( bjtwin_input_ports )
+INPUT_PORTS_START( bjtwin )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -276,7 +276,7 @@ static struct GfxDecodeInfo bjtwin_gfxdecodeinfo[] =
 static struct OKIM6295interface okim6295_interface =
 {
 	2,              /* 2 chip */
-	{ 22050, 22050 },         /* 22050Hz frequency */
+	{ 24000, 24000 },	/* ??? */
 	{ 2,3 },        /* memory region 2,3 */
 	{ 50,50 }
 };
@@ -323,7 +323,7 @@ static struct MachineDriver machine_driver =
 
 
 
-ROM_START( bjtwin_rom )
+ROM_START( bjtwin )
 	ROM_REGION(0x80000)		/* 68000 code */
 	ROM_LOAD_EVEN( "bjt.77",  0x00000, 0x40000, 0x7830A465 )	/* 68000 code */
 	ROM_LOAD_ODD ( "bjt.76",  0x00000, 0x40000, 0x7CD4E72A )	/* 68000 code */
@@ -500,7 +500,7 @@ static void hisave(void)
 }
 
 
-struct GameDriver bjtwin_driver =
+struct GameDriver driver_bjtwin =
 {
 	__FILE__,
 	0,
@@ -513,12 +513,12 @@ struct GameDriver bjtwin_driver =
 	&machine_driver,
 	0,
 
-	bjtwin_rom,
+	rom_bjtwin,
 	bjtwin_decode, 0,
 	0,
 	0,
 
-	bjtwin_input_ports,
+	input_ports_bjtwin,
 	0, 0, 0,
 
 	ORIENTATION_ROTATE_270,

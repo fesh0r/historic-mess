@@ -205,7 +205,7 @@ static struct IOWritePort writeport[] =
 
 
 
-INPUT_PORTS_START( gundealr_input_ports )
+INPUT_PORTS_START( gundealr )
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
@@ -287,7 +287,7 @@ INPUT_PORTS_START( gundealr_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably unused */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( yamyam_input_ports )
+INPUT_PORTS_START( yamyam )
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
@@ -462,7 +462,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( gundealr_rom )
+ROM_START( gundealr )
 	ROM_REGION(0x30000)	/* 64k for code + 128k for banks */
 	ROM_LOAD( "gundealr.1",   0x00000, 0x10000, 0x5797e830 )
 	ROM_RELOAD(               0x10000, 0x10000 )	/* banked at 0x8000-0xbfff */
@@ -472,7 +472,7 @@ ROM_START( gundealr_rom )
 	ROM_LOAD( "gundealr.2",   0x10000, 0x20000, 0x7874ec41 )
 ROM_END
 
-ROM_START( gundeala_rom )
+ROM_START( gundeala )
 	ROM_REGION(0x30000)	/* 64k for code + 128k for banks */
 	ROM_LOAD( "gundeala.1",   0x00000, 0x10000, 0xd87e24f1 )
 	ROM_RELOAD(               0x10000, 0x10000 )	/* banked at 0x8000-0xbfff */
@@ -482,7 +482,7 @@ ROM_START( gundeala_rom )
 	ROM_LOAD( "gundeala.2",   0x10000, 0x20000, 0x4b5fb53c )
 ROM_END
 
-ROM_START( yamyam_rom )
+ROM_START( yamyam )
 	ROM_REGION(0x30000)	/* 64k for code + 128k for banks */
 	ROM_LOAD( "b3.f10",       0x00000, 0x20000, 0x96ae9088 )
 	ROM_RELOAD(               0x10000, 0x20000 )	/* banked at 0x8000-0xbfff */
@@ -492,7 +492,7 @@ ROM_START( yamyam_rom )
 	ROM_LOAD( "b1.a16",       0x10000, 0x20000, 0xb122828d )
 ROM_END
 
-ROM_START( wiseguy_rom )
+ROM_START( wiseguy )
 	ROM_REGION(0x30000)	/* 64k for code + 128k for banks */
 	ROM_LOAD( "b3.f10",       0x00000, 0x20000, 0x96ae9088 )
 	ROM_RELOAD(               0x10000, 0x20000 )	/* banked at 0x8000-0xbfff */
@@ -503,7 +503,7 @@ ROM_START( wiseguy_rom )
 ROM_END
 
 
-struct GameDriver gundealr_driver =
+struct GameDriver driver_gundealr =
 {
 	__FILE__,
 	0,
@@ -516,12 +516,12 @@ struct GameDriver gundealr_driver =
 	&machine_driver,
 	gundealr_init,
 
-	gundealr_rom,
+	rom_gundealr,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	gundealr_input_ports,
+	input_ports_gundealr,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -529,10 +529,10 @@ struct GameDriver gundealr_driver =
 	0, 0
 };
 
-struct GameDriver gundeala_driver =
+struct GameDriver driver_gundeala =
 {
 	__FILE__,
-	&gundealr_driver,
+	&driver_gundealr,
 	"gundeala",
 	"Gun Dealer (set 2)",
 	"????",
@@ -542,12 +542,12 @@ struct GameDriver gundeala_driver =
 	&machine_driver,
 	gundealr_init,
 
-	gundeala_rom,
+	rom_gundeala,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	gundealr_input_ports,
+	input_ports_gundealr,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -555,7 +555,7 @@ struct GameDriver gundeala_driver =
 	0, 0
 };
 
-struct GameDriver yamyam_driver =
+struct GameDriver driver_yamyam =
 {
 	__FILE__,
 	0,
@@ -568,12 +568,12 @@ struct GameDriver yamyam_driver =
 	&machine_driver,
 	yamyam_init,
 
-	yamyam_rom,
+	rom_yamyam,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	yamyam_input_ports,
+	input_ports_yamyam,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -582,10 +582,10 @@ struct GameDriver yamyam_driver =
 };
 
 /* only gfx are different, code is the same */
-struct GameDriver wiseguy_driver =
+struct GameDriver driver_wiseguy =
 {
 	__FILE__,
-	&yamyam_driver,
+	&driver_yamyam,
 	"wiseguy",
 	"Wise Guy",
 	"1990",
@@ -595,12 +595,12 @@ struct GameDriver wiseguy_driver =
 	&machine_driver,
 	yamyam_init,
 
-	wiseguy_rom,
+	rom_wiseguy,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	yamyam_input_ports,
+	input_ports_yamyam,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

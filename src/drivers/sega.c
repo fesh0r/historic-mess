@@ -164,7 +164,7 @@ static struct MemoryReadAddress readmem[] =
 {
 	{ 0x0000, 0xbfff, MRA_ROM },
 	{ 0xc800, 0xcfff, MRA_RAM },
-	{ 0xe000, 0xefff, MRA_RAM, &vectorram, &vectorram_size },
+	{ 0xe000, 0xefff, MRA_RAM },
 	{ 0xd000, 0xdfff, MRA_RAM },			/* sound ram */
 	{ -1 }	/* end of table */
 };
@@ -172,6 +172,8 @@ static struct MemoryReadAddress readmem[] =
 static struct MemoryWriteAddress writemem[] =
 {
 	{ 0x0000, 0xFFFF, sega_wr, &sega_mem },
+	{ 0xe000, 0xefff, MWA_RAM, &vectorram, &vectorram_size },	/* handled by the above, */
+												/* here only to initialize the pointer */
 	{ -1 }
 };
 
@@ -308,7 +310,7 @@ Input Ports
         PORT_DIPSETTING(    0x10, DEF_STR ( 1C_6C ) )
 
 
-INPUT_PORTS_START( spacfury_input_ports )
+INPUT_PORTS_START( spacfury )
 	PORT_START	/* IN0 - port 0xf8 */
 	/* The next bit is referred to as the Service switch in the self test - it just adds a credit */
 	PORT_BIT_IMPULSE( 0x20, IP_ACTIVE_LOW, IPT_COIN3, 3 )
@@ -367,7 +369,7 @@ INPUT_PORTS_START( spacfury_input_ports )
 
 INPUT_PORTS_END
 
-INPUT_PORTS_START( zektor_input_ports )
+INPUT_PORTS_START( zektor )
 	PORT_START	/* IN0 - port 0xf8 */
 	/* The next bit is referred to as the Service switch in the self test - it just adds a credit */
 	PORT_BIT_IMPULSE( 0x20, IP_ACTIVE_LOW, IPT_COIN3, 3 )
@@ -426,7 +428,7 @@ INPUT_PORTS_START( zektor_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( startrek_input_ports )
+INPUT_PORTS_START( startrek )
 	PORT_START	/* IN0 - port 0xf8 */
 	/* The next bit is referred to as the Service switch in the self test - it just adds a credit */
 	PORT_BIT_IMPULSE( 0x20, IP_ACTIVE_LOW, IPT_COIN3, 3 )
@@ -487,7 +489,7 @@ INPUT_PORTS_START( startrek_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( tacscan_input_ports )
+INPUT_PORTS_START( tacscan )
 	PORT_START	/* IN0 - port 0xf8 */
 	/* The next bit is referred to as the Service switch in the self test - it just adds a credit */
 	PORT_BIT_IMPULSE( 0x20, IP_ACTIVE_LOW, IPT_COIN3, 3 )
@@ -546,7 +548,7 @@ INPUT_PORTS_START( tacscan_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( elim2_input_ports )
+INPUT_PORTS_START( elim2 )
 	PORT_START	/* IN0 - port 0xf8 */
 	/* The next bit is referred to as the Service switch in the self test - it just adds a credit */
 	PORT_BIT_IMPULSE( 0x20, IP_ACTIVE_LOW, IPT_COIN3, 3 )
@@ -606,7 +608,7 @@ INPUT_PORTS_START( elim2_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( elim4_input_ports )
+INPUT_PORTS_START( elim4 )
 	PORT_START	/* IN0 - port 0xf8 */
 	PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	/* The next bit is referred to as the Service switch in the self test - it just adds a credit */
@@ -678,24 +680,6 @@ INPUT_PORTS_START( elim4_input_ports )
 INPUT_PORTS_END
 
 
-static struct GfxLayout fakelayout =
-{
-	1,1,
-	0,
-	1,
-	{ 0 },
-	{ 0 },
-	{ 0 },
-	0
-};
-
-static struct GfxDecodeInfo gfxdecodeinfo[] =
-{
-	{ 0, 0,      &fakelayout,     0, 256 },
-	{ -1 } /* end of array */
-};
-
-
 /***************************************************************************
 
   Security Chips
@@ -744,7 +728,7 @@ void tacscan_decode(void)
 
 ***************************************************************************/
 
-ROM_START( spacfury_rom ) /* Revision C */
+ROM_START( spacfury ) /* Revision C */
 	ROM_REGION(0x10000)	/* 64k for code */
         ROM_LOAD( "969c.u25",     0x0000, 0x0800, 0x411207f2 )
         ROM_LOAD( "960c.u1",      0x0800, 0x0800, 0xd071ab7e )
@@ -758,7 +742,7 @@ ROM_START( spacfury_rom ) /* Revision C */
         ROM_LOAD( "968c.u9",      0x4800, 0x0800, 0x8366eadb )
 ROM_END
 
-ROM_START( spacfura_rom ) /* Revision A */
+ROM_START( spacfura ) /* Revision A */
 	ROM_REGION(0x10000)	/* 64k for code */
         ROM_LOAD( "969a.u25",     0x0000, 0x0800, 0x896a615c )
         ROM_LOAD( "960a.u1",      0x0800, 0x0800, 0xe1ea7964 )
@@ -772,7 +756,7 @@ ROM_START( spacfura_rom ) /* Revision A */
         ROM_LOAD( "968a.u9",      0x4800, 0x0800, 0xaea85b6a )
 ROM_END
 
-ROM_START( zektor_rom )
+ROM_START( zektor )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1611.cpu",     0x0000, 0x0800, 0x6245aa23 )
 	ROM_LOAD( "1586.rom",     0x0800, 0x0800, 0xefeb4fb5 )
@@ -798,7 +782,7 @@ ROM_START( zektor_rom )
 	ROM_LOAD( "1606.rom",     0xa800, 0x0800, 0x7965f636 )
 ROM_END
 
-ROM_START( tacscan_rom )
+ROM_START( tacscan )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1711a",        0x0000, 0x0800, 0x0da13158 )
 	ROM_LOAD( "1670c",        0x0800, 0x0800, 0x98de6fd5 )
@@ -824,7 +808,7 @@ ROM_START( tacscan_rom )
 	ROM_LOAD( "1710a",        0xa800, 0x0800, 0x6203be22 )
 ROM_END
 
-ROM_START( elim2_rom )
+ROM_START( elim2 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "cpu_u25.969",  0x0000, 0x0800, 0x411207f2 )
 	ROM_LOAD( "1333",         0x0800, 0x0800, 0xfd2a2916 )
@@ -842,7 +826,7 @@ ROM_START( elim2_rom )
 	ROM_LOAD( "1345",         0x6800, 0x0800, 0x40597a92 )
 ROM_END
 
-ROM_START( elim2a_rom )
+ROM_START( elim2a )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "cpu_u25.969",  0x0000, 0x0800, 0x411207f2 )
 	ROM_LOAD( "1158",         0x0800, 0x0800, 0xa40ac3a5 )
@@ -860,7 +844,7 @@ ROM_START( elim2a_rom )
 	ROM_LOAD( "1170a",        0x6800, 0x0800, 0x8cdacd35 )
 ROM_END
 
-ROM_START( elim4_rom )
+ROM_START( elim4 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1390_cpu.u25", 0x0000, 0x0800, 0x97010c3e )
 	ROM_LOAD( "1347",         0x0800, 0x0800, 0x657d7320 )
@@ -879,7 +863,7 @@ ROM_START( elim4_rom )
 	ROM_LOAD( "1360",         0x7000, 0x0800, 0x96d48238 )
 ROM_END
 
-ROM_START( startrek_rom )
+ROM_START( startrek )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "cpu1873",      0x0000, 0x0800, 0xbe46f5d9 )
 	ROM_LOAD( "1848",         0x0800, 0x0800, 0x65e3baf3 )
@@ -1206,7 +1190,8 @@ static const char *spacfury_sample_names[] =
 static struct Samplesinterface spacfury_samples_interface =
 {
 	9,	/* 9 channels */
-	25	/* volume */
+	25,	/* volume */
+	spacfury_sample_names
 };
 
 static struct CustomSound_interface sega_custom_interface =
@@ -1235,7 +1220,7 @@ static struct MachineDriver spacfury_machine_driver =
 
 	/* video hardware */
 	400, 300, { 512, 1536, 552, 1464 },
-	gfxdecodeinfo,
+	0,
 	256,256,
 	sega_init_colors,
 
@@ -1261,7 +1246,7 @@ static struct MachineDriver spacfury_machine_driver =
 
 
 
-struct GameDriver spacfury_driver =
+struct GameDriver driver_spacfury =
 {
 	__FILE__,
 	0,
@@ -1274,12 +1259,12 @@ struct GameDriver spacfury_driver =
 	&spacfury_machine_driver,
 	0,
 
-	spacfury_rom,
+	rom_spacfury,
 	spacfury_decode, 0,
-	spacfury_sample_names,
+	0,
 	0,
 
-	spacfury_input_ports,
+	input_ports_spacfury,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1287,10 +1272,10 @@ struct GameDriver spacfury_driver =
     spacfury_hiload, spacfury_hisave
 };
 
-struct GameDriver spacfura_driver =
+struct GameDriver driver_spacfura =
 {
 	__FILE__,
-	&spacfury_driver,
+	&driver_spacfury,
 	"spacfura",
 	"Space Fury (revision A)",
 	"1981",
@@ -1300,12 +1285,12 @@ struct GameDriver spacfura_driver =
 	&spacfury_machine_driver,
 	0,
 
-	spacfura_rom,
+	rom_spacfura,
 	spacfury_decode, 0,
-	spacfury_sample_names,
+	0,
 	0,
 
-	spacfury_input_ports,
+	input_ports_spacfury,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1363,7 +1348,8 @@ static const char *zektor_sample_names[] =
 static struct Samplesinterface zektor_samples_interface =
 {
 	12, /* only speech for now */
-	25	/* volume */
+	25,	/* volume */
+	zektor_sample_names
 };
 
 
@@ -1388,7 +1374,7 @@ static struct MachineDriver zektor_machine_driver =
 
 	/* video hardware */
 	400, 300, { 512, 1536, 624, 1432 },
-	gfxdecodeinfo,
+	0,
 	256,256,
 	sega_init_colors,
 
@@ -1414,7 +1400,7 @@ static struct MachineDriver zektor_machine_driver =
 
 
 
-struct GameDriver zektor_driver =
+struct GameDriver driver_zektor =
 {
 	__FILE__,
 	0,
@@ -1427,12 +1413,12 @@ struct GameDriver zektor_driver =
 	&zektor_machine_driver,
 	0,
 
-	zektor_rom,
+	rom_zektor,
 	zektor_decode, 0,
-	zektor_sample_names,
+	0,
 	0,
 
-	zektor_input_ports,
+	input_ports_zektor,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1479,7 +1465,8 @@ static const char *tacscan_sample_names[] =
 static struct Samplesinterface tacscan_samples_interface =
 {
 	12,	/* 12 channels */
-	25	/* volume */
+	25,	/* volume */
+	tacscan_sample_names
 };
 
 static struct CustomSound_interface tacscan_custom_interface =
@@ -1511,7 +1498,7 @@ static struct MachineDriver tacscan_machine_driver =
 
 	/* video hardware */
 	400, 300, { 496, 1552, 592, 1456 },
-	gfxdecodeinfo,
+	0,
 	256,256,
 	sega_init_colors,
 
@@ -1535,7 +1522,7 @@ static struct MachineDriver tacscan_machine_driver =
 	}
 };
 
-struct GameDriver tacscan_driver =
+struct GameDriver driver_tacscan =
 {
 	__FILE__,
 	0,
@@ -1548,12 +1535,12 @@ struct GameDriver tacscan_driver =
 	&tacscan_machine_driver,
 	0,
 
-	tacscan_rom,
+	rom_tacscan,
 	tacscan_decode, 0,
-	tacscan_sample_names,
+	0,
 	0,
 
-        tacscan_input_ports,
+        input_ports_tacscan,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -1589,8 +1576,10 @@ static const char *elim_sample_names[] =
 static struct Samplesinterface elim2_samples_interface =
 {
 	8,	/* 8 channels */
-	25	/* volume */
+	25,	/* volume */
+	elim_sample_names
 };
+
 
 static struct MachineDriver elim2_machine_driver =
 {
@@ -1612,7 +1601,7 @@ static struct MachineDriver elim2_machine_driver =
 
 	/* video hardware */
 	400, 300, { 512, 1536, 600, 1440 },
-	gfxdecodeinfo,
+	0,
 	256,256,
 	sega_init_colors,
 
@@ -1636,7 +1625,7 @@ static struct MachineDriver elim2_machine_driver =
 	}
 };
 
-struct GameDriver elim2_driver =
+struct GameDriver driver_elim2 =
 {
 	__FILE__,
 	0,
@@ -1649,12 +1638,12 @@ struct GameDriver elim2_driver =
 	&elim2_machine_driver,
 	0,
 
-	elim2_rom,
+	rom_elim2,
 	elim2_decode, 0,
-	elim_sample_names,
+	0,
 	0,
 
-	elim2_input_ports,
+	input_ports_elim2,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1662,10 +1651,10 @@ struct GameDriver elim2_driver =
 	elim2_hiload, elim2_hisave
 };
 
-struct GameDriver elim2a_driver =
+struct GameDriver driver_elim2a =
 {
 	__FILE__,
-	&elim2_driver,
+	&driver_elim2,
 	"elim2a",
 	"Eliminator (2 Players, set 2)",
 	"1981",
@@ -1675,12 +1664,12 @@ struct GameDriver elim2a_driver =
 	&elim2_machine_driver,
 	0,
 
-	elim2a_rom,
+	rom_elim2a,
 	elim2_decode, 0,
-	elim_sample_names,
+	0,
 	0,
 
-	elim2_input_ports,
+	input_ports_elim2,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1709,7 +1698,7 @@ static struct MachineDriver elim4_machine_driver =
 
 	/* video hardware */
 	400, 300, { 512, 1536, 600, 1440 },
-	gfxdecodeinfo,
+	0,
 	256,256,
 	sega_init_colors,
 
@@ -1733,10 +1722,10 @@ static struct MachineDriver elim4_machine_driver =
 	}
 };
 
-struct GameDriver elim4_driver =
+struct GameDriver driver_elim4 =
 {
 	__FILE__,
-	&elim2_driver,
+	&driver_elim2,
 	"elim4",
 	"Eliminator (4 Players)",
 	"1981",
@@ -1746,12 +1735,12 @@ struct GameDriver elim4_driver =
 	&elim4_machine_driver,
 	0,
 
-	elim4_rom,
+	rom_elim4,
 	elim4_decode, 0,
-	elim_sample_names,
+	0,
 	0,
 
-	elim4_input_ports,
+	input_ports_elim4,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1826,8 +1815,9 @@ static const char *startrek_sample_names[] =
 
 static struct Samplesinterface startrek_samples_interface =
 {
-	10,       /* 10 channels */
-	25	/* volume */
+	10,	/* 10 channels */
+	25,	/* volume */
+	startrek_sample_names
 };
 
 static struct MachineDriver startrek_machine_driver =
@@ -1850,7 +1840,7 @@ static struct MachineDriver startrek_machine_driver =
 
 	/* video hardware */
 	400, 300, { 512, 1536, 616, 1464 },
-	gfxdecodeinfo,
+	0,
 	256,256,
 	sega_init_colors,
 
@@ -1874,7 +1864,7 @@ static struct MachineDriver startrek_machine_driver =
 	}
 };
 
-struct GameDriver startrek_driver =
+struct GameDriver driver_startrek =
 {
 	__FILE__,
 	0,
@@ -1887,12 +1877,12 @@ struct GameDriver startrek_driver =
 	&startrek_machine_driver,
 	0,
 
-	startrek_rom,
+	rom_startrek,
 	startrek_decode, 0,
-	startrek_sample_names,
+	0,
 	0,
 
-	startrek_input_ports,
+	input_ports_startrek,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

@@ -498,7 +498,7 @@ static struct MemoryWriteAddress midres_s_writemem[] =
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) ) \
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) ) \
 
-INPUT_PORTS_START( hbarrel_input_ports )
+INPUT_PORTS_START( hbarrel )
 	DEC0_PLAYER1_CONTROL
 	DEC0_PLAYER2_CONTROL
 	DEC0_MACHINE_CONTROL
@@ -548,7 +548,7 @@ INPUT_PORTS_START( hbarrel_input_ports )
 	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, 0, KEYCODE_N, KEYCODE_M, 0, 0 )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( baddudes_input_ports )
+INPUT_PORTS_START( baddudes )
 	DEC0_PLAYER1_CONTROL
 	DEC0_PLAYER2_CONTROL
 	DEC0_MACHINE_CONTROL
@@ -599,7 +599,7 @@ INPUT_PORTS_START( baddudes_input_ports )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( robocop_input_ports )
+INPUT_PORTS_START( robocop )
 	DEC0_PLAYER1_CONTROL
 	DEC0_PLAYER2_CONTROL
 	DEC0_MACHINE_CONTROL
@@ -644,7 +644,7 @@ INPUT_PORTS_START( robocop_input_ports )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( hippodrm_input_ports )
+INPUT_PORTS_START( hippodrm )
 	DEC0_PLAYER1_CONTROL
 	DEC0_PLAYER2_CONTROL
 	DEC0_MACHINE_CONTROL
@@ -714,7 +714,7 @@ INPUT_PORTS_END
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 
-INPUT_PORTS_START( slyspy_input_ports )
+INPUT_PORTS_START( slyspy )
 	DEC1_PLAYER1_CONTROL
 	DEC1_PLAYER2_CONTROL
 
@@ -768,7 +768,7 @@ INPUT_PORTS_START( slyspy_input_ports )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( midres_input_ports )
+INPUT_PORTS_START( midres )
 	DEC1_PLAYER1_CONTROL
 	DEC1_PLAYER2_CONTROL
 
@@ -828,7 +828,7 @@ INPUT_PORTS_START( midres_input_ports )
 	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, 0, KEYCODE_N, KEYCODE_M, 0, 0 )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( bouldash_input_ports )
+INPUT_PORTS_START( bouldash )
 	DEC1_PLAYER1_CONTROL
 	DEC1_PLAYER2_CONTROL
 
@@ -1424,7 +1424,7 @@ static struct MachineDriver midres_machine_driver =
 
 /******************************************************************************/
 
-ROM_START( hbarrel_rom )
+ROM_START( hbarrel )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "hb_ec04.rom",  0x00000, 0x10000, 0xd01bc3db )
 	ROM_LOAD_ODD ( "hb_ec01.rom",  0x00000, 0x10000, 0x6756f8ae )
@@ -1468,7 +1468,7 @@ ROM_START( hbarrel_rom )
 	ROM_LOAD( "hb_ec08.rom",  0x0000, 0x10000, 0x2159a609 )
 ROM_END
 
-ROM_START( hbarrelu_rom )
+ROM_START( hbarrelu )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "hb04.bin",     0x00000, 0x10000, 0x4877b09e )
 	ROM_LOAD_ODD ( "hb01.bin",     0x00000, 0x10000, 0x8b41c219 )
@@ -1512,7 +1512,7 @@ ROM_START( hbarrelu_rom )
 	ROM_LOAD( "hb08.bin",     0x0000, 0x10000, 0x645c5b68 )
 ROM_END
 
-ROM_START( baddudes_rom )
+ROM_START( baddudes )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code, middle 0x20000 unused */
 	ROM_LOAD_EVEN( "baddudes.4",   0x00000, 0x10000, 0x4bf158a7 )
 	ROM_LOAD_ODD ( "baddudes.1",   0x00000, 0x10000, 0x74f5110c )
@@ -1564,7 +1564,7 @@ ROM_START( baddudes_rom )
 	ROM_LOAD( "baddudes.8",   0x0000, 0x10000, 0x3c87463e )
 ROM_END
 
-ROM_START( drgninja_rom )
+ROM_START( drgninja )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code, middle 0x20000 unused */
 	ROM_LOAD_EVEN( "drgninja.04",  0x00000, 0x10000, 0x41b8b3f8 )
 	ROM_LOAD_ODD ( "drgninja.01",  0x00000, 0x10000, 0xe08e6885 )
@@ -1616,7 +1616,7 @@ ROM_START( drgninja_rom )
 	ROM_LOAD( "baddudes.8",   0x0000, 0x10000, 0x3c87463e )
 ROM_END
 
-ROM_START( birdtry_rom )
+ROM_START( birdtry )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "ek-04.bin",     0x00000, 0x10000, 0x5f0f4686 )
 	ROM_LOAD_ODD ( "ek-01.bin",     0x00000, 0x10000, 0x47f470db )
@@ -1656,7 +1656,7 @@ ROM_START( birdtry_rom )
 	ROM_LOAD( "ek-08.bin",     0x0000, 0x10000, 0xbe3db6cb )
 ROM_END
 
-ROM_START( robocop_rom )
+ROM_START( robocop )
 	ROM_REGION(0x40000) /* 68000 code */
 	ROM_LOAD_EVEN( "ep05-3", 0x00000, 0x10000, 0xba69bf84 )
 	ROM_LOAD_ODD ( "ep01-3", 0x00000, 0x10000, 0x2a9f6e2c )
@@ -1697,7 +1697,7 @@ ROM_START( robocop_rom )
 	/* Filled in later */
 ROM_END
 
-ROM_START( robocopu_rom )
+ROM_START( robocopu )
 	ROM_REGION(0x40000) /* 68000 code */
 	ROM_LOAD_EVEN( "ep05-1", 0x00000, 0x10000, 0x8de5cb3d )
 	ROM_LOAD_ODD ( "ep01-1", 0x00000, 0x10000, 0xb3c6bc02 )
@@ -1738,7 +1738,7 @@ ROM_START( robocopu_rom )
 	/* Filled in later */
 ROM_END
 
-ROM_START( robocpu0_rom )
+ROM_START( robocpu0 )
 	ROM_REGION(0x40000) /* 68000 code */
 	ROM_LOAD_EVEN( "ep05", 0x00000, 0x10000, 0xc465bdd8 )
 	ROM_LOAD_ODD ( "ep01", 0x00000, 0x10000, 0x1352d36e )
@@ -1779,7 +1779,7 @@ ROM_START( robocpu0_rom )
 	/* Filled in later */
 ROM_END
 
-ROM_START( robocopb_rom )
+ROM_START( robocopb )
 	ROM_REGION(0x40000) /* 68000 code */
 	ROM_LOAD_EVEN( "robop_05.rom", 0x00000, 0x10000, 0xbcef3e9b )
 	ROM_LOAD_ODD ( "robop_01.rom", 0x00000, 0x10000, 0xc9803685 )
@@ -1817,7 +1817,7 @@ ROM_START( robocopb_rom )
 	ROM_LOAD( "ep02", 0x00000, 0x10000, 0x711ce46f )
 ROM_END
 
-ROM_START( hippodrm_rom )
+ROM_START( hippodrm )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "ew02",         0x00000, 0x10000, 0xdf0d7dc6 )
 	ROM_LOAD_ODD ( "ew01",         0x00000, 0x10000, 0xd5670aa7 )
@@ -1854,7 +1854,7 @@ ROM_START( hippodrm_rom )
 	ROM_LOAD( "ew08",         0x00000, 0x10000, 0x53010534 )
 ROM_END
 
-ROM_START( ffantasy_rom )
+ROM_START( ffantasy )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "ev02",         0x00000, 0x10000, 0x797a7860 )
 	ROM_LOAD_ODD ( "ev01",         0x00000, 0x10000, 0x0f17184d )
@@ -1891,7 +1891,7 @@ ROM_START( ffantasy_rom )
 	ROM_LOAD( "ew08",         0x00000, 0x10000, 0x53010534 )
 ROM_END
 
-ROM_START( slyspy_rom )
+ROM_START( slyspy )
 	ROM_REGION(0x60000) /* 68000 code */
 	ROM_LOAD_EVEN( "fa14-3.17l",   0x00000, 0x10000, 0x54353a84 )
 	ROM_LOAD_ODD ( "fa12-2.9l",    0x00000, 0x10000, 0x1b534294 )
@@ -1924,7 +1924,7 @@ ROM_START( slyspy_rom )
 	ROM_LOAD( "fa11.11k",     0x00000, 0x20000, 0x4e547bad )
 ROM_END
 
-ROM_START( slyspy2_rom )
+ROM_START( slyspy2 )
 	ROM_REGION(0x60000) /* 68000 code */
 	ROM_LOAD_EVEN( "fa14-2.bin",   0x00000, 0x10000, 0x0e431e39 )
 	ROM_LOAD_ODD ( "fa12-2.9l",    0x00000, 0x10000, 0x1b534294 )
@@ -1968,7 +1968,7 @@ ROM_START( slyspy2_rom )
 	ROM_LOAD( "fa11.11k",     0x00000, 0x20000, 0x4e547bad )
 ROM_END
 
-ROM_START( secretag_rom )
+ROM_START( secretag )
 	ROM_REGION(0x60000) /* 68000 code */
 	ROM_LOAD_EVEN( "fb14.bin",   0x00000, 0x10000, 0x9be6ac90 )
 	ROM_LOAD_ODD ( "fb12.bin",   0x00000, 0x10000, 0x28904b6b )
@@ -2013,7 +2013,7 @@ ROM_START( secretag_rom )
 ROM_END
 
 #if 0
-ROM_START( secretab_rom )
+ROM_START( secretab )
 	ROM_REGION(0x60000) /* 68000 code */
 	ROM_LOAD_EVEN( "sa_05.bin",    0x00000, 0x10000, 0x54353a84 )
 	ROM_LOAD_ODD ( "sa_03.bin",    0x00000, 0x10000, 0x1b534294 )
@@ -2047,7 +2047,7 @@ ROM_START( secretab_rom )
 ROM_END
 #endif
 
-ROM_START( midres_rom )
+ROM_START( midres )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "fk_14.rom",    0x00000, 0x20000, 0xde7522df )
 	ROM_LOAD_ODD ( "fk_12.rom",    0x00000, 0x20000, 0x3494b8c9 )
@@ -2083,7 +2083,7 @@ ROM_START( midres_rom )
 	ROM_LOAD( "fl17",              0x00000, 0x20000, 0x9029965d )
 ROM_END
 
-ROM_START( midresu_rom )
+ROM_START( midresu )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "fl14",         0x00000, 0x20000, 0x2f9507a2 )
 	ROM_LOAD_ODD ( "fl12",         0x00000, 0x20000, 0x3815ad9f )
@@ -2119,7 +2119,7 @@ ROM_START( midresu_rom )
 	ROM_LOAD( "fl17",              0x00000, 0x20000, 0x9029965d )
 ROM_END
 
-ROM_START( midresj_rom )
+ROM_START( midresj )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "fh14",         0x00000, 0x20000, 0x6d632a51 )
 	ROM_LOAD_ODD ( "fh12",         0x00000, 0x20000, 0x45143384 )
@@ -2155,7 +2155,7 @@ ROM_START( midresj_rom )
 	ROM_LOAD( "fh17",              0x00000, 0x20000, 0xc7b0a24e )
 ROM_END
 
-ROM_START( bouldash_rom )
+ROM_START( bouldash )
 	ROM_REGION(0x60000) /* 68000 code */
 	ROM_LOAD_EVEN( "fn-15",   0x00000, 0x10000, 0xca19a967 )
 	ROM_LOAD_ODD ( "fn-12",   0x00000, 0x10000, 0x242bdc2a )
@@ -2493,7 +2493,7 @@ static void midres_hisave(void)
 
 /******************************************************************************/
 
-struct GameDriver hbarrel_driver =
+struct GameDriver driver_hbarrel =
 {
 	__FILE__,
 	0,
@@ -2506,22 +2506,22 @@ struct GameDriver hbarrel_driver =
 	&hbarrel_machine_driver,
 	dec0_custom_memory,
 
-	hbarrelu_rom,
+	rom_hbarrelu,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	hbarrel_input_ports,
+	input_ports_hbarrel,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	hbarrel_hiload, hbarrel_hisave
 };
 
-struct GameDriver hbarrelw_driver =
+struct GameDriver driver_hbarrelw =
 {
 	__FILE__,
-	&hbarrel_driver,
+	&driver_hbarrel,
 	"hbarrelw",
 	"Heavy Barrel (World)",
 	"1987",
@@ -2531,19 +2531,19 @@ struct GameDriver hbarrelw_driver =
 	&hbarrel_machine_driver,
 	dec0_custom_memory,
 
-	hbarrel_rom,
+	rom_hbarrel,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	hbarrel_input_ports,
+	input_ports_hbarrel,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	hbarrelj_hiload, hbarrelj_hisave
 };
 
-struct GameDriver baddudes_driver =
+struct GameDriver driver_baddudes =
 {
 	__FILE__,
 	0,
@@ -2556,22 +2556,22 @@ struct GameDriver baddudes_driver =
 	&baddudes_machine_driver,
 	dec0_custom_memory,
 
-	baddudes_rom,
+	rom_baddudes,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	baddudes_input_ports,
+	input_ports_baddudes,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	baddudes_hiload, baddudes_hisave
 };
 
-struct GameDriver drgninja_driver =
+struct GameDriver driver_drgninja =
 {
 	__FILE__,
-	&baddudes_driver,
+	&driver_baddudes,
 	"drgninja",
 	"Dragonninja (Japan)",
 	"1988",
@@ -2581,19 +2581,19 @@ struct GameDriver drgninja_driver =
 	&baddudes_machine_driver,
 	dec0_custom_memory,
 
-	drgninja_rom,
+	rom_drgninja,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	baddudes_input_ports,
+	input_ports_baddudes,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	drgninja_hiload, drgninja_hisave
 };
 
-struct GameDriver birdtry_driver =
+struct GameDriver driver_birdtry =
 {
 	__FILE__,
 	0,
@@ -2602,23 +2602,23 @@ struct GameDriver birdtry_driver =
 	"1988",
 	"Data East Corporation",
 	"Bryan McPhail (MAME driver)\nNicola Salmoria (additional code)",
-	GAME_NOT_WORKING,
+	0,
 	&birdtry_machine_driver,
 	dec0_custom_memory,
 
-	birdtry_rom,
+	rom_birdtry,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	hbarrel_input_ports, /* For now */
+	input_ports_hbarrel, /* For now */
 
 	0, 0, 0,   /* colors, palette, colortable */
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver robocop_driver =
+struct GameDriver driver_robocop =
 {
 	__FILE__,
 	0,
@@ -2627,76 +2627,76 @@ struct GameDriver robocop_driver =
 	"1988",
 	"Data East Corporation",
 	"Bryan McPhail (MAME driver)\nNicola Salmoria (additional code)",
-	GAME_NOT_WORKING,
+	0,
 	&robocop_machine_driver,
 	dec0_custom_memory,
 
-	robocop_rom,
+	rom_robocop,
 	0, 0,
 	0,
 	0,
 
-	robocop_input_ports,
+	input_ports_robocop,
 
 	0, 0, 0,   /* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	robocopp_hiload, robocopp_hisave
 };
 
-struct GameDriver robocopu_driver =
+struct GameDriver driver_robocopu =
 {
 	__FILE__,
-	&robocop_driver,
+	&driver_robocop,
 	"robocopu",
 	"Robocop (US revision 1)",
 	"1988",
 	"Data East USA",
 	"Bryan McPhail (MAME driver)\nNicola Salmoria (additional code)",
-	GAME_NOT_WORKING,
+	0,
 	&robocop_machine_driver,
 	dec0_custom_memory,
 
-	robocopu_rom,
+	rom_robocopu,
 	0, 0,
 	0,
 	0,
 
-	robocop_input_ports,
+	input_ports_robocop,
 
 	0, 0, 0,   /* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	robocopp_hiload, robocopp_hisave
 };
 
-struct GameDriver robocpu0_driver =
+struct GameDriver driver_robocpu0 =
 {
 	__FILE__,
-	&robocop_driver,
+	&driver_robocop,
 	"robocpu0",
 	"Robocop (US revision 0)",
 	"1988",
 	"Data East USA",
 	"Bryan McPhail (MAME driver)\nNicola Salmoria (additional code)",
-	GAME_NOT_WORKING,
+	0,
 	&robocop_machine_driver,
 	dec0_custom_memory,
 
-	robocpu0_rom,
+	rom_robocpu0,
 	0, 0,
 	0,
 	0,
 
-	robocop_input_ports,
+	input_ports_robocop,
 
 	0, 0, 0,   /* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	robocopp_hiload,robocopp_hisave
 };
 
-struct GameDriver robocopb_driver =
+struct GameDriver driver_robocopb =
 {
 	__FILE__,
-	&robocop_driver,
+	&driver_robocop,
 	"robocopb",
 	"Robocop (World bootleg)",
 	"1988",
@@ -2706,19 +2706,19 @@ struct GameDriver robocopb_driver =
 	&robocopb_machine_driver,
 	dec0_custom_memory,
 
-	robocopb_rom,
+	rom_robocopb,
 	0, 0,
 	0,
 	0,
 
-	robocop_input_ports,
+	input_ports_robocop,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	robocopp_hiload, robocopp_hisave
 };
 
-struct GameDriver hippodrm_driver =
+struct GameDriver driver_hippodrm =
 {
 	__FILE__,
 	0,
@@ -2731,22 +2731,22 @@ struct GameDriver hippodrm_driver =
 	&hippodrm_machine_driver,
 	dec0_custom_memory,
 
-	hippodrm_rom,
+	rom_hippodrm,
 	hippodrm_patch, 0,
 	0,
 	0,	/* sound_prom */
 
-	hippodrm_input_ports,
+	input_ports_hippodrm,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hippodrm_hiload,hippodrm_hisave
 };
 
-struct GameDriver ffantasy_driver =
+struct GameDriver driver_ffantasy =
 {
 	__FILE__,
-	&hippodrm_driver,
+	&driver_hippodrm,
 	"ffantasy",
 	"Fighting Fantasy (Japan)",
 	"1989",
@@ -2756,19 +2756,19 @@ struct GameDriver ffantasy_driver =
 	&hippodrm_machine_driver,
 	dec0_custom_memory,
 
-	ffantasy_rom,
+	rom_ffantasy,
 	hippodrm_patch, 0,
 	0,
 	0,	/* sound_prom */
 
-	hippodrm_input_ports,
+	input_ports_hippodrm,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hippodrm_hiload,hippodrm_hisave
 };
 
-struct GameDriver slyspy_driver =
+struct GameDriver driver_slyspy =
 {
 	__FILE__,
 	0,
@@ -2781,22 +2781,22 @@ struct GameDriver slyspy_driver =
 	&slyspy_machine_driver,
 	dec0_custom_memory,
 
-	slyspy_rom,
+	rom_slyspy,
 	slyspy_patch,0,
 	0,
 	0,
 
-	slyspy_input_ports,
+	input_ports_slyspy,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	slyspy_hiload,slyspy_hisave
 };
 
-struct GameDriver slyspy2_driver =
+struct GameDriver driver_slyspy2 =
 {
 	__FILE__,
-	&slyspy_driver,
+	&driver_slyspy,
 	"slyspy2",
 	"Sly Spy (US revision 2)",
 	"1989",
@@ -2806,22 +2806,22 @@ struct GameDriver slyspy2_driver =
 	&slyspy_machine_driver,
 	dec0_custom_memory,
 
-	slyspy2_rom,
+	rom_slyspy2,
 	slyspy_patch,0,
 	0,
 	0,
 
-	slyspy_input_ports,
+	input_ports_slyspy,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	slyspy_hiload,slyspy_hisave
 };
 
-struct GameDriver secretag_driver =
+struct GameDriver driver_secretag =
 {
 	__FILE__,
-	&slyspy_driver,
+	&driver_slyspy,
 	"secretag",
 	"Secret Agent (World)",
 	"1989",
@@ -2831,12 +2831,12 @@ struct GameDriver secretag_driver =
 	&slyspy_machine_driver,
 	dec0_custom_memory,
 
-	secretag_rom,
+	rom_secretag,
 	slyspy_patch,0,
 	0,
 	0,
 
-	slyspy_input_ports,
+	input_ports_slyspy,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -2844,10 +2844,10 @@ struct GameDriver secretag_driver =
 };
 
 #if 0
-struct GameDriver secretab_driver =
+struct GameDriver driver_secretab =
 {
 	__FILE__,
-	&slyspy_driver,
+	&driver_slyspy,
 	"secretab",
 	"Sly Spy (revision 2)",
 	"1989",
@@ -2857,12 +2857,12 @@ struct GameDriver secretab_driver =
 	&slyspy_machine_driver,
 	dec0_custom_memory,
 
-	secretab_rom,
+	rom_secretab,
 	0,0,
 	0,
 	0,
 
-	slyspy_input_ports,
+	input_ports_slyspy,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -2870,7 +2870,7 @@ struct GameDriver secretab_driver =
 };
 #endif
 
-struct GameDriver midres_driver =
+struct GameDriver driver_midres =
 {
 	__FILE__,
 	0,
@@ -2883,22 +2883,22 @@ struct GameDriver midres_driver =
 	&midres_machine_driver,
 	dec0_custom_memory,
 
-	midres_rom,
+	rom_midres,
 	0, 0,
 	0,
 	0,
 
-	midres_input_ports,
+	input_ports_midres,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	midres_hiload, midres_hisave
 };
 
-struct GameDriver midresu_driver =
+struct GameDriver driver_midresu =
 {
 	__FILE__,
-	&midres_driver,
+	&driver_midres,
 	"midresu",
 	"Midnight Resistance (US)",
 	"1989",
@@ -2908,22 +2908,22 @@ struct GameDriver midresu_driver =
 	&midres_machine_driver,
 	dec0_custom_memory,
 
-	midresu_rom,
+	rom_midresu,
 	0, 0,
 	0,
 	0,
 
-	midres_input_ports,
+	input_ports_midres,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	midres_hiload, midres_hisave
 };
 
-struct GameDriver midresj_driver =
+struct GameDriver driver_midresj =
 {
 	__FILE__,
-	&midres_driver,
+	&driver_midres,
 	"midresj",
 	"Midnight Resistance (Japan)",
 	"1989",
@@ -2933,19 +2933,19 @@ struct GameDriver midresj_driver =
 	&midres_machine_driver,
 	dec0_custom_memory,
 
-	midresj_rom,
+	rom_midresj,
 	0, 0,
 	0,
 	0,
 
-	midres_input_ports,
+	input_ports_midres,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	midres_hiload, midres_hisave
 };
 
-struct GameDriver bouldash_driver =
+struct GameDriver driver_bouldash =
 {
 	__FILE__,
 	0,
@@ -2958,12 +2958,12 @@ struct GameDriver bouldash_driver =
 	&slyspy_machine_driver,
 	dec0_custom_memory,
 
-	bouldash_rom,
+	rom_bouldash,
 	slyspy_patch, 0,
 	0,
 	0,
 
-	bouldash_input_ports,
+	input_ports_bouldash,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

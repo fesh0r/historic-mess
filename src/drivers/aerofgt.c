@@ -330,7 +330,7 @@ static struct IOWritePort aerofgt_sound_writeport[] =
 
 
 
-INPUT_PORTS_START( pspikes_input_ports )
+INPUT_PORTS_START( pspikes )
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
@@ -405,7 +405,7 @@ INPUT_PORTS_START( pspikes_input_ports )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( turbofrc_input_ports )
+INPUT_PORTS_START( turbofrc )
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -493,7 +493,7 @@ INPUT_PORTS_START( turbofrc_input_ports )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( aerofgtb_input_ports )
+INPUT_PORTS_START( aerofgtb )
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -576,7 +576,7 @@ INPUT_PORTS_START( aerofgtb_input_ports )
 	/* this port is checked at 1b080 */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( aerofgt_input_ports )
+INPUT_PORTS_START( aerofgt )
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -1135,7 +1135,7 @@ static struct MachineDriver unkvsys_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( pspikes_rom )
+ROM_START( pspikes )
 	ROM_REGION(0xc0000)	/* 68000 code */
 	ROM_LOAD_WIDE_SWAP( "20",           0x00000, 0x40000, 0x75cdcee2 )
 
@@ -1155,7 +1155,7 @@ ROM_START( pspikes_rom )
 	ROM_LOAD( "a47",          0x00000, 0x40000, 0xc6779dfa )
 ROM_END
 
-ROM_START( turbofrc_rom )
+ROM_START( turbofrc )
 	ROM_REGION(0xc0000)	/* 68000 code */
 	ROM_LOAD_WIDE_SWAP( "tfrc2.bin",    0x00000, 0x40000, 0x721300ee )
 	ROM_LOAD_WIDE_SWAP( "tfrc1.bin",    0x40000, 0x40000, 0x6cd5312b )
@@ -1184,7 +1184,7 @@ ROM_START( turbofrc_rom )
 	ROM_LOAD( "tfrcu180.bin",   0x00000, 0x20000, 0x39c7c7d5 )
 ROM_END
 
-ROM_START( aerofgt_rom )
+ROM_START( aerofgt )
 	ROM_REGION(0x80000)	/* 68000 code */
 	ROM_LOAD_WIDE_SWAP( "1.u4",         0x00000, 0x80000, 0x6fdff0a2 )
 
@@ -1205,7 +1205,7 @@ ROM_START( aerofgt_rom )
 	ROM_LOAD( "it-19-01",     0x00000, 0x40000, 0x6d42723d )
 ROM_END
 
-ROM_START( aerofgtb_rom )
+ROM_START( aerofgtb )
 	ROM_REGION(0x80000)	/* 68000 code */
 	ROM_LOAD_EVEN( "v2",                0x00000, 0x40000, 0x5c9de9f0 )
 	ROM_LOAD_ODD ( "v1",                0x00000, 0x40000, 0x89c1dcf4 )
@@ -1229,7 +1229,7 @@ ROM_START( aerofgtb_rom )
 	ROM_LOAD( "it-19-01",     0x00000, 0x40000, 0x6d42723d )
 ROM_END
 
-ROM_START( aerofgtc_rom )
+ROM_START( aerofgtc )
 	ROM_REGION(0x80000)	/* 68000 code */
 	ROM_LOAD_EVEN( "v2.149",            0x00000, 0x40000, 0xf187aec6 )
 	ROM_LOAD_ODD ( "v1.111",            0x00000, 0x40000, 0x9e684b19 )
@@ -1254,7 +1254,7 @@ ROM_START( aerofgtc_rom )
 	ROM_LOAD( "it-19-01",     0x00000, 0x40000, 0x6d42723d )
 ROM_END
 
-ROM_START( unkvsys_rom )
+ROM_START( unkvsys )
 	ROM_REGION(0x60000)	/* 68000 code */
 	ROM_LOAD_EVEN( "v4",           0x00000, 0x10000, 0x1d4240c2 )
 	ROM_LOAD_ODD ( "v7",           0x00000, 0x10000, 0x0fb70066 )
@@ -1283,7 +1283,7 @@ ROM_END
 
 
 
-struct GameDriver pspikes_driver =
+struct GameDriver driver_pspikes =
 {
 	__FILE__,
 	0,
@@ -1296,19 +1296,19 @@ struct GameDriver pspikes_driver =
 	&pspikes_machine_driver,
 	0,
 
-	pspikes_rom,
+	rom_pspikes,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	pspikes_input_ports,
+	input_ports_pspikes,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver turbofrc_driver =
+struct GameDriver driver_turbofrc =
 {
 	__FILE__,
 	0,
@@ -1321,19 +1321,19 @@ struct GameDriver turbofrc_driver =
 	&turbofrc_machine_driver,
 	0,
 
-	turbofrc_rom,
+	rom_turbofrc,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	turbofrc_input_ports,
+	input_ports_turbofrc,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	0, 0
 };
 
-struct GameDriver aerofgt_driver =
+struct GameDriver driver_aerofgt =
 {
 	__FILE__,
 	0,
@@ -1346,22 +1346,22 @@ struct GameDriver aerofgt_driver =
 	&aerofgt_machine_driver,
 	0,
 
-	aerofgt_rom,
+	rom_aerofgt,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	aerofgt_input_ports,
+	input_ports_aerofgt,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	0, 0
 };
 
-struct GameDriver aerofgtb_driver =
+struct GameDriver driver_aerofgtb =
 {
 	__FILE__,
-	&aerofgt_driver,
+	&driver_aerofgt,
 	"aerofgtb",
 	"Aero Fighters (Turbo Force hardware set 1)",
 	"1992",
@@ -1371,22 +1371,22 @@ struct GameDriver aerofgtb_driver =
 	&aerofgtb_machine_driver,
 	0,
 
-	aerofgtb_rom,
+	rom_aerofgtb,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	aerofgtb_input_ports,
+	input_ports_aerofgtb,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	0, 0
 };
 
-struct GameDriver aerofgtc_driver =
+struct GameDriver driver_aerofgtc =
 {
 	__FILE__,
-	&aerofgt_driver,
+	&driver_aerofgt,
 	"aerofgtc",
 	"Aero Fighters (Turbo Force hardware set 2)",
 	"1992",
@@ -1396,12 +1396,12 @@ struct GameDriver aerofgtc_driver =
 	&aerofgtb_machine_driver,
 	0,
 
-	aerofgtc_rom,
+	rom_aerofgtc,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	aerofgtb_input_ports,
+	input_ports_aerofgtb,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -1409,7 +1409,7 @@ struct GameDriver aerofgtc_driver =
 };
 
 /* note: this one has a 2608, not a 2610 */
-struct GameDriver unkvsys_driver =
+struct GameDriver driver_unkvsys =
 {
 	__FILE__,
 	0,
@@ -1422,12 +1422,12 @@ struct GameDriver unkvsys_driver =
 	&unkvsys_machine_driver,
 	0,
 
-	unkvsys_rom,
+	rom_unkvsys,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	aerofgt_input_ports,
+	input_ports_aerofgt,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,

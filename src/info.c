@@ -323,6 +323,7 @@ static void print_game_rom(FILE* out, const struct GameDriver* game) {
 	}
 }
 
+#if 0
 static void print_game_sample(FILE* out, const struct GameDriver* game) {
 	if (game->samplenames != 0 && game->samplenames[0] != 0) {
 		int k = 0;
@@ -348,6 +349,8 @@ static void print_game_sample(FILE* out, const struct GameDriver* game) {
 		}
 	}
 }
+#endif
+
 
 static void print_game_micro(FILE* out, const struct GameDriver* game)
 {
@@ -420,7 +423,7 @@ static void print_game_video(FILE* out, const struct GameDriver* game)
 		showxy = 1;
 	}
 
-	if (game->orientation & ORIENTATION_SWAP_XY)
+	if (game->flags & ORIENTATION_SWAP_XY)
 	{
 		dx = driver->visible_area.max_y - driver->visible_area.min_y + 1;
 		dy = driver->visible_area.max_x - driver->visible_area.min_x + 1;
@@ -497,8 +500,6 @@ static void print_game_history(FILE* out, const struct GameDriver* game) {
 }
 
 static void print_game_driver(FILE* out, const struct GameDriver* game) {
-	const struct MachineDriver* driver = game->drv;
-
 	fprintf(out, L1P "driver" L2B);
 	if (game->flags & GAME_NOT_WORKING)
 		fprintf(out, L2P "status preliminary" L2N);
@@ -524,7 +525,7 @@ static void print_game_driver(FILE* out, const struct GameDriver* game) {
 	else
 		fprintf(out, L2P "hiscore preliminary" L2N);
 
-	if (driver->video_attributes & VIDEO_SUPPORTS_16BIT)
+	if (game->flags & GAME_REQUIRES_16BIT)
 		fprintf(out, L2P "colordeep 16" L2N);
 	else
 		fprintf(out, L2P "colordeep 8" L2N);
@@ -569,7 +570,7 @@ static void print_game_info(FILE* out, const struct GameDriver* game) {
 
 	if (game->rom) /* MESS */
 	print_game_rom(out,game);
-	print_game_sample(out,game);
+//	print_game_sample(out,game);
 	print_game_micro(out,game);
 	print_game_video(out,game);
 	print_game_sound(out,game);

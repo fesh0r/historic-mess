@@ -18,9 +18,11 @@ extern int PIT_clock[3];
 
 static int channel = 0;
 static int baseclock = BASECLOCK/440;
+
 static signed char waveform0[8] = {  0,  0,  0,  0,  0,  0,  0,  0};
 static signed char waveform1[8] = {127,127,127,127,127,127,127,127};
 static signed char waveform2[8] = { 64, 90,127, 90, 64, 38,  0, 38};
+
 static signed char *waveform = waveform0;
 
 /************************************/
@@ -31,6 +33,10 @@ int pc_sh_start(void)
 	if (errorlog) fprintf(errorlog, "pc_sh_start\n");
 	channel = stream_init("PC speaker", 50, baseclock, 8, 0, pc_sh_update);
     return 0;
+}
+
+int pc_sh_custom_start(const struct MachineSound* driver) { 
+	return pc_sh_start();
 }
 
 /************************************/
@@ -45,10 +51,8 @@ void pc_sh_speaker(int mode)
 {
 	static int old_mode = 0;
 
-	if (mode == old_mode)
-		return;
+	if (mode == old_mode) return;
 
-    stream_update(channel,0);
     switch (mode) {
 		case 0: /* completely off */
 			SND_LOG(1,"PC_speaker",(errorlog,"off\n"));
@@ -63,8 +67,11 @@ void pc_sh_speaker(int mode)
 			waveform = waveform2;
             break;
     }
+    stream_update(channel,0);
     old_mode = mode;
 }
+
+void pc_sh_custom_update(void) {}
 
 /************************************/
 /* Sound handler update 			*/

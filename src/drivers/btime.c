@@ -545,7 +545,7 @@ static void sound_command_w(int offset,int data)
 }
 
 
-INPUT_PORTS_START( btime_input_ports )
+INPUT_PORTS_START( btime )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
@@ -622,7 +622,7 @@ INPUT_PORTS_START( btime_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( cookrace_input_ports )
+INPUT_PORTS_START( cookrace )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH,IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH,IPT_JOYSTICK_LEFT | IPF_4WAY )
@@ -701,7 +701,7 @@ INPUT_PORTS_START( cookrace_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( zoar_input_ports )
+INPUT_PORTS_START( zoar )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -777,7 +777,7 @@ INPUT_PORTS_START( zoar_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( lnc_input_ports )
+INPUT_PORTS_START( lnc )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
@@ -847,7 +847,7 @@ INPUT_PORTS_START( lnc_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( wtennis_input_ports )
+INPUT_PORTS_START( wtennis )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -918,7 +918,7 @@ INPUT_PORTS_START( wtennis_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( mmonkey_input_ports )
+INPUT_PORTS_START( mmonkey )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
@@ -986,7 +986,7 @@ INPUT_PORTS_START( mmonkey_input_ports )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( bnj_input_ports )
+INPUT_PORTS_START( bnj )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -1064,7 +1064,7 @@ INPUT_PORTS_START( bnj_input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( disco_input_ports )
+INPUT_PORTS_START( disco )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_4WAY )
@@ -1406,7 +1406,7 @@ MACHINE_DRIVER( disco,     750000, btime_irq_interrupt, nmi_interrupt,       dis
 
 ***************************************************************************/
 
-ROM_START( btime_rom )
+ROM_START( btime )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "aa04.9b",      0xc000, 0x1000, 0x368a25b5 )
 	ROM_LOAD( "aa06.13b",     0xd000, 0x1000, 0xb4ba400d )
@@ -1431,7 +1431,7 @@ ROM_START( btime_rom )
 	ROM_LOAD( "ab03.6b",      0x0000, 0x0800, 0xd26bc1f3 )
 ROM_END
 
-ROM_START( btime2_rom )
+ROM_START( btime2 )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "aa04.9b2",     0xc000, 0x1000, 0xa041e25b )
 	ROM_LOAD( "aa06.13b",     0xd000, 0x1000, 0xb4ba400d )
@@ -1456,7 +1456,7 @@ ROM_START( btime2_rom )
 	ROM_LOAD( "ab03.6b",      0x0000, 0x0800, 0xd26bc1f3 )
 ROM_END
 
-ROM_START( btimem_rom )
+ROM_START( btimem )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "ab05a1.12b",   0xb000, 0x1000, 0x0a98b230 )
 	ROM_LOAD( "ab04.9b",      0xc000, 0x1000, 0x797e5f75 )
@@ -1482,7 +1482,7 @@ ROM_START( btimem_rom )
 	ROM_LOAD( "ab03.6b",      0x0000, 0x0800, 0xd26bc1f3 )
 ROM_END
 
-ROM_START( cookrace_rom )
+ROM_START( cookrace )
 	ROM_REGION(0x10000)     /* 64k for code */
 	/* code is in the range 0500-3fff, encrypted */
 	ROM_LOAD( "1f.1",         0x0000, 0x2000, 0x68759d32 )
@@ -1504,15 +1504,15 @@ ROM_START( cookrace_rom )
 	ROM_LOAD( "6f.6",         0x0000, 0x1000, 0x6b8e0272 ) /* starts at 0000, not f000; 0000-01ff is RAM */
 	ROM_RELOAD(               0xf000, 0x1000 )     /* for the reset/interrupt vectors */
 
-    ROM_REGION(0x0040)
-    ROM_LOAD( "f9.clr",       0x0000, 0x0020, 0xc2348c1d )	/* palette */
-    ROM_LOAD( "b7",           0x0020, 0x0020, 0xe4268fa6 )	/* unknown */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
+	ROM_LOAD( "f9.clr",       0x0000, 0x0020, 0xc2348c1d )	/* palette */
+	ROM_LOAD( "b7",           0x0020, 0x0020, 0xe4268fa6 )	/* unknown */
 ROM_END
 
 /* There is a flyer with a screen shot for Lock'n'Chase at:
    http://www.gamearchive.com/flyers/video/taito/locknchase_f.jpg  */
 
-ROM_START( lnc_rom )
+ROM_START( lnc )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "s3-3d",        0xc000, 0x1000, 0x1ab4f2c2 )
 	ROM_LOAD( "s2-3c",        0xd000, 0x1000, 0x5e46b789 )
@@ -1530,12 +1530,12 @@ ROM_START( lnc_rom )
 	ROM_REGION(0x10000)     /* 64k for the audio CPU */
 	ROM_LOAD( "sa-1h",        0xf000, 0x1000, 0x379387ec )
 
-    ROM_REGION(0x0040)	/* PROMs */
-    ROM_LOAD( "sc-5m",        0x0000, 0x0020, 0x2a976ebe )	/* palette */
-    ROM_LOAD( "sb-4c",        0x0020, 0x0020, 0xa29b4204 )	/* RAS/CAS logic - not used */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
+	ROM_LOAD( "sc-5m",        0x0000, 0x0020, 0x2a976ebe )	/* palette */
+	ROM_LOAD( "sb-4c",        0x0020, 0x0020, 0xa29b4204 )	/* RAS/CAS logic - not used */
 ROM_END
 
-ROM_START( wtennis_rom )
+ROM_START( wtennis )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "tx",           0xc000, 0x0800, 0xfd343474 )
 	ROM_LOAD( "t4",           0xd000, 0x1000, 0xe465d82c )
@@ -1554,12 +1554,12 @@ ROM_START( wtennis_rom )
 	ROM_LOAD( "t1",           0x0000, 0x1000, 0x40737ea7 ) /* starts at 0000, not f000; 0000-01ff is RAM */
 	ROM_RELOAD(               0xf000, 0x1000 )     /* for the reset/interrupt vectors */
 
-    ROM_REGION(0x0040)	/* PROMs */
-    ROM_LOAD( "mb7051.m5",    0x0000, 0x0020, 0xf051cb28 )	/* palette */
-    ROM_LOAD( "sb-4c",        0x0020, 0x0020, 0xa29b4204 )	/* RAS/CAS logic - not used */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
+	ROM_LOAD( "mb7051.m5",    0x0000, 0x0020, 0xf051cb28 )	/* palette */
+	ROM_LOAD( "sb-4c",        0x0020, 0x0020, 0xa29b4204 )	/* RAS/CAS logic - not used */
 ROM_END
 
-ROM_START( mmonkey_rom )
+ROM_START( mmonkey )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "mmonkey.e4",   0xc000, 0x1000, 0x8d31bf6a )
 	ROM_LOAD( "mmonkey.d4",   0xd000, 0x1000, 0xe54f584a )
@@ -1577,12 +1577,12 @@ ROM_START( mmonkey_rom )
 	ROM_REGION(0x10000)     /* 64k for the audio CPU */
 	ROM_LOAD( "mmonkey.h1",   0xf000, 0x1000, 0x5bcb2e81 )
 
-    ROM_REGION(0x0040)	/* PROMs */
-    ROM_LOAD( "mmi6331.m5",   0x0000, 0x0020, 0x55e28b32 )	/* palette */
-    ROM_LOAD( "sb-4c",        0x0020, 0x0020, 0xa29b4204 )	/* RAS/CAS logic - not used */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
+	ROM_LOAD( "mmi6331.m5",   0x0000, 0x0020, 0x55e28b32 )	/* palette */
+	ROM_LOAD( "sb-4c",        0x0020, 0x0020, 0xa29b4204 )	/* RAS/CAS logic - not used */
 ROM_END
 
-ROM_START( brubber_rom )
+ROM_START( brubber )
 	ROM_REGION(0x10000)     /* 64k for code */
 	/* a000-bfff space for the service ROM */
 	ROM_LOAD( "brubber.12c",  0xc000, 0x2000, 0xb5279c70 )
@@ -1599,7 +1599,7 @@ ROM_START( brubber_rom )
 	ROM_LOAD( "bnj6c.bin",    0xf000, 0x1000, 0x8c02f662 )
 ROM_END
 
-ROM_START( bnj_rom )
+ROM_START( bnj )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "bnj12b.bin",   0xa000, 0x2000, 0xba3e3801 )
 	ROM_LOAD( "bnj12c.bin",   0xc000, 0x2000, 0xfb3a2cdd )
@@ -1616,7 +1616,7 @@ ROM_START( bnj_rom )
 	ROM_LOAD( "bnj6c.bin",    0xf000, 0x1000, 0x8c02f662 )
 ROM_END
 
-ROM_START( caractn_rom )
+ROM_START( caractn )
 	ROM_REGION(0x10000)     /* 64k for code */
 	/* a000-bfff space for the service ROM */
 	ROM_LOAD( "brubber.12c",  0xc000, 0x2000, 0xb5279c70 )
@@ -1633,7 +1633,7 @@ ROM_START( caractn_rom )
 	ROM_LOAD( "bnj6c.bin",    0xf000, 0x1000, 0x8c02f662 )
 ROM_END
 
-ROM_START( zoar_rom )
+ROM_START( zoar )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "zoar15",       0xd000, 0x1000, 0x1f0cfdb7 )
 	ROM_LOAD( "zoar16",       0xe000, 0x1000, 0x7685999c )
@@ -1661,12 +1661,12 @@ ROM_START( zoar_rom )
 	ROM_REGION(0x1000)      /* background graphics */
 	ROM_LOAD( "zoar13",       0x0000, 0x1000, 0x8fefa960 )
 
-    ROM_REGION(0x0040)
-    ROM_LOAD( "z20-1l",       0x0000, 0x0020, 0xa63f0a07 )
-    ROM_LOAD( "z21-1l",       0x0020, 0x0020, 0x5e1e5788 )
+	ROM_REGIONX( 0x0040, REGION_PROMS )
+	ROM_LOAD( "z20-1l",       0x0000, 0x0020, 0xa63f0a07 )
+	ROM_LOAD( "z21-1l",       0x0020, 0x0020, 0x5e1e5788 )
 ROM_END
 
-ROM_START( disco_rom )
+ROM_START( disco )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "disco.w5",     0xa000, 0x1000, 0xb2c87b78 )
 	ROM_LOAD( "disco.w4",     0xb000, 0x1000, 0xad7040ee )
@@ -1680,7 +1680,7 @@ ROM_START( disco_rom )
 	ROM_REGION(0x10000)     /* 64k for the audio CPU */
 	ROM_LOAD( "disco.w6",     0xf000, 0x1000, 0xd81e781e )
 
-	ROM_REGION(0x0020)	    /* color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "disco.clr",    0x0000, 0x0020, 0xa393f913 )
 ROM_END
 
@@ -2013,7 +2013,7 @@ static void disco_hisave(void)
 }
 
 
-struct GameDriver btime_driver =
+struct GameDriver driver_btime =
 {
 	__FILE__,
 	0,
@@ -2026,12 +2026,12 @@ struct GameDriver btime_driver =
 	&btime_machine_driver,
 	0,
 
-	btime_rom,
+	rom_btime,
 	0, btime_decode,
 	0,
 	0,	/* sound_prom */
 
-	btime_input_ports,
+	input_ports_btime,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -2039,10 +2039,10 @@ struct GameDriver btime_driver =
 	btime_hiload, btime_hisave
 };
 
-struct GameDriver btime2_driver =
+struct GameDriver driver_btime2 =
 {
 	__FILE__,
-	&btime_driver,
+	&driver_btime,
 	"btime2",
 	"Burger Time (Data East set 2)",
 	"1982",
@@ -2052,12 +2052,12 @@ struct GameDriver btime2_driver =
 	&btime_machine_driver,
 	0,
 
-	btime2_rom,
+	rom_btime2,
 	0, btime_decode,
 	0,
 	0,	/* sound_prom */
 
-	btime_input_ports,
+	input_ports_btime,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -2065,10 +2065,10 @@ struct GameDriver btime2_driver =
 	btime_hiload, btime_hisave
 };
 
-struct GameDriver btimem_driver =
+struct GameDriver driver_btimem =
 {
 	__FILE__,
-	&btime_driver,
+	&driver_btime,
 	"btimem",
 	"Burger Time (Midway)",
 	"1982",
@@ -2078,12 +2078,12 @@ struct GameDriver btimem_driver =
 	&btime_machine_driver,
 	0,
 
-	btimem_rom,
+	rom_btimem,
 	0, btime_decode,
 	0,
 	0,	/* sound_prom */
 
-	btime_input_ports,
+	input_ports_btime,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -2091,10 +2091,10 @@ struct GameDriver btimem_driver =
 	btime_hiload, btime_hisave
 };
 
-struct GameDriver cookrace_driver =
+struct GameDriver driver_cookrace =
 {
 	__FILE__,
-	&btime_driver,
+	&driver_btime,
 	"cookrace",
 	"Cook Race",
 	"1982",
@@ -2104,20 +2104,20 @@ struct GameDriver cookrace_driver =
 	&cookrace_machine_driver,
 	0,
 
-	cookrace_rom,
+	rom_cookrace,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	cookrace_input_ports,
+	input_ports_cookrace,
 
-    PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	0, 0
 };
 
-struct GameDriver lnc_driver =
+struct GameDriver driver_lnc =
 {
 	__FILE__,
 	0,
@@ -2130,20 +2130,20 @@ struct GameDriver lnc_driver =
 	&lnc_machine_driver,
 	0,
 
-	lnc_rom,
+	rom_lnc,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	lnc_input_ports,
+	input_ports_lnc,
 
-    PROM_MEMORY_REGION(3), 0, 0,
+    0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	lnc_hiload, lnc_hisave
 };
 
-struct GameDriver wtennis_driver =
+struct GameDriver driver_wtennis =
 {
 	__FILE__,
 	0,
@@ -2152,24 +2152,24 @@ struct GameDriver wtennis_driver =
 	"1982",
 	"bootleg",
 	"Zsolt Vasvari\nKevin Brisley (Bump 'n' Jump driver)\nMirko Buffoni (Audio/Add. code)",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&wtennis_machine_driver,
 	wtennis_driver_init,
 
-	wtennis_rom,
+	rom_wtennis,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	wtennis_input_ports,
+	input_ports_wtennis,
 
-    PROM_MEMORY_REGION(3), 0, 0,
-	ORIENTATION_ROTATE_270,
+    0, 0, 0,
+	ORIENTATION_ROTATE_270 | GAME_IMPERFECT_COLORS,
 
 	0, 0
 };
 
-struct GameDriver mmonkey_driver =
+struct GameDriver driver_mmonkey =
 {
 	__FILE__,
 	0,
@@ -2182,20 +2182,20 @@ struct GameDriver mmonkey_driver =
 	&mmonkey_machine_driver,
 	0,
 
-	mmonkey_rom,
+	rom_mmonkey,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	mmonkey_input_ports,
+	input_ports_mmonkey,
 
-    PROM_MEMORY_REGION(3), 0, 0,
+    0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	0, 0
 };
 
-struct GameDriver brubber_driver =
+struct GameDriver driver_brubber =
 {
 	__FILE__,
 	0,
@@ -2208,12 +2208,12 @@ struct GameDriver brubber_driver =
 	&bnj_machine_driver,
 	0,
 
-	brubber_rom,
+	rom_brubber,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	bnj_input_ports,
+	input_ports_bnj,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -2221,10 +2221,10 @@ struct GameDriver brubber_driver =
 	bnj_hiload, bnj_hisave
 };
 
-struct GameDriver bnj_driver =
+struct GameDriver driver_bnj =
 {
 	__FILE__,
-	&brubber_driver,
+	&driver_brubber,
 	"bnj",
 	"Bump 'n' Jump",
 	"1982",
@@ -2234,12 +2234,12 @@ struct GameDriver bnj_driver =
 	&bnj_machine_driver,
 	0,
 
-	bnj_rom,
+	rom_bnj,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	bnj_input_ports,
+	input_ports_bnj,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -2247,10 +2247,10 @@ struct GameDriver bnj_driver =
 	bnj_hiload, bnj_hisave
 };
 
-struct GameDriver caractn_driver =
+struct GameDriver driver_caractn =
 {
 	__FILE__,
-	&brubber_driver,
+	&driver_brubber,
 	"caractn",
 	"Car Action",
 	"1983",
@@ -2260,12 +2260,12 @@ struct GameDriver caractn_driver =
 	&bnj_machine_driver,
 	0,
 
-	caractn_rom,
+	rom_caractn,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	bnj_input_ports,
+	input_ports_bnj,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -2273,7 +2273,7 @@ struct GameDriver caractn_driver =
 	bnj_hiload, bnj_hisave
 };
 
-struct GameDriver zoar_driver =
+struct GameDriver driver_zoar =
 {
 	__FILE__,
 	0,
@@ -2286,20 +2286,20 @@ struct GameDriver zoar_driver =
 	&zoar_machine_driver,
 	0,
 
-	zoar_rom,
+	rom_zoar,
 	0, zoar_decode,
 	0,
 	0,	/* sound_prom */
 
-	zoar_input_ports,
+	input_ports_zoar,
 
-    PROM_MEMORY_REGION(4), 0, 0,
+    0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	zoar_hiload, zoar_hisave
 };
 
-struct GameDriver disco_driver =
+struct GameDriver driver_disco =
 {
 	__FILE__,
 	0,
@@ -2312,14 +2312,14 @@ struct GameDriver disco_driver =
 	&disco_machine_driver,
 	0,
 
-	disco_rom,
+	rom_disco,
 	0, btime_decode,
 	0,
 	0,	/* sound_prom */
 
-	disco_input_ports,
+	input_ports_disco,
 
-	PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	disco_hiload, disco_hisave
@@ -2405,7 +2405,7 @@ static struct MemoryWriteAddress decocass_sound_writemem[] =
 	{ -1 }  /* end of table */
 };
 
-INPUT_PORTS_START( decocass_input_ports )
+INPUT_PORTS_START( decocass )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH,IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH,IPT_JOYSTICK_LEFT | IPF_4WAY )
@@ -2537,7 +2537,7 @@ ignore_interrupt,0,//			nmi_interrupt,16   /* IRQs are triggered by the main CPU
 	}
 };
 
-ROM_START( decocass_rom )
+ROM_START( decocass )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "rms8.cpu",     0xf000, 0x1000, 0x23d929b7 )
 /* the following two are just about the same stuff as the one above */
@@ -2548,7 +2548,7 @@ ROM_START( decocass_rom )
 	ROM_LOAD( "rms8.snd",     0xf800, 0x0800, 0xb66b2c2a )
 ROM_END
 
-struct GameDriver decocass_driver =
+struct GameDriver driver_decocass =
 {
 	__FILE__,
 	0,
@@ -2561,12 +2561,12 @@ struct GameDriver decocass_driver =
 	&decocass_machine_driver,
 	0,
 
-	decocass_rom,
+	rom_decocass,
 	0, lnc_decode,
 	0,
 	0,	/* sound_prom */
 
-	decocass_input_ports,
+	input_ports_decocass,
 
     0, 0, 0,
 	ORIENTATION_ROTATE_270,

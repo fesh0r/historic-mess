@@ -240,7 +240,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /*	Input Ports:	[0] Controls	[1] DSWs */
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( ginganin )
 
 	PORT_START	// IN0 - Controls - Read from 70000.w
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
@@ -401,7 +401,7 @@ static struct AY8910interface AY8910_interface =
 {
 	1,
 	3579545 / 2 ,	/* ? */
-	{ 10 },					// Takahiro Nogi. 1999/09/27 (30 -> 10)
+	{ 10 },
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -414,7 +414,7 @@ static struct YM3526interface ym3526_interface =
 {
 	1,
 	3579545,	/* ? */
-	{ 63 },					// Takahiro Nogi. 1999/09/27 (50 -> 63)
+	{ 63 },
 	{ 0 }
 };
 
@@ -423,10 +423,10 @@ static struct YM3526interface ym3526_interface =
 static struct ADPCMinterface adpcm_interface =
 {
 	4,			/* ? channels */
-	16000/2,		/* ? Hz */	// Takahiro Nogi. 1999/09/27 (6000 -> 8000)
+	3579545/512,/* ??? */
 	4,			/* memory region */
 	0,			/* init function */
-	{ 10, 10, 10 , 10 }	/* volume(s) */	// Takahiro Nogi. 1999/09/27 (30 -> 10)
+	{ 10, 10, 10 , 10 }	/* volume(s) */
 };
 
 
@@ -489,7 +489,7 @@ static struct MachineDriver ginganin_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( ginganin_rom )
+ROM_START( ginganin )
 
 	ROM_REGION(0x20000)				/* Region 0 - main cpu */
 	ROM_LOAD_EVEN( "gn_02.bin", 0x00000, 0x10000, 0x4a4e012f )
@@ -539,7 +539,7 @@ unsigned char *RAM;
 }
 
 
-struct GameDriver ginganin_driver =
+struct GameDriver driver_ginganin =
 {
 	__FILE__,
 	0,
@@ -548,19 +548,19 @@ struct GameDriver ginganin_driver =
 	"1987",
 	"Jaleco",
 	"Luca Elia\n",
-	GAME_IMPERFECT_SOUND,
+	0,
 	&ginganin_machine_driver,
 	0,
 
-	ginganin_rom,
+	rom_ginganin,
 	ginganin_rom_decode, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_ginganin,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_SOUND,
 
 	0,0
 };

@@ -46,7 +46,7 @@ static struct MemoryWriteAddress vectrex_writemem[] =
 	{ -1 }
 };
 
-INPUT_PORTS_START( vectrex_input_ports )
+INPUT_PORTS_START( vectrex )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
@@ -128,6 +128,15 @@ static struct AY8910interface ay8910_interface =
 	{ 0 }
 };
 
+
+/* list of file extensions */
+static const char *vectrex_file_extensions[] =
+{
+	"bin",
+	0       /* end of array */
+};
+
+
 static struct MachineDriver vectrex_machine_driver =
 {
 	/* basic machine hardware */
@@ -173,7 +182,7 @@ static struct MachineDriver vectrex_machine_driver =
 
 };
 
-ROM_START(vectrex_rom)
+ROM_START(vectrex)
 	ROM_REGION(0x10000)
 	ROM_LOAD("system.img", 0xe000, 0x2000, 0xba13fb57)
 ROM_END
@@ -193,9 +202,10 @@ struct GameDriver vectrex_driver =
 	0,
 	&vectrex_machine_driver,
 	0,
-	vectrex_rom,
+	rom_vectrex,
 	vectrex_load_rom,
 	vectrex_id_rom,
+	vectrex_file_extensions,
 	1,	/* number of ROM slots */
 	0,	/* number of floppy drives supported */
 	0,	/* number of hard drives supported */
@@ -204,7 +214,7 @@ struct GameDriver vectrex_driver =
 	0,
 	0,	/* sound_prom */
 
-	vectrex_input_ports,
+	input_ports_vectrex,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -252,7 +262,7 @@ static struct MemoryWriteAddress spectrum1_writemem[] =
 	{ -1 }
 };
 
-INPUT_PORTS_START( spectrum1_input_ports )
+INPUT_PORTS_START( spectrum1 )
 	PORT_START
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -313,7 +323,7 @@ static struct MachineDriver raaspec_machine_driver =
 
 };
 
-ROM_START(spectrum1_rom)
+ROM_START(spectrum1)
 	ROM_REGION(0x10000)
 	ROM_LOAD("spectrum.bin", 0x0000, 0x8000, 0x20af7f3f)
 	ROM_LOAD("system.img", 0xe000, 0x2000, 0xba13fb57)
@@ -335,9 +345,10 @@ struct GameDriver raaspec_driver =
 	&raaspec_machine_driver,
 	0,
 
-	spectrum1_rom,
+	rom_spectrum1,
 	0,
 	0,
+	0,	/* file extensions */
 	1,	/* number of ROM slots */
 	0,	/* number of floppy drives supported */
 	0,	/* number of hard drives supported */
@@ -346,7 +357,7 @@ struct GameDriver raaspec_driver =
 	0,
 	0,	/* sound_prom */
 
-	spectrum1_input_ports,
+	input_ports_spectrum1,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

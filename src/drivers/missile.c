@@ -171,7 +171,7 @@ static struct MemoryWriteAddress writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( missile )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
@@ -244,9 +244,15 @@ INPUT_PORTS_START( input_ports )
 
 	PORT_START	/* FAKE */
 	PORT_ANALOG( 0x0f, 0x00, IPT_TRACKBALL_Y | IPF_REVERSE, 50, 10, 7, 0, 0)
+
+	PORT_START	/* FAKE */
+	PORT_ANALOG( 0x0f, 0x00, IPT_TRACKBALL_X | IPF_REVERSE | IPF_COCKTAIL, 50, 10, 7, 0, 0)
+
+	PORT_START	/* FAKE */
+	PORT_ANALOG( 0x0f, 0x00, IPT_TRACKBALL_Y | IPF_REVERSE | IPF_COCKTAIL, 50, 10, 7, 0, 0)
 INPUT_PORTS_END
 
-INPUT_PORTS_START( suprmatk_input_ports )
+INPUT_PORTS_START( suprmatk )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
@@ -319,6 +325,12 @@ INPUT_PORTS_START( suprmatk_input_ports )
 
 	PORT_START	/* FAKE */
 	PORT_ANALOG( 0x0f, 0x00, IPT_TRACKBALL_Y | IPF_REVERSE, 50, 10, 7, 0, 0)
+
+	PORT_START	/* FAKE */
+	PORT_ANALOG( 0x0f, 0x00, IPT_TRACKBALL_X | IPF_REVERSE | IPF_COCKTAIL, 50, 10, 7, 0, 0)
+
+	PORT_START	/* FAKE */
+	PORT_ANALOG( 0x0f, 0x00, IPT_TRACKBALL_Y | IPF_REVERSE | IPF_COCKTAIL, 50, 10, 7, 0, 0)
 INPUT_PORTS_END
 
 
@@ -392,7 +404,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( missile_rom )
+ROM_START( missile )
 	ROM_REGION(0x10000) /* 64k for code */
 	ROM_LOAD( "035820.02",    0x5000, 0x0800, 0x7a62ce6a )
 	ROM_LOAD( "035821.02",    0x5800, 0x0800, 0xdf3bd57f )
@@ -403,7 +415,7 @@ ROM_START( missile_rom )
 	ROM_RELOAD( 		   0xF800, 0x0800 ) 	/* for interrupt vectors  */
 ROM_END
 
-ROM_START( missile2_rom )
+ROM_START( missile2 )
 	ROM_REGION(0x10000) /* 64k for code */
 	ROM_LOAD( "35820-01.h1",  0x5000, 0x0800, 0x41cbb8f2 )
 	ROM_LOAD( "35821-01.jk1", 0x5800, 0x0800, 0x728702c8 )
@@ -414,7 +426,7 @@ ROM_START( missile2_rom )
 	ROM_RELOAD( 		      0xF800, 0x0800 ) 	/* for interrupt vectors  */
 ROM_END
 
-ROM_START( suprmatk_rom )
+ROM_START( suprmatk )
 	ROM_REGION(0x10000) /* 64k for code */
 	ROM_LOAD( "035820.sma",   0x5000, 0x0800, 0x75f01b87 )
 	ROM_LOAD( "035821.sma",   0x5800, 0x0800, 0x3320d67e )
@@ -462,7 +474,7 @@ static void hisave(void)
 
 
 
-struct GameDriver missile_driver =
+struct GameDriver driver_missile =
 {
 	__FILE__,
 	0,
@@ -475,12 +487,12 @@ struct GameDriver missile_driver =
 	&machine_driver,
 	0,
 
-	missile_rom,
+	rom_missile,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_missile,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -488,10 +500,10 @@ struct GameDriver missile_driver =
 	hiload, hisave
 };
 
-struct GameDriver missile2_driver =
+struct GameDriver driver_missile2 =
 {
 	__FILE__,
-	&missile_driver,
+	&driver_missile,
 	"missile2",
 	"Missile Command (set 2)",
 	"1980",
@@ -501,12 +513,12 @@ struct GameDriver missile2_driver =
 	&machine_driver,
 	0,
 
-	missile2_rom,
+	rom_missile2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_missile,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -514,10 +526,10 @@ struct GameDriver missile2_driver =
 	hiload, hisave
 };
 
-struct GameDriver suprmatk_driver =
+struct GameDriver driver_suprmatk =
 {
 	__FILE__,
-	&missile_driver,
+	&driver_missile,
 	"suprmatk",
 	"Super Missile Attack",
 	"1981",
@@ -527,12 +539,12 @@ struct GameDriver suprmatk_driver =
 	&machine_driver,
 	0,
 
-	suprmatk_rom,
+	rom_suprmatk,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	suprmatk_input_ports,
+	input_ports_suprmatk,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

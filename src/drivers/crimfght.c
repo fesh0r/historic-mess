@@ -144,7 +144,7 @@ static struct MemoryWriteAddress crimfght_writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( crimfght_input_ports )
+INPUT_PORTS_START( crimfght )
 	PORT_START	/* DSW #1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
@@ -270,7 +270,7 @@ INPUT_PORTS_START( crimfght_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )	/* actually service 4 */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( crimfgtj_input_ports )
+INPUT_PORTS_START( crimfgtj )
 	PORT_START	/* DSW #1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
@@ -470,7 +470,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( crimfght_rom )
+ROM_START( crimfght )
 	ROM_REGION( 0x28000 ) /* code + banked roms */
 	ROM_LOAD( "821l02.f24", 0x10000, 0x18000, 0x588e7da6 )
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -493,7 +493,7 @@ ROM_START( crimfght_rom )
 	ROM_LOAD( "prom",        0x0000, 0x0100, 0x00000000 )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( crimfgtj_rom )
+ROM_START( crimfgtj )
 	ROM_REGION( 0x28000 ) /* code + banked roms */
 	ROM_LOAD( "821p02.bin", 0x10000, 0x18000, 0xf33fa2e1 )
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -557,7 +557,7 @@ static void gfx_untangle(void)
 
 
 
-struct GameDriver crimfght_driver =
+struct GameDriver driver_crimfght =
 {
 	__FILE__,
 	0,
@@ -570,22 +570,22 @@ struct GameDriver crimfght_driver =
 	&machine_driver,
 	0,
 
-	crimfght_rom,
+	rom_crimfght,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	crimfght_input_ports,
+	input_ports_crimfght,
 
 	0, 0, 0,
     ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver crimfgtj_driver =
+struct GameDriver driver_crimfgtj =
 {
 	__FILE__,
-	&crimfght_driver,
+	&driver_crimfght,
 	"crimfgtj",
 	"Crime Fighters (Japan)",
 	"1989",
@@ -595,12 +595,12 @@ struct GameDriver crimfgtj_driver =
 	&machine_driver,
 	0,
 
-	crimfgtj_rom,
+	rom_crimfgtj,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	crimfgtj_input_ports,
+	input_ports_crimfgtj,
 
 	0, 0, 0,
     ORIENTATION_DEFAULT,

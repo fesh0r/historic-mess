@@ -72,7 +72,7 @@ static struct MemoryWriteAddress writemem[] =
 };
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( circus )
 	PORT_START /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
@@ -101,7 +101,7 @@ INPUT_PORTS_START( input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( robotbowl_input_ports )
+INPUT_PORTS_START( robotbowl )
 	PORT_START /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 )
@@ -129,7 +129,7 @@ INPUT_PORTS_START( robotbowl_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( crash_input_ports )
+INPUT_PORTS_START( crash )
 	PORT_START /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
@@ -158,7 +158,7 @@ INPUT_PORTS_START( crash_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( ripcord_input_ports )
+INPUT_PORTS_START( ripcord )
 	PORT_START /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
@@ -200,6 +200,12 @@ static unsigned short colortable[ARTWORK_COLORS] =
 	0,0,
 	0,1,
 };
+
+static void init_palette(unsigned char *game_palette, unsigned short *game_colortable,const unsigned char *color_prom)
+{
+	memcpy(game_palette,palette,sizeof(palette));
+	memcpy(game_colortable,colortable,sizeof(colortable));
+}
 
 
 static struct GfxLayout charlayout =
@@ -257,7 +263,7 @@ static struct GfxDecodeInfo robotbowl_gfxdecodeinfo[] =
   ROMs
 ***************************************************************************/
 
-ROM_START( circus_rom )
+ROM_START( circus )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "circus.1a",    0x1000, 0x0200, 0x7654ea75 ) /* Code */
 	ROM_LOAD( "circus.2a",    0x1200, 0x0200, 0xb8acdbc5 )
@@ -278,7 +284,7 @@ ROM_START( circus_rom )
 
 ROM_END
 
-ROM_START( robotbowl_rom )
+ROM_START( robotbowl )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "robotbwl.1a",  0xF000, 0x0200, 0xdf387a0b ) /* Code */
 	ROM_LOAD( "robotbwl.2a",  0xF200, 0x0200, 0xc948274d )
@@ -298,7 +304,7 @@ ROM_START( robotbowl_rom )
 
 ROM_END
 
-ROM_START( crash_rom )
+ROM_START( crash )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "crash.a1",     0x1000, 0x0200, 0xb9571203 ) /* Code */
 	ROM_LOAD( "crash.a2",     0x1200, 0x0200, 0xb4581a95 )
@@ -318,7 +324,7 @@ ROM_START( crash_rom )
 	ROM_LOAD( "crash.d14",    0x0800, 0x0200, 0x833f81e4 ) /* Cars */
 ROM_END
 
-ROM_START( ripcord_rom )
+ROM_START( ripcord )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "9027.1a",      0x1000, 0x0200, 0x56b8dc06 ) /* Code */
 	ROM_LOAD( "9028.2a",      0x1200, 0x0200, 0xa8a78a30 )
@@ -386,12 +392,10 @@ static struct MachineDriver machine_driver =
 	/* video hardware */
 	32*8, 32*8, { 0*8, 31*8-1, 0*8, 32*8-1 },
 	gfxdecodeinfo,
-//	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
 	ARTWORK_COLORS,ARTWORK_COLORS,		/* Leave extra colors for the overlay */
-	0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY | VIDEO_MODIFIES_PALETTE,
-//	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
 	circus_vh_start,
 	circus_vh_stop,
@@ -428,7 +432,7 @@ static struct MachineDriver robotbowl_machine_driver =
 	32*8, 32*8, { 0*8, 31*8-1, 0*8, 32*8-1 },
 	robotbowl_gfxdecodeinfo,
 	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -466,7 +470,7 @@ static struct MachineDriver crash_machine_driver =
 	32*8, 32*8, { 0*8, 31*8-1, 0*8, 32*8-1 },
 	gfxdecodeinfo,
 	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -504,7 +508,7 @@ static struct MachineDriver ripcord_machine_driver =
 	32*8, 32*8, { 0*8, 31*8-1, 0*8, 32*8-1 },
 	gfxdecodeinfo,
 	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -604,7 +608,7 @@ static void crash_hisave(void)
   Game Drivers
 ***************************************************************************/
 
-struct GameDriver circus_driver =
+struct GameDriver driver_circus =
 {
 	__FILE__,
 	0,
@@ -617,20 +621,20 @@ struct GameDriver circus_driver =
 	&machine_driver,
 	0,
 
-	circus_rom,
+	rom_circus,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_circus,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload,hisave
 };
 
-struct GameDriver robotbwl_driver =
+struct GameDriver driver_robotbwl =
 {
 	__FILE__,
 	0,
@@ -643,20 +647,20 @@ struct GameDriver robotbwl_driver =
 	&robotbowl_machine_driver,
 	0,
 
-	robotbowl_rom,
+	rom_robotbowl,
 	robotbowl_decode, 0,
 	0,
 	0,      /* sound_prom */
 
-	robotbowl_input_ports,
+	input_ports_robotbowl,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0,0
 };
 
-struct GameDriver crash_driver =
+struct GameDriver driver_crash =
 {
 	__FILE__,
 	0,
@@ -669,20 +673,20 @@ struct GameDriver crash_driver =
 	&crash_machine_driver,
 	0,
 
-	crash_rom,
+	rom_crash,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	crash_input_ports,
+	input_ports_crash,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	crash_hiload,crash_hisave
 };
 
-struct GameDriver ripcord_driver =
+struct GameDriver driver_ripcord =
 {
 	__FILE__,
 	0,
@@ -691,19 +695,19 @@ struct GameDriver ripcord_driver =
 	"1977",
 	"Exidy",
 	"Mike Coates",
-	GAME_NOT_WORKING,
+	0,
 	&ripcord_machine_driver,
 	0,
 
-	ripcord_rom,
+	rom_ripcord,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	ripcord_input_ports,
+	input_ports_ripcord,
 
-	0, palette, colortable,
-	ORIENTATION_DEFAULT,
+	0, 0, 0,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0, 0
 };

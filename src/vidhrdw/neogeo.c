@@ -345,7 +345,7 @@ static const unsigned char *neogeo_palette(const struct rectangle *clip)
 			else fullmode = 0;
 
 			sy = 0x200 - (t1 >> 7);
-			if (clip->max_y - clip->min_y > 7)	/* kludge to improve the ssideki games */
+			if (clip->max_y - clip->min_y > 8)	/* kludge to improve the ssideki games */
 			{
 				if (sy > 0x110) sy -= 0x200;
 				if (fullmode == 2 || (fullmode == 1 && rzy == 0xff))
@@ -938,6 +938,7 @@ static void screenrefresh(struct osd_bitmap *bitmap,const struct rectangle *clip
 
 		/* Do compressed palette stuff */
 		neogeo_palette(clip);
+		/* no need to check the return code since we redraw everything each frame */
 
 		fillbitmap(bitmap,Machine->pens[4095],clip);
 	}
@@ -978,7 +979,7 @@ if (!dotiles) { 					/* debug */
 			else fullmode = 0;
 
 			sy = 0x200 - (t1 >> 7);
-			if (clip->max_y - clip->min_y > 7)	/* kludge to improve the ssideki games */
+			if (clip->max_y - clip->min_y > 8)	/* kludge to improve the ssideki games */
 			{
 				if (sy > 0x110) sy -= 0x200;
 				if (fullmode == 2 || (fullmode == 1 && rzy == 0xff))
@@ -1249,7 +1250,7 @@ void neogeo_vh_raster_partial_refresh(struct osd_bitmap *bitmap,int current_line
 
 	if (clip.max_y >= clip.min_y)
 	{
-if (errorlog) fprintf(errorlog,"refresh %d-%d\n",clip.min_y,clip.max_y);
+//if (errorlog) fprintf(errorlog,"refresh %d-%d\n",clip.min_y,clip.max_y);
 		screenrefresh(bitmap,&clip);
 	}
 
@@ -1261,4 +1262,5 @@ void neogeo_vh_raster_screenrefresh(struct osd_bitmap *bitmap,int full_refresh)
     /* Palette swap occured after last frame but before this one */
     if (palette_swap_pending) swap_palettes();
     palette_recalc();
+	/* no need to check the return code since we redraw everything each frame */
 }

@@ -25,7 +25,7 @@ void rockrage_vreg_w(int offset, int data);
 static int rockrage_interrupt( void )
 {
 	if (K007342_is_INT_enabled())
-        return M6309_INT_IRQ;
+        return HD6309_INT_IRQ;
     else
 		return ignore_interrupt();
 }
@@ -123,7 +123,7 @@ static struct MemoryWriteAddress rockrage_writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( rockrage )
 	PORT_START	/* DSW #1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
@@ -279,7 +279,7 @@ static struct MachineDriver machine_driver =
 	/* basic machine hardware */
 	{
 		{
-			CPU_M6309,
+			CPU_HD6309,
 			3000000,		/* 24MHz/8 (?) */
 			0,
 			rockrage_readmem,rockrage_writemem,0,0,
@@ -287,7 +287,7 @@ static struct MachineDriver machine_driver =
         },
 		{
 			CPU_M6809 | CPU_AUDIO_CPU,
-			3000000,		/* 24MHz/8 (?) */
+			2000000,		/* ? */
 			2,
 			rockrage_readmem_sound, rockrage_writemem_sound,0,0,
 			ignore_interrupt,0	/* interrupts are triggered by the main CPU */
@@ -330,7 +330,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( rockrage_rom )
+ROM_START( rockrage )
 	ROM_REGION( 0x20000 ) /* code + banked roms */
 	ROM_LOAD( "rr-q01.rom", 0x08000, 0x08000, 0x0ddb5ef5 )	/* fixed ROM */
 	ROM_LOAD( "rr-q02.rom", 0x10000, 0x10000, 0xb4f6e346 )	/* banked ROM */
@@ -347,13 +347,13 @@ ROM_START( rockrage_rom )
 	ROM_REGION( 0x08000 ) /* VLM3050 data */
 	ROM_LOAD( "620k04.6e", 0x00000, 0x08000, 0x8be969f3 )
 
-	ROM_REGION( 0x0300 ) /* lookup tables */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "620k08.12g", 0x00000, 0x00100, 0xb499800c )
 	ROM_LOAD( "620k09.11g", 0x00100, 0x00100, 0x9f0e0608 )
 	ROM_LOAD( "620k07.13g", 0x00200, 0x00100, 0xb6135ee0 )
 ROM_END
 
-ROM_START( rockragj_rom )
+ROM_START( rockragj )
 	ROM_REGION( 0x20000 ) /* code + banked roms */
 	ROM_LOAD( "620k01.16c", 0x08000, 0x08000, 0x4f5171f7 )	/* fixed ROM */
 	ROM_LOAD( "620k02.15c", 0x10000, 0x10000, 0x04c4d8f7 )	/* banked ROM */
@@ -370,7 +370,7 @@ ROM_START( rockragj_rom )
 	ROM_REGION( 0x08000 ) /* VLM3050 data */
 	ROM_LOAD( "620k04.6e", 0x00000, 0x08000, 0x8be969f3 )
 
-	ROM_REGION( 0x0300 ) /* lookup tables */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "620k08.12g", 0x00000, 0x00100, 0xb499800c )
 	ROM_LOAD( "620k09.11g", 0x00100, 0x00100, 0x9f0e0608 )
 	ROM_LOAD( "620k07.13g", 0x00200, 0x00100, 0xb6135ee0 )
@@ -382,7 +382,7 @@ ROM_END
 
 ***************************************************************************/
 
-struct GameDriver rockrage_driver =
+struct GameDriver driver_rockrage =
 {
 	__FILE__,
 	0,
@@ -391,43 +391,43 @@ struct GameDriver rockrage_driver =
 	"1986",
 	"Konami",
 	"Manuel Abadia",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	rockrage_rom,
+	rom_rockrage,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_rockrage,
 
-	PROM_MEMORY_REGION(4), 0, 0,
-    ORIENTATION_DEFAULT,
+	0, 0, 0,
+    ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 	0, 0
 };
 
-struct GameDriver rockragj_driver =
+struct GameDriver driver_rockragj =
 {
 	__FILE__,
-	&rockrage_driver,
+	&driver_rockrage,
 	"rockragj",
 	"Koi no Hotrock (Japan)",
 	"1986",
 	"Konami",
 	"Manuel Abadia",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	rockragj_rom,
+	rom_rockragj,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_rockrage,
 
-	PROM_MEMORY_REGION(4), 0, 0,
-    ORIENTATION_DEFAULT,
+	0, 0, 0,
+    ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 	0, 0
 };

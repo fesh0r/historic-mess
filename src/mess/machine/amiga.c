@@ -616,7 +616,7 @@ static void fdc_init( void ) {
 
 		fdc_status[i].disk_changed = 1;
 		if ( floppy_name[i] && floppy_name[i][0] ) {
-			fdc_status[i].f = osd_fopen(Machine->gamedrv->name,floppy_name[i],OSD_FILETYPE_IMAGE,0);
+			fdc_status[i].f = osd_fopen(Machine->gamedrv->name,floppy_name[i],OSD_FILETYPE_IMAGE_RW,0);
 			if ( fdc_status[i].f == NULL ) {
 				if ( errorlog )
 					fprintf( errorlog, "Could not open image %s\n", floppy_name[i] );

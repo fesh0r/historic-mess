@@ -181,7 +181,7 @@ int brkthru_interrupt(void)
 	return ignore_interrupt();
 }
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( brkthru )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -246,7 +246,7 @@ INPUT_PORTS_START( input_ports )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( darwin_input_ports )
+INPUT_PORTS_START( darwin )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -267,22 +267,21 @@ INPUT_PORTS_START( darwin_input_ports )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
-	PORT_START	/* IN2 */
+	PORT_START	/* IN2 modified by Shingo Suzuki 1999/11/02 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x01, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x02, "20k and every 50k" )
+	PORT_DIPSETTING(    0x00, "30k and every 80k" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x0c, "Easy" )
+	PORT_DIPSETTING(    0x08, "Medium" )
+	PORT_DIPSETTING(    0x04, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT_IMPULSE( 0x20, IP_ACTIVE_LOW, IPT_COIN1, 2 )
 	PORT_BIT_IMPULSE( 0x40, IP_ACTIVE_LOW, IPT_COIN2, 2 )
 	PORT_BIT_IMPULSE( 0x80, IP_ACTIVE_LOW, IPT_COIN3, 2 )
@@ -426,7 +425,7 @@ static struct MachineDriver brkthru_machine_driver =
 			ignore_interrupt,0	/* IRQs are caused by the YM3526 */
 		}
 	},
-	60, DEFAULT_REAL_60HZ_VBLANK_DURATION,	/* frames per second, vblank duration */
+	58, DEFAULT_REAL_60HZ_VBLANK_DURATION,	/* frames per second, vblank duration (not sure) */
 	1,	/* 1 CPU slice per frame - interleaving is forced when a sound command is written */
 	0,	/* init machine */
 
@@ -475,7 +474,7 @@ static struct MachineDriver darwin_machine_driver =
 			ignore_interrupt,0	/* IRQs are caused by the YM3526 */
 		}
 	},
-	60, DEFAULT_REAL_60HZ_VBLANK_DURATION,	/* frames per second, vblank duration */
+	58, DEFAULT_REAL_60HZ_VBLANK_DURATION,	/* frames per second, vblank duration / 60->58 tuned by Shingo Suzuki 1999/10/16 */
 	1,	/* 1 CPU slice per frame - interleaving is forced when a sound command is written */
 	0,	/* init machine */
 
@@ -512,7 +511,7 @@ static struct MachineDriver darwin_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( brkthru_rom )
+ROM_START( brkthru )
 	ROM_REGION(0x20000)     /* 64k for main CPU + 64k for banked ROMs */
 	ROM_LOAD( "brkthru.1",    0x04000, 0x4000, 0xcfb4265f )
 	ROM_LOAD( "brkthru.2",    0x08000, 0x8000, 0xfa8246d9 )
@@ -541,15 +540,15 @@ ROM_START( brkthru_rom )
 	ROM_LOAD( "brkthru.10",   0x2a000, 0x8000, 0xfd156945 )
 	ROM_LOAD( "brkthru.11",   0x32000, 0x8000, 0xc152a99b )
 
-	ROM_REGION(0x200)	/* color proms */
-	ROM_LOAD( "brkthru.13",   0x0000, 0x100, 0xaae44269 ) /* red and green component */
-	ROM_LOAD( "brkthru.14",   0x0100, 0x100, 0xf2d4822a ) /* blue component */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
+	ROM_LOAD( "brkthru.13",   0x0000, 0x0100, 0xaae44269 ) /* red and green component */
+	ROM_LOAD( "brkthru.14",   0x0100, 0x0100, 0xf2d4822a ) /* blue component */
 
 	ROM_REGION(0x10000)	/* 64K for sound CPU */
 	ROM_LOAD( "brkthru.5",    0x8000, 0x8000, 0xc309435f )
 ROM_END
 
-ROM_START( brkthruj_rom )
+ROM_START( brkthruj )
 	ROM_REGION(0x20000)     /* 64k for main CPU + 64k for banked ROMs */
 	ROM_LOAD( "1",            0x04000, 0x4000, 0x09bd60ee )
 	ROM_LOAD( "2",            0x08000, 0x8000, 0xf2b2cd1c )
@@ -578,15 +577,15 @@ ROM_START( brkthruj_rom )
 	ROM_LOAD( "brkthru.10",   0x2a000, 0x8000, 0xfd156945 )
 	ROM_LOAD( "brkthru.11",   0x32000, 0x8000, 0xc152a99b )
 
-	ROM_REGION(0x200)	/* color proms */
-	ROM_LOAD( "brkthru.13",   0x0000, 0x100, 0xaae44269 ) /* red and green component */
-	ROM_LOAD( "brkthru.14",   0x0100, 0x100, 0xf2d4822a ) /* blue component */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
+	ROM_LOAD( "brkthru.13",   0x0000, 0x0100, 0xaae44269 ) /* red and green component */
+	ROM_LOAD( "brkthru.14",   0x0100, 0x0100, 0xf2d4822a ) /* blue component */
 
 	ROM_REGION(0x10000)	/* 64K for sound CPU */
 	ROM_LOAD( "brkthru.5",    0x8000, 0x8000, 0xc309435f )
 ROM_END
 
-ROM_START( darwin_rom )
+ROM_START( darwin )
 	ROM_REGION(0x20000)     /* 64k for main CPU + 64k for banked ROMs */
 	ROM_LOAD( "darw_04.rom",  0x04000, 0x4000, 0x0eabf21c )
 	ROM_LOAD( "darw_05.rom",  0x08000, 0x8000, 0xe771f864 )
@@ -615,9 +614,9 @@ ROM_START( darwin_rom )
 	ROM_LOAD( "darw_11.rom",  0x2a000, 0x8000, 0x548ce2d1 )
 	ROM_LOAD( "darw_12.rom",  0x32000, 0x8000, 0xfaba5fef )
 
-	ROM_REGION(0x200)	/* color proms */
-	ROM_LOAD( "df.12",   0x0000, 0x100, 0x89b952ef ) /* red and green component */
-	ROM_LOAD( "df.13",   0x0100, 0x100, 0xd595e91d ) /* blue component */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
+	ROM_LOAD( "df.12",   0x0000, 0x0100, 0x89b952ef ) /* red and green component */
+	ROM_LOAD( "df.13",   0x0100, 0x0100, 0xd595e91d ) /* blue component */
 
 	ROM_REGION(0x10000)	/* 64K for sound CPU */
 	ROM_LOAD( "darw_08.rom",  0x8000, 0x8000, 0x6b580d58 )
@@ -707,7 +706,7 @@ static void darwin_hisave(void)
 
 
 
-struct GameDriver brkthru_driver =
+struct GameDriver driver_brkthru =
 {
 	__FILE__,
 	0,
@@ -720,23 +719,23 @@ struct GameDriver brkthru_driver =
 	&brkthru_machine_driver,
 	0,
 
-	brkthru_rom,
+	rom_brkthru,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_brkthru,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload, hisave
 };
 
-struct GameDriver brkthruj_driver =
+struct GameDriver driver_brkthruj =
 {
 	__FILE__,
-	&brkthru_driver,
+	&driver_brkthru,
 	"brkthruj",
 	"Kyohkoh-Toppa (Japan)",
 	"1986",
@@ -746,20 +745,20 @@ struct GameDriver brkthruj_driver =
 	&brkthru_machine_driver,
 	0,
 
-	brkthruj_rom,
+	rom_brkthruj,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_brkthru,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload, hisave
 };
 
-struct GameDriver darwin_driver =
+struct GameDriver driver_darwin =
 {
 	__FILE__,
 	0,
@@ -772,14 +771,14 @@ struct GameDriver darwin_driver =
 	&darwin_machine_driver,
 	0,
 
-	darwin_rom,
+	rom_darwin,
 	0, 0,
 	0,
 	0,
 
-	darwin_input_ports,
+	input_ports_darwin,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	darwin_hiload, darwin_hisave

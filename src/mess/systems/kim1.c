@@ -137,7 +137,7 @@ static struct MemoryWriteAddress writemem[] =
     {-1}
 };
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( kim1 )
 	PORT_START			/* IN0 keys row 0 */
 	PORT_BIT (0x80, 0x00, IPT_UNUSED )
 	PORT_BITX(0x40, 0x40, IPT_UNKNOWN, "0.6: 0",        KEYCODE_0,      IP_JOY_NONE )
@@ -787,7 +787,7 @@ static struct MachineDriver machine_driver =
     }
 };
 
-ROM_START(kim1_rom)
+ROM_START(kim1)
 	ROM_REGION(0x10000)
 		ROM_LOAD("6530-003.bin",    0x1800, 0x0400, 0xa2a56502)
 		ROM_LOAD("6530-002.bin",    0x1c00, 0x0400, 0x2b08e923)
@@ -1343,9 +1343,10 @@ struct GameDriver kim1_driver =
 	&machine_driver,
 	0,
 
-	kim1_rom,	/* ROM_LOAD structures */
+	rom_kim1,	/* ROM_LOAD structures */
 	0,
 	id_rom,
+	0,	/*  default file extensions */
 	1,	/* number of ROM slots */
 	4,	/* number of floppy drives supported */
 	0,	/* number of hard drives supported */
@@ -1355,7 +1356,7 @@ struct GameDriver kim1_driver =
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_kim1,
 
 	0, NULL, NULL,
 	ORIENTATION_DEFAULT,

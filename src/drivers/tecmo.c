@@ -255,7 +255,7 @@ static struct MemoryWriteAddress rygar_sound_writemem[] =
 
 
 
-INPUT_PORTS_START( rygar_input_ports )
+INPUT_PORTS_START( rygar )
 	PORT_START	/* IN0 bits 0-3 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -344,7 +344,7 @@ INPUT_PORTS_START( rygar_input_ports )
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( gemini_input_ports )
+INPUT_PORTS_START( gemini )
 	PORT_START	/* IN0 bits 0-3 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -436,7 +436,7 @@ INPUT_PORTS_START( gemini_input_ports )
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( silkworm_input_ports )
+INPUT_PORTS_START( silkworm )
 	PORT_START	/* IN0 bit 0-3 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -831,7 +831,7 @@ static struct MachineDriver gemini_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( rygar_rom )
+ROM_START( rygar )
 	ROM_REGION(0x18000)	/* 64k for code */
 	ROM_LOAD( "5.5p",         0x00000, 0x08000, 0x062cd55d ) /* code */
 	ROM_LOAD( "cpu_5m.bin",   0x08000, 0x04000, 0x7ac5191b ) /* code */
@@ -862,7 +862,7 @@ ROM_START( rygar_rom )
 	ROM_LOAD( "cpu_1f.bin",   0x0000, 0x4000, 0x3cc98c5a )
 ROM_END
 
-ROM_START( rygar2_rom )
+ROM_START( rygar2 )
 	ROM_REGION(0x18000)	/* 64k for code */
 	ROM_LOAD( "cpu_5p.bin",   0x00000, 0x08000, 0xe79c054a ) /* code */
 	ROM_LOAD( "cpu_5m.bin",   0x08000, 0x04000, 0x7ac5191b ) /* code */
@@ -893,7 +893,7 @@ ROM_START( rygar2_rom )
 	ROM_LOAD( "cpu_1f.bin",   0x0000, 0x4000, 0x3cc98c5a )
 ROM_END
 
-ROM_START( rygarj_rom )
+ROM_START( rygarj )
 	ROM_REGION(0x18000)	/* 64k for code */
 
 	ROM_LOAD( "cpuj_5p.bin",  0x00000, 0x08000, 0xb39698ba ) /* code */
@@ -925,7 +925,7 @@ ROM_START( rygarj_rom )
 	ROM_LOAD( "cpu_1f.bin",   0x0000, 0x4000, 0x3cc98c5a )
 ROM_END
 
-ROM_START( silkworm_rom )
+ROM_START( silkworm )
 	ROM_REGION(0x20000)	/* 64k for code */
 	ROM_LOAD( "silkworm.4",   0x00000, 0x10000, 0xa5277cce )	/* c000-ffff is not used */
 	ROM_LOAD( "silkworm.5",   0x10000, 0x10000, 0xa6c7bb51 )	/* banked at f000-f7ff */
@@ -952,7 +952,7 @@ ROM_START( silkworm_rom )
 	ROM_LOAD( "silkworm.1",   0x0000, 0x8000, 0x5b553644 )
 ROM_END
 
-ROM_START( silkwrm2_rom )
+ROM_START( silkwrm2 )
 	ROM_REGION(0x20000)	/* 64k for code */
 	ROM_LOAD( "r4",           0x00000, 0x10000, 0x6df3df22 )	/* c000-ffff is not used */
 	ROM_LOAD( "silkworm.5",   0x10000, 0x10000, 0xa6c7bb51 )	/* banked at f000-f7ff */
@@ -979,7 +979,7 @@ ROM_START( silkwrm2_rom )
 	ROM_LOAD( "silkworm.1",   0x0000, 0x8000, 0x5b553644 )
 ROM_END
 
-ROM_START( gemini_rom )
+ROM_START( gemini )
 	ROM_REGION(0x20000)	/* 64k for code */
 	ROM_LOAD( "gw04-5s.rom",  0x00000, 0x10000, 0xff9de855 )	/* c000-ffff is not used */
 	ROM_LOAD( "gw05-6s.rom",  0x10000, 0x10000, 0x5a6947a9 )	/* banked at f000-f7ff */
@@ -1145,7 +1145,7 @@ static void gemini_hisave(void)
 
 
 
-struct GameDriver rygar_driver =
+struct GameDriver driver_rygar =
 {
 	__FILE__,
 	0,
@@ -1158,12 +1158,12 @@ struct GameDriver rygar_driver =
 	&rygar_machine_driver,
 	0,
 
-	rygar_rom,
+	rom_rygar,
 	0, 0,
 	0,
 	0,
 
-	rygar_input_ports,
+	input_ports_rygar,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1171,10 +1171,10 @@ struct GameDriver rygar_driver =
 	rygar_hiload, rygar_hisave
 };
 
-struct GameDriver rygar2_driver =
+struct GameDriver driver_rygar2 =
 {
 	__FILE__,
-	&rygar_driver,
+	&driver_rygar,
 	"rygar2",
 	"Rygar (US set 2)",
 	"1986",
@@ -1184,12 +1184,12 @@ struct GameDriver rygar2_driver =
 	&rygar_machine_driver,
 	0,
 
-	rygar2_rom,
+	rom_rygar2,
 	0, 0,
 	0,
 	0,
 
-	rygar_input_ports,
+	input_ports_rygar,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1197,10 +1197,10 @@ struct GameDriver rygar2_driver =
 	rygar_hiload, rygar_hisave
 };
 
-struct GameDriver rygarj_driver =
+struct GameDriver driver_rygarj =
 {
 	__FILE__,
-	&rygar_driver,
+	&driver_rygar,
 	"rygarj",
 	"Argus no Senshi (Japan)",
 	"1986",
@@ -1210,12 +1210,12 @@ struct GameDriver rygarj_driver =
 	&rygar_machine_driver,
 	0,
 
-	rygarj_rom,
+	rom_rygarj,
 	0, 0,
 	0,
 	0,
 
-	rygar_input_ports,
+	input_ports_rygar,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1223,7 +1223,7 @@ struct GameDriver rygarj_driver =
 	rygar_hiload, rygar_hisave
 };
 
-struct GameDriver gemini_driver =
+struct GameDriver driver_gemini =
 {
 	__FILE__,
 	0,
@@ -1236,12 +1236,12 @@ struct GameDriver gemini_driver =
 	&gemini_machine_driver,
 	0,
 
-	gemini_rom,
+	rom_gemini,
 	0, 0,
 	0,
 	0,
 
-	gemini_input_ports,
+	input_ports_gemini,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -1249,7 +1249,7 @@ struct GameDriver gemini_driver =
 	gemini_hiload, gemini_hisave
 };
 
-struct GameDriver silkworm_driver =
+struct GameDriver driver_silkworm =
 {
 	__FILE__,
 	0,
@@ -1262,12 +1262,12 @@ struct GameDriver silkworm_driver =
 	&silkworm_machine_driver,
 	0,
 
-	silkworm_rom,
+	rom_silkworm,
 	0, 0,
 	0,
 	0,
 
-	silkworm_input_ports,
+	input_ports_silkworm,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1275,10 +1275,10 @@ struct GameDriver silkworm_driver =
 	silkworm_hiload, silkworm_hisave
 };
 
-struct GameDriver silkwrm2_driver =
+struct GameDriver driver_silkwrm2 =
 {
 	__FILE__,
-	&silkworm_driver,
+	&driver_silkworm,
 	"silkwrm2",
 	"Silkworm (set 2)",
 	"1988",
@@ -1288,12 +1288,12 @@ struct GameDriver silkwrm2_driver =
 	&silkworm_machine_driver,
 	0,
 
-	silkwrm2_rom,
+	rom_silkwrm2,
 	0, 0,
 	0,
 	0,
 
-	silkworm_input_ports,
+	input_ports_silkworm,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

@@ -134,7 +134,7 @@ static struct MemoryWriteAddress writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( rollerg )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
@@ -313,7 +313,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( rollerg_rom )
+ROM_START( rollerg )
 	ROM_REGION( 0x28000 ) /* code + banked roms */
 	ROM_LOAD( "999m02.g7",  0x10000, 0x18000, 0x3df8db93 )
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -333,7 +333,7 @@ ROM_START( rollerg_rom )
 	ROM_LOAD( "999h09.c5",  0x000000, 0x080000, 0xc5188783 )
 ROM_END
 
-ROM_START( rollergj_rom )
+ROM_START( rollergj )
 	ROM_REGION( 0x28000 ) /* code + banked roms */
 	ROM_LOAD( "999v02.bin", 0x10000, 0x18000, 0x0dd8c3ac )
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -386,7 +386,7 @@ static void gfx_untangle(void)
 
 
 
-struct GameDriver rollerg_driver =
+struct GameDriver driver_rollerg =
 {
 	__FILE__,
 	0,
@@ -399,22 +399,22 @@ struct GameDriver rollerg_driver =
 	&machine_driver,
 	0,
 
-	rollerg_rom,
+	rom_rollerg,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_rollerg,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver rollergj_driver =
+struct GameDriver driver_rollergj =
 {
 	__FILE__,
-	&rollerg_driver,
+	&driver_rollerg,
 	"rollergj",
 	"Rollergames (Japan)",
 	"1991",
@@ -424,12 +424,12 @@ struct GameDriver rollergj_driver =
 	&machine_driver,
 	0,
 
-	rollergj_rom,
+	rom_rollergj,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_rollerg,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

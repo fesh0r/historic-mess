@@ -420,7 +420,7 @@ static struct MemoryWriteAddress sound_writemem[] = {
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( renegade )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
@@ -623,7 +623,7 @@ static void irqhandler(int linestate)
 
 static struct YM3526interface ym3526_interface = {
 	1,			/* 1 chip (no more supported) */
-	3250000,	/* 3.25 MHz ? (hand tuned) */
+	3000000,	/* 3 MHz ? (hand tuned) */
 	{ 50 },		/* volume */
 	{ irqhandler },
 };
@@ -691,7 +691,7 @@ static struct MachineDriver renegade_machine_driver =
 
 
 
-ROM_START( renegade_rom )
+ROM_START( renegade )
 	ROM_REGION(0x14000)	/* 64k for code + bank switched ROM */
 	ROM_LOAD( "nb-5.bin",     0x8000, 0x8000, 0xba683ddf )
 	ROM_LOAD( "na-5.bin",     0x4000, 0x4000, 0xde7e7df4 )
@@ -736,7 +736,7 @@ ROM_START( renegade_rom )
 	ROM_LOAD( "n3-5.bin",     0x18000, 0x8000, 0x78fd6190 )
 ROM_END
 
-ROM_START( kuniokun_rom )
+ROM_START( kuniokun )
 	ROM_REGION(0x14000)	/* 64k for code + bank switched ROM */
 	ROM_LOAD( "nb-01.bin",	  0x8000, 0x8000, 0x93fcfdf5 ) // original
 	ROM_LOAD( "ta18-11.bin",  0x4000, 0x4000, 0xf240f5cd )
@@ -781,7 +781,7 @@ ROM_START( kuniokun_rom )
 	ROM_LOAD( "ta18-09.bin",  0x18000, 0x8000, 0x07ed4705 )
 ROM_END
 
-ROM_START( kuniokub_rom )
+ROM_START( kuniokub )
 	ROM_REGION(0x14000)	/* 64k for code + bank switched ROM */
 	ROM_LOAD( "ta18-10.bin",  0x8000, 0x8000, 0xa90cf44a ) // bootleg
 	ROM_LOAD( "ta18-11.bin",  0x4000, 0x4000, 0xf240f5cd )
@@ -855,7 +855,7 @@ static void hisave(void){
 }
 */
 
-struct GameDriver renegade_driver =
+struct GameDriver driver_renegade =
 {
 	__FILE__,
 	0,
@@ -868,12 +868,12 @@ struct GameDriver renegade_driver =
 	&renegade_machine_driver,
 	0,
 
-	renegade_rom,
+	rom_renegade,
 	renegade_init, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_renegade,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -881,10 +881,10 @@ struct GameDriver renegade_driver =
 	0,0 /*hiload, hisave*/
 };
 
-struct GameDriver kuniokun_driver =
+struct GameDriver driver_kuniokun =
 {
 	__FILE__,
-	&renegade_driver,
+	&driver_renegade,
 	"kuniokun",
 	"Nekketsu Kouha Kunio-kun (Japan)",
 	"1986",
@@ -894,12 +894,12 @@ struct GameDriver kuniokun_driver =
 	&renegade_machine_driver,
 	kuniokun_init,
 
-	kuniokun_rom,
+	rom_kuniokun,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_renegade,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -907,10 +907,10 @@ struct GameDriver kuniokun_driver =
 	0,0 /*hiload, hisave*/
 };
 
-struct GameDriver kuniokub_driver =
+struct GameDriver driver_kuniokub =
 {
 	__FILE__,
-	&renegade_driver,
+	&driver_renegade,
 	"kuniokub",
 	"Nekketsu Kouha Kunio-kun (Japan bootleg)",
 	"1986",
@@ -920,12 +920,12 @@ struct GameDriver kuniokub_driver =
 	&renegade_machine_driver,
 	0,
 
-	kuniokub_rom,
+	rom_kuniokub,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_renegade,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

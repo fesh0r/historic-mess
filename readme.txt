@@ -80,13 +80,19 @@ VII. Derivative Works
    discouraged: MAME is a project continuously evolving, and you should, in
    your best interest, submit your contributions to the development team, so
    that they are integrated in the main distribution.
-   There are a certain number of drivers in the source which are disabled in
-   the official distribution. Enabling them is NOT considered a derivative
-   work, and distribution of executables with those drivers enabled is strictly
-   forbidden.
+   There are some trivial modifications to the source code that anybody could
+   do, but go against the spirit of the project. They are NOT considered a
+   derivative work, and distribution of executables with them applied is
+   strictly forbidden. Such changes include, but are not limited to:
+   - enabling games that are disabled
+   - changing the ROM verification commands so that they report missing games
+   - removing the startup information screens
    If you make a derivative work, you are not allowed to call it MAME. You must
-   use a different name to make clear that it isn't an official distribution
-   from the MAME team.
+   use a different name to make clear that it is a MAME derivative, but it isn't
+   an official distribution from the MAME team. Simply calling it MAME followed
+   or preceded by a punctuation (e.g. MAME+) will not be enough. The name must
+   be clearly distinct, e.g. REMAME. The version number must also match the one
+   of the official MAME you derived your version from.
 
 
 How to Contact Us
@@ -126,7 +132,7 @@ support. Basically, if you can't get the emulator to work, you are on your own.
 First of all, read the docs carefully. If you still can't find an answer to
 your question, try checking the beginner's sections that many emulation pages
 have, or ask on the appropriate Usenet newsgroups (e.g. comp.emulators.misc) or
-on the official MAME message board, http://www.macmame.org/wwwboard/mame/.
+on the official MAME message board, http://mame.retrogames.com/msgboard.htm.
 
 For help in compiling MAME, check this page:
 http://mameworld.retrogames.com
@@ -240,10 +246,12 @@ options:
 -stretch/-nostretch (default: stretch)
               use nostretch to disable pixel doubling in VESA modes (faster,
               but smaller picture).
--depth n      (default: 16)
-              Some games need 65k color modes to get accurate graphics. To
+-depth n      (default: auto)
+              Some games need 16-bit color modes to get accurate graphics. To
               improve speed, you can turn that off using -depth 8, which limits
-              to the standard 256 color modes.
+              to the standard 256 color modes. You can also use -depth 16 to
+              force games to use a 16-bit diplay even if they fit in 256 colors,
+              but this isn't suggested.
 -gamma n      (default: 1.0)
               Set the initial gamma correction value.
 -vgafreq n    where n can be 0 (default) 1, 2 or 3.

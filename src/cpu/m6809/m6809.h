@@ -44,7 +44,7 @@ extern unsigned m6809_dasm(char *buffer, unsigned pc);
 /****************************************************************************/
 /* For now the 6309 is using the functions of the 6809						*/
 /****************************************************************************/
-#if HAS_M6309
+#if HAS_HD6309
 #define M6309_A 				M6809_A
 #define M6309_B 				M6809_B
 #define M6309_PC				M6809_PC
@@ -58,10 +58,10 @@ extern unsigned m6809_dasm(char *buffer, unsigned pc);
 #define M6309_IRQ_STATE 		M6809_IRQ_STATE
 #define M6309_FIRQ_STATE		M6809_FIRQ_STATE
 
-#define M6309_INT_NONE                  M6809_INT_NONE
-#define M6309_INT_IRQ					M6809_INT_IRQ
-#define M6309_INT_FIRQ					M6809_INT_FIRQ
-#define M6309_INT_NMI					M6809_INT_NMI
+#define HD6309_INT_NONE					M6809_INT_NONE
+#define HD6309_INT_IRQ					M6809_INT_IRQ
+#define HD6309_INT_FIRQ					M6809_INT_FIRQ
+#define HD6309_INT_NMI					M6809_INT_NMI
 #define M6309_IRQ_LINE					M6809_IRQ_LINE
 #define M6309_FIRQ_LINE 				M6809_FIRQ_LINE
 

@@ -211,7 +211,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 	{ -1 }	/* end of table */
 };
 
-INPUT_PORTS_START( wc90_input_ports )
+INPUT_PORTS_START( wc90 )
 	PORT_START	/* IN0 bit 0-5 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -477,7 +477,7 @@ static void wc90_hisave(void)
 }
 
 
-ROM_START( wc90_rom )
+ROM_START( wc90 )
 	ROM_REGION(0x20000)	/* 128k for code */
 	ROM_LOAD( "ic87_01.bin",  0x00000, 0x08000, 0x4a1affbc )	/* c000-ffff is not used */
 	ROM_LOAD( "ic95_02.bin",  0x10000, 0x10000, 0x847d439c )	/* banked at f000-f7ff */
@@ -504,7 +504,7 @@ ROM_START( wc90_rom )
 	ROM_LOAD( "ic82_06.bin",  0x00000, 0x20000, 0x2fd692ed )
 ROM_END
 
-struct GameDriver wc90_driver =
+struct GameDriver driver_wc90 =
 {
 	__FILE__,
 	0,
@@ -517,12 +517,12 @@ struct GameDriver wc90_driver =
 	&wc90_machine_driver,
 	0,
 
-	wc90_rom,
+	rom_wc90,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	wc90_input_ports,
+	input_ports_wc90,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

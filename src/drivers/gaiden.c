@@ -225,7 +225,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( gaiden_input_ports )
+INPUT_PORTS_START( gaiden )
 	PORT_START      /* PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 | IPF_8WAY )
@@ -307,7 +307,7 @@ INPUT_PORTS_START( gaiden_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( tknight_input_ports )
+INPUT_PORTS_START( tknight )
 	PORT_START      /* PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 | IPF_8WAY )
@@ -562,7 +562,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( gaiden_rom )
+ROM_START( gaiden )
 	ROM_REGION(0x40000)	/* 2*128k for 68000 code */
 	ROM_LOAD_EVEN( "gaiden.1",     0x00000, 0x20000, 0xe037ff7c )
 	ROM_LOAD_ODD ( "gaiden.2",     0x00000, 0x20000, 0x454f7314 )
@@ -593,7 +593,7 @@ ROM_START( gaiden_rom )
 	ROM_LOAD( "gaiden.4",     0x0000, 0x20000, 0xb0e0faf9 ) /* samples */
 ROM_END
 
-ROM_START( shadoww_rom )
+ROM_START( shadoww )
 	ROM_REGION(0x40000)	/* 2*128k for 68000 code */
 	ROM_LOAD_EVEN( "shadoww.1",    0x00000, 0x20000, 0xfefba387 )
 	ROM_LOAD_ODD ( "shadoww.2",    0x00000, 0x20000, 0x9b9d6b18 )
@@ -626,7 +626,7 @@ ROM_START( shadoww_rom )
 	ROM_LOAD( "gaiden.4",     0x0000, 0x20000, 0xb0e0faf9 ) /* samples */
 ROM_END
 
-ROM_START( tknight_rom )
+ROM_START( tknight )
 	ROM_REGION(0x40000)	/* 2*128k for 68000 code */
 	ROM_LOAD_EVEN( "tkni1.bin",    0x00000, 0x20000, 0x9121daa8 )
 	ROM_LOAD_ODD ( "tkni2.bin",    0x00000, 0x20000, 0x6669cd87 )
@@ -645,7 +645,7 @@ ROM_START( tknight_rom )
 	ROM_LOAD( "tkni4.bin",    0x0000, 0x20000, 0xa7a1dbcf ) /* samples */
 ROM_END
 
-ROM_START( wildfang_rom )
+ROM_START( wildfang )
 	ROM_REGION(0x40000)	/* 2*128k for 68000 code */
 	ROM_LOAD_EVEN( "1.3st",    0x00000, 0x20000, 0xab876c9b )
 	ROM_LOAD_ODD ( "2.5st",    0x00000, 0x20000, 0x1dc74b3b )
@@ -669,7 +669,7 @@ ROM_END
 
 
 
-struct GameDriver gaiden_driver =
+struct GameDriver driver_gaiden =
 {
 	__FILE__,
 	0,
@@ -682,22 +682,22 @@ struct GameDriver gaiden_driver =
 	&machine_driver,
 		0,
 
-	gaiden_rom,
+	rom_gaiden,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	gaiden_input_ports,
+	input_ports_gaiden,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver shadoww_driver =
+struct GameDriver driver_shadoww =
 {
 	__FILE__,
-	&gaiden_driver,
+	&driver_gaiden,
 	"shadoww",
 	"Shadow Warriors",
 	"1988",
@@ -707,19 +707,19 @@ struct GameDriver shadoww_driver =
 	&machine_driver,
 		0,
 
-	shadoww_rom,
+	rom_shadoww,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	gaiden_input_ports,
+	input_ports_gaiden,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver tknight_driver =
+struct GameDriver driver_tknight =
 {
 	__FILE__,
 	0,
@@ -732,22 +732,22 @@ struct GameDriver tknight_driver =
 	&machine_driver,
 		0,
 
-	tknight_rom,
+	rom_tknight,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	tknight_input_ports,
+	input_ports_tknight,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver wildfang_driver =
+struct GameDriver driver_wildfang =
 {
 	__FILE__,
-	&tknight_driver,
+	&driver_tknight,
 	"wildfang",
 	"Wild Fang",
 	"1989",
@@ -757,12 +757,12 @@ struct GameDriver wildfang_driver =
 	&machine_driver,
 	0,
 
-	wildfang_rom,
+	rom_wildfang,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	tknight_input_ports,
+	input_ports_tknight,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

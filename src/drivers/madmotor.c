@@ -151,7 +151,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /******************************************************************************/
 
-INPUT_PORTS_START( madmotor_input_ports )
+INPUT_PORTS_START( madmotor )
 	PORT_START	/* Player 1 controls */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -372,7 +372,7 @@ static struct MachineDriver madmotor_machine_driver =
 
 /******************************************************************************/
 
-ROM_START( madmotor_rom )
+ROM_START( madmotor )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "02", 0x00000, 0x20000, 0x50b554e0 )
 	ROM_LOAD_ODD ( "00", 0x00000, 0x20000, 0x2d6a1b3f )
@@ -444,7 +444,7 @@ static void memory_handler(void)
 
 /******************************************************************************/
 
-struct GameDriver madmotor_driver =
+struct GameDriver driver_madmotor =
 {
 	__FILE__,
 	0,
@@ -457,12 +457,12 @@ struct GameDriver madmotor_driver =
 	&madmotor_machine_driver,
 	memory_handler,
 
-	madmotor_rom,
+	rom_madmotor,
 	madmotor_decrypt, 0,
 	0,
 	0,
 
-	madmotor_input_ports,
+	input_ports_madmotor,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

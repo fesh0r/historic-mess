@@ -527,7 +527,7 @@ static struct MemoryReadAddress main_readmem[] =
 	{ 0x000000, 0x087fff, MRA_ROM },
 	{ 0x2e0000, 0x2e0003, atarisys1_int3state_r },
 	{ 0x400000, 0x401fff, MRA_BANK1 },
-	{ 0x840000, 0x840003, MRA_BANK2, &atarisys1_prioritycolor },
+	{ 0x840000, 0x840003, MRA_BANK2 },
 	{ 0x900000, 0x9fffff, MRA_BANK3 },
 	{ 0xa00000, 0xa01fff, MRA_BANK4 },
 	{ 0xa02000, 0xa02fff, MRA_BANK5 },
@@ -548,7 +548,7 @@ static struct MemoryWriteAddress main_writemem[] =
 	{ 0x400000, 0x401fff, MWA_BANK1 },
 	{ 0x800000, 0x800003, atarisys1_hscroll_w, &atarigen_hscroll },
 	{ 0x820000, 0x820003, atarisys1_vscroll_w, &atarigen_vscroll },
-	{ 0x840000, 0x840003, MWA_BANK2 },
+	{ 0x840000, 0x840003, MWA_BANK2, &atarisys1_prioritycolor },
 	{ 0x860000, 0x860003, atarisys1_bankselect_w, &atarisys1_bankselect },
 	{ 0x880000, 0x880003, watchdog_reset_w },
 	{ 0x8a0000, 0x8a0003, atarigen_video_int_ack_w },
@@ -607,7 +607,7 @@ static struct MemoryWriteAddress sound_writemem[] =
  *
  *************************************/
 
-INPUT_PORTS_START( marble_ports )
+INPUT_PORTS_START( marble )
 	PORT_START      /* IN0 */
     PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_REVERSE | IPF_CENTER | IPF_PLAYER1, 100, 30, 0x7f, 0, 0 )
 
@@ -640,7 +640,7 @@ INPUT_PORTS_START( marble_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( peterpak_ports )
+INPUT_PORTS_START( peterpak )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
@@ -678,7 +678,7 @@ INPUT_PORTS_START( peterpak_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( indytemp_ports )
+INPUT_PORTS_START( indytemp )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
@@ -716,7 +716,7 @@ INPUT_PORTS_START( indytemp_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( roadrunn_ports )
+INPUT_PORTS_START( roadrunn )
 	PORT_START	/* IN0 */
 	PORT_ANALOG ( 0xff, 0x80, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER1, 100, 10, 0, 0x10, 0xf0 )
 
@@ -750,7 +750,7 @@ INPUT_PORTS_START( roadrunn_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( roadblst_ports )
+INPUT_PORTS_START( roadblst )
 	PORT_START	/* IN0 */
 	PORT_ANALOG ( 0xff, 0x40, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0x00, 0x7f )
 
@@ -1058,7 +1058,7 @@ static void roadblst_init(void)
  *
  *************************************/
 
-ROM_START( marble_rom )
+ROM_START( marble )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1098,7 +1098,7 @@ ROM_START( marble_rom )
 ROM_END
 
 
-ROM_START( marble2_rom )
+ROM_START( marble2 )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1138,7 +1138,7 @@ ROM_START( marble2_rom )
 ROM_END
 
 
-ROM_START( marblea_rom )
+ROM_START( marblea )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1182,7 +1182,7 @@ ROM_START( marblea_rom )
 ROM_END
 
 
-ROM_START( peterpak_rom )
+ROM_START( peterpak )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1224,7 +1224,7 @@ ROM_START( peterpak_rom )
 ROM_END
 
 
-ROM_START( indytemp_rom )
+ROM_START( indytemp )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1272,7 +1272,7 @@ ROM_START( indytemp_rom )
 ROM_END
 
 
-ROM_START( indytem2_rom )
+ROM_START( indytem2 )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1320,7 +1320,7 @@ ROM_START( indytem2_rom )
 ROM_END
 
 
-ROM_START( indytem3_rom )
+ROM_START( indytem3 )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1368,7 +1368,7 @@ ROM_START( indytem3_rom )
 ROM_END
 
 
-ROM_START( indytem4_rom )
+ROM_START( indytem4 )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1416,7 +1416,7 @@ ROM_START( indytem4_rom )
 ROM_END
 
 
-ROM_START( roadrunn_rom )
+ROM_START( roadrunn )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1477,7 +1477,7 @@ ROM_START( roadrunn_rom )
 ROM_END
 
 
-ROM_START( roadblst_rom )
+ROM_START( roadblst )
 	ROM_REGION(0x88000)	/* 8.5*64k for 68000 code & slapstic ROM */
 	ROM_LOAD_EVEN( "136032.205",   0x00000, 0x04000, 0x88d0be26 )
 	ROM_LOAD_ODD ( "136032.206",   0x00000, 0x04000, 0x3c79ef05 )
@@ -1547,7 +1547,7 @@ ROM_END
  *************************************/
 
 #define ATARISY1_DRIVER_EXT(name,year,fullname,decoder)	\
-	struct GameDriver name##_driver =			\
+	struct GameDriver driver_##name =			\
 	{											\
 		__FILE__,								\
 		0,										\
@@ -1562,13 +1562,13 @@ ROM_END
 		&machine_driver,						\
 		name##_init,							\
 												\
-		name##_rom,								\
+		rom_##name,								\
 		decoder,								\
 		0,										\
 		0,										\
 		0,	/* sound_prom */					\
 												\
-		name##_ports,							\
+		input_ports_##name,						\
 												\
 		0, 0, 0,   /* colors, palette, colortable */\
 		ORIENTATION_DEFAULT,					\
@@ -1577,10 +1577,10 @@ ROM_END
 #define ATARISY1_DRIVER(name,year,fullname) ATARISY1_DRIVER_EXT(name,year,fullname,rom_decode)
 
 #define ATARISY1_CLONE_DRIVER(name,year,fullname,cloneof)		\
-	struct GameDriver name##_driver =			\
+	struct GameDriver driver_##name =			\
 	{											\
 		__FILE__,								\
-		&cloneof##_driver,						\
+		&driver_##cloneof,						\
 		#name,									\
 		fullname,								\
 		#year,									\
@@ -1592,13 +1592,13 @@ ROM_END
 		&machine_driver,						\
 		cloneof##_init,							\
 												\
-		name##_rom,								\
+		rom_##name,								\
 		rom_decode,								\
 		0,										\
 		0,										\
 		0,	/* sound_prom */					\
 												\
-		cloneof##_ports,						\
+		input_ports_##cloneof,					\
 												\
 		0, 0, 0,   /* colors, palette, colortable */\
 		ORIENTATION_DEFAULT,					\

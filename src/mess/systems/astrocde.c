@@ -124,12 +124,12 @@ static struct IOWritePort astrocade_writeport[] =
 	{ -1 }	/* end of table */
 };
 
-ROM_START( astrocade_rom )
+ROM_START( astrocade )
 	ROM_REGION( 0x10000 )
 	ROM_LOAD( "astro.bin",  0x0000, 0x2000, 0xebc77f3a )
 ROM_END
 
-INPUT_PORTS_START( astrocade_input_ports )
+INPUT_PORTS_START( astrocade )
 	PORT_START /* IN0 */	/* Player 1 Handle */
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
@@ -269,9 +269,11 @@ struct GameDriver astrocde_driver =
 	&astrocade_machine_driver,
 	0,
 
-	astrocade_rom,
+	rom_astrocade,
 	astrocade_load_rom,
 	astrocade_id_rom,
+
+	0,	/* default file extensions */
 
 	1,	/* number of ROM slots */
 	0,	/* number of floppy drives supported */
@@ -282,7 +284,7 @@ struct GameDriver astrocde_driver =
 	0,
 	0,	/* sound_prom */
 
-	astrocade_input_ports,
+	input_ports_astrocade,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

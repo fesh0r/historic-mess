@@ -189,7 +189,7 @@ static struct IOWritePort writeport[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( dlair )
 	PORT_START
 INPUT_PORTS_END
 
@@ -265,7 +265,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( dlair_rom )
+ROM_START( dlair )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "u45",          0x0000, 0x2000, 0x329b354a )
 	ROM_LOAD( "u46",          0x2000, 0x2000, 0x8479612b )
@@ -278,7 +278,7 @@ ROM_END
 
 
 
-struct GameDriver dlair_driver =
+struct GameDriver driver_dlair =
 {
 	__FILE__,
 	0,
@@ -287,19 +287,19 @@ struct GameDriver dlair_driver =
 	"1983",
 	"Cinematronics",
 	"Nicola Salmoria",
-	GAME_NOT_WORKING,
+	0,
 	&machine_driver,
 	0,
 
-	dlair_rom,
+	rom_dlair,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_dlair,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0, 0
 };

@@ -62,7 +62,7 @@ static struct MemoryWriteAddress writemem[] =
 };
 
 
-INPUT_PORTS_START( ports )
+INPUT_PORTS_START( atetris )
 	// These ports are read via the Pokeys
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN2 )
@@ -88,7 +88,7 @@ INPUT_PORTS_END
 
 
 // Same as the regular one except they added a Flip Controls switch
-INPUT_PORTS_START( atetcktl_ports )
+INPUT_PORTS_START( atetcktl )
 	// These ports are read via the Pokeys
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN2 )
@@ -200,7 +200,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( atetris_rom )
+ROM_START( atetris )
 	ROM_REGION(0x14000)     /* 80k for code */
 	ROM_LOAD( "1100.45f",     0x0000, 0x10000, 0x2acbdb09 )
 
@@ -208,7 +208,7 @@ ROM_START( atetris_rom )
 	ROM_LOAD( "1101.35a",     0x0000, 0x10000, 0x84a1939f )
 ROM_END
 
-ROM_START( atetrisa_rom )
+ROM_START( atetrisa )
 	ROM_REGION(0x14000)     /* 80k for code */
 	ROM_LOAD( "d1",           0x0000, 0x10000, 0x2bcab107 )
 
@@ -216,7 +216,7 @@ ROM_START( atetrisa_rom )
 	ROM_LOAD( "1101.35a",     0x0000, 0x10000, 0x84a1939f )
 ROM_END
 
-ROM_START( atetrisb_rom )
+ROM_START( atetrisb )
 	ROM_REGION(0x14000)     /* 80k for code */
 	ROM_LOAD( "tetris.01",    0x0000, 0x10000, 0x944d15f6 )
 
@@ -227,7 +227,7 @@ ROM_START( atetrisb_rom )
 	/* however doesn't seem to be required to run the game in this driver. */
 ROM_END
 
-ROM_START( atetcktl_rom )
+ROM_START( atetcktl )
 	ROM_REGION(0x14000)     /* 80k for code */
 	ROM_LOAD( "tetcktl1.rom", 0x0000, 0x10000, 0x9afd1f4a )
 
@@ -235,7 +235,7 @@ ROM_START( atetcktl_rom )
 	ROM_LOAD( "1103.35a",     0x0000, 0x10000, 0xec2a7f93 )
 ROM_END
 
-ROM_START( atetckt2_rom )
+ROM_START( atetckt2 )
 	ROM_REGION(0x14000)     /* 80k for code */
 	ROM_LOAD( "1102.45f",     0x0000, 0x10000, 0x1bd28902 )
 
@@ -294,7 +294,7 @@ static void hisave (void)
 }
 
 
-struct GameDriver atetris_driver =
+struct GameDriver driver_atetris =
 {
 	__FILE__,
 	0,
@@ -307,23 +307,23 @@ struct GameDriver atetris_driver =
 	&machine_driver,
 	0,
 
-	atetris_rom,
+	rom_atetris,
 	atetris_rom_move,
 	0,
 	0,
 	0,      /* sound_prom */
 
-	ports,
+	input_ports_atetris,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver atetrisa_driver =
+struct GameDriver driver_atetrisa =
 {
 	__FILE__,
-	&atetris_driver,
+	&driver_atetris,
 	"atetrisa",
 	"Tetris (set 2)",
 	"1988",
@@ -333,23 +333,23 @@ struct GameDriver atetrisa_driver =
 	&machine_driver,
 	0,
 
-	atetrisa_rom,
+	rom_atetrisa,
 	atetris_rom_move,
 	0,
 	0,
 	0,      /* sound_prom */
 
-	ports,
+	input_ports_atetris,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver atetrisb_driver =
+struct GameDriver driver_atetrisb =
 {
 	__FILE__,
-	&atetris_driver,
+	&driver_atetris,
 	"atetrisb",
 	"Tetris (bootleg)",
 	"1988",
@@ -359,23 +359,23 @@ struct GameDriver atetrisb_driver =
 	&machine_driver,
 	0,
 
-	atetrisb_rom,
+	rom_atetrisb,
 	atetris_rom_move,
 	0,
 	0,
 	0,      /* sound_prom */
 
-	ports,
+	input_ports_atetris,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver atetcktl_driver =
+struct GameDriver driver_atetcktl =
 {
 	__FILE__,
-	&atetris_driver,
+	&driver_atetris,
 	"atetcktl",
 	"Tetris (Cocktail set 1)",
 	"1989",
@@ -385,23 +385,23 @@ struct GameDriver atetcktl_driver =
 	&machine_driver,
 	0,
 
-	atetcktl_rom,
+	rom_atetcktl,
 	atetris_rom_move,
 	0,
 	0,
 	0,      /* sound_prom */
 
-	atetcktl_ports,
+	input_ports_atetcktl,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,
 	hiload, hisave
 };
 
-struct GameDriver atetckt2_driver =
+struct GameDriver driver_atetckt2 =
 {
 	__FILE__,
-	&atetris_driver,
+	&driver_atetris,
 	"atetckt2",
 	"Tetris (Cocktail set 2)",
 	"1989",
@@ -411,13 +411,13 @@ struct GameDriver atetckt2_driver =
 	&machine_driver,
 	0,
 
-	atetckt2_rom,
+	rom_atetckt2,
 	atetris_rom_move,
 	0,
 	0,
 	0,      /* sound_prom */
 
-	atetcktl_ports,
+	input_ports_atetcktl,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_270,

@@ -54,7 +54,7 @@ int genesis_load_rom (void)
 if (errorlog) fprintf (errorlog, "ROM load/init regsions\n");
 
 
-	if (!(romfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0))) return 1;
+	if (!(romfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0))) return 1;
 	/* Allocate memory and set up memory regions */
 	for (region = 0;region < MAX_MEMORY_REGIONS;region++)
 		Machine->memory_region[region] = 0;
@@ -173,7 +173,7 @@ int genesis_id_rom (const char *name, const char *gamename)
 	unsigned char temp[0x110];
 	int retval = 0;
 
-	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_ROM_CART, 0))) return 0;
+	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_IMAGE_R, 0))) return 0;
 
 	osd_fread (romfile, temp, 0x110);
 

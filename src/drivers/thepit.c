@@ -170,7 +170,7 @@ static struct IOWritePort sound_writeport[] =
 };
 
 
-INPUT_PORTS_START( thepit_input_ports )
+INPUT_PORTS_START( thepit )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -230,7 +230,7 @@ INPUT_PORTS_START( thepit_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( roundup_input_ports )
+INPUT_PORTS_START( roundup )
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -287,7 +287,7 @@ INPUT_PORTS_START( roundup_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( fitter_input_ports )
+INPUT_PORTS_START( fitter )
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -346,7 +346,7 @@ INPUT_PORTS_START( fitter_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( intrepid_input_ports )
+INPUT_PORTS_START( intrepid )
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -406,7 +406,7 @@ INPUT_PORTS_START( intrepid_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( portman_input_ports )
+INPUT_PORTS_START( portman )
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -465,7 +465,7 @@ INPUT_PORTS_START( portman_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( suprmous_input_ports )
+INPUT_PORTS_START( suprmous )
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -675,7 +675,7 @@ MACHINE_DRIVER(suprmous, 8*8)
 
 ***************************************************************************/
 
-ROM_START( thepit_rom )
+ROM_START( thepit )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "p38b",         0x0000, 0x1000, 0x7315e1bc )
 	ROM_LOAD( "p39b",         0x1000, 0x1000, 0xc9cc30fe )
@@ -687,14 +687,14 @@ ROM_START( thepit_rom )
 	ROM_LOAD( "p9",           0x0000, 0x0800, 0x69502afc )
 	ROM_LOAD( "p8",           0x1000, 0x0800, 0x2ddd5045 )
 
-	ROM_REGION(0x0020)      /* Color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "pitclr.ic4",   0x0000, 0x0020, 0xa758b567 )
 
 	ROM_REGION(0x10000)     /* 64k for audio CPU */
 	ROM_LOAD( "p30",          0x0000, 0x0800, 0x1b79dfb6 )
 ROM_END
 
-ROM_START( roundup_rom )
+ROM_START( roundup )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "roundup.u38",  0x0000, 0x1000, 0xd62c3b7a )
 	ROM_LOAD( "roundup.u39",  0x1000, 0x1000, 0x37bf554b )
@@ -706,7 +706,7 @@ ROM_START( roundup_rom )
 	ROM_LOAD( "roundup.u9",   0x0000, 0x0800, 0x394676a2 )
 	ROM_LOAD( "roundup.u10",  0x1000, 0x0800, 0xa38d708d )
 
-	ROM_REGION(0x0020)      /* Color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "roundup.clr",  0x0000, 0x0020, 0xa758b567 )
 
 	ROM_REGION(0x10000)     /* 64k for audio CPU */
@@ -714,7 +714,7 @@ ROM_START( roundup_rom )
 	ROM_LOAD( "roundup.u31",  0x0800, 0x0800, 0x76cf4394 )
 ROM_END
 
-ROM_START( fitter_rom )
+ROM_START( fitter )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "ic38.bin",     0x0000, 0x1000, 0x6bf6cca4 )
 	ROM_LOAD( "roundup.u39",  0x1000, 0x1000, 0x37bf554b )
@@ -726,7 +726,7 @@ ROM_START( fitter_rom )
 	ROM_LOAD( "ic9.bin",      0x0000, 0x0800, 0xa6799a37 )
 	ROM_LOAD( "ic8.bin",      0x1000, 0x0800, 0xa8256dfe )
 
-	ROM_REGION(0x0020)      /* Color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "roundup.clr",  0x0000, 0x0020, 0xa758b567 )
 
 	ROM_REGION(0x10000)     /* 64k for audio CPU */
@@ -734,7 +734,7 @@ ROM_START( fitter_rom )
 	ROM_LOAD( "ic31.bin",     0x0800, 0x0800, 0xc9d8c1cc )
 ROM_END
 
-ROM_START( intrepid_rom )
+ROM_START( intrepid )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "ic19.1",       0x0000, 0x1000, 0x7d927b23 )
 	ROM_LOAD( "ic18.2",       0x1000, 0x1000, 0xdcc22542 )
@@ -746,7 +746,7 @@ ROM_START( intrepid_rom )
 	ROM_LOAD( "ic9.9",        0x0000, 0x1000, 0x8c70d18d )
 	ROM_LOAD( "ic8.8",        0x1000, 0x1000, 0x04d067d3 )
 
-	ROM_REGION(0x0020)      /* Color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "ic3.prm",      0x0000, 0x0020, 0x927ff40a )
 
 	ROM_REGION(0x10000)     /* 64k for audio CPU */
@@ -754,7 +754,7 @@ ROM_START( intrepid_rom )
 	ROM_LOAD( "ic23.6",       0x0800, 0x0800, 0x91ca7097 )
 ROM_END
 
-ROM_START( intrepi2_rom )
+ROM_START( intrepi2 )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "intrepid.001", 0x0000, 0x1000, 0x9505df1e )
 	ROM_LOAD( "intrepid.002", 0x1000, 0x1000, 0x27e9f53f )
@@ -766,7 +766,7 @@ ROM_START( intrepi2_rom )
 	ROM_LOAD( "ic9.9",        0x0000, 0x1000, 0x8c70d18d )
 	ROM_LOAD( "ic8.8",        0x1000, 0x1000, 0x04d067d3 )
 
-	ROM_REGION(0x0020)      /* Color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "ic3.prm",      0x0000, 0x0020, 0x927ff40a )
 
 	ROM_REGION(0x10000)     /* 64k for audio CPU */
@@ -774,7 +774,7 @@ ROM_START( intrepi2_rom )
 	ROM_LOAD( "intrepid.006", 0x0800, 0x0800, 0x9eb6c61b )
 ROM_END
 
-ROM_START( portman_rom )
+ROM_START( portman )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	ROM_LOAD( "pe1",          0x0000, 0x1000, 0xa5cf6083 )
 	ROM_LOAD( "pe2",          0x1000, 0x1000, 0x0b53d48a )
@@ -786,7 +786,7 @@ ROM_START( portman_rom )
 	ROM_LOAD( "pe8",          0x0000, 0x1000, 0x4d8c2974 )
 	ROM_LOAD( "pe9",          0x1000, 0x1000, 0x4e4ea162 )
 
-	ROM_REGION(0x0020)      /* Color PROM */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "ic3",          0x0000, 0x0020, 0x6440dc61 )
 
 	ROM_REGION(0x10000)     /* 64k for audio CPU */
@@ -794,7 +794,7 @@ ROM_START( portman_rom )
 	ROM_LOAD( "pe6",          0x0800, 0x0800, 0x1cf447f4 )
 ROM_END
 
-ROM_START( suprmous_rom )
+ROM_START( suprmous )
 	ROM_REGION(0x10000)	    /* 64k for main CPU */
 	ROM_LOAD( "sm.1",         0x0000, 0x1000, 0x9db2b786 )
 	ROM_LOAD( "sm.2",         0x1000, 0x1000, 0x0a3d91d3 )
@@ -807,7 +807,7 @@ ROM_START( suprmous_rom )
 	ROM_LOAD( "sm.8",         0x1000, 0x1000, 0x2f81ab5f )
 	ROM_LOAD( "sm.9",         0x2000, 0x1000, 0x8463af89 )
 
-	ROM_REGION(0x0040)      /* Color PROMs */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
 	ROM_LOAD( "smouse2.clr",  0x0000, 0x0020, 0x8c295553 )
 	ROM_LOAD( "smouse1.clr",  0x0020, 0x0020, 0xd815504b )
 
@@ -815,7 +815,7 @@ ROM_START( suprmous_rom )
 	ROM_LOAD( "sm.6",         0x0000, 0x1000, 0xfba71785 )
 ROM_END
 
-ROM_START( suprmou2_rom )
+ROM_START( suprmou2 )
 	ROM_REGION(0x10000)	    /* 64k for main CPU */
 	ROM_LOAD( "suprmous.x1",  0x0000, 0x1000, 0xad72b467 )
 	ROM_LOAD( "suprmous.x2",  0x1000, 0x1000, 0x53f5be5e )
@@ -828,7 +828,7 @@ ROM_START( suprmou2_rom )
 	ROM_LOAD( "suprmous.x8",  0x1000, 0x1000, 0xdbef9db8 )
 	ROM_LOAD( "suprmous.x9",  0x2000, 0x1000, 0x700d996e )
 
-	ROM_REGION(0x0040)      /* Color PROMs */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
 	ROM_LOAD( "smouse2.clr",  0x0000, 0x0020, 0x8c295553 )
 	ROM_LOAD( "smouse1.clr",  0x0020, 0x0020, 0xd815504b )
 
@@ -836,7 +836,7 @@ ROM_START( suprmou2_rom )
 	ROM_LOAD( "sm.6",         0x0000, 0x1000, 0xfba71785 )
 ROM_END
 
-ROM_START( machomou_rom )
+ROM_START( machomou )
 	ROM_REGION(0x10000)	    /* 64k for main CPU */
 	ROM_LOAD( "mm1.2g",       0x0000, 0x1000, 0x91f116be )
 	ROM_LOAD( "mm2.2h",       0x1000, 0x1000, 0x3aa88c9b )
@@ -849,7 +849,7 @@ ROM_START( machomou_rom )
 	ROM_LOAD( "mm8.3c",       0x1000, 0x1000, 0x062e77cb )
 	ROM_LOAD( "mm9.3a",       0x2000, 0x1000, 0xa2f0cfb3 )
 
-	ROM_REGION(0x0040)      /* Color PROMs */
+	ROM_REGIONX( 0x0040, REGION_PROMS )
 	ROM_LOAD( "mmouse2.clr",  0x0000, 0x0020, 0x00000000 )
 	ROM_LOAD( "mmouse1.clr",  0x0020, 0x0020, 0x00000000 )
 
@@ -1013,7 +1013,7 @@ static void suprmous_hisave(void)
 	}
 }
 
-struct GameDriver thepit_driver =
+struct GameDriver driver_thepit =
 {
 	__FILE__,
 	0,
@@ -1022,25 +1022,25 @@ struct GameDriver thepit_driver =
 	"1982",
 	"Centuri",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&thepit_machine_driver,
 	0,
 
-	thepit_rom,
+	rom_thepit,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	thepit_input_ports,
+	input_ports_thepit,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	thepit_hiload, thepit_hisave
 };
 
 
-struct GameDriver roundup_driver =
+struct GameDriver driver_roundup =
 {
 	__FILE__,
 	0,
@@ -1049,51 +1049,51 @@ struct GameDriver roundup_driver =
 	"1981",
 	"Amenip/Centuri",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&thepit_machine_driver,
 	0,
 
-	roundup_rom,
+	rom_roundup,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	roundup_input_ports,
+	input_ports_roundup,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	roundup_hiload, roundup_hisave
 };
 
-struct GameDriver fitter_driver =
+struct GameDriver driver_fitter =
 {
 	__FILE__,
-	&roundup_driver,
+	&driver_roundup,
 	"fitter",
 	"Fitter",
 	"1981",
 	"Taito",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&thepit_machine_driver,
 	0,
 
-	fitter_rom,
+	rom_fitter,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	fitter_input_ports,
+	input_ports_fitter,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	roundup_hiload, roundup_hisave
 };
 
 
-struct GameDriver intrepid_driver =
+struct GameDriver driver_intrepid =
 {
 	__FILE__,
 	0,
@@ -1102,50 +1102,50 @@ struct GameDriver intrepid_driver =
 	"1983",
 	"Nova Games Ltd.",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&intrepid_machine_driver,
 	0,
 
-	intrepid_rom,
+	rom_intrepid,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	intrepid_input_ports,
+	input_ports_intrepid,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	intrepid_hiload, intrepid_hisave
 };
 
-struct GameDriver intrepi2_driver =
+struct GameDriver driver_intrepi2 =
 {
 	__FILE__,
-	&intrepid_driver,
+	&driver_intrepid,
 	"intrepi2",
 	"Intrepid (set 2)",
 	"1983",
 	"Nova Games Ltd.",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&intrepid_machine_driver,
 	0,
 
-	intrepi2_rom,
+	rom_intrepi2,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	intrepid_input_ports,
+	input_ports_intrepid,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	intrepid_hiload, intrepid_hisave
 };
 
-struct GameDriver portman_driver =
+struct GameDriver driver_portman =
 {
 	__FILE__,
 	0,
@@ -1154,24 +1154,24 @@ struct GameDriver portman_driver =
 	"1982",
 	"Nova Games Ltd.",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&intrepid_machine_driver,
 	0,
 
-	portman_rom,
+	rom_portman,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	portman_input_ports,
+	input_ports_portman,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	0, 0
 };
 
-struct GameDriver suprmous_driver =
+struct GameDriver driver_suprmous =
 {
 	__FILE__,
 	0,
@@ -1180,50 +1180,50 @@ struct GameDriver suprmous_driver =
 	"1982",
 	"Taito",
 	"Brad Oliver",
-	GAME_WRONG_COLORS,
+	0,
 	&suprmous_machine_driver,
 	0,
 
-	suprmous_rom,
+	rom_suprmous,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	suprmous_input_ports,
+	input_ports_suprmous,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	suprmous_hiload, suprmous_hisave
 };
 
-struct GameDriver suprmou2_driver =
+struct GameDriver driver_suprmou2 =
 {
 	__FILE__,
-	&suprmous_driver,
+	&driver_suprmous,
 	"suprmou2",
 	"Funny Mouse (bootleg?)",
 	"1982",
 	"Chu Co. Ltd",
 	"Brad Oliver",
-	GAME_WRONG_COLORS,
+	0,
 	&suprmous_machine_driver,
 	0,
 
-	suprmou2_rom,
+	rom_suprmou2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	suprmous_input_ports,
+	input_ports_suprmous,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	suprmous_hiload, suprmous_hisave
 };
 
-struct GameDriver machomou_driver =
+struct GameDriver driver_machomou =
 {
 	__FILE__,
 	0,
@@ -1232,19 +1232,19 @@ struct GameDriver machomou_driver =
 	"1982",
 	"Techstar",
 	"Brad Oliver",
-	GAME_WRONG_COLORS,
+	0,
 	&suprmous_machine_driver,
 	0,
 
-	machomou_rom,
+	rom_machomou,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	suprmous_input_ports,
+	input_ports_suprmous,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	0, 0
 };

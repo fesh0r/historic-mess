@@ -209,7 +209,7 @@ static struct IOWritePort sh_writeport[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( kangaroo )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN3 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START1 )
@@ -367,7 +367,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( kangaroo_rom )
+ROM_START( kangaroo )
 	ROM_REGION(0x14000)	/* 64k for code + 16k for banked ROMs */
 	ROM_LOAD( "tvg75.bin",    0x0000, 0x1000, 0x0d18c581 )
 	ROM_LOAD( "tvg76.bin",    0x1000, 0x1000, 0x5978d37a )
@@ -392,7 +392,7 @@ ROM_START( kangaroo_rom )
 	ROM_LOAD( "tvg82.bin",    0x0000, 0x0800, 0x57766f69 )
 ROM_END
 
-ROM_START( kangarob_rom )
+ROM_START( kangarob )
 	ROM_REGION(0x14000)	/* 64k for code + 16k for banked ROMs */
 	ROM_LOAD( "tvg75.bin",    0x0000, 0x1000, 0x0d18c581 )
 	ROM_LOAD( "tvg76.bin",    0x1000, 0x1000, 0x5978d37a )
@@ -451,25 +451,25 @@ static void kangaroo_hisave(void)
 
 
 
-struct GameDriver kangaroo_driver =
+struct GameDriver driver_kangaroo =
 {
 	__FILE__,
 	0,
 	"kangaroo",
 	"Kangaroo",
 	"1982",
-	"Atari",
+	"[Sun Electronics] (Atari license)",
 	"Ville Laitinen (MAME driver)\nMarco Cassili",
 	0,
 	&machine_driver,
 	0,
 
-	kangaroo_rom,
+	rom_kangaroo,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_kangaroo,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
@@ -477,10 +477,10 @@ struct GameDriver kangaroo_driver =
 	kangaroo_hiload, kangaroo_hisave
 };
 
-struct GameDriver kangarob_driver =
+struct GameDriver driver_kangarob =
 {
 	__FILE__,
-	&kangaroo_driver,
+	&driver_kangaroo,
 	"kangarob",
 	"Kangaroo (bootleg)",
 	"1982",
@@ -490,12 +490,12 @@ struct GameDriver kangarob_driver =
 	&machine_driver,
 	0,
 
-	kangarob_rom,
+	rom_kangarob,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_kangaroo,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,

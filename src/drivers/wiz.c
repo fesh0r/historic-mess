@@ -169,7 +169,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( wiz_input_ports )
+INPUT_PORTS_START( wiz )
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
@@ -237,7 +237,7 @@ INPUT_PORTS_START( wiz_input_ports )
 	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( stinger_input_ports )
+INPUT_PORTS_START( stinger )
 	PORT_START	/* IN0 */
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
@@ -310,7 +310,7 @@ INPUT_PORTS_START( stinger_input_ports )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( scion_input_ports )
+INPUT_PORTS_START( scion )
 	PORT_START	/* IN0 */
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
@@ -517,7 +517,7 @@ MACHINE_DRIVER(stinger);
 
 ***************************************************************************/
 
-ROM_START( wiz_rom )
+ROM_START( wiz )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "ic07_01.bin",  0x0000, 0x4000, 0xc05f2c78 )
 	ROM_LOAD( "ic05_03.bin",  0x4000, 0x4000, 0x7978d879 )
@@ -534,7 +534,7 @@ ROM_START( wiz_rom )
 	ROM_LOAD( "ic01_09.bin",  0x0a000, 0x2000, 0x4d86b041 )
 	ROM_CONTINUE(		      0x10000, 0x2000  )
 
-	ROM_REGION(0x0400)      /* color proms */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "ic23_3-1.bin", 0x0000, 0x0100, 0x2dd52fb2 ) /* palette red component */
 	ROM_LOAD( "ic23_3-2.bin", 0x0100, 0x0100, 0x8c2880c9 ) /* palette green component */
 	ROM_LOAD( "ic23_3-3.bin", 0x0200, 0x0100, 0xa488d761 ) /* palette blue component */
@@ -543,7 +543,7 @@ ROM_START( wiz_rom )
 	ROM_LOAD( "ic57_10.bin",  0x0000, 0x2000, 0x8a7575bd )
 ROM_END
 
-ROM_START( stinger_rom )
+ROM_START( stinger )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "n1.bin",       0x0000, 0x2000, 0xf2d2790c )
 	ROM_LOAD( "n2.bin",       0x2000, 0x2000, 0x8fd2d8d8 )
@@ -559,7 +559,7 @@ ROM_START( stinger_rom )
 	ROM_LOAD( "11.bin",       0x8000, 0x2000, 0xa4404e63 )
 	ROM_LOAD( "12.bin",       0xa000, 0x2000, 0xb60fa88c )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "stinger.a7",   0x0000, 0x0100, 0x52c06fc2 )	/* red component */
 	ROM_LOAD( "stinger.b7",   0x0100, 0x0100, 0x9985e575 )	/* green component */
 	ROM_LOAD( "stinger.a8",   0x0200, 0x0100, 0x76b57629 )	/* blue component */
@@ -568,7 +568,7 @@ ROM_START( stinger_rom )
 	ROM_LOAD( "6.bin",        0x0000, 0x2000, 0x79757f0c )
 ROM_END
 
-ROM_START( scion_rom )
+ROM_START( scion )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "sc1",          0x0000, 0x2000, 0x8dcad575 )
 	ROM_LOAD( "sc2",          0x2000, 0x2000, 0xf608e0ba )
@@ -584,7 +584,7 @@ ROM_START( scion_rom )
 	ROM_LOAD( "11.12h",       0x8000, 0x2000, 0xdc6ef8ab )
 	ROM_LOAD( "12.15h",       0xa000, 0x2000, 0xc82c28bf )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "82s129.7a",    0x0000, 0x0100, 0x2f89d9ea )	/* red component */
 	ROM_LOAD( "82s129.7b",    0x0100, 0x0100, 0xba151e6a )	/* green component */
 	ROM_LOAD( "82s129.8a",    0x0200, 0x0100, 0xf681ce59 )	/* blue component */
@@ -593,7 +593,7 @@ ROM_START( scion_rom )
 	ROM_LOAD( "sc6",         0x0000, 0x2000, 0x09f5f9c1 )
 ROM_END
 
-ROM_START( scionc_rom )
+ROM_START( scionc )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1.5j",         0x0000, 0x2000, 0x5aaf571e )
 	ROM_LOAD( "2.6j",         0x2000, 0x2000, 0xd5a66ac9 )
@@ -609,7 +609,7 @@ ROM_START( scionc_rom )
 	ROM_LOAD( "11.12h",       0x8000, 0x2000, 0xdc6ef8ab )
 	ROM_LOAD( "12.15h",       0xa000, 0x2000, 0xc82c28bf )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "82s129.7a",    0x0000, 0x0100, 0x2f89d9ea )	/* red component */
 	ROM_LOAD( "82s129.7b",    0x0100, 0x0100, 0xba151e6a )	/* green component */
 	ROM_LOAD( "82s129.8a",    0x0200, 0x0100, 0xf681ce59 )	/* blue component */
@@ -773,7 +773,7 @@ static void scion_hisave(void)
 }
 
 
-struct GameDriver wiz_driver =
+struct GameDriver driver_wiz =
 {
 	__FILE__,
 	0,
@@ -782,24 +782,24 @@ struct GameDriver wiz_driver =
 	"1985",
 	"Seibu Kaihatsu",
 	"Zsolt Vasvari",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&wiz_machine_driver,
 	0,
 
-	wiz_rom,
+	rom_wiz,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	wiz_input_ports,
+	input_ports_wiz,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_270,
+	0, 0, 0,
+	ORIENTATION_ROTATE_270 | GAME_IMPERFECT_COLORS,
 
 	wiz_hiload, wiz_hisave
 };
 
-struct GameDriver stinger_driver =
+struct GameDriver driver_stinger =
 {
 	__FILE__,
 	0,
@@ -808,24 +808,24 @@ struct GameDriver stinger_driver =
 	"1983",
 	"Seibu Denshi",
 	"Nicola Salmoria",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&stinger_machine_driver,
 	0,
 
-	stinger_rom,
+	rom_stinger,
 	0, stinger_decode,
 	0,
 	0,
 
-	stinger_input_ports,
+	input_ports_stinger,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_IMPERFECT_COLORS,
 
 	stinger_hiload, stinger_hisave
 };
 
-struct GameDriver scion_driver =
+struct GameDriver driver_scion =
 {
 	__FILE__,
 	0,
@@ -834,45 +834,45 @@ struct GameDriver scion_driver =
 	"1984",
 	"Seibu Denshi",
 	"Nicola Salmoria",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&stinger_machine_driver,
 	0,
 
-	scion_rom,
+	rom_scion,
 	0, 0,
 	0,
 	0,
 
-	scion_input_ports,
+	input_ports_scion,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_DEFAULT,
+	0, 0, 0,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 
 	scion_hiload, scion_hisave
 };
 
-struct GameDriver scionc_driver =
+struct GameDriver driver_scionc =
 {
 	__FILE__,
-	&scion_driver,
+	&driver_scion,
 	"scionc",
 	"Scion (Cinematronics)",
 	"1984",
 	"Seibu Denshi [Cinematronics license]",
 	"Nicola Salmoria",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&stinger_machine_driver,
 	0,
 
-	scionc_rom,
+	rom_scionc,
 	0, 0,
 	0,
 	0,
 
-	scion_input_ports,
+	input_ports_scion,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_DEFAULT,
+	0, 0, 0,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 
 	scion_hiload, scion_hisave
 };

@@ -144,7 +144,7 @@ static struct MemoryWriteAddress farwest_sound_writemem[] =
 
 
 
-INPUT_PORTS_START( ironhors_input_ports )
+INPUT_PORTS_START( ironhors )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -395,7 +395,7 @@ static struct MachineDriver farwest_machine_driver =
 	{
 		{
 			CPU_M6809,
-			18432000/6,        /* 3.07MHz? mod by Shingo Suzuki 1999/10/15 */
+			2000000,        /* ? */
 			0,
 			ironhors_readmem,ironhors_writemem,0,0,
 			ironhors_interrupt,8
@@ -442,7 +442,7 @@ static struct MachineDriver farwest_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( ironhors_rom )
+ROM_START( ironhors )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "13c_h03.bin",  0x4000, 0x8000, 0x24539af1 )
 	ROM_LOAD( "12c_h02.bin",  0xc000, 0x4000, 0xfab07f86 )
@@ -453,7 +453,7 @@ ROM_START( ironhors_rom )
 	ROM_LOAD( "08f_h06.bin",  0x10000, 0x8000, 0xf21d8c93 )
 	ROM_LOAD( "07f_h05.bin",  0x18000, 0x8000, 0x60107859 )
 
-	ROM_REGION(0x500)	/* color/lookup proms */
+	ROM_REGIONX( 0x0500, REGION_PROMS )
 	ROM_LOAD( "03f_h08.bin",  0x0000, 0x0100, 0x9f6ddf83 ) /* palette red */
 	ROM_LOAD( "04f_h09.bin",  0x0100, 0x0100, 0xe6773825 ) /* palette green */
 	ROM_LOAD( "05f_h10.bin",  0x0200, 0x0100, 0x30a57860 ) /* palette blue */
@@ -464,7 +464,7 @@ ROM_START( ironhors_rom )
 	ROM_LOAD( "10c_h01.bin",  0x0000, 0x4000, 0x2b17930f )
 ROM_END
 
-ROM_START( farwest_rom )
+ROM_START( farwest )
 	ROM_REGION(0x12000)	/* 64k for code + 8k for extra ROM */
 	ROM_LOAD( "ironhors.008", 0x04000, 0x4000, 0xb1c8246c )
 	ROM_LOAD( "ironhors.009", 0x08000, 0x8000, 0xea34ecfc )
@@ -478,7 +478,7 @@ ROM_START( farwest_rom )
 	ROM_LOAD( "ironhors.003", 0x18000, 0x4000, 0x3a0bf799 )
 	ROM_LOAD( "ironhors.004", 0x1c000, 0x4000, 0x1fab18a3 )
 
-	ROM_REGION(0x500)	/* color/lookup proms */
+	ROM_REGIONX( 0x0500, REGION_PROMS )
 	ROM_LOAD( "ironcol.003",  0x0000, 0x0100, 0x3e3fca11 ) /* palette red */
 	ROM_LOAD( "ironcol.001",  0x0100, 0x0100, 0xdfb13014 ) /* palette green */
 	ROM_LOAD( "ironcol.002",  0x0200, 0x0100, 0x77c88430 ) /* palette blue */
@@ -528,7 +528,7 @@ static void hisave(void) /* HSC 12/29/98 */
 }
 
 
-struct GameDriver ironhors_driver =
+struct GameDriver driver_ironhors =
 {
 	__FILE__,
 	0,
@@ -541,41 +541,41 @@ struct GameDriver ironhors_driver =
 	&ironhors_machine_driver,
 	0,
 
-	ironhors_rom,
+	rom_ironhors,
 	0, 0,
 	0,
 	0,
 
-	ironhors_input_ports,
+	input_ports_ironhors,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload, hisave
 };
 
-struct GameDriver farwest_driver =
+struct GameDriver driver_farwest =
 {
 	__FILE__,
-	&ironhors_driver,
+	&driver_ironhors,
 	"farwest",
 	"Far West",
 	"1986",
 	"bootleg?",
 	"Mirko Buffoni (MAME driver)\nGerald Vanderick (color info)",
-	GAME_NOT_WORKING,
+	0,
 	&farwest_machine_driver,
 	0,
 
-	farwest_rom,
+	rom_farwest,
 	0, 0,
 	0,
 	0,
 
-	ironhors_input_ports,
+	input_ports_ironhors,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_DEFAULT,
+	0, 0, 0,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	hiload, hisave
 };

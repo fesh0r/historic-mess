@@ -61,15 +61,12 @@ int detatwin_vh_start(void);
 void detatwin_vh_stop(void);
 int glfgreat_vh_start(void);
 void glfgreat_vh_stop(void);
-int xmen_vh_start(void);
-void xmen_vh_stop(void);
 void mia_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 void tmnt_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 void punkshot_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 void lgtnfght_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 void glfgreat_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 void ssriders_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
-void xmen_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 static int tmnt_soundlatch;
 
 
@@ -86,17 +83,6 @@ static void K052109_word_w(int offset,int data)
 		K052109_w(offset,(data >> 8) & 0xff);
 	if ((data & 0x00ff0000) == 0)
 		K052109_w(offset + 0x2000,data & 0xff);
-}
-
-static int K052109_halfword_r(int offset)
-{
-	return K052109_r(offset >> 1);
-}
-
-static void K052109_halfword_w(int offset,int data)
-{
-	if ((data & 0x00ff0000) == 0)
-		K052109_w(offset >> 1,data & 0xff);
 }
 
 static int K052109_word_noA12_r(int offset)
@@ -353,6 +339,8 @@ static void sound_arm_nmi(int offset,int data)
 
 
 
+
+
 static int punkshot_kludge(int offset)
 {
 	/* I don't know what's going on here; at one point, the code reads location */
@@ -466,47 +454,6 @@ static void ssriders_eeprom_w(int offset,int data)
 
 	/* bit 5 selects sprite ROM for testing in TMNT2 */
 	K053244_bankselect((data & 0x20) >> 5);
-}
-
-static int xmen_eeprom_r(int offset)
-{
-	int res;
-
-if (errorlog) fprintf(errorlog,"%06x eeprom_r\n",cpu_get_pc());
-	/* bit 6 is EEPROM data */
-	/* bit 7 is EEPROM ready */
-	/* bit 14 is service button */
-	res = (EEPROM_read_bit() << 6) | input_port_2_r(0);
-	if (init_eeprom_count)
-	{
-		init_eeprom_count--;
-		res &= 0xbfff;
-	}
-	return res;
-}
-
-static void xmen_eeprom_w(int offset,int data)
-{
-if (errorlog) fprintf(errorlog,"%06x: write %04x to 108000\n",cpu_get_pc(),data);
-	if ((data & 0x00ff0000) == 0)
-	{
-		/* bit 0 = coin counter */
-		coin_counter_w(0,data & 0x01);
-
-		/* bit 2 is data */
-		/* bit 3 is clock (active high) */
-		/* bit 4 is cs (active low) */
-		EEPROM_write_bit(data & 0x04);
-		EEPROM_set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
-		EEPROM_set_clock_line((data & 0x08) ? ASSERT_LINE : CLEAR_LINE);
-	}
-	else
-	{
-		/* bit 8 = enable sprite ROM reading */
-		K053246_set_OBJCHA_line((data & 0x0100) ? ASSERT_LINE : CLEAR_LINE);
-		/* bit 9 = enable char ROM reading through the video RAM */
-		K052109_set_RMRD_line((data & 0x0200) ? ASSERT_LINE : CLEAR_LINE);
-	}
 }
 
 
@@ -900,51 +847,6 @@ static struct MemoryWriteAddress ssriders_writemem[] =
 	{ -1 }	/* end of table */
 };
 
-static int xmen_sound_r(int offset)
-{
-	/* fake self test pass until we emulate the sound chip */
-	return 0x000f;
-}
-
-static struct MemoryReadAddress xmen_readmem[] =
-{
-	{ 0x000000, 0x03ffff, MRA_ROM },
-	{ 0x080000, 0x0fffff, MRA_ROM },
-	{ 0x100000, 0x100fff, K053247_word_r },
-	{ 0x101000, 0x101fff, MRA_BANK2 },
-	{ 0x104000, 0x104fff, paletteram_word_r },
-	{ 0x108054, 0x108055, xmen_sound_r },
-	{ 0x10a000, 0x10a001, input_port_0_r },
-	{ 0x10a002, 0x10a003, input_port_1_r },
-	{ 0x10a004, 0x10a005, xmen_eeprom_r },
-	{ 0x10a00c, 0x10a00d, K053246_word_r },
-	{ 0x110000, 0x113fff, MRA_BANK1 },	/* main RAM */
-	{ 0x18c000, 0x197fff, K052109_halfword_r },
-	{ -1 }	/* end of table */
-};
-
-static void xmen_18fa00_w(int offset,int data)
-{
-	/* bit 2 is interrupt enable */
-	interrupt_enable_w(0,data & 0x04);
-}
-
-static struct MemoryWriteAddress xmen_writemem[] =
-{
-	{ 0x000000, 0x03ffff, MWA_ROM },
-	{ 0x080000, 0x0fffff, MWA_ROM },
-	{ 0x100000, 0x100fff, K053247_word_w },
-	{ 0x101000, 0x101fff, MWA_BANK2 },
-	{ 0x104000, 0x104fff, paletteram_xBBBBBGGGGGRRRRR_word_w, &paletteram },
-	{ 0x108000, 0x108001, xmen_eeprom_w },
-	{ 0x108020, 0x108027, K053246_word_w },
-	{ 0x108060, 0x10807f, K053251_halfword_w },
-	{ 0x10a000, 0x10a001, watchdog_reset_w },
-	{ 0x110000, 0x113fff, MWA_BANK1 },	/* main RAM */
-	{ 0x18fa00, 0x18fa01, xmen_18fa00_w },
-	{ 0x18c000, 0x197fff, K052109_halfword_w },
-	{ -1 }	/* end of table */
-};
 
 
 static struct MemoryReadAddress mia_s_readmem[] =
@@ -1070,7 +972,7 @@ static struct MemoryWriteAddress ssriders_s_writemem[] =
 
 
 
-INPUT_PORTS_START( mia_input_ports )
+INPUT_PORTS_START( mia )
 	PORT_START      /* COINS */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1174,7 +1076,7 @@ INPUT_PORTS_START( mia_input_ports )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( tmnt_input_ports )
+INPUT_PORTS_START( tmnt )
 	PORT_START      /* COINS */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1282,7 +1184,7 @@ INPUT_PORTS_START( tmnt_input_ports )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( tmnt2p_input_ports )
+INPUT_PORTS_START( tmnt2p )
 	PORT_START      /* COINS */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1407,7 +1309,7 @@ INPUT_PORTS_START( tmnt2p_input_ports )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( punkshot_input_ports )
+INPUT_PORTS_START( punkshot )
 	PORT_START	/* DSW1/DSW2 */
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 5C_1C ) )
@@ -1521,7 +1423,7 @@ INPUT_PORTS_START( punkshot_input_ports )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( punksht2_input_ports )
+INPUT_PORTS_START( punksht2 )
 	PORT_START	/* DSW1/DSW2 */
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 5C_1C ) )
@@ -1617,7 +1519,7 @@ INPUT_PORTS_START( punksht2_input_ports )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( lgtnfght_input_ports )
+INPUT_PORTS_START( lgtnfght )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1721,7 +1623,7 @@ INPUT_PORTS_START( lgtnfght_input_ports )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( detatwin_input_ports )
+INPUT_PORTS_START( detatwin )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1758,7 +1660,7 @@ INPUT_PORTS_START( detatwin_input_ports )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( glfgreat_input_ports )
+INPUT_PORTS_START( glfgreat )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1880,7 +1782,7 @@ INPUT_PORTS_START( glfgreat_input_ports )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( ssriders4p_input_ports )
+INPUT_PORTS_START( ssriders4p )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1941,7 +1843,7 @@ INPUT_PORTS_START( ssriders4p_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( ssriders_input_ports )
+INPUT_PORTS_START( ssriders )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -1980,56 +1882,6 @@ INPUT_PORTS_START( ssriders_input_ports )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* ?? TMNT2: IPL0 */
 	PORT_BIT( 0x60, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused? */
 	PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-INPUT_PORTS_END
-
-INPUT_PORTS_START( xmen_input_ports )
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4 )
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER4 )
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER4 )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_COIN4 )
-
-	PORT_START	/* IN0 */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER3 )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_COIN3 )
-
-	PORT_START	/* COIN  EEPROM and service */
-	PORT_BIT( 0x003f, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused? */
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/* EEPROM data */
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* EEPROM status - always 1 */
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_START3 )
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START4 )
-	PORT_BIT( 0x3000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused? */
-	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused? */
 INPUT_PORTS_END
 
 
@@ -2510,58 +2362,6 @@ static struct MachineDriver ssriders_machine_driver =
 	}
 };
 
-static int xmen_interrupt(void)
-{
-	if (cpu_getiloops() == 0) return m68_level5_irq();
-	else return m68_level3_irq();
-}
-
-static struct MachineDriver xmen_machine_driver =
-{
-	/* basic machine hardware */
-	{
-		{
-			CPU_M68000,
-			16000000,	/* ? */
-			0,
-			xmen_readmem,xmen_writemem,0,0,
-			xmen_interrupt,2
-		},
-#if 0
-		{
-			CPU_Z80 | CPU_AUDIO_CPU,
-			2*3579545,	/* ????? */
-			3,
-			ssriders_s_readmem,ssriders_s_writemem,0,0,
-			ignore_interrupt,0	/* IRQs are triggered by the main CPU */
-		}
-#endif
-	},
-	60, DEFAULT_60HZ_VBLANK_DURATION,	/* frames per second, vblank duration */
-	1,	/* 1 CPU slice per frame - interleaving is forced when a sound command is written */
-	ssriders_eeprom_init,
-
-	/* video hardware */
-	64*8, 32*8, { 14*8, (64-14)*8-1, 2*8, 30*8-1 },
-	0,	/* gfx decoded by konamiic.c */
-	2048, 2048,
-	0,
-
-	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
-	0,
-	xmen_vh_start,
-	xmen_vh_stop,
-	xmen_vh_screenrefresh,
-
-	/* sound hardware */
-	SOUND_SUPPORTS_STEREO,0,0,0,
-	{
-		{
-			SOUND_YM2151,
-			&ym2151_interface
-		}
-	}
-};
 
 
 /***************************************************************************
@@ -2649,7 +2449,7 @@ static void punkshot_hisave(void)
 
 ***************************************************************************/
 
-ROM_START( mia_rom )
+ROM_START( mia )
 	ROM_REGION(0x40000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "808t20.h17",   0x00000, 0x20000, 0x6f0acb1d )
 	ROM_LOAD_ODD ( "808t21.j17",   0x00000, 0x20000, 0x42a30416 )
@@ -2674,7 +2474,7 @@ ROM_START( mia_rom )
 	ROM_LOAD( "808a18.f16",   0x0000, 0x0100, 0xeb95aede )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( mia2_rom )
+ROM_START( mia2 )
 	ROM_REGION(0x40000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "808s20.h17",   0x00000, 0x20000, 0xcaa2897f )
 	ROM_LOAD_ODD ( "808s21.j17",   0x00000, 0x20000, 0x3d892ffb )
@@ -2699,7 +2499,7 @@ ROM_START( mia2_rom )
 	ROM_LOAD( "808a18.f16",   0x0000, 0x0100, 0xeb95aede )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( tmnt_rom )
+ROM_START( tmnt )
 	ROM_REGION(0x60000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "963-r23",      0x00000, 0x20000, 0xa7f61195 )
 	ROM_LOAD_ODD ( "963-r24",      0x00000, 0x20000, 0x661e056a )
@@ -2733,7 +2533,7 @@ ROM_START( tmnt_rom )
 	ROM_LOAD( "tmnt.g19",     0x0100, 0x0100, 0xf8004a1c )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( tmht_rom )
+ROM_START( tmht )
 	ROM_REGION(0x60000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "963f23.j17",   0x00000, 0x20000, 0x9cb5e461 )
 	ROM_LOAD_ODD ( "963f24.k17",   0x00000, 0x20000, 0x2d902fab )
@@ -2767,7 +2567,7 @@ ROM_START( tmht_rom )
 	ROM_LOAD( "tmnt.g19",     0x0100, 0x0100, 0xf8004a1c )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( tmntj_rom )
+ROM_START( tmntj )
 	ROM_REGION(0x60000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "963-x23",      0x00000, 0x20000, 0xa9549004 )
 	ROM_LOAD_ODD ( "963-x24",      0x00000, 0x20000, 0xe5cc9067 )
@@ -2801,7 +2601,7 @@ ROM_START( tmntj_rom )
 	ROM_LOAD( "tmnt.g19",     0x0100, 0x0100, 0xf8004a1c )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( tmht2p_rom )
+ROM_START( tmht2p )
 	ROM_REGION(0x60000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "963-u23",      0x00000, 0x20000, 0x58bec748 )
 	ROM_LOAD_ODD ( "963-u24",      0x00000, 0x20000, 0xdce87c8d )
@@ -2835,7 +2635,7 @@ ROM_START( tmht2p_rom )
 	ROM_LOAD( "tmnt.g19",     0x0100, 0x0100, 0xf8004a1c )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( tmnt2pj_rom )
+ROM_START( tmnt2pj )
 	ROM_REGION(0x60000)	/* 2*128k and 2*64k for 68000 code */
 	ROM_LOAD_EVEN( "963-123",      0x00000, 0x20000, 0x6a3527c9 )
 	ROM_LOAD_ODD ( "963-124",      0x00000, 0x20000, 0x2c4bfa15 )
@@ -2869,7 +2669,7 @@ ROM_START( tmnt2pj_rom )
 	ROM_LOAD( "tmnt.g19",     0x0100, 0x0100, 0xf8004a1c )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( punkshot_rom )
+ROM_START( punkshot )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "907-j02.i7",   0x00000, 0x20000, 0xdbb3a23b )
 	ROM_LOAD_ODD ( "907-j03.i10",  0x00000, 0x20000, 0x2151d1ab )
@@ -2891,7 +2691,7 @@ ROM_START( punkshot_rom )
 	ROM_LOAD( "907d04.d3",    0x0000, 0x80000, 0x090feb5e )
 ROM_END
 
-ROM_START( punksht2_rom )
+ROM_START( punksht2 )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "907m02.i7",    0x00000, 0x20000, 0x59e14575 )
 	ROM_LOAD_ODD ( "907m03.i10",   0x00000, 0x20000, 0xadb14b1e )
@@ -2913,7 +2713,7 @@ ROM_START( punksht2_rom )
 	ROM_LOAD( "907d04.d3",    0x0000, 0x80000, 0x090feb5e )
 ROM_END
 
-ROM_START( lgtnfght_rom )
+ROM_START( lgtnfght )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "939m02.e11",   0x00000, 0x20000, 0x61a12184 )
 	ROM_LOAD_ODD ( "939m03.e15",   0x00000, 0x20000, 0x6db6659d )
@@ -2933,7 +2733,7 @@ ROM_START( lgtnfght_rom )
 	ROM_LOAD( "939a04.c5",    0x0000, 0x80000, 0xc24e2b6e )
 ROM_END
 
-ROM_START( trigon_rom )
+ROM_START( trigon )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "939j02.bin",   0x00000, 0x20000, 0x38381d1b )
 	ROM_LOAD_ODD ( "939j03.bin",   0x00000, 0x20000, 0xb5beddcd )
@@ -2953,7 +2753,7 @@ ROM_START( trigon_rom )
 	ROM_LOAD( "939a04.c5",    0x0000, 0x80000, 0xc24e2b6e )
 ROM_END
 
-ROM_START( detatwin_rom )
+ROM_START( detatwin )
 	ROM_REGION(0x80000)
 	ROM_LOAD_EVEN( "060_j02.rom", 0x000000, 0x20000, 0x11b761ac )
 	ROM_LOAD_ODD ( "060_j03.rom", 0x000000, 0x20000, 0x8d0b588c )
@@ -2975,7 +2775,7 @@ ROM_START( detatwin_rom )
 	ROM_LOAD( "060_e04.r16",  0x0000, 0x100000, 0xc680395d )
 ROM_END
 
-ROM_START( glfgreat_rom )
+ROM_START( glfgreat )
 	ROM_REGION(0x40000)
 	ROM_LOAD_EVEN( "061l02.1h",   0x000000, 0x20000, 0xac7399f4 )
 	ROM_LOAD_ODD ( "061l03.4h",   0x000000, 0x20000, 0x77b0ff5c )
@@ -3003,7 +2803,7 @@ ROM_START( glfgreat_rom )
 	ROM_LOAD( "061b10.17g",   0x280000, 0x080000, 0x10f89ce7 )
 ROM_END
 
-ROM_START( tmnt2_rom )
+ROM_START( tmnt2 )
 	ROM_REGION(0x80000)
 	ROM_LOAD_EVEN( "uaa02", 0x000000, 0x20000, 0x58d5c93d )
 	ROM_LOAD_ODD ( "uaa03", 0x000000, 0x20000, 0x0541fec9 )
@@ -3029,7 +2829,7 @@ ROM_START( tmnt2_rom )
 	ROM_LOAD( "063b06",       0x0000, 0x200000, 0x1e510aa5 )
 ROM_END
 
-ROM_START( tmnt22p_rom )
+ROM_START( tmnt22p )
 	ROM_REGION(0x80000)
 	ROM_LOAD_EVEN( "a02",   0x000000, 0x20000, 0xaadffe3a )
 	ROM_LOAD_ODD ( "a03",   0x000000, 0x20000, 0x125687a8 )
@@ -3055,7 +2855,7 @@ ROM_START( tmnt22p_rom )
 	ROM_LOAD( "063b06",       0x0000, 0x200000, 0x1e510aa5 )
 ROM_END
 
-ROM_START( tmnt2a_rom )
+ROM_START( tmnt2a )
 	ROM_REGION(0x80000)
 	ROM_LOAD_EVEN( "ada02", 0x000000, 0x20000, 0x4f11b587 )
 	ROM_LOAD_ODD ( "ada03", 0x000000, 0x20000, 0x82a1b9ac )
@@ -3081,7 +2881,7 @@ ROM_START( tmnt2a_rom )
 	ROM_LOAD( "063b06",       0x0000, 0x200000, 0x1e510aa5 )
 ROM_END
 
-ROM_START( ssriders_rom )
+ROM_START( ssriders )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "064eac02",    0x000000, 0x40000, 0x5a5425f4 )
 	ROM_LOAD_ODD ( "064eac03",    0x000000, 0x40000, 0x093c00fb )
@@ -3103,7 +2903,7 @@ ROM_START( ssriders_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdrebd_rom )
+ROM_START( ssrdrebd )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "064ebd02",    0x000000, 0x40000, 0x8deef9ac )
 	ROM_LOAD_ODD ( "064ebd03",    0x000000, 0x40000, 0x2370c107 )
@@ -3125,7 +2925,7 @@ ROM_START( ssrdrebd_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdrebc_rom )
+ROM_START( ssrdrebc )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "sr_c02.rom",  0x000000, 0x40000, 0x9bd7d164 )
 	ROM_LOAD_ODD ( "sr_c03.rom",  0x000000, 0x40000, 0x40fd4165 )
@@ -3147,7 +2947,7 @@ ROM_START( ssrdrebc_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdruda_rom )
+ROM_START( ssrdruda )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "064uda02",    0x000000, 0x40000, 0x5129a6b7 )
 	ROM_LOAD_ODD ( "064uda03",    0x000000, 0x40000, 0x9f887214 )
@@ -3169,7 +2969,7 @@ ROM_START( ssrdruda_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdruac_rom )
+ROM_START( ssrdruac )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "064uac02",    0x000000, 0x40000, 0x870473b6 )
 	ROM_LOAD_ODD ( "064uac03",    0x000000, 0x40000, 0xeadf289a )
@@ -3191,7 +2991,7 @@ ROM_START( ssrdruac_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdrubc_rom )
+ROM_START( ssrdrubc )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "2pl.8e",      0x000000, 0x40000, 0xaca7fda5 )
 	ROM_LOAD_ODD ( "2pl.8g",      0x000000, 0x40000, 0xbb1fdeff )
@@ -3213,7 +3013,7 @@ ROM_START( ssrdrubc_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdrabd_rom )
+ROM_START( ssrdrabd )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "064abd02.8e", 0x000000, 0x40000, 0x713406cb )
 	ROM_LOAD_ODD ( "064abd03.8g", 0x000000, 0x40000, 0x680feb3c )
@@ -3235,7 +3035,7 @@ ROM_START( ssrdrabd_rom )
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
 ROM_END
 
-ROM_START( ssrdrjbd_rom )
+ROM_START( ssrdrjbd )
 	ROM_REGION(0xc0000)
 	ROM_LOAD_EVEN( "064jbd02.8e", 0x000000, 0x40000, 0x7acdc1e3 )
 	ROM_LOAD_ODD ( "064jbd03.8g", 0x000000, 0x40000, 0x6a424918 )
@@ -3255,54 +3055,6 @@ ROM_START( ssrdrjbd_rom )
 
 	ROM_REGION(0x100000)	/* samples for the 053260 */
 	ROM_LOAD( "sr_1d.rom",    0x0000, 0x100000, 0x59810df9 )
-ROM_END
-
-ROM_START( xmen_rom )
-    ROM_REGION(0x100000)
-    ROM_LOAD_EVEN( "065ubb04.10d",  0x00000, 0x20000, 0xf896c93b )
-    ROM_LOAD_ODD ( "065ubb05.10f",  0x00000, 0x20000, 0xe02e5d64 )
-    ROM_LOAD_EVEN( "xmen17g.bin",   0x80000, 0x40000, 0xb31dc44c )
-    ROM_LOAD_ODD ( "xmen17j.bin",   0x80000, 0x40000, 0x13842fe6 )
-
-    ROM_REGION(0x200000)	/* graphics (addressable by the main CPU) */
-    ROM_LOAD( "xmen1l.bin",   0x000000, 0x100000, 0x6b649aca )	/* tiles */
-    ROM_LOAD( "xmen1h.bin",   0x100000, 0x100000, 0xc5dc8fc4 )
-
-	ROM_REGION(0x400000)	/* graphics (addressable by the main CPU) */
-    ROM_LOAD( "xmen12l.bin",  0x000000, 0x100000, 0xea05d52f )	/* sprites */
-    ROM_LOAD( "xmen17l.bin",  0x100000, 0x100000, 0x96b91802 )
-    ROM_LOAD( "xmen22h.bin",  0x200000, 0x100000, 0x321ed07a )
-    ROM_LOAD( "xmen22l.bin",  0x300000, 0x100000, 0x46da948e )
-
-    ROM_REGION(0x20000)
-    ROM_LOAD( "065-a01.6f",   0x00000, 0x20000, 0x147d3a4d )
-
-    ROM_REGION(0x200000)	/* samples for the 054544 */
-    ROM_LOAD( "xmenc25.bin",  0x000000, 0x200000, 0x5adbcee0 )
-ROM_END
-
-ROM_START( xmen6p_rom )
-    ROM_REGION(0x100000)
-    ROM_LOAD_EVEN( "xmenb04.bin",   0x00000, 0x20000, 0x0f09b8e0 )
-    ROM_LOAD_ODD ( "xmenb05.bin",   0x00000, 0x20000, 0x867becbf )
-    ROM_LOAD_EVEN( "xmen17g.bin",   0x80000, 0x40000, 0xb31dc44c )
-    ROM_LOAD_ODD ( "xmen17j.bin",   0x80000, 0x40000, 0x13842fe6 )
-
-    ROM_REGION(0x200000)	/* graphics (addressable by the main CPU) */
-    ROM_LOAD( "xmen1l.bin",   0x000000, 0x100000, 0x6b649aca )	/* tiles */
-    ROM_LOAD( "xmen1h.bin",   0x100000, 0x100000, 0xc5dc8fc4 )
-
-	ROM_REGION(0x400000)	/* graphics (addressable by the main CPU) */
-    ROM_LOAD( "xmen12l.bin",  0x000000, 0x100000, 0xea05d52f )	/* sprites */
-    ROM_LOAD( "xmen17l.bin",  0x100000, 0x100000, 0x96b91802 )
-    ROM_LOAD( "xmen22h.bin",  0x200000, 0x100000, 0x321ed07a )
-    ROM_LOAD( "xmen22l.bin",  0x300000, 0x100000, 0x46da948e )
-
-    ROM_REGION(0x20000)
-    ROM_LOAD( "065-a01.6f",   0x00000, 0x20000, 0x147d3a4d )
-
-    ROM_REGION(0x200000)	/* samples for the 054544 */
-    ROM_LOAD( "xmenc25.bin",  0x000000, 0x200000, 0x5adbcee0 )
 ROM_END
 
 
@@ -3547,12 +3299,6 @@ static void glfgreat_gfx_untangle(void)
 	shuffle(Machine->memory_region[2],Machine->memory_region_length[2]);
 }
 
-static void xmen_gfx_untangle(void)
-{
-	konami_rom_deinterleave_2(1);
-	konami_rom_deinterleave_4(2);
-}
-
 
 
 static int nvram_load(void)
@@ -3583,7 +3329,7 @@ static void nvram_save(void)
 
 
 
-struct GameDriver mia_driver =
+struct GameDriver driver_mia =
 {
 	__FILE__,
 	0,
@@ -3596,12 +3342,12 @@ struct GameDriver mia_driver =
 	&mia_machine_driver,
 	0,
 
-	mia_rom,
+	rom_mia,
 	mia_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	mia_input_ports,
+	input_ports_mia,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3609,10 +3355,10 @@ struct GameDriver mia_driver =
 	0, 0
 };
 
-struct GameDriver mia2_driver =
+struct GameDriver driver_mia2 =
 {
 	__FILE__,
-	&mia_driver,
+	&driver_mia,
 	"mia2",
 	"Missing in Action (version S)",
 	"1989",
@@ -3622,12 +3368,12 @@ struct GameDriver mia2_driver =
 	&mia_machine_driver,
 	0,
 
-	mia2_rom,
+	rom_mia2,
 	mia_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	mia_input_ports,
+	input_ports_mia,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3635,7 +3381,7 @@ struct GameDriver mia2_driver =
 	0, 0
 };
 
-struct GameDriver tmnt_driver =
+struct GameDriver driver_tmnt =
 {
 	__FILE__,
 	0,
@@ -3648,12 +3394,12 @@ struct GameDriver tmnt_driver =
 	&tmnt_machine_driver,
 	0,
 
-	tmnt_rom,
+	rom_tmnt,
 	tmnt_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	tmnt_input_ports,
+	input_ports_tmnt,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3661,10 +3407,10 @@ struct GameDriver tmnt_driver =
 	tmnt_hiload, tmnt_hisave
 };
 
-struct GameDriver tmht_driver =
+struct GameDriver driver_tmht =
 {
 	__FILE__,
-	&tmnt_driver,
+	&driver_tmnt,
 	"tmht",
 	"Teenage Mutant Hero Turtles (4 Players UK)",
 	"1989",
@@ -3674,12 +3420,12 @@ struct GameDriver tmht_driver =
 	&tmnt_machine_driver,
 	0,
 
-	tmht_rom,
+	rom_tmht,
 	tmnt_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	tmnt_input_ports,
+	input_ports_tmnt,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3687,10 +3433,10 @@ struct GameDriver tmht_driver =
 	tmnt_hiload, tmnt_hisave
 };
 
-struct GameDriver tmntj_driver =
+struct GameDriver driver_tmntj =
 {
 	__FILE__,
-	&tmnt_driver,
+	&driver_tmnt,
 	"tmntj",
 	"Teenage Mutant Ninja Turtles (4 Players Japan)",
 	"1989",
@@ -3700,12 +3446,12 @@ struct GameDriver tmntj_driver =
 	&tmnt_machine_driver,
 	0,
 
-	tmntj_rom,
+	rom_tmntj,
 	tmnt_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	tmnt_input_ports,
+	input_ports_tmnt,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3713,10 +3459,10 @@ struct GameDriver tmntj_driver =
 	tmnt_hiload, tmnt_hisave
 };
 
-struct GameDriver tmht2p_driver =
+struct GameDriver driver_tmht2p =
 {
 	__FILE__,
-	&tmnt_driver,
+	&driver_tmnt,
 	"tmht2p",
 	"Teenage Mutant Hero Turtles (2 Players UK)",
 	"1989",
@@ -3726,12 +3472,12 @@ struct GameDriver tmht2p_driver =
 	&tmnt_machine_driver,
 	0,
 
-	tmht2p_rom,
+	rom_tmht2p,
 	tmnt_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	tmnt2p_input_ports,
+	input_ports_tmnt2p,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3739,10 +3485,10 @@ struct GameDriver tmht2p_driver =
 	tmnt_hiload, tmnt_hisave
 };
 
-struct GameDriver tmnt2pj_driver =
+struct GameDriver driver_tmnt2pj =
 {
 	__FILE__,
-	&tmnt_driver,
+	&driver_tmnt,
 	"tmnt2pj",
 	"Teenage Mutant Ninja Turtles (2 Players Japan)",
 	"1990",
@@ -3752,12 +3498,12 @@ struct GameDriver tmnt2pj_driver =
 	&tmnt_machine_driver,
 	0,
 
-	tmnt2pj_rom,
+	rom_tmnt2pj,
 	tmnt_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	tmnt2p_input_ports,
+	input_ports_tmnt2p,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3765,7 +3511,7 @@ struct GameDriver tmnt2pj_driver =
 	tmnt_hiload, tmnt_hisave
 };
 
-struct GameDriver punkshot_driver =
+struct GameDriver driver_punkshot =
 {
 	__FILE__,
 	0,
@@ -3778,12 +3524,12 @@ struct GameDriver punkshot_driver =
 	&punkshot_machine_driver,
 	0,
 
-	punkshot_rom,
+	rom_punkshot,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	punkshot_input_ports,
+	input_ports_punkshot,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3791,10 +3537,10 @@ struct GameDriver punkshot_driver =
 	punkshot_hiload, punkshot_hisave
 };
 
-struct GameDriver punksht2_driver =
+struct GameDriver driver_punksht2 =
 {
 	__FILE__,
-	&punkshot_driver,
+	&driver_punkshot,
 	"punksht2",
 	"Punk Shot (2 Players)",
 	"1990",
@@ -3804,12 +3550,12 @@ struct GameDriver punksht2_driver =
 	&punkshot_machine_driver,
 	0,
 
-	punksht2_rom,
+	rom_punksht2,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	punksht2_input_ports,
+	input_ports_punksht2,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -3817,7 +3563,7 @@ struct GameDriver punksht2_driver =
 	punkshot_hiload, punkshot_hisave
 };
 
-struct GameDriver lgtnfght_driver =
+struct GameDriver driver_lgtnfght =
 {
 	__FILE__,
 	0,
@@ -3830,12 +3576,12 @@ struct GameDriver lgtnfght_driver =
 	&lgtnfght_machine_driver,
 	0,
 
-	lgtnfght_rom,
+	rom_lgtnfght,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	lgtnfght_input_ports,
+	input_ports_lgtnfght,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -3843,10 +3589,10 @@ struct GameDriver lgtnfght_driver =
 	0, 0
 };
 
-struct GameDriver trigon_driver =
+struct GameDriver driver_trigon =
 {
 	__FILE__,
-	&lgtnfght_driver,
+	&driver_lgtnfght,
 	"trigon",
 	"Trigon (Japan)",
 	"1990",
@@ -3856,12 +3602,12 @@ struct GameDriver trigon_driver =
 	&lgtnfght_machine_driver,
 	0,
 
-	trigon_rom,
+	rom_trigon,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	lgtnfght_input_ports,
+	input_ports_lgtnfght,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -3869,7 +3615,7 @@ struct GameDriver trigon_driver =
 	0, 0
 };
 
-struct GameDriver detatwin_driver =
+struct GameDriver driver_detatwin =
 {
 	__FILE__,
 	0,
@@ -3882,12 +3628,12 @@ struct GameDriver detatwin_driver =
 	&detatwin_machine_driver,
 	0,
 
-	detatwin_rom,
+	rom_detatwin,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	detatwin_input_ports,
+	input_ports_detatwin,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -3895,7 +3641,7 @@ struct GameDriver detatwin_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver glfgreat_driver =
+struct GameDriver driver_glfgreat =
 {
 	__FILE__,
 	0,
@@ -3904,24 +3650,24 @@ struct GameDriver glfgreat_driver =
 	"1991",
 	"Konami",
 	"Nicola Salmoria (MAME driver)\nAlex Pasadyn (MAME driver)\nJeff Slutter (hardware info)\nHowie Cohen (hardware info)",
-	GAME_NOT_WORKING,
+	0,
 	&glfgreat_machine_driver,
 	0,
 
-	glfgreat_rom,
+	rom_glfgreat,
 	glfgreat_gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	glfgreat_input_ports,
+	input_ports_glfgreat,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	0, 0
 };
 
-struct GameDriver tmnt2_driver =
+struct GameDriver driver_tmnt2 =
 {
 	__FILE__,
 	0,
@@ -3930,76 +3676,76 @@ struct GameDriver tmnt2_driver =
 	"1991",
 	"Konami",
 	"Nicola Salmoria (MAME driver)\nAlex Pasadyn (MAME driver)\nJeff Slutter (hardware info)\nHowie Cohen (hardware info)",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&tmnt2_machine_driver,
 	0,
 
-	tmnt2_rom,
+	rom_tmnt2,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders4p_input_ports,
+	input_ports_ssriders4p,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 
 	nvram_load, nvram_save
 };
 
-struct GameDriver tmnt22p_driver =
+struct GameDriver driver_tmnt22p =
 {
 	__FILE__,
-	&tmnt2_driver,
+	&driver_tmnt2,
 	"tmnt22p",
 	"Teenage Mutant Ninja Turtles - Turtles in Time (2 Players US)",
 	"1991",
 	"Konami",
 	"Nicola Salmoria (MAME driver)\nAlex Pasadyn (MAME driver)\nJeff Slutter (hardware info)\nHowie Cohen (hardware info)",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&tmnt2_machine_driver,
 	0,
 
-	tmnt22p_rom,
+	rom_tmnt22p,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 
 	nvram_load, nvram_save
 };
 
-struct GameDriver tmnt2a_driver =
+struct GameDriver driver_tmnt2a =
 {
 	__FILE__,
-	&tmnt2_driver,
+	&driver_tmnt2,
 	"tmnt2a",
 	"Teenage Mutant Ninja Turtles - Turtles in Time (4 Players Asia)",
 	"1991",
 	"Konami",
 	"Nicola Salmoria (MAME driver)\nAlex Pasadyn (MAME driver)\nJeff Slutter (hardware info)\nHowie Cohen (hardware info)",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&tmnt2_machine_driver,
 	0,
 
-	tmnt2a_rom,
+	rom_tmnt2a,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders4p_input_ports,
+	input_ports_ssriders4p,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_COLORS,
 
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssriders_driver =
+struct GameDriver driver_ssriders =
 {
 	__FILE__,
 	0,
@@ -4012,12 +3758,12 @@ struct GameDriver ssriders_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssriders_rom,
+	rom_ssriders,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders4p_input_ports,
+	input_ports_ssriders4p,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4025,10 +3771,10 @@ struct GameDriver ssriders_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdrebd_driver =
+struct GameDriver driver_ssrdrebd =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdrebd",
 	"Sunset Riders (World 2 Players ver. EBD)",
 	"1991",
@@ -4038,12 +3784,12 @@ struct GameDriver ssrdrebd_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdrebd_rom,
+	rom_ssrdrebd,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4051,10 +3797,10 @@ struct GameDriver ssrdrebd_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdrebc_driver =
+struct GameDriver driver_ssrdrebc =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdrebc",
 	"Sunset Riders (World 2 Players ver. EBC)",
 	"1991",
@@ -4064,12 +3810,12 @@ struct GameDriver ssrdrebc_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdrebc_rom,
+	rom_ssrdrebc,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4077,10 +3823,10 @@ struct GameDriver ssrdrebc_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdruda_driver =
+struct GameDriver driver_ssrdruda =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdruda",
 	"Sunset Riders (US 4 Players ver. UDA)",
 	"1991",
@@ -4090,12 +3836,12 @@ struct GameDriver ssrdruda_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdruda_rom,
+	rom_ssrdruda,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4103,10 +3849,10 @@ struct GameDriver ssrdruda_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdruac_driver =
+struct GameDriver driver_ssrdruac =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdruac",
 	"Sunset Riders (US 4 Players ver. UAC)",
 	"1991",
@@ -4116,12 +3862,12 @@ struct GameDriver ssrdruac_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdruac_rom,
+	rom_ssrdruac,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4129,10 +3875,10 @@ struct GameDriver ssrdruac_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdrubc_driver =
+struct GameDriver driver_ssrdrubc =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdrubc",
 	"Sunset Riders (US 2 Players ver. UBC)",
 	"1991",
@@ -4142,12 +3888,12 @@ struct GameDriver ssrdrubc_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdrubc_rom,
+	rom_ssrdrubc,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4155,10 +3901,10 @@ struct GameDriver ssrdrubc_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdrabd_driver =
+struct GameDriver driver_ssrdrabd =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdrabd",
 	"Sunset Riders (Asia 2 Players ver. ABD)",
 	"1991",
@@ -4168,12 +3914,12 @@ struct GameDriver ssrdrabd_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdrabd_rom,
+	rom_ssrdrabd,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -4181,10 +3927,10 @@ struct GameDriver ssrdrabd_driver =
 	nvram_load, nvram_save
 };
 
-struct GameDriver ssrdrjbd_driver =
+struct GameDriver driver_ssrdrjbd =
 {
 	__FILE__,
-	&ssriders_driver,
+	&driver_ssriders,
 	"ssrdrjbd",
 	"Sunset Riders (Japan 2 Players ver. JBD)",
 	"1991",
@@ -4194,75 +3940,12 @@ struct GameDriver ssrdrjbd_driver =
 	&ssriders_machine_driver,
 	0,
 
-	ssrdrjbd_rom,
+	rom_ssrdrjbd,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	ssriders_input_ports,
-
-	0, 0, 0,
-	ORIENTATION_DEFAULT,
-
-	nvram_load, nvram_save
-};
-
-struct GameDriver xmen_driver =
-{
-	__FILE__,
-	0,
-	"xmen",
-	"X-Men (4 Players)",
-	"1992",
-	"Konami",
-	"Nicola Salmoria (MAME driver)\nAlex Pasadyn (MAME driver)\nJeff Slutter (hardware info)\nHowie Cohen (hardware info)",
-	GAME_NO_SOUND,
-	&xmen_machine_driver,
-	0,
-
-	xmen_rom,
-	xmen_gfx_untangle, 0,
-	0,
-	0,	/* sound_prom */
-
-	xmen_input_ports,
-
-	0, 0, 0,
-	ORIENTATION_DEFAULT,
-
-	nvram_load, nvram_save
-};
-
-static void xmen6p_patch(void)
-{
-	unsigned char *RAM = Machine->memory_region[0];
-
-	WRITE_WORD(&RAM[0x21a6],0x4e71);
-	WRITE_WORD(&RAM[0x21a8],0x4e71);
-	WRITE_WORD(&RAM[0x21aa],0x4e71);
-
-	xmen_gfx_untangle();
-}
-
-struct GameDriver xmen6p_driver =
-{
-	__FILE__,
-	&xmen_driver,
-	"xmen6p",
-	"X-Men (6 Players)",
-	"1992",
-	"Konami",
-	"Nicola Salmoria (MAME driver)\nAlex Pasadyn (MAME driver)\nJeff Slutter (hardware info)\nHowie Cohen (hardware info)",
-	GAME_NOT_WORKING,
-	&xmen_machine_driver,
-	0,
-
-	xmen6p_rom,
-	xmen6p_patch, 0,
-	0,
-	0,	/* sound_prom */
-
-	xmen_input_ports,
+	input_ports_ssriders,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

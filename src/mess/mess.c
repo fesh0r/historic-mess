@@ -54,6 +54,7 @@ void showmessinfo(void)
 }
 
 
+
 /**********************************************************/
 /* Functions called from MSDOS.C by MAME for running MESS */
 /**********************************************************/

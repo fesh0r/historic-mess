@@ -276,7 +276,7 @@ static struct MemoryWriteAddress dorunrun_writemem2[] =
 	/* 0x10, 0x20, 0x30, 0x40, 0x50 all give 1 Coin/1 Credit */
 
 
-INPUT_PORTS_START( docastle_input_ports )
+INPUT_PORTS_START( docastle )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
@@ -337,7 +337,7 @@ INPUT_PORTS_START( docastle_input_ports )
 	COINAGE_PORT
 INPUT_PORTS_END
 
-INPUT_PORTS_START( dorunrun_input_ports )
+INPUT_PORTS_START( dorunrun )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
@@ -399,7 +399,7 @@ INPUT_PORTS_START( dorunrun_input_ports )
 	COINAGE_PORT
 INPUT_PORTS_END
 
-INPUT_PORTS_START( dowild_input_ports )
+INPUT_PORTS_START( dowild )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
@@ -462,7 +462,7 @@ PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
 	COINAGE_PORT
 INPUT_PORTS_END
 
-INPUT_PORTS_START( jjack_input_ports )
+INPUT_PORTS_START( jjack )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
@@ -523,7 +523,7 @@ INPUT_PORTS_START( jjack_input_ports )
 	COINAGE_PORT
 INPUT_PORTS_END
 
-INPUT_PORTS_START( kickridr_input_ports )
+INPUT_PORTS_START( kickridr )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
@@ -728,7 +728,7 @@ static struct MachineDriver dorunrun_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( docastle_rom )
+ROM_START( docastle )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "01p_a1.bin",   0x0000, 0x2000, 0x17c6fc24 )
 	ROM_LOAD( "01n_a2.bin",   0x2000, 0x2000, 0x1d2fc7f4 )
@@ -742,7 +742,7 @@ ROM_START( docastle_rom )
 	ROM_LOAD( "04j_a8.bin",   0x8000, 0x2000, 0x9afb16e9 )
 	ROM_LOAD( "04h_a9.bin",   0xa000, 0x2000, 0xaf24bce0 )
 
-	ROM_REGION(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "09c.bin",      0x0000, 0x0200, 0x066f52bc ) /* color prom */
 	ROM_LOAD( "01d.bin",      0x0200, 0x0200, 0x2747ca77 ) /* ??? */
 
@@ -750,7 +750,7 @@ ROM_START( docastle_rom )
 	ROM_LOAD( "07n_a0.bin",   0x0000, 0x4000, 0xf23b5cdb )
 ROM_END
 
-ROM_START( docastl2_rom )
+ROM_START( docastl2 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "a1",           0x0000, 0x2000, 0x0d81fafc )
 	ROM_LOAD( "a2",           0x2000, 0x2000, 0xa13dc4ac )
@@ -764,7 +764,7 @@ ROM_START( docastl2_rom )
 	ROM_LOAD( "04j_a8.bin",   0x8000, 0x2000, 0x9afb16e9 )
 	ROM_LOAD( "04h_a9.bin",   0xa000, 0x2000, 0xaf24bce0 )
 
-	ROM_REGION(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "09c.bin",      0x0000, 0x0200, 0x066f52bc ) /* color prom */
 	ROM_LOAD( "01d.bin",      0x0200, 0x0200, 0x2747ca77 ) /* ??? */
 
@@ -772,7 +772,7 @@ ROM_START( docastl2_rom )
 	ROM_LOAD( "a10",          0x0000, 0x4000, 0x45f7f69b )
 ROM_END
 
-ROM_START( dounicorn_rom )
+ROM_START( dounicorn )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "dorev1.bin",   0x0000, 0x2000, 0x1e2cbb3c )
 	ROM_LOAD( "dorev2.bin",   0x2000, 0x2000, 0x18418f83 )
@@ -786,7 +786,7 @@ ROM_START( dounicorn_rom )
 	ROM_LOAD( "dorev8.bin",   0x8000, 0x2000, 0x7143ca68 )
 	ROM_LOAD( "dorev9.bin",   0xa000, 0x2000, 0x893fc004 )
 
-	ROM_REGION(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "dorevc9.bin",  0x0000, 0x0200, 0x96624ebe ) /* color prom */
 	ROM_LOAD( "01d.bin",      0x0200, 0x0200, 0x2747ca77 ) /* ??? */
 
@@ -794,7 +794,7 @@ ROM_START( dounicorn_rom )
 	ROM_LOAD( "dorev10.bin",  0x0000, 0x4000, 0x4b1925e3 )
 ROM_END
 
-ROM_START( dorunruc_rom )
+ROM_START( dorunruc )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "rev-0-1.p1",   0x0000, 0x2000, 0x49906ebd )
 	ROM_LOAD( "rev-0-2.n1",   0x2000, 0x2000, 0xdbe3e7db )
@@ -808,14 +808,14 @@ ROM_START( dorunruc_rom )
 	ROM_LOAD( "2764.j4",      0x8000, 0x2000, 0x79287039 )
 	ROM_LOAD( "2764.h4",      0xa000, 0x2000, 0x523aa999 )
 
-	ROM_REGION(0x0100)	/* color prom */
+	ROM_REGIONX( 0x0100, REGION_PROMS )
 	ROM_LOAD( "dorunrun.clr", 0x0000, 0x0100, 0xd5bab5d5 )
 
 	ROM_REGION(0x10000)	/* 64k for the second CPU */
 	ROM_LOAD( "rev-0-2.n7",   0x0000, 0x4000, 0x6dac2fa3 )
 ROM_END
 
-ROM_START( dorunrun_rom )
+ROM_START( dorunrun )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "2764.p1",      0x0000, 0x2000, 0x95c86f8e )
 	ROM_LOAD( "2764.l1",      0x4000, 0x2000, 0xe9a65ba7 )
@@ -829,14 +829,14 @@ ROM_START( dorunrun_rom )
 	ROM_LOAD( "2764.j4",      0x8000, 0x2000, 0x79287039 )
 	ROM_LOAD( "2764.h4",      0xa000, 0x2000, 0x523aa999 )
 
-	ROM_REGION(0x0100)	/* color prom */
+	ROM_REGIONX( 0x0100, REGION_PROMS )
 	ROM_LOAD( "dorunrun.clr", 0x0000, 0x0100, 0xd5bab5d5 )
 
 	ROM_REGION(0x10000)	/* 64k for the second CPU */
 	ROM_LOAD( "27128.p7",     0x0000, 0x4000, 0x8b06d461 )
 ROM_END
 
-ROM_START( dorunru2_rom )
+ROM_START( dorunru2 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "p1",           0x0000, 0x2000, 0x12a99365 )
 	ROM_LOAD( "l1",           0x4000, 0x2000, 0x38609287 )
@@ -850,14 +850,14 @@ ROM_START( dorunru2_rom )
 	ROM_LOAD( "2764.j4",      0x8000, 0x2000, 0x79287039 )
 	ROM_LOAD( "2764.h4",      0xa000, 0x2000, 0x523aa999 )
 
-	ROM_REGION(0x0100)	/* color prom */
+	ROM_REGIONX( 0x0100, REGION_PROMS )
 	ROM_LOAD( "dorunrun.clr", 0x0000, 0x0100, 0xd5bab5d5 )
 
 	ROM_REGION(0x10000)	/* 64k for the second CPU */
 	ROM_LOAD( "27128.p7",     0x0000, 0x4000, 0x8b06d461 )
 ROM_END
 
-ROM_START( spiero_rom )
+ROM_START( spiero )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "sp1.bin",      0x0000, 0x2000, 0x08d23e38 )
 	ROM_LOAD( "sp3.bin",      0x4000, 0x2000, 0xfaa0c18c )
@@ -871,7 +871,7 @@ ROM_START( spiero_rom )
 	ROM_LOAD( "sp8.bin",      0x8000, 0x2000, 0x2e66525a )
 	ROM_LOAD( "sp9.bin",      0xa000, 0x2000, 0x9c571525 )
 
-	ROM_REGION(0x0400)	/* proms */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "bprom1.bin",   0x0000, 0x0200, 0xfc1b66ff ) /* color prom */
 	ROM_LOAD( "bprom2.bin",   0x0200, 0x0200, 0x2747ca77 ) /* ??? */
 
@@ -879,7 +879,7 @@ ROM_START( spiero_rom )
 	ROM_LOAD( "27128.p7",     0x0000, 0x4000, 0x8b06d461 )
 ROM_END
 
-ROM_START( dowild_rom )
+ROM_START( dowild )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "w1",           0x0000, 0x2000, 0x097de78b )
 	ROM_LOAD( "w3",           0x4000, 0x2000, 0xfc6a1cbb )
@@ -893,14 +893,14 @@ ROM_START( dowild_rom )
 	ROM_LOAD( "w8",           0x8000, 0x2000, 0xec503251 )
 	ROM_LOAD( "w9",           0xa000, 0x2000, 0xaf7bd7eb )
 
-	ROM_REGION(0x0100)	/* color prom */
+	ROM_REGIONX( 0x0100, REGION_PROMS )
 	ROM_LOAD( "dowild.clr",   0x0000, 0x0100, 0xa703dea5 )
 
 	ROM_REGION(0x10000)	/* 64k for the second CPU */
 	ROM_LOAD( "w10",          0x0000, 0x4000, 0xd1f37fba )
 ROM_END
 
-ROM_START( jjack_rom )
+ROM_START( jjack )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "j1.bin",       0x0000, 0x2000, 0x87f29bd2 )
 	ROM_LOAD( "j3.bin",       0x4000, 0x2000, 0x35b0517e )
@@ -914,7 +914,7 @@ ROM_START( jjack_rom )
 	ROM_LOAD( "j8.bin",       0x8000, 0x2000, 0x84f6fc8c )
 	ROM_LOAD( "j9.bin",       0xa000, 0x2000, 0x3f9bb09f )
 
-	ROM_REGION(0x0400)	/* proms */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "bprom1.bin",   0x0000, 0x0200, 0x2f0955f2 ) /* color prom */
 	ROM_LOAD( "bprom2.bin",   0x0200, 0x0200, 0x2747ca77 ) /* ??? */
 
@@ -922,7 +922,7 @@ ROM_START( jjack_rom )
 	ROM_LOAD( "j0.bin",       0x0000, 0x4000, 0xab042f04 )
 ROM_END
 
-ROM_START( kickridr_rom )
+ROM_START( kickridr )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "k1",           0x0000, 0x2000, 0xdfdd1ab4 )
 	ROM_LOAD( "k3",           0x4000, 0x2000, 0x412244da )
@@ -936,7 +936,7 @@ ROM_START( kickridr_rom )
 	ROM_LOAD( "k8",           0x8000, 0x2000, 0x29bed201 )
 	ROM_LOAD( "k9",           0xa000, 0x2000, 0x847584d3 )
 
-	ROM_REGION(0x0100)	/* color prom */
+	ROM_REGIONX( 0x0100, REGION_PROMS )
 	ROM_LOAD( "kickridr.clr", 0x0000, 0x0100, 0x73ec281c )
 
 	ROM_REGION(0x10000)	/* 64k for the second CPU */
@@ -1092,7 +1092,7 @@ static void dowild_hisave(void)
 
 
 
-struct GameDriver docastle_driver =
+struct GameDriver driver_docastle =
 {
 	__FILE__,
 	0,
@@ -1105,23 +1105,23 @@ struct GameDriver docastle_driver =
 	&docastle_machine_driver,
 	0,
 
-	docastle_rom,
+	rom_docastle,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	docastle_input_ports,
+	input_ports_docastle,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	docastle_hiload, docastle_hisave
 };
 
-struct GameDriver docastl2_driver =
+struct GameDriver driver_docastl2 =
 {
 	__FILE__,
-	&docastle_driver,
+	&driver_docastle,
 	"docastl2",
 	"Mr. Do's Castle (set 2)",
 	"1983",
@@ -1131,23 +1131,23 @@ struct GameDriver docastl2_driver =
 	&docastle_machine_driver,
 	0,
 
-	docastl2_rom,
+	rom_docastl2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	docastle_input_ports,
+	input_ports_docastle,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	docastle_hiload, docastle_hisave
 };
 
-struct GameDriver dounicorn_driver =
+struct GameDriver driver_dounicorn =
 {
 	__FILE__,
-	&docastle_driver,
+	&driver_docastle,
 	"douni",
 	"Mr. Do vs. Unicorns",
 	"1983",
@@ -1157,20 +1157,20 @@ struct GameDriver dounicorn_driver =
 	&docastle_machine_driver,
 	0,
 
-	dounicorn_rom,
+	rom_dounicorn,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	docastle_input_ports,
+	input_ports_docastle,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	docastle_hiload, docastle_hisave
 };
 
-struct GameDriver dorunrun_driver =
+struct GameDriver driver_dorunrun =
 {
 	__FILE__,
 	0,
@@ -1183,23 +1183,23 @@ struct GameDriver dorunrun_driver =
 	&dorunrun_machine_driver,
 	0,
 
-	dorunrun_rom,
+	rom_dorunrun,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	dorunrun_input_ports,
+	input_ports_dorunrun,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	dorunrun_hiload, dorunrun_hisave
 };
 
-struct GameDriver dorunru2_driver =
+struct GameDriver driver_dorunru2 =
 {
 	__FILE__,
-	&dorunrun_driver,
+	&driver_dorunrun,
 	"dorunru2",
 	"Do! Run Run (set 2)",
 	"1984",
@@ -1209,23 +1209,23 @@ struct GameDriver dorunru2_driver =
 	&dorunrun_machine_driver,
 	0,
 
-	dorunru2_rom,
+	rom_dorunru2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	dorunrun_input_ports,
+	input_ports_dorunrun,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	dorunrun_hiload, dorunrun_hisave
 };
 
-struct GameDriver dorunruc_driver =
+struct GameDriver driver_dorunruc =
 {
 	__FILE__,
-	&dorunrun_driver,
+	&driver_dorunrun,
 	"dorunruc",
 	"Do! Run Run (Do's Castle hardware)",
 	"1984",
@@ -1235,23 +1235,23 @@ struct GameDriver dorunruc_driver =
 	&docastle_machine_driver,
 	0,
 
-	dorunruc_rom,
+	rom_dorunruc,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	dorunrun_input_ports,
+	input_ports_dorunrun,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	dorunrun_hiload, dorunrun_hisave
 };
 
-struct GameDriver spiero_driver =
+struct GameDriver driver_spiero =
 {
 	__FILE__,
-	&dorunrun_driver,
+	&driver_dorunrun,
 	"spiero",
 	"Super Pierrot (Japan)",
 	"1987",
@@ -1261,20 +1261,20 @@ struct GameDriver spiero_driver =
 	&dorunrun_machine_driver,
 	0,
 
-	spiero_rom,
+	rom_spiero,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	dorunrun_input_ports,
+	input_ports_dorunrun,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	spiero_hiload, spiero_hisave
 };
 
-struct GameDriver dowild_driver =
+struct GameDriver driver_dowild =
 {
 	__FILE__,
 	0,
@@ -1287,20 +1287,20 @@ struct GameDriver dowild_driver =
 	&dorunrun_machine_driver,
 	0,
 
-	dowild_rom,
+	rom_dowild,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	dowild_input_ports,
+	input_ports_dowild,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	dowild_hiload, dowild_hisave
 };
 
-struct GameDriver jjack_driver =
+struct GameDriver driver_jjack =
 {
 	__FILE__,
 	0,
@@ -1314,20 +1314,20 @@ struct GameDriver jjack_driver =
 	&dorunrun_machine_driver,
 	0,
 
-	jjack_rom,
+	rom_jjack,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	jjack_input_ports,
+	input_ports_jjack,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	dowild_hiload, dowild_hisave
 };
 
-struct GameDriver kickridr_driver =
+struct GameDriver driver_kickridr =
 {
 	__FILE__,
 	0,
@@ -1340,14 +1340,14 @@ struct GameDriver kickridr_driver =
 	&dorunrun_machine_driver,
 	0,
 
-	kickridr_rom,
+	rom_kickridr,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	kickridr_input_ports,
+	input_ports_kickridr,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	dowild_hiload, dowild_hisave

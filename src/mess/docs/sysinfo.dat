@@ -1,0 +1,189 @@
+# MESS History Data File, version 0.1 
+# Maintained by Chris "Battlepriest" Henry
+# Most data obtained from www.icwhen.com, www.classicgaming.com and the Vectrex FAQ.
+# Send corrections/submissions to: battlepriest@hotmail.com
+
+
+
+# a7800
+
+$info=a7800
+
+$bio
+
+Originally developed in 1984 as
+the Atari 3600, the Atari 7800 
+Prosystem was released to the US 
+market in 1986, in an attempt to 
+compete in a revitalised home 
+videogame market. The 7800 was 
+actually designed by Gencomp as 
+part of a lawsuit settlement 
+(Gencomp had been sued for 
+releasing a speedup chipset for 
+early Atari Coinops).
+
+The 7800 was compatible 
+with pre-existing Atari 2600 
+game program cartridges, without
+the need for expansion modules or
+turning switches, but was also 
+designed to use enhanced 
+7800-only cartridges such as the
+pack-in "Pole Position 2".
+(n.b., only the 7800-specific
+cartridges are currently 
+supported in MESS.) Many 
+peripherals, including a 
+computer/keyboard and high score
+saving cartridge were planned but
+never released.
+
+Unfortunately for Atari, the system 
+did poorly in the late 1980's 
+market dominated by Nintendo.
+
+www.atari-history.com has this
+interesting anecdote:
+"In the summer of 1984 the first 
+5,000 Atari 7800's had just been 
+built in the new El Paso assembly 
+plant.   The production line 
+manager, Brad Saville was eager to 
+meet with Jack Tramiel to show him 
+the new flagship Atari video game 
+console.   The meeting ended 
+abruptly as Jack Tramiel was 
+quoted "Get your pollution out of 
+here!   We make computers now and 
+we don't want your garbage." The 
+line manager was fired 2 days later.
+About 8-9 months later the line 
+manager received a phone call from 
+Atari asking him as to the 
+whereabouts of the die molds for 
+the Atari 7800. The ex-line manager 
+responded that he did in fact know 
+where they were and for $50/hour 
+for about 200 to 300 hours of his 
+time he would remember where they 
+were and find them. The Atari Corp. 
+representative who called was 
+infuriated and informed the former 
+production line manager that 
+Atari's lawyers would be in contact 
+with him. He never heard from Atari 
+again."
+
+$end
+
+#-----------------------------
+
+# coleco
+
+$info=coleco
+
+$bio
+The ColecoVision video game 
+system was released in August 
+of 1982 for a suggested retail 
+price of $175 US. Similar at 
+it's core to the MSX computer, 
+ColecoVision had both superior 
+graphics and more expansion 
+capabilities compared to it's 
+chief rivals: the Atari 2600 
+and Intellivision. Among the 
+expansion module options were 
+a hardware Atari 2600 emulator, 
+and a Steering Wheel for 
+driving games, both unheard of 
+at the time.
+
+The competitive price, 
+technical superiority, and 
+perhaps more importantly, the 
+inclusion of Donkey Kong as the 
+pack-in cartridge, led to Coleco 
+becoming an industry leader. 
+With the emergence of the 
+popularity of home computers, 
+however, the console market 
+seemed in jeopardy of losing 
+it's share to the likes of 
+Commodore and Apple. Coleco 
+responded by releasing the Adam 
+Family Computer as both a 
+standalone unit and as an 
+expansion to the ColecoVision 
+itself. 
+
+The Adam was a phenomenal market 
+failure though, and Coleco 
+pulled itself from both the 
+console and computer markets 
+just before the game market 
+crash in late 1984.
+
+Telegames purchased the rights to 
+the system, and many of the 
+manufactured games, and released 
+a clone, The Personal Arcade, in 
+1988. It was later re-released by 
+them, as the DINA, which is still 
+sold today. 
+
+$end
+
+#-----------------------------
+
+# vectrex
+
+$info=vectrex
+
+$bio
+The Vectrex was released in 
+the US late in 1982 by General 
+Consumer Electric (GCE) at a 
+suggested retail price of $199. 
+The Vectrex differed from other 
+consoles in that it had it's own 
+built in nine inch by eleven 
+inch vector monitor, and thus 
+didn't require (or even allow) 
+the use of a television set. The 
+system even contained a built in 
+game, the Asteroids-like 
+"Minestorm". 
+
+The monochrome Vectrex used 
+screen overlays to give the 
+illusion of colour, and also to 
+reduce the severity of the 
+inherent flickering caused by 
+the vector monitor.
+
+in 1983, GCE was merged into 
+Milton Bradley, who expanded 
+the Vectrex's market to include 
+Europe. As the video game market 
+declined and then crashed, the 
+Vectrex exited the market in 
+early 1984. The rights to the 
+system reverted to it's 
+developers, Smith Engineering. 
+
+Smith Engineering briefly 
+considered designing a handheld 
+version of the device in 1988, 
+though the success of the 
+Nintendo Gameboy made such a 
+project too risky. In the 
+mid-1990s, Smith Engineering 
+condoned the duplication of 
+the Vectrex system image and 
+cartridges for non-commercial 
+uses.
+
+$end
+

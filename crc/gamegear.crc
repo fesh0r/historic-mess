@@ -1,0 +1,33 @@
+# Sega Gamegear Cartridge CRC's.  
+# Note: This list is provided as a record of known dumps for this system.  
+#       These checksums have not been validated and cannot be assumed correct.  
+#       They are provided here as a database to help the emulation of this system.  
+
+[gamegear]
+7cb3facf = Arena
+c90f29ef = Bust-a-Move
+da811ba6 = Chessmaster
+aae268fc = Daffy Duck in Hollywood
+d0a93e00 = F-1
+ 593ba24 = Galaga '91
+a16c5e58 = Pac-Man
+ce863dba = Pengo
+8ac0dade = Sonic and Tails
+5550173b = Sonic Labyrinth
+3e31cb8c = Sonic the Hedgehog
+95a18ec7 = Sonic the Hedgehog 2
+742a372b = Spiderman and the X-Men: Arcade's Revenge
+8ba43af3 = Super Columns
+88618afa = Tails' Sky Patrol
+eebad668 = Taz in Escape from Mars
+695cc120 = Virtua Fighter Portrait: Pai Chan
+8dc68d92 = WWF Raw
+
+
+#[not_working]
+
+
+
+#[known_bad_dumps]
+
+

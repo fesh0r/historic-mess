@@ -187,7 +187,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( capbowl )
 	PORT_START	/* IN0 */
 	PORT_ANALOG ( 0x0f, 0x00, IPT_TRACKBALL_Y | IPF_REVERSE | IPF_CENTER, 100, 10, 7, 0, 0 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
@@ -262,7 +262,7 @@ static struct MachineDriver NAME##_machine_driver =			\
 	16*256,16*256,											\
 	0,														\
 															\
-	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_SUPPORTS_16BIT,	\
+	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,				\
 	0,														\
 	capbowl_vh_start,										\
 	capbowl_vh_stop,										\
@@ -294,7 +294,7 @@ MACHINEDRIVER(bowlrama, 239)
 
 ***************************************************************************/
 
-ROM_START( capbowl_rom )
+ROM_START( capbowl )
 	ROM_REGION(0x28000)   /* 160k for code and graphics */
 	ROM_LOAD( "u6",           0x08000, 0x8000, 0x14924c96 )
 	ROM_LOAD( "gr0",          0x10000, 0x8000, 0xef53ca7a )
@@ -309,7 +309,7 @@ ROM_START( capbowl_rom )
 	ROM_LOAD( "sound",        0x8000, 0x8000, 0x8c9c3b8a )
 ROM_END
 
-ROM_START( capbowl2_rom )
+ROM_START( capbowl2 )
 	ROM_REGION(0x28000)   /* 160k for code and graphics */
 	ROM_LOAD( "progrev3.u6",  0x08000, 0x8000, 0x9162934a )
 	ROM_LOAD( "gr0",          0x10000, 0x8000, 0xef53ca7a )
@@ -324,7 +324,7 @@ ROM_START( capbowl2_rom )
 	ROM_LOAD( "sound",        0x8000, 0x8000, 0x8c9c3b8a )
 ROM_END
 
-ROM_START( clbowl_rom )
+ROM_START( clbowl )
 	ROM_REGION(0x28000)   /* 160k for code and graphics */
 	ROM_LOAD( "u6.cl",        0x08000, 0x8000, 0x91e06bc4 )
 	ROM_LOAD( "gr0.cl",       0x10000, 0x8000, 0x899c8f15 )
@@ -339,7 +339,7 @@ ROM_START( clbowl_rom )
 	ROM_LOAD( "sound.cl",     0x8000, 0x8000, 0x1eba501e )
 ROM_END
 
-ROM_START( bowlrama_rom )
+ROM_START( bowlrama )
 	ROM_REGION(0x10000)      /* 64k for code */
 	ROM_LOAD( "u6",           0x08000, 0x08000, 0x7103ad55 )
 
@@ -394,7 +394,7 @@ static void hisave(void)
 
 
 
-struct GameDriver capbowl_driver =
+struct GameDriver driver_capbowl =
 {
 	__FILE__,
 	0,
@@ -407,23 +407,23 @@ struct GameDriver capbowl_driver =
 	&capbowl_machine_driver,
 	0,
 
-	capbowl_rom,
+	rom_capbowl,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_capbowl,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_REQUIRES_16BIT,
 
 	hiload, hisave
 };
 
-struct GameDriver capbowl2_driver =
+struct GameDriver driver_capbowl2 =
 {
 	__FILE__,
-	&capbowl_driver,
+	&driver_capbowl,
 	"capbowl2",
 	"Capcom Bowling (set 2)",
 	"1988",
@@ -433,23 +433,23 @@ struct GameDriver capbowl2_driver =
 	&capbowl_machine_driver,
 	0,
 
-	capbowl2_rom,
+	rom_capbowl2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_capbowl,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_REQUIRES_16BIT,
 
 	hiload, hisave
 };
 
-struct GameDriver clbowl_driver =
+struct GameDriver driver_clbowl =
 {
 	__FILE__,
-	&capbowl_driver,
+	&driver_capbowl,
 	"clbowl",
 	"Coors Light Bowling",
 	"1989",
@@ -459,20 +459,20 @@ struct GameDriver clbowl_driver =
 	&capbowl_machine_driver,
 	0,
 
-	clbowl_rom,
+	rom_clbowl,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_capbowl,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_REQUIRES_16BIT,
 
 	hiload, hisave
 };
 
-struct GameDriver bowlrama_driver =
+struct GameDriver driver_bowlrama =
 {
 	__FILE__,
 	0,
@@ -485,15 +485,15 @@ struct GameDriver bowlrama_driver =
 	&bowlrama_machine_driver,
 	0,
 
-	bowlrama_rom,
+	rom_bowlrama,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_capbowl,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_REQUIRES_16BIT,
 
 	hiload, hisave
 };

@@ -48,7 +48,7 @@ static struct MemoryWriteAddress writemem[] =
 	{ -1 }	/* end of table */
 };
 
-INPUT_PORTS_START( avalnche_input_ports )
+INPUT_PORTS_START( avalnche )
 	PORT_START /* IN0 */
 	PORT_BIT (0x03, IP_ACTIVE_HIGH, IPT_UNKNOWN ) /* Spare */
 	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Coinage ) )
@@ -80,23 +80,9 @@ INPUT_PORTS_START( avalnche_input_ports )
 
 	PORT_START /* IN2 */
 	PORT_ANALOG ( 0xff, 0x00, IPT_PADDLE, 100, 10, 7, 0, 255 )
-
 INPUT_PORTS_END
 
 
-static unsigned char palette[] =
-{
-	0x00,0x00,0x00, /* BLACK */
-	0xff,0xff,0xff, /* WHITE */
-	0x80,0x80,0x80, /* LT GREY */
-	0x55,0x55,0x55, /* DK GREY */
-};
-
-static unsigned short colortable[] =
-{
-	0x00, 0x01,
-	0x01, 0x00
-};
 
 static struct GfxLayout backlayout =
 {
@@ -114,6 +100,27 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ 0, 0x0000, &backlayout,	0, 2 }, 	/* dynamic bitmapped display */
 	{ -1 } /* end of array */
 };
+
+
+static unsigned char palette[] =
+{
+	0x00,0x00,0x00, /* BLACK */
+	0xff,0xff,0xff, /* WHITE */
+	0x80,0x80,0x80, /* LT GREY */
+	0x55,0x55,0x55, /* DK GREY */
+};
+static unsigned short colortable[] =
+{
+	0x00, 0x01,
+	0x01, 0x00
+};
+static void init_palette(unsigned char *game_palette, unsigned short *game_colortable,const unsigned char *color_prom)
+{
+	memcpy(game_palette,palette,sizeof(palette));
+	memcpy(game_colortable,colortable,sizeof(colortable));
+}
+
+
 
 static struct DACinterface dac_interface =
 {
@@ -141,10 +148,10 @@ static struct MachineDriver machine_driver =
 	/* video hardware */
 	32*8, 32*8, { 0*8, 32*8-1, 2*8, 32*8-1 },
 	gfxdecodeinfo,
-	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	sizeof(palette) / sizeof(palette[0]) / 3, sizeof(colortable) / sizeof(colortable[0]),
+	init_palette,
 
-	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
+	VIDEO_TYPE_RASTER,
 	0,
 	generic_vh_start,
 	generic_vh_stop,
@@ -183,7 +190,7 @@ static void avalnche_rom_init(void)
 
 ***************************************************************************/
 
-ROM_START( avalnche_rom )
+ROM_START( avalnche )
 	ROM_REGION(0x10000) /* 64k for code */
 	/* Note: These are being loaded into a bogus location, */
 	/*		 They are nibble wide rom images which will be */
@@ -254,7 +261,7 @@ static void hisave(void)
 
 ***************************************************************************/
 
-struct GameDriver avalnche_driver =
+struct GameDriver driver_avalnche =
 {
 	__FILE__,
 	0,
@@ -267,14 +274,15 @@ struct GameDriver avalnche_driver =
 	&machine_driver,
 	0,
 
-	avalnche_rom,
+	rom_avalnche,
 	avalnche_rom_init, 0,
 	0,
 	0,	/* sound_prom */
 
-	avalnche_input_ports,
+	input_ports_avalnche,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
-	hiload,hisave
+
+	hiload, hisave
 };

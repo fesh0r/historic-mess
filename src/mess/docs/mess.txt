@@ -152,9 +152,7 @@ A NOTE ABOUT FILES:
        (eg) ROMPATH = C:\MESS\ROMS;
             The files for the coleco system would be placed here: 
                       C:\MESS\ROMS\COLECO 
-
-
-
+     - You can also specify the exact path to a file in the ROMPATH.
 
 
 

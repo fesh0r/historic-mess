@@ -157,7 +157,7 @@ static struct MemoryWriteAddress writemem[] =
 	{ -1 }	/* end of table */
 };
 
-INPUT_PORTS_START( bsktball_input_ports )
+INPUT_PORTS_START( bsktball )
 	PORT_START	/* IN0 */
 	PORT_ANALOG ( 0xFF, 0x00, IPT_TRACKBALL_X, 100, 10, 0, 0, 0 ) /* Sensitivity, clip, min, max */
 
@@ -254,7 +254,6 @@ static unsigned char palette[] =
 	0x50,0x50,0x50, /* DARK GREY */
 	0xff,0xff,0xff, /* WHITE */
 };
-
 static unsigned short colortable[] =
 {
 	/* Playfield */
@@ -343,6 +342,11 @@ static unsigned short colortable[] =
 	0x01, 0x03, 0x03, 0x03,
 
 };
+static void init_palette(unsigned char *game_palette, unsigned short *game_colortable,const unsigned char *color_prom)
+{
+	memcpy(game_palette,palette,sizeof(palette));
+	memcpy(game_colortable,colortable,sizeof(colortable));
+}
 
 
 static struct DACinterface dac_interface =
@@ -371,8 +375,8 @@ static struct MachineDriver machine_driver =
 	/* video hardware */
 	32*8, 28*8, { 0*8, 32*8-1, 0*8, 28*8-1 },
 	gfxdecodeinfo,
-	sizeof(palette)/3,sizeof(colortable)/sizeof(unsigned short),
-	0,
+	sizeof(palette) / sizeof(palette[0]) / 3, sizeof(colortable) / sizeof(colortable[0]),
+	init_palette,
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -397,7 +401,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( bsktball_rom )
+ROM_START( bsktball )
 	ROM_REGION(0x10000) /* 64k for code */
 		ROM_LOAD( "034765.d1",    0x2000, 0x0800, 0x798cea39 )
 		ROM_LOAD( "034764.c1",    0x2800, 0x0800, 0xa087109e )
@@ -413,7 +417,7 @@ ROM_END
 
 
 
-struct GameDriver bsktball_driver =
+struct GameDriver driver_bsktball =
 {
 	__FILE__,
 	0,
@@ -426,14 +430,15 @@ struct GameDriver bsktball_driver =
 	&machine_driver,
 	0,
 
-	bsktball_rom,
+	rom_bsktball,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	bsktball_input_ports,
+	input_ports_bsktball,
 
-	0, palette, colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
-	0,0
+
+	0, 0
 };

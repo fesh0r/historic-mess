@@ -121,7 +121,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( hyperspt_input_ports )
+INPUT_PORTS_START( hyperspt )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -224,7 +224,7 @@ INPUT_PORTS_START( hyperspt_input_ports )
 	PORT_DIPSETTING(    0x00, "Difficult 4" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( roadf_input_ports )
+INPUT_PORTS_START( roadf )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -388,6 +388,7 @@ static struct GfxDecodeInfo roadf_gfxdecodeinfo[] =
 /* filename for hyper sports sample files */
 static const char *hyperspt_sample_names[] =
 {
+	"*hyperspt",
 	"00.wav","01.wav","02.wav","03.wav","04.wav","05.wav","06.wav","07.wav",
 	"08.wav","09.wav","0a.wav","0b.wav","0c.wav","0d.wav","0e.wav","0f.wav",
 	"10.wav","11.wav","12.wav","13.wav","14.wav","15.wav","16.wav","17.wav",
@@ -400,6 +401,17 @@ static const char *hyperspt_sample_names[] =
 	"48.wav","49.wav",
 	0
 };
+
+struct VLM5030interface hyperspt_vlm5030_interface =
+{
+    3580000,    /* master clock  */
+    255,        /* volume        */
+    4,         /* memory region  */
+    0,         /* memory size    */
+    0,         /* VCU            */
+	hyperspt_sample_names
+};
+
 
 static struct MachineDriver hyperspt_machine_driver =
 {
@@ -449,7 +461,7 @@ static struct MachineDriver hyperspt_machine_driver =
 		},
 		{
 			SOUND_VLM5030,
-			&konami_vlm5030_interface
+			&hyperspt_vlm5030_interface
 		}
 	}
 };
@@ -514,7 +526,7 @@ static struct MachineDriver roadf_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( hyperspt_rom )
+ROM_START( hyperspt )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "c01",          0x4000, 0x2000, 0x0c720eeb )
 	ROM_LOAD( "c02",          0x6000, 0x2000, 0x560258e0 )
@@ -537,7 +549,7 @@ ROM_START( hyperspt_rom )
 	ROM_LOAD( "c16",          0x14000, 0x2000, 0xd7ff9f2b )
 	ROM_LOAD( "c15",          0x16000, 0x2000, 0xf3d454e6 )
 
-	ROM_REGION(0x220)	/* color/lookup proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "c03_c27.bin",  0x0000, 0x0020, 0xbc8a5956 )
 	ROM_LOAD( "j12_c28.bin",  0x0020, 0x0100, 0x2c891d59 )
 	ROM_LOAD( "a09_c29.bin",  0x0120, 0x0100, 0x811a3f3f )
@@ -550,7 +562,7 @@ ROM_START( hyperspt_rom )
 	ROM_LOAD( "c08",          0x0000, 0x2000, 0xe8f8ea78 )
 ROM_END
 
-ROM_START( hpolym84_rom )
+ROM_START( hpolym84 )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "c01",          0x4000, 0x2000, 0x0c720eeb )
 	ROM_LOAD( "c02",          0x6000, 0x2000, 0x560258e0 )
@@ -573,7 +585,7 @@ ROM_START( hpolym84_rom )
 	ROM_LOAD( "c16",          0x14000, 0x2000, 0xd7ff9f2b )
 	ROM_LOAD( "c15",          0x16000, 0x2000, 0xf3d454e6 )
 
-	ROM_REGION(0x220)	/* color/lookup proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "c03_c27.bin",  0x0000, 0x0020, 0xbc8a5956 )
 	ROM_LOAD( "j12_c28.bin",  0x0020, 0x0100, 0x2c891d59 )
 	ROM_LOAD( "a09_c29.bin",  0x0120, 0x0100, 0x811a3f3f )
@@ -586,7 +598,7 @@ ROM_START( hpolym84_rom )
 	ROM_LOAD( "c08",          0x0000, 0x2000, 0xe8f8ea78 )
 ROM_END
 
-ROM_START( roadf_rom )
+ROM_START( roadf )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "g05_g01.bin",  0x4000, 0x2000, 0xe2492a06 )
 	ROM_LOAD( "g07_f02.bin",  0x6000, 0x2000, 0x0bf75165 )
@@ -603,7 +615,7 @@ ROM_START( roadf_rom )
 	ROM_LOAD( "j19_e14.bin",  0x0c000, 0x4000, 0x16d2bcff )
 	ROM_LOAD( "g19_e18.bin",  0x10000, 0x4000, 0x490685ff )
 
-	ROM_REGION(0x220)	/* color/lookup proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "c03_c27.bin",  0x0000, 0x0020, 0x45d5e352 )
 	ROM_LOAD( "j12_c28.bin",  0x0020, 0x0100, 0x2955e01f )
 	ROM_LOAD( "a09_c29.bin",  0x0120, 0x0100, 0x5b3b5f2a )
@@ -612,7 +624,7 @@ ROM_START( roadf_rom )
 	ROM_LOAD( "a17_d10.bin",  0x0000, 0x2000, 0xc33c927e )
 ROM_END
 
-ROM_START( roadf2_rom )
+ROM_START( roadf2 )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "5g",           0x4000, 0x2000, 0xd8070d30 )
 	ROM_LOAD( "6g",           0x6000, 0x2000, 0x8b661672 )
@@ -629,7 +641,7 @@ ROM_START( roadf2_rom )
 	ROM_LOAD( "j19_e14.bin",  0x0c000, 0x4000, 0x16d2bcff )
 	ROM_LOAD( "g19_e18.bin",  0x10000, 0x4000, 0x490685ff )
 
-	ROM_REGION(0x220)	/* color/lookup proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "c03_c27.bin",  0x0000, 0x0020, 0x45d5e352 )
 	ROM_LOAD( "j12_c28.bin",  0x0020, 0x0100, 0x2955e01f )
 	ROM_LOAD( "a09_c29.bin",  0x0120, 0x0100, 0x5b3b5f2a )
@@ -783,7 +795,7 @@ static void roadf_hisave(void)
 
 
 
-struct GameDriver hyperspt_driver =
+struct GameDriver driver_hyperspt =
 {
 	__FILE__,
 	0,
@@ -796,23 +808,23 @@ struct GameDriver hyperspt_driver =
 	&hyperspt_machine_driver,
 	0,
 
-	hyperspt_rom,
+	rom_hyperspt,
 	0, hyperspt_decode,
-	hyperspt_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	hyperspt_input_ports,
+	input_ports_hyperspt,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload, hisave
 };
 
-struct GameDriver hpolym84_driver =
+struct GameDriver driver_hpolym84 =
 {
 	__FILE__,
-	&hyperspt_driver,
+	&driver_hyperspt,
 	"hpolym84",
 	"Hyper Olympics '84",
 	"1984",
@@ -822,20 +834,20 @@ struct GameDriver hpolym84_driver =
 	&hyperspt_machine_driver,
 	0,
 
-	hpolym84_rom,
+	rom_hpolym84,
 	0, hyperspt_decode,
-	hyperspt_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	hyperspt_input_ports,
+	input_ports_hyperspt,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload, hisave
 };
 
-struct GameDriver roadf_driver =
+struct GameDriver driver_roadf =
 {
 	__FILE__,
 	0,
@@ -848,23 +860,23 @@ struct GameDriver roadf_driver =
 	&roadf_machine_driver,
 	0,
 
-	roadf_rom,
+	rom_roadf,
 	0, hyperspt_decode,
 	0,
 	0,	/* sound_prom */
 
-	roadf_input_ports,
+	input_ports_roadf,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	roadf_hiload, roadf_hisave
 };
 
-struct GameDriver roadf2_driver =
+struct GameDriver driver_roadf2 =
 {
 	__FILE__,
-	&roadf_driver,
+	&driver_roadf,
 	"roadf2",
 	"Road Fighter (set 2)",
 	"1984",
@@ -874,14 +886,14 @@ struct GameDriver roadf2_driver =
 	&roadf_machine_driver,
 	0,
 
-	roadf2_rom,
+	rom_roadf2,
 	0, hyperspt_decode,
 	0,
 	0,	/* sound_prom */
 
-	roadf_input_ports,
+	input_ports_roadf,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	roadf_hiload, roadf_hisave

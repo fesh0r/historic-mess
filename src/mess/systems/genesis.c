@@ -257,7 +257,7 @@ static struct IOWritePort writeport[] =
 
 
 
-INPUT_PORTS_START( genesis_input_ports )
+INPUT_PORTS_START( genesis )
 	PORT_START	/* IN0 player 1 controller */
 	PORT_BIT(	0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
 	PORT_BIT(	0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
@@ -319,6 +319,17 @@ static struct YM2612interface ym2612_interface =
 	53693100 / 7,
 	{ 0x7fffffff,0x7fffffff },
 	{ 0 },
+};
+
+
+
+
+/* list of file extensions */
+static const char *genesis_file_extensions[] =
+{
+	"smd",
+	"bin",
+	0       /* end of array */
 };
 
 
@@ -394,6 +405,7 @@ struct GameDriver genesis_driver =
 	0,
 	genesis_load_rom,
 	genesis_id_rom,
+	genesis_file_extensions,
 	1,	/* number of ROM slots */
 	0,	/* number of floppy drives supported */
 	0,	/* number of hard drives supported */
@@ -402,7 +414,7 @@ struct GameDriver genesis_driver =
 	0,
 	0,
 
-	genesis_input_ports,
+	input_ports_genesis,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

@@ -520,11 +520,11 @@ int cpm_init(int n, const char *ids[])
 			else
 			{
 				mode[d] = 1;
-				fp[d] = osd_fopen(Machine->gamedrv->name, floppy_name[d], OSD_FILETYPE_IMAGE, 1);
+				fp[d] = osd_fopen(Machine->gamedrv->name, floppy_name[d], OSD_FILETYPE_IMAGE_RW, 1);
 				if (!fp[d])
 				{
 					mode[d] = 0;
-					fp[d] = osd_fopen(Machine->gamedrv->name, floppy_name[d], OSD_FILETYPE_IMAGE, 0);
+					fp[d] = osd_fopen(Machine->gamedrv->name, floppy_name[d], OSD_FILETYPE_IMAGE_RW, 0);
 					if (!fp[d])
 					{
 						floppy_name[d][0] = '\0';
@@ -535,7 +535,7 @@ int cpm_init(int n, const char *ids[])
     }
 
 	/* create a file to receive list output (ie. PIP LST:=FILE.EXT) */
-	lp = osd_fopen(Machine->gamedrv->name, "cpm.lst", OSD_FILETYPE_IMAGE, 1);
+	lp = osd_fopen(Machine->gamedrv->name, "cpm.lst", OSD_FILETYPE_IMAGE_RW, 1);
 
     cpm_jumptable();
 

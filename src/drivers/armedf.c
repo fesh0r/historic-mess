@@ -242,7 +242,7 @@ static struct IOWritePort writeport[] =
 	{ -1 }	/* end of table */
 };
 
-INPUT_PORTS_START( armedf_input_ports )
+INPUT_PORTS_START( armedf )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY)
@@ -325,7 +325,7 @@ INPUT_PORTS_START( armedf_input_ports )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( terraf_input_ports )
+INPUT_PORTS_START( terraf )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY)
@@ -406,7 +406,7 @@ INPUT_PORTS_START( terraf_input_ports )
 	PORT_DIPSETTING(    0x00, "Unlimited" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( cclimbr2_input_ports )
+INPUT_PORTS_START( cclimbr2 )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP     | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN   | IPF_8WAY | IPF_PLAYER1 )
@@ -710,7 +710,7 @@ static struct MachineDriver cclimbr2_machine_driver =
 	}
 };
 
-ROM_START( terraf_rom )
+ROM_START( terraf )
 	ROM_REGION(0x80000)	/* 64K*8 for 68000 code */
 	ROM_LOAD_EVEN( "terrafor.014", 0x00000, 0x10000, 0x8e5f557f )
 	ROM_LOAD_ODD(  "terrafor.011", 0x00000, 0x10000, 0x5320162a )
@@ -732,7 +732,7 @@ ROM_START( terraf_rom )
 	ROM_LOAD( "terrafor.001", 0x00000, 0x10000, 0xeb6b4138 )
 ROM_END
 
-ROM_START( terrafu_rom )
+ROM_START( terrafu )
 	ROM_REGION(0x80000)	/* 64K*8 for 68000 code */
 	ROM_LOAD_EVEN( "tf.8",         0x00000, 0x10000, 0xfea6dd64 )
 	ROM_LOAD_ODD(  "tf.3",         0x00000, 0x10000, 0x02f9d05a )
@@ -754,7 +754,7 @@ ROM_START( terrafu_rom )
 	ROM_LOAD( "terrafor.001", 0x00000, 0x10000, 0xeb6b4138 )
 ROM_END
 
-ROM_START( armedf_rom )
+ROM_START( armedf )
 	ROM_REGION(0x80000)	/* 68000 code */
 	ROM_LOAD_EVEN( "af_06.rom", 0x00000, 0x10000, 0xc5326603 )
 	ROM_LOAD_ODD(  "af_01.rom", 0x00000, 0x10000, 0x458e9542 )
@@ -776,7 +776,7 @@ ROM_START( armedf_rom )
 	ROM_LOAD( "af_10.rom", 0x00000, 0x10000, 0xc5eacb87 )
 ROM_END
 
-ROM_START( cclimbr2_rom )
+ROM_START( cclimbr2 )
 	ROM_REGION(0x80000)	/* 64K*8 for 68000 code */
 	ROM_LOAD_EVEN( "4.bin", 0x00000, 0x10000, 0x7922ea14 )
 	ROM_LOAD_ODD(  "1.bin", 0x00000, 0x10000, 0x2ac7ed67 )
@@ -804,7 +804,7 @@ ROM_START( cclimbr2_rom )
 	ROM_LOAD( "9.bin",  0x0000, 0x4000, 0x740d260f )	// DATA ?
 ROM_END
 
-struct GameDriver terraf_driver =
+struct GameDriver driver_terraf =
 {
 	__FILE__,
 	0,
@@ -816,18 +816,18 @@ struct GameDriver terraf_driver =
 	0,
 	&terraf_machine_driver,
 	0,
-	terraf_rom,
+	rom_terraf,
 	0,0,0,0,
-	terraf_input_ports,
+	input_ports_terraf,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver terrafu_driver =
+struct GameDriver driver_terrafu =
 {
 	__FILE__,
-	&terraf_driver,
+	&driver_terraf,
 	"terrafu",
 	"Terra Force (US)",
 	"1987",
@@ -837,19 +837,19 @@ struct GameDriver terrafu_driver =
 	&terraf_machine_driver,
 	0,
 
-	terrafu_rom,
+	rom_terrafu,
 	0, 0,
 	0,
 	0,
 
-	terraf_input_ports,
+	input_ports_terraf,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver armedf_driver =
+struct GameDriver driver_armedf =
 {
 	__FILE__,
 	0,
@@ -862,19 +862,19 @@ struct GameDriver armedf_driver =
 	&armedf_machine_driver,
 	0,
 
-	armedf_rom,
+	rom_armedf,
 	0, 0,
 	0,
 	0,
 
-	armedf_input_ports,
+	input_ports_armedf,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	0, 0
 };
 
-struct GameDriver cclimbr2_driver =
+struct GameDriver driver_cclimbr2 =
 {
 	__FILE__,
 	0,
@@ -887,12 +887,12 @@ struct GameDriver cclimbr2_driver =
 	&cclimbr2_machine_driver,
 	0,
 
-	cclimbr2_rom,
+	rom_cclimbr2,
 	0, 0,
 	0,
 	0,
 
-	cclimbr2_input_ports,
+	input_ports_cclimbr2,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

@@ -190,7 +190,7 @@ int battlane_cpu2_interrupt(void)
 }
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( battlane )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -367,7 +367,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( battlane_rom )
+ROM_START( battlane )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	/* first half of da00-5 will be copied at 0x4000-0x7fff */
 	ROM_LOAD( "da01-5",    0x8000, 0x8000, 0x7a6c3f02 )
@@ -389,7 +389,7 @@ ROM_START( battlane_rom )
 	ROM_LOAD( "82s123.9n", 0x00020, 0x0020, 0x06491e53 )
 ROM_END
 
-ROM_START( battlan2_rom )
+ROM_START( battlan2 )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	/* first half of da00-3 will be copied at 0x4000-0x7fff */
 	ROM_LOAD( "da01-3",    0x8000, 0x8000, 0xd9e40800 )
@@ -411,7 +411,7 @@ ROM_START( battlan2_rom )
 	ROM_LOAD( "82s123.9n", 0x00020, 0x0020, 0x06491e53 )
 ROM_END
 
-ROM_START( battlan3_rom )
+ROM_START( battlan3 )
 	ROM_REGION(0x10000)     /* 64k for main CPU */
 	/* first half of bl_04.rom will be copied at 0x4000-0x7fff */
 	ROM_LOAD( "bl_05.rom", 0x8000, 0x8000, 0x001c4bbe )
@@ -449,7 +449,7 @@ static void battlane_decode(void)
 
 
 
-struct GameDriver battlane_driver =
+struct GameDriver driver_battlane =
 {
 	__FILE__,
 	0,
@@ -458,71 +458,71 @@ struct GameDriver battlane_driver =
 	"1986",
 	"Technos (Taito license)",
 	"Paul Leaman\nKim Greenblatt",
-    GAME_WRONG_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	battlane_rom,
+	rom_battlane,
 	battlane_decode, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_battlane,
 
 	0, 0, 0,
-    ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	0, 0
 };
 
-struct GameDriver battlan2_driver =
+struct GameDriver driver_battlan2 =
 {
 	__FILE__,
-	&battlane_driver,
+	&driver_battlane,
 	"battlan2",
 	"Battle Lane Vol. 5 (set 2)",
 	"1986",
 	"Technos (Taito license)",
 	"Paul Leaman\nKim Greenblatt",
-    GAME_WRONG_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	battlan2_rom,
+	rom_battlan2,
 	battlane_decode, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_battlane,
 
 	0, 0, 0,
-    ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	0, 0
 };
 
-struct GameDriver battlan3_driver =
+struct GameDriver driver_battlan3 =
 {
 	__FILE__,
-	&battlane_driver,
+	&driver_battlane,
 	"battlan3",
 	"Battle Lane Vol. 5 (set 3)",
 	"1986",
 	"Technos (Taito license)",
 	"Paul Leaman\nKim Greenblatt",
-    GAME_WRONG_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	battlan3_rom,
+	rom_battlan3,
 	battlane_decode, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_battlane,
 
 	0, 0, 0,
-    ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	0, 0
 };

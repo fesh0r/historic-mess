@@ -182,11 +182,11 @@ WD179X *w = wd[drive];
 						drv, w->image_name);
 #endif
 			w->mode = 1;
-			w->image_file = osd_fopen(Machine->gamedrv->name, w->image_name, OSD_FILETYPE_IMAGE, 1);
+			w->image_file = osd_fopen(Machine->gamedrv->name, w->image_name, OSD_FILETYPE_IMAGE_RW, 1);
 			if (!w->image_file)
 			{
 				w->mode = 0;
-				w->image_file = osd_fopen(Machine->gamedrv->name, w->image_name, OSD_FILETYPE_IMAGE, 0);
+				w->image_file = osd_fopen(Machine->gamedrv->name, w->image_name, OSD_FILETYPE_IMAGE_RW, 0);
 			}
 		}
 

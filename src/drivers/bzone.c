@@ -258,38 +258,38 @@ static int redbaron_joy_r (int offset)
 static struct MemoryReadAddress bzone_readmem[] =
 {
 	{ 0x0000, 0x03ff, MRA_RAM },
-	{ 0x5000, 0x7fff, MRA_ROM },
-	{ 0x3000, 0x3fff, MRA_ROM },
-	{ 0xf800, 0xffff, MRA_ROM },        /* for the reset / interrupt vectors */
-	{ 0x2000, 0x2fff, MRA_RAM, &vectorram, &vectorram_size },
 	{ 0x0800, 0x0800, bzone_IN0_r },    /* IN0 */
 	{ 0x0a00, 0x0a00, input_port_1_r },	/* DSW1 */
 	{ 0x0c00, 0x0c00, input_port_2_r },	/* DSW2 */
-	{ 0x1820, 0x182f, pokey1_r },
 	{ 0x1800, 0x1800, mb_status_r },
 	{ 0x1810, 0x1810, mb_lo_r },
 	{ 0x1818, 0x1818, mb_hi_r },
+	{ 0x1820, 0x182f, pokey1_r },
+	{ 0x2000, 0x2fff, MRA_RAM },
+	{ 0x3000, 0x3fff, MRA_ROM },
+	{ 0x5000, 0x7fff, MRA_ROM },
+	{ 0xf800, 0xffff, MRA_ROM },        /* for the reset / interrupt vectors */
 	{ -1 }	/* end of table */
 };
 
 static struct MemoryWriteAddress bzone_writemem[] =
 {
 	{ 0x0000, 0x03ff, MWA_RAM },
-	{ 0x2000, 0x2fff, MWA_RAM },
-	{ 0x1820, 0x182f, bzone_pokey_w },
-	{ 0x1860, 0x187f, mb_go },
-	{ 0x1200, 0x1200, avgdvg_go },
 	{ 0x1000, 0x1000, coin_counter_w },
+	{ 0x1200, 0x1200, avgdvg_go },
 	{ 0x1400, 0x1400, MWA_NOP }, /* watchdog clear */
 	{ 0x1600, 0x1600, avgdvg_reset },
+	{ 0x1820, 0x182f, bzone_pokey_w },
 	{ 0x1840, 0x1840, bzone_sounds_w },
-	{ 0x5000, 0x7fff, MWA_ROM },
+	{ 0x1860, 0x187f, mb_go },
+	{ 0x2000, 0x2fff, MWA_RAM, &vectorram, &vectorram_size },
 	{ 0x3000, 0x3fff, MWA_ROM },
+	{ 0x5000, 0x7fff, MWA_ROM },
 	{ -1 }	/* end of table */
 };
 
 
-INPUT_PORTS_START( bzone_input_ports )
+INPUT_PORTS_START( bzone )
 	PORT_START	/* IN0 */
 	PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_COIN1)
 	PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_COIN2)
@@ -370,43 +370,43 @@ INPUT_PORTS_END
 static struct MemoryReadAddress redbaron_readmem[] =
 {
 	{ 0x0000, 0x03ff, MRA_RAM },
-	{ 0x5000, 0x7fff, MRA_ROM },
-	{ 0x3000, 0x3fff, MRA_ROM },
-	{ 0xf800, 0xffff, MRA_ROM },        /* for the reset / interrupt vectors */
-	{ 0x2000, 0x2fff, MRA_RAM, &vectorram, &vectorram_size },
 	{ 0x0800, 0x0800, bzone_IN0_r },    /* IN0 */
 	{ 0x0a00, 0x0a00, input_port_1_r },	/* DSW1 */
 	{ 0x0c00, 0x0c00, input_port_2_r },	/* DSW2 */
-	{ 0x1810, 0x181f, pokey1_r },
-	{ 0x1802, 0x1802, input_port_4_r },	/* IN4 */
 	{ 0x1800, 0x1800, mb_status_r },
+	{ 0x1802, 0x1802, input_port_4_r },	/* IN4 */
 	{ 0x1804, 0x1804, mb_lo_r },
 	{ 0x1806, 0x1806, mb_hi_r },
+	{ 0x1810, 0x181f, pokey1_r },
 	{ 0x1820, 0x185f, atari_vg_earom_r },
+	{ 0x2000, 0x2fff, MRA_RAM },
+	{ 0x3000, 0x3fff, MRA_ROM },
+	{ 0x5000, 0x7fff, MRA_ROM },
+	{ 0xf800, 0xffff, MRA_ROM },        /* for the reset / interrupt vectors */
 	{ -1 }	/* end of table */
 };
 
 static struct MemoryWriteAddress redbaron_writemem[] =
 {
 	{ 0x0000, 0x03ff, MWA_RAM },
-	{ 0x2000, 0x2fff, MWA_RAM },
-	{ 0x1808, 0x1808, redbaron_sounds_w },	/* and select joystick pot also */
 	{ 0x1000, 0x1000, MWA_NOP },			/* coin out */
+	{ 0x1200, 0x1200, avgdvg_go },
+	{ 0x1400, 0x1400, MWA_NOP },			/* watchdog clear */
+	{ 0x1600, 0x1600, avgdvg_reset },
+	{ 0x1808, 0x1808, redbaron_sounds_w },	/* and select joystick pot also */
 	{ 0x180a, 0x180a, MWA_NOP },			/* sound reset, yet todo */
 	{ 0x180c, 0x180c, atari_vg_earom_ctrl },
 	{ 0x1810, 0x181f, pokey1_w },
 	{ 0x1820, 0x185f, atari_vg_earom_w },
 	{ 0x1860, 0x187f, mb_go },
-	{ 0x1200, 0x1200, avgdvg_go },
-	{ 0x1400, 0x1400, MWA_NOP },			/* watchdog clear */
-	{ 0x1600, 0x1600, avgdvg_reset },
-	{ 0x5000, 0x7fff, MWA_ROM },
+	{ 0x2000, 0x2fff, MWA_RAM, &vectorram, &vectorram_size },
 	{ 0x3000, 0x3fff, MWA_ROM },
+	{ 0x5000, 0x7fff, MWA_ROM },
 	{ -1 }	/* end of table */
 };
 
 
-INPUT_PORTS_START( redbaron_input_ports )
+INPUT_PORTS_START( redbaron )
 	PORT_START	/* IN0 */
 	PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_COIN1)
 	PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_COIN2)
@@ -472,26 +472,6 @@ INPUT_PORTS_START( redbaron_input_ports )
 	PORT_ANALOG ( 0xff, 0x80, IPT_AD_STICK_Y, 25, 10, 0, 64, 192 )
 INPUT_PORTS_END
 
-static struct GfxLayout fakelayout =
-{
-	1,1,
-	0,
-	1,
-	{ 0 },
-	{ 0 },
-	{ 0 },
-	0
-};
-
-static struct GfxDecodeInfo gfxdecodeinfo[] =
-{
-	{ 0, 0,      &fakelayout,     0, 256 },
-	{ -1 } /* end of array */
-};
-
-
-static unsigned char bzone_color_prom[]    = { VEC_PAL_BZONE     };
-static unsigned char redbaron_color_prom[] = { VEC_PAL_MONO_AQUA };
 
 
 static int bzone_hiload(void)
@@ -554,10 +534,23 @@ static struct POKEYinterface bzone_pokey_interface =
 	{ bzone_IN3_r },
 };
 
+static const char *bzone_sample_names[] =
+{
+	"*bzone",
+	"fire.wav",
+	"fire2.wav",
+	"engine1.wav",
+	"engine2.wav",
+	"explode1.wav",
+	"explode2.wav",
+    0	/* end of array */
+};
+
 static struct Samplesinterface bzone_samples_interface =
 {
 	2,	/* 2 channels */
-	25	/* volume */
+	25,	/* volume */
+	bzone_sample_names
 };
 
 
@@ -579,9 +572,9 @@ static struct MachineDriver bzone_machine_driver =
 
 	/* video hardware */
 	400, 300, { 0, 580, 0, 400 },
-	gfxdecodeinfo,
+	0,
 	256, 256,
-	avg_init_colors,
+	avg_init_palette_bzone,
 
 	VIDEO_TYPE_VECTOR,
 	0,
@@ -611,19 +604,7 @@ static struct MachineDriver bzone_machine_driver =
 
 ***************************************************************************/
 
-static const char *bzone_sample_names[] =
-{
-	"*bzone",
-	"fire.wav",
-	"fire2.wav",
-	"engine1.wav",
-	"engine2.wav",
-	"explode1.wav",
-	"explode2.wav",
-    0	/* end of array */
-};
-
-ROM_START( bzone_rom )
+ROM_START( bzone )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "036414.01",  0x5000, 0x0800, 0xefbc3fa0 )
 	ROM_LOAD( "036413.01",  0x5800, 0x0800, 0x5d9d9111 )
@@ -637,7 +618,7 @@ ROM_START( bzone_rom )
 	ROM_LOAD( "036421.01",  0x3800, 0x0800, 0x8ea8f939 )
 ROM_END
 
-ROM_START( bzone2_rom )
+ROM_START( bzone2 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "036414a.01", 0x5000, 0x0800, 0x13de36d5 )
 	ROM_LOAD( "036413.01",  0x5800, 0x0800, 0x5d9d9111 )
@@ -653,7 +634,7 @@ ROM_END
 
 
 
-struct GameDriver bzone_driver =
+struct GameDriver driver_bzone =
 {
 	__FILE__,
 	0,
@@ -666,23 +647,23 @@ struct GameDriver bzone_driver =
 	&bzone_machine_driver,
 	0,
 
-	bzone_rom,
+	rom_bzone,
 	0, 0,
-	bzone_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	bzone_input_ports,
+	input_ports_bzone,
 
-	bzone_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	bzone_hiload, bzone_hisave
 };
 
-struct GameDriver bzone2_driver =
+struct GameDriver driver_bzone2 =
 {
 	__FILE__,
-	&bzone_driver,
+	&driver_bzone,
 	"bzone2",
 	"Battle Zone (set 2)",
 	"1980",
@@ -692,14 +673,14 @@ struct GameDriver bzone2_driver =
 	&bzone_machine_driver,
 	0,
 
-	bzone2_rom,
+	rom_bzone2,
 	0, 0,
-	bzone_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	bzone_input_ports,
+	input_ports_bzone,
 
-	bzone_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	bzone_hiload, bzone_hisave
@@ -727,10 +708,19 @@ static struct POKEYinterface redbaron_pokey_interface =
 };
 
 
+static const char *redbaron_sample_names[] =
+{
+	"fire.wav",
+	"spin.wav",
+	"explode1.wav",
+    0	/* end of array */
+};
+
 static struct Samplesinterface redbaron_samples_interface =
 {
 	2,	/* 2 channels */
-	25	/* volume */
+	25,	/* volume */
+	redbaron_sample_names
 };
 
 static struct MachineDriver redbaron_machine_driver =
@@ -751,9 +741,9 @@ static struct MachineDriver redbaron_machine_driver =
 
 	/* video hardware */
 	400, 300, { 0, 520, 0, 400 },
-	gfxdecodeinfo,
+	0,
 	256, 256,
-	avg_init_colors,
+	avg_init_palette_aqua,
 
 	VIDEO_TYPE_VECTOR,
 	0,
@@ -783,15 +773,7 @@ static struct MachineDriver redbaron_machine_driver =
 
 ***************************************************************************/
 
-static const char *redbaron_sample_names[] =
-{
-	"fire.wav",
-	"spin.wav",
-	"explode1.wav",
-    0	/* end of array */
-};
-
-ROM_START( redbaron_rom )
+ROM_START( redbaron )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "037587.01",  0x4800, 0x0800, 0x60f23983 )
 	ROM_CONTINUE(           0x5800, 0x0800 )
@@ -806,7 +788,7 @@ ROM_START( redbaron_rom )
 	ROM_LOAD( "037007.01e", 0x3800, 0x0800, 0x60250ede )
 ROM_END
 
-struct GameDriver redbaron_driver =
+struct GameDriver driver_redbaron =
 {
 	__FILE__,
 	0,
@@ -819,14 +801,14 @@ struct GameDriver redbaron_driver =
 	&redbaron_machine_driver,
 	0,
 
-	redbaron_rom,
+	rom_redbaron,
 	0, 0,
-	redbaron_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	redbaron_input_ports,
+	input_ports_redbaron,
 
-	redbaron_color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	atari_vg_earom_load, atari_vg_earom_save

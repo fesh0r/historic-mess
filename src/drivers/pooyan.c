@@ -104,7 +104,7 @@ static struct MemoryWriteAddress writemem[] =
 };
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( pooyan )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -286,7 +286,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( pooyan_rom )
+ROM_START( pooyan )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1.4a",         0x0000, 0x2000, 0xbb319c63 )
 	ROM_LOAD( "2.5a",         0x2000, 0x2000, 0xa1463d98 )
@@ -299,7 +299,7 @@ ROM_START( pooyan_rom )
 	ROM_LOAD( "6.9a",         0x2000, 0x1000, 0xb2d8c121 )
 	ROM_LOAD( "5.8a",         0x3000, 0x1000, 0x1097c2b6 )
 
-	ROM_REGION(0x0220)	/* color proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "pooyan.pr1",   0x0000, 0x0020, 0xa06a6d0e ) /* palette */
 	ROM_LOAD( "pooyan.pr2",   0x0020, 0x0100, 0x82748c0b ) /* sprites */
 	ROM_LOAD( "pooyan.pr3",   0x0120, 0x0100, 0x8cd4cd60 ) /* characters */
@@ -309,7 +309,7 @@ ROM_START( pooyan_rom )
 	ROM_LOAD( "xx.8a",        0x1000, 0x1000, 0xe1795b3d )
 ROM_END
 
-ROM_START( pooyans_rom )
+ROM_START( pooyans )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic22_a4.cpu",  0x0000, 0x2000, 0x916ae7d7 )
 	ROM_LOAD( "ic23_a5.cpu",  0x2000, 0x2000, 0x8fe38c61 )
@@ -322,7 +322,7 @@ ROM_START( pooyans_rom )
 	ROM_LOAD( "6.9a",         0x2000, 0x1000, 0xb2d8c121 )
 	ROM_LOAD( "5.8a",         0x3000, 0x1000, 0x1097c2b6 )
 
-	ROM_REGION(0x0220)	/* color proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "pooyan.pr1",   0x0000, 0x0020, 0xa06a6d0e ) /* palette */
 	ROM_LOAD( "pooyan.pr2",   0x0020, 0x0100, 0x82748c0b ) /* sprites */
 	ROM_LOAD( "pooyan.pr3",   0x0120, 0x0100, 0x8cd4cd60 ) /* characters */
@@ -332,7 +332,7 @@ ROM_START( pooyans_rom )
 	ROM_LOAD( "xx.8a",        0x1000, 0x1000, 0xe1795b3d )
 ROM_END
 
-ROM_START( pootan_rom )
+ROM_START( pootan )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "poo_ic22.bin", 0x0000, 0x2000, 0x41b23a24 )
 	ROM_LOAD( "poo_ic23.bin", 0x2000, 0x2000, 0xc9d94661 )
@@ -345,7 +345,7 @@ ROM_START( pootan_rom )
 	ROM_LOAD( "6.9a",         0x2000, 0x1000, 0xb2d8c121 )
 	ROM_LOAD( "5.8a",         0x3000, 0x1000, 0x1097c2b6 )
 
-	ROM_REGION(0x0220)	/* color proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "pooyan.pr1",   0x0000, 0x0020, 0xa06a6d0e ) /* palette */
 	ROM_LOAD( "pooyan.pr2",   0x0020, 0x0100, 0x82748c0b ) /* sprites */
 	ROM_LOAD( "pooyan.pr3",   0x0120, 0x0100, 0x8cd4cd60 ) /* characters */
@@ -410,7 +410,7 @@ static void hisave(void)
 
 
 
-struct GameDriver pooyan_driver =
+struct GameDriver driver_pooyan =
 {
 	__FILE__,
 	0,
@@ -423,23 +423,23 @@ struct GameDriver pooyan_driver =
 	&machine_driver,
 	0,
 
-	pooyan_rom,
+	rom_pooyan,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pooyan,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	hiload, hisave
 };
 
-struct GameDriver pooyans_driver =
+struct GameDriver driver_pooyans =
 {
 	__FILE__,
-	&pooyan_driver,
+	&driver_pooyan,
 	"pooyans",
 	"Pooyan (Stern)",
 	"1982",
@@ -449,23 +449,23 @@ struct GameDriver pooyans_driver =
 	&machine_driver,
 	0,
 
-	pooyans_rom,
+	rom_pooyans,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pooyan,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	hiload, hisave
 };
 
-struct GameDriver pootan_driver =
+struct GameDriver driver_pootan =
 {
 	__FILE__,
-	&pooyan_driver,
+	&driver_pooyan,
 	"pootan",
 	"Pootan",
 	"1982",
@@ -475,14 +475,14 @@ struct GameDriver pootan_driver =
 	&machine_driver,
 	0,
 
-	pootan_rom,
+	rom_pootan,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pooyan,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 
 	hiload, hisave

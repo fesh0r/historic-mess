@@ -238,7 +238,7 @@ static struct MemoryWriteAddress writemem[] =
 };
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( tutankhm )
 	PORT_START      /* DSW2 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x03, "3" )
@@ -379,7 +379,7 @@ static struct MachineDriver machine_driver =
 };
 
 
-ROM_START( tutankhm_rom )
+ROM_START( tutankhm )
 	ROM_REGION( 0x20000 )      /* 64k for M6809 CPU code + 64k for ROM banks */
 	ROM_LOAD( "h1.bin",       0x0a000, 0x1000, 0xda18679f ) /* program ROMs */
 	ROM_LOAD( "h2.bin",       0x0b000, 0x1000, 0xa0f02c85 )
@@ -404,7 +404,7 @@ ROM_START( tutankhm_rom )
 ROM_END
 
 
-ROM_START( tutankst_rom )
+ROM_START( tutankst )
 	ROM_REGION( 0x20000 )      /* 64k for M6809 CPU code + 64k for ROM banks */
 	ROM_LOAD( "h1.bin",       0x0a000, 0x1000, 0xda18679f ) /* program ROMs */
 	ROM_LOAD( "h2.bin",       0x0b000, 0x1000, 0xa0f02c85 )
@@ -468,7 +468,7 @@ static void hisave(void)
 }
 
 
-struct GameDriver tutankhm_driver =
+struct GameDriver driver_tutankhm =
 {
 	__FILE__,
 	0,
@@ -481,12 +481,12 @@ struct GameDriver tutankhm_driver =
 	&machine_driver,
 	0,
 
-	tutankhm_rom,
+	rom_tutankhm,
 	0, 0,   /* ROM decode and opcode decode functions */
 	0,      /* Sample names */
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_tutankhm,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_90,
@@ -494,10 +494,10 @@ struct GameDriver tutankhm_driver =
 	hiload, hisave		        /* High score load and save */
 };
 
-struct GameDriver tutankst_driver =
+struct GameDriver driver_tutankst =
 {
 	__FILE__,
-	&tutankhm_driver,
+	&driver_tutankhm,
 	"tutankst",
 	"Tutankham (Stern)",
 	"1982",
@@ -507,12 +507,12 @@ struct GameDriver tutankst_driver =
 	&machine_driver,
 	0,
 
-	tutankst_rom,
+	rom_tutankst,
 	0, 0,   /* ROM decode and opcode decode functions */
 	0,      /* Sample names */
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_tutankhm,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_90,

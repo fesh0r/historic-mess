@@ -332,7 +332,7 @@ static struct MemoryReadAddress sound_readmem[] =
 	{ -1 }	/* end of table */
 };
 
-INPUT_PORTS_START( meadows_input_ports )
+INPUT_PORTS_START( meadows )
 	PORT_START		/* IN0 buttons */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1  )
@@ -422,6 +422,12 @@ static unsigned short colortable[ARTWORK_COLORS] =
 	0,0,
 	0,1,
 };
+static void init_palette(unsigned char *game_palette, unsigned short *game_colortable,const unsigned char *color_prom)
+{
+	memcpy(game_palette,palette,sizeof(palette));
+	memcpy(game_colortable,colortable,sizeof(colortable));
+}
+
 
 static struct DACinterface dac_interface =
 {
@@ -467,7 +473,7 @@ static struct MachineDriver deadeye_machine_driver =
 	32*8, 30*8, { 0*8, 32*8-1, 2*8, 30*8-1 },
 	gfxdecodeinfo,
 	ARTWORK_COLORS,ARTWORK_COLORS,		/* Leave extra colors for the overlay */
-    0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY | VIDEO_MODIFIES_PALETTE,
     0,
@@ -518,7 +524,7 @@ static struct MachineDriver gypsyjug_machine_driver =
 	32*8, 30*8, { 0*8, 32*8-1, 2*8, 30*8-1 },
 	gfxdecodeinfo,
 	ARTWORK_COLORS,ARTWORK_COLORS,		/* Leave extra colors for the overlay */
-    0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY | VIDEO_MODIFIES_PALETTE,
     0,
@@ -546,7 +552,7 @@ static struct MachineDriver gypsyjug_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( deadeye_rom )
+ROM_START( deadeye )
 	ROM_REGION(0x08000) 	/* 32K for code */
 	ROM_LOAD( "de1.8h",       0x0000, 0x0400, 0xbd09e4dc )
 	ROM_LOAD( "de2.9h",       0x0400, 0x0400, 0xb89edec3 )
@@ -564,7 +570,7 @@ ROM_START( deadeye_rom )
 	ROM_LOAD( "de_snd",       0x0000, 0x0400, 0xc10a1b1a )
 ROM_END
 
-ROM_START( gypsyjug_rom )
+ROM_START( gypsyjug )
 	ROM_REGION(0x08000) 	/* 32K for code */
 	ROM_LOAD( "gj.1b",        0x0000, 0x0400, 0xf6a71d9f )
 	ROM_LOAD( "gj.2b",        0x0400, 0x0400, 0x94c14455 )
@@ -647,7 +653,7 @@ static void deadeye_hisave(void)
 
 
 
-struct GameDriver deadeye_driver =
+struct GameDriver driver_deadeye =
 {
 	__FILE__,
 	0,
@@ -660,23 +666,21 @@ struct GameDriver deadeye_driver =
 	&deadeye_machine_driver,
 	0,
 
-	deadeye_rom,
+	rom_deadeye,
 	0,
 	0,
 	0,
 	0,		/* sound_prom */
 
-	meadows_input_ports,
+	input_ports_meadows,
 
-	0,		/* color_prom */
-	palette,
-	colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	deadeye_hiload,deadeye_hisave
 };
 
-struct GameDriver gypsyjug_driver =
+struct GameDriver driver_gypsyjug =
 {
 	__FILE__,
 	0,
@@ -689,17 +693,15 @@ struct GameDriver gypsyjug_driver =
 	&gypsyjug_machine_driver,
 	0,
 
-	gypsyjug_rom,
+	rom_gypsyjug,
 	gypsyjug_rom_decode,
 	0,
 	0,
 	0,		/* sound_prom */
 
-	meadows_input_ports,
+	input_ports_meadows,
 
-	0,		/* color_prom */
-	palette,
-	colortable,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	deadeye_hiload,deadeye_hisave

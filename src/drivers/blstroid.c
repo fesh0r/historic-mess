@@ -179,7 +179,7 @@ static struct MemoryWriteAddress main_writemem[] =
  *
  *************************************/
 
-INPUT_PORTS_START( blstroid_ports )
+INPUT_PORTS_START( blstroid )
 	PORT_START      /* ff9800 */
 	PORT_ANALOG ( 0x00ff, 0, IPT_DIAL | IPF_PLAYER1, 60, 10, 0xff, 0, 0 )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -301,7 +301,7 @@ static struct MachineDriver machine_driver =
  *
  *************************************/
 
-ROM_START( blstroid_rom )
+ROM_START( blstroid )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "057-4123",  0x00000, 0x10000, 0xd14badc4 )
 	ROM_LOAD_ODD ( "057-4121",  0x00000, 0x10000, 0xae3e93e8 )
@@ -336,7 +336,7 @@ ROM_START( blstroid_rom )
 ROM_END
 
 
-ROM_START( blstroi2_rom )
+ROM_START( blstroi2 )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "blstroid.6c",  0x00000, 0x10000, 0x5a092513 )
 	ROM_LOAD_ODD ( "blstroid.6b",  0x00000, 0x10000, 0x486aac51 )
@@ -398,7 +398,7 @@ static void blstroid_init(void)
  *
  *************************************/
 
-struct GameDriver blstroid_driver =
+struct GameDriver driver_blstroid =
 {
 	__FILE__,
 	0,
@@ -411,13 +411,13 @@ struct GameDriver blstroid_driver =
 	&machine_driver,
 	blstroid_init,
 
-	blstroid_rom,
+	rom_blstroid,
 	0,
 	0,
 	0,
 	0,	/* sound_prom */
 
-	blstroid_ports,
+	input_ports_blstroid,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -425,10 +425,10 @@ struct GameDriver blstroid_driver =
 };
 
 
-struct GameDriver blstroi2_driver =
+struct GameDriver driver_blstroi2 =
 {
 	__FILE__,
-	&blstroid_driver,
+	&driver_blstroid,
 	"blstroi2",
 	"Blasteroids (version 2)",
 	"1987",
@@ -438,13 +438,13 @@ struct GameDriver blstroi2_driver =
 	&machine_driver,
 	blstroid_init,
 
-	blstroi2_rom,
+	rom_blstroi2,
 	0,
 	0,
 	0,
 	0,	/* sound_prom */
 
-	blstroid_ports,
+	input_ports_blstroid,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

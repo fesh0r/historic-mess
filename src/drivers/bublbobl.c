@@ -318,7 +318,7 @@ static struct MemoryWriteAddress tokio_sound_writemem[] =
 
 
 
-INPUT_PORTS_START( bublbobl_input_ports )
+INPUT_PORTS_START( bublbobl )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN3 )
@@ -391,7 +391,7 @@ INPUT_PORTS_START( bublbobl_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( boblbobl_input_ports )
+INPUT_PORTS_START( boblbobl )
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x01, 0x00, "Language" )
 	PORT_DIPSETTING(    0x00, "English" )
@@ -457,7 +457,7 @@ INPUT_PORTS_START( boblbobl_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( sboblbob_input_ports )
+INPUT_PORTS_START( sboblbob )
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x01, 0x00, "Game" )
 	PORT_DIPSETTING(    0x01, "Bobble Bobble" )
@@ -523,7 +523,7 @@ INPUT_PORTS_START( sboblbob_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( tokio_input_ports )
+INPUT_PORTS_START( tokio )
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
@@ -851,7 +851,7 @@ static struct MachineDriver tokio_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( bublbobl_rom )
+ROM_START( bublbobl )
     ROM_REGION(0x1c000)	/* 64k+64k for the first CPU */
     ROM_LOAD( "a78_06.bin",   0x00000, 0x8000, 0x32c8305b )
     ROM_LOAD( "a78_05.bin",   0x08000, 0x4000, 0x53f4bc6e )	/* banked at 8000-bfff. I must load */
@@ -883,7 +883,7 @@ ROM_START( bublbobl_rom )
 	ROM_LOAD( "68705.bin",    0x0000, 0x0800, 0x78caa635 )	/* from a pirate board */
 ROM_END
 
-ROM_START( bublbobr_rom )
+ROM_START( bublbobr )
     ROM_REGION(0x1c000)	/* 64k+64k for the first CPU */
     ROM_LOAD( "25.cpu",       0x00000, 0x8000, 0x2d901c9d )
     ROM_LOAD( "24.cpu",       0x08000, 0x4000, 0xb7afedc4 )	/* banked at 8000-bfff. I must load */
@@ -915,7 +915,7 @@ ROM_START( bublbobr_rom )
 	ROM_LOAD( "68705.bin",    0x0000, 0x0800, 0x78caa635 )	/* from a pirate board */
 ROM_END
 
-ROM_START( boblbobl_rom )
+ROM_START( boblbobl )
     ROM_REGION(0x1c000)	/* 64k+64k for the first CPU */
     ROM_LOAD( "bb3",          0x00000, 0x8000, 0x01f81936 )
     ROM_LOAD( "bb5",          0x08000, 0x4000, 0x13118eb1 )	/* banked at 8000-bfff. I must load */
@@ -946,7 +946,7 @@ ROM_START( boblbobl_rom )
     ROM_LOAD( "a78_07.bin",   0x0000, 0x08000, 0x4f9a26e8 )
 ROM_END
 
-ROM_START( sboblbob_rom )
+ROM_START( sboblbob )
     ROM_REGION(0x1c000)	/* 64k+64k for the first CPU */
     ROM_LOAD( "bbb-3.rom",    0x00000, 0x8000, 0xf304152a )
     ROM_LOAD( "bb5",          0x08000, 0x4000, 0x13118eb1 )	/* banked at 8000-bfff. I must load */
@@ -977,7 +977,7 @@ ROM_START( sboblbob_rom )
     ROM_LOAD( "a78_07.bin",   0x0000, 0x08000, 0x4f9a26e8 )
 ROM_END
 
-ROM_START( tokio_rom )
+ROM_START( tokio )
     ROM_REGION(0x30000)	/* main CPU */
     ROM_LOAD( "a7127-1.256", 0x00000, 0x8000, 0x8c180896 )
     /* ROMs banked at 8000-bfff */
@@ -1011,7 +1011,7 @@ ROM_START( tokio_rom )
     ROM_LOAD( "a7107.256",   0x0000, 0x08000, 0xf298cc7b )
 ROM_END
 
-ROM_START( tokiob_rom )
+ROM_START( tokiob )
     ROM_REGION(0x30000) /* main CPU */
     ROM_LOAD( "2",           0x00000, 0x8000, 0xf583b1ef )
     /* ROMs banked at 8000-bfff */
@@ -1159,7 +1159,7 @@ static void tokio_hisave(void)
 
 
 
-struct GameDriver bublbobl_driver =
+struct GameDriver driver_bublbobl =
 {
 	__FILE__,
 	0,
@@ -1172,12 +1172,12 @@ struct GameDriver bublbobl_driver =
 	&bublbobl_machine_driver,
 	0,
 
-	bublbobl_rom,
+	rom_bublbobl,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	bublbobl_input_ports,
+	input_ports_bublbobl,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1185,10 +1185,10 @@ struct GameDriver bublbobl_driver =
 	bublbobl_hiload, bublbobl_hisave
 };
 
-struct GameDriver bublbobr_driver =
+struct GameDriver driver_bublbobr =
 {
 	__FILE__,
-	&bublbobl_driver,
+	&driver_bublbobl,
 	"bublbobr",
 	"Bubble Bobble (US)",
 	"1986",
@@ -1198,12 +1198,12 @@ struct GameDriver bublbobr_driver =
 	&bublbobl_machine_driver,
 	0,
 
-	bublbobr_rom,
+	rom_bublbobr,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	bublbobl_input_ports,
+	input_ports_bublbobl,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1211,10 +1211,10 @@ struct GameDriver bublbobr_driver =
 	bublbobl_hiload, bublbobl_hisave
 };
 
-struct GameDriver boblbobl_driver =
+struct GameDriver driver_boblbobl =
 {
 	__FILE__,
-	&bublbobl_driver,
+	&driver_bublbobl,
 	"boblbobl",
 	"Bobble Bobble",
 	"1986",
@@ -1224,12 +1224,12 @@ struct GameDriver boblbobl_driver =
 	&boblbobl_machine_driver,
 	0,
 
-	boblbobl_rom,
+	rom_boblbobl,
 	boblbobl_patch, 0,	/* remove protection */
 	0,
 	0,	/* sound_prom */
 
-	boblbobl_input_ports,
+	input_ports_boblbobl,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1237,10 +1237,10 @@ struct GameDriver boblbobl_driver =
 	bublbobl_hiload, bublbobl_hisave
 };
 
-struct GameDriver sboblbob_driver =
+struct GameDriver driver_sboblbob =
 {
 	__FILE__,
-	&bublbobl_driver,
+	&driver_bublbobl,
 	"sboblbob",
 	"Super Bobble Bobble",
 	"1986",
@@ -1250,12 +1250,12 @@ struct GameDriver sboblbob_driver =
 	&boblbobl_machine_driver,
 	0,
 
-	sboblbob_rom,
+	rom_sboblbob,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	sboblbob_input_ports,
+	input_ports_sboblbob,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1265,7 +1265,7 @@ struct GameDriver sboblbob_driver =
 
 
 
-struct GameDriver tokio_driver =
+struct GameDriver driver_tokio =
 {
 	__FILE__,
 	0,
@@ -1274,27 +1274,27 @@ struct GameDriver tokio_driver =
 	"1986",
 	"Taito",
 	"Marcelo de G. Malheiros\nFredrik Sjostedt\nNicola Salmoria\nVictor Trucco\nChris Moore\nOliver White",
-	GAME_NOT_WORKING,
+	0,
 	&tokio_machine_driver,
 	0,
 
-	tokio_rom,
+	rom_tokio,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	tokio_input_ports,
+	input_ports_tokio,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_NOT_WORKING,
 
 	tokio_hiload, tokio_hisave
 };
 
-struct GameDriver tokiob_driver =
+struct GameDriver driver_tokiob =
 {
 	__FILE__,
-	&tokio_driver,
+	&driver_tokio,
 	"tokiob",
 	"Tokio / Scramble Formation (bootleg)",
 	"1986",
@@ -1304,12 +1304,12 @@ struct GameDriver tokiob_driver =
 	&tokio_machine_driver,
 	0,
 
-	tokiob_rom,
+	rom_tokiob,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	tokio_input_ports,
+	input_ports_tokio,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,

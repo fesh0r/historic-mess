@@ -180,7 +180,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 };
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( sidearms )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
@@ -267,7 +267,7 @@ INPUT_PORTS_START( input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )     /* not sure, but likely */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( turtship_input_ports )
+INPUT_PORTS_START( turtship )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
@@ -348,7 +348,7 @@ INPUT_PORTS_START( turtship_input_ports )
 	/* 0xc0 1 Coin/1 Credit */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( dyger_input_ports )
+INPUT_PORTS_START( dyger )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
@@ -639,7 +639,7 @@ static struct MachineDriver turtship_machine_driver =
 };
 
 
-ROM_START( sidearms_rom )
+ROM_START( sidearms )
 	ROM_REGION(0x20000)     /* 64k for code + banked ROMs images */
 	ROM_LOAD( "sa03.bin",     0x00000, 0x08000, 0xe10fe6a0 )        /* CODE */
 	ROM_LOAD( "a_14e.rom",    0x10000, 0x08000, 0x4925ed03 )        /* 0+1 */
@@ -676,7 +676,7 @@ ROM_START( sidearms_rom )
 #endif
 ROM_END
 
-ROM_START( sidearmr_rom )
+ROM_START( sidearmr )
 	ROM_REGION(0x20000)     /* 64k for code + banked ROMs images */
 	ROM_LOAD( "03",           0x00000, 0x08000, 0x9a799c45 )        /* CODE */
 	ROM_LOAD( "a_14e.rom",    0x10000, 0x08000, 0x4925ed03 )        /* 0+1 */
@@ -713,7 +713,7 @@ ROM_START( sidearmr_rom )
 #endif
 ROM_END
 
-ROM_START( sidearjp_rom )
+ROM_START( sidearjp )
 	ROM_REGION(0x20000)     /* 64k for code + banked ROMs images */
 	ROM_LOAD( "a_15e.rom",    0x00000, 0x08000, 0x61ceb0cc )        /* CODE */
 	ROM_LOAD( "a_14e.rom",    0x10000, 0x08000, 0x4925ed03 )        /* 0+1 */
@@ -750,7 +750,7 @@ ROM_START( sidearjp_rom )
 #endif
 ROM_END
 
-ROM_START( turtship_rom )
+ROM_START( turtship )
 	ROM_REGION(0x20000)     /* 64k for code + banked ROMs images */
 	ROM_LOAD( "turtship.003",    0x00000, 0x08000, 0xe7a7fc2e )
 	ROM_LOAD( "turtship.002",    0x10000, 0x08000, 0xe576f482 )
@@ -776,7 +776,7 @@ ROM_START( turtship_rom )
 	ROM_LOAD( "turtship.016",    0x0000, 0x8000, 0xaffd51dd )
 ROM_END
 
-ROM_START( dyger_rom )
+ROM_START( dyger )
 	ROM_REGION(0x20000)     /* 64k for code + banked ROMs images */
 	ROM_LOAD( "dyger.003",    0x00000, 0x08000, 0xbae9882e )
 	ROM_LOAD( "dyger.002",    0x10000, 0x08000, 0x059ac4dc )
@@ -845,7 +845,7 @@ static void hisave(void)
 
 
 
-struct GameDriver sidearms_driver =
+struct GameDriver driver_sidearms =
 {
 	__FILE__,
 	0,
@@ -858,22 +858,22 @@ struct GameDriver sidearms_driver =
 	&sidearms_machine_driver,
 	0,
 
-	sidearms_rom,
+	rom_sidearms,
 	0,0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_sidearms,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver sidearmr_driver =
+struct GameDriver driver_sidearmr =
 {
 	__FILE__,
-	&sidearms_driver,
+	&driver_sidearms,
 	"sidearmr",
 	"Side Arms - Hyper Dyne (US)",
 	"1988",
@@ -883,22 +883,22 @@ struct GameDriver sidearmr_driver =
 	&sidearms_machine_driver,
 	0,
 
-	sidearmr_rom,
+	rom_sidearmr,
 	0,0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_sidearms,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver sidearjp_driver =
+struct GameDriver driver_sidearjp =
 {
 	__FILE__,
-	&sidearms_driver,
+	&driver_sidearms,
 	"sidearjp",
 	"Side Arms - Hyper Dyne (Japan)",
 	"1986",
@@ -908,19 +908,19 @@ struct GameDriver sidearjp_driver =
 	&sidearms_machine_driver,
 	0,
 
-	sidearjp_rom,
+	rom_sidearjp,
 	0,0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_sidearms,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hiload, hisave
 };
 
-struct GameDriver turtship_driver =
+struct GameDriver driver_turtship =
 {
 	__FILE__,
 	0,
@@ -933,19 +933,19 @@ struct GameDriver turtship_driver =
 	&turtship_machine_driver,
 	0,
 
-	turtship_rom,
+	rom_turtship,
 	0,0,
 	0,
 	0,      /* sound_prom */
 
-	turtship_input_ports,
+	input_ports_turtship,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver dyger_driver =
+struct GameDriver driver_dyger =
 {
 	__FILE__,
 	0,
@@ -958,12 +958,12 @@ struct GameDriver dyger_driver =
 	&turtship_machine_driver,
 	0,
 
-	dyger_rom,
+	rom_dyger,
 	0,0,
 	0,
 	0,      /* sound_prom */
 
-	dyger_input_ports,
+	input_ports_dyger,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,

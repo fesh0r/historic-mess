@@ -39,16 +39,47 @@ static void pc_common_init_machine(void)
 		/* no floppy name given for that drive ? */
 		if (!floppy_name[i]) continue;
 		if (!floppy_name[i][0]) continue;
-		pc_fdc_file[i] = osd_fopen(Machine->gamedrv->name, floppy_name[i], OSD_FILETYPE_IMAGE, 1);
+		pc_fdc_file[i] = osd_fopen(Machine->gamedrv->name, floppy_name[i], OSD_FILETYPE_IMAGE_RW, 1);
 		/* find the sectors/track and bytes/sector values in the boot sector */
 		if (!pc_fdc_file[i] && Machine->gamedrv->clone_of)
-			pc_fdc_file[i] = osd_fopen(Machine->gamedrv->clone_of->name, floppy_name[i], OSD_FILETYPE_IMAGE, 1);
+			pc_fdc_file[i] = osd_fopen(Machine->gamedrv->clone_of->name, floppy_name[i], OSD_FILETYPE_IMAGE_RW, 1);
 		if (pc_fdc_file[i])
 		{
-			osd_fseek(pc_fdc_file[i], 0x018, SEEK_SET);
-			osd_fread(pc_fdc_file[i], &pc_fdc_spt[i], 1);
-			osd_fseek(pc_fdc_file[i], 0x01a, SEEK_SET);
-			osd_fread(pc_fdc_file[i], &pc_fdc_scl[i], 1);
+			int length;
+
+			/* tracks pre sector recognition with image size
+			   works only 512 byte sectors! and 40 or 80 tracks*/
+			pc_fdc_scl[i]=2;
+			pc_fdc_heads[i]=2;
+			length=osd_fsize(pc_fdc_file[i]);
+			if (length==36*2*80*512) { // 3 1/2 inch enhanced density
+				pc_fdc_spt[i]=36;
+			} else if (length==18*2*80*512) { // 3 1/2 inch high density
+				pc_fdc_spt[i] = 18;
+			} else if (length==15*2*80*512) { // 5 1/4 inch high density (or japanese 3 1/2 inch high density)
+				pc_fdc_spt[i] = 15;
+			} else if ( (length==9*2*80*512) // 3 1/2 inch double density
+							// 80 tracks 5 1/4 inch drives rare in pcs
+				    ||(length==9*2*40*512) ) { // 5 1/4 inch double density
+				pc_fdc_spt[i] = 9;
+			} else if (length==9*1*40*512) {// 5 1/4 inch double density single sided
+				pc_fdc_spt[i] = 9;
+				pc_fdc_heads[i] = 1;
+			} else if (length==8*2*40*512) {// 5 1/4 inch double density
+				pc_fdc_spt[i] = 8;
+			} else if (length==8*1*40*512) {// 5 1/4 inch double density single sided
+				pc_fdc_spt[i] = 8;
+				pc_fdc_heads[i] = 1;
+			} else {
+				/* info in boot sector,
+				   is not correct on all disks */
+				osd_fseek(pc_fdc_file[i], 0x0c, SEEK_SET);
+				osd_fread(pc_fdc_file[i], &pc_fdc_scl[i], 1);
+				osd_fseek(pc_fdc_file[i], 0x018, SEEK_SET);
+				osd_fread(pc_fdc_file[i], &pc_fdc_spt[i], 1);
+				osd_fseek(pc_fdc_file[i], 0x01a, SEEK_SET);
+				osd_fread(pc_fdc_file[i], &pc_fdc_heads[i], 1);
+			}
 		}
     }
 
@@ -57,9 +88,9 @@ static void pc_common_init_machine(void)
 		/* no hard disk name given for that drive ? */
 		if (!hard_name[i]) continue;
 		if (!hard_name[i][0]) continue;
-		pc_hdc_file[i] = osd_fopen(Machine->gamedrv->name, hard_name[i], OSD_FILETYPE_IMAGE, 1);
+		pc_hdc_file[i] = osd_fopen(Machine->gamedrv->name, hard_name[i], OSD_FILETYPE_IMAGE_RW, 1);
 		if (!pc_hdc_file[i] && Machine->gamedrv->clone_of)
-			pc_hdc_file[i] = osd_fopen(Machine->gamedrv->clone_of->name, hard_name[i], OSD_FILETYPE_IMAGE, 1);
+			pc_hdc_file[i] = osd_fopen(Machine->gamedrv->clone_of->name, hard_name[i], OSD_FILETYPE_IMAGE_RW, 1);
     }
 
 }
@@ -1253,7 +1284,7 @@ int pc_HDC_r(int chip, int offset)
 }
 int pc_HDC1_r(int offset) { return pc_HDC_r(0, offset); }
 int pc_HDC2_r(int offset) { return pc_HDC_r(1, offset); }
-	
+
 /*************************************************************************
  *
  *		MDA

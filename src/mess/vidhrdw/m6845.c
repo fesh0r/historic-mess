@@ -537,6 +537,7 @@ void m6845_vh_screenrefresh(struct osd_bitmap * bitmap, int full_refresh)
 				}
 			}
 		}
+		palette_recalc();
 		update_all = 0;
     }
 }

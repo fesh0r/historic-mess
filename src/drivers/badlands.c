@@ -162,7 +162,7 @@ static struct MemoryWriteAddress main_writemem[] =
  *
  *************************************/
 
-INPUT_PORTS_START( badlands_ports )
+INPUT_PORTS_START( badlands )
 	PORT_START		/* fe4000 */
 	PORT_BIT( 0x000f, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
@@ -296,7 +296,7 @@ static void rom_decode(void)
  *
  *************************************/
 
-ROM_START( badlands_rom )
+ROM_START( badlands )
 	ROM_REGION(0x40000)	/* 4*64k for 68000 code */
 	ROM_LOAD_EVEN( "1008.20f",  0x00000, 0x10000, 0xa3da5774 )
 	ROM_LOAD_ODD ( "1006.27f",  0x00000, 0x10000, 0xaa03b4f3 )
@@ -347,7 +347,7 @@ static void badlands_init(void)
  *
  *************************************/
 
-struct GameDriver badlands_driver =
+struct GameDriver driver_badlands =
 {
 	__FILE__,
 	0,
@@ -360,13 +360,13 @@ struct GameDriver badlands_driver =
 	&machine_driver,
 	badlands_init,
 
-	badlands_rom,
+	rom_badlands,
 	rom_decode,
 	0,
 	0,
 	0,	/* sound_prom */
 
-	badlands_ports,
+	input_ports_badlands,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

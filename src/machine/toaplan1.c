@@ -28,7 +28,7 @@ static int unk;
 static int credits;
 static int latch;
 
-unsigned char *toaplan1_sharedram;
+extern unsigned char *toaplan1_sharedram;
 
 
 
@@ -355,7 +355,7 @@ int toaplan1_hiload(void)
 				tp1_skip_zeros = 1;
 			}
 			tp1_vram_offs++ ;
-			if (Machine->gamedrv->orientation == ORIENTATION_ROTATE_270)
+			if ((Machine->gamedrv->flags & ORIENTATION_MASK) == ORIENTATION_ROTATE_270)
 			{
 				tp1_vram_offs += 0x3f;
 			}

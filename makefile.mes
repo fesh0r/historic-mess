@@ -5,15 +5,31 @@ LD = gcc
 ASM = nasmw
 ASMFLAGS = -f coff
 VPATH=src $(wildcard src/cpu/*)
+
+ifdef K6
+EMULATOR_EXE = messk6.exe
+ARCH = -march=k6
+else
+ifdef I686
+EMULATOR_EXE = messppro.exe
+ARCH = -march=pentiumpro
+else
 EMULATOR_EXE = mess.exe
+ARCH = -march=pentium
+endif
+endif
 
 # uncomment next line to include the debugger
 # DEBUG = 1
 
 # uncomment next line to do a smaller compile including only one driver
 # TINY_COMPILE = 1
-TINY_NAME = finalizr_driver
-TINY_OBJS = obj/drivers/finalizr.o obj/vidhrdw/finalizr.o obj/machine/konami.o
+TINY_NAME = coleco_driver
+TINY_OBJS =     obj/mess/vidhrdw/tms9928a.o \
+                obj/mess/machine/coleco.o   \
+                obj/mess/vidhrdw/coleco.o   \
+                obj/mess/systems/coleco.o   \
+
 
 # uncomment one of the two next lines to not compile the NeoGeo games or to
 # compile only the NeoGeo games
@@ -32,6 +48,7 @@ CPUS+=M68000@
 SOUNDS+=YM2610@
 else
 # uncomment the following lines to include a CPU core
+#CPUS+=GENSYNC@
 CPUS+=Z80@
 #CPUS+=Z80_VM@
 #CPUS+=8080@
@@ -58,7 +75,7 @@ CPUS+=I86@
 #CPUS+=M6805@
 #CPUS+=M68705@
 #CPUS+=HD63705@
-#CPUS+=M6309@
+#CPUS+=HD6309@
 CPUS+=M6809@
 #CPUS+=KONAMI@
 CPUS+=M68000@
@@ -74,8 +91,8 @@ CPUS+=TMS9900@
 CPUS+=PDP1@
 
 # uncomment the following lines to include a sound core
-#SOUNDS+=CUSTOM@
-#SOUNDS+=SAMPLES@
+SOUNDS+=CUSTOM@
+SOUNDS+=SAMPLES@
 SOUNDS+=DAC@
 SOUNDS+=AY8910@
 #SOUNDS+=YM2203@
@@ -87,7 +104,7 @@ SOUNDS+=AY8910@
 SOUNDS+=YM2612@
 #SOUNDS+=YM3438@
 #SOUNDS+=YM2413@
-#SOUNDS+=YM3812@
+SOUNDS+=YM3812@
 #SOUNDS+=YM3526@
 SOUNDS+=SN76496@
 SOUNDS+=POKEY@
@@ -137,6 +154,13 @@ CPUDEFS =
 CPUOBJS =
 DBGOBJS =
 ASMDEFS =
+
+CPU=$(strip $(findstring GENSYNC@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_GENSYNC=1
+CPUOBJS += obj/cpu/gensync/gensync.o
+DBGOBJS += obj/cpu/gensync/gensyncd.o
+endif
 
 CPU=$(strip $(findstring Z80@,$(CPUS)))
 ifneq ($(CPU),)
@@ -320,9 +344,9 @@ CPUOBJS += obj/cpu/m6805/m6805.o
 DBGOBJS += obj/cpu/m6805/6805dasm.o
 endif
 
-CPU=$(strip $(findstring M6309@,$(CPUS)))
+CPU=$(strip $(findstring HD6309@,$(CPUS)))
 ifneq ($(CPU),)
-CPUDEFS += -DHAS_M6309=1
+CPUDEFS += -DHAS_HD6309=1
 CPUOBJS += obj/cpu/m6809/m6809.o
 DBGOBJS += obj/cpu/m6809/6809dasm.o
 endif
@@ -661,7 +685,7 @@ CFLAGS = -Isrc -Isrc/msdos -Iobj/cpu/m68000 -Isrc/cpu/m68000 \
 	-O0 -pedantic -Wall -Werror -Wno-unused -g
 else
 CFLAGS = -Isrc -Isrc/msdos -Iobj/cpu/m68000 -Isrc/cpu/m68000 \
-	-fomit-frame-pointer -O3 -mcpu=pentium \
+	$(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing \
 	-Werror -Wall -Wno-sign-compare -Wunused \
 	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
 	-pedantic \
@@ -735,7 +759,7 @@ MSDOSOBJS = obj/msdos/msdos.o obj/msdos/video.o obj/msdos/blit.o obj/msdos/vecto
          obj/msdos/fronthlp.o \
          obj/msdos/gen15khz.o obj/msdos/ati15khz.o \
 
-MSDOSOBJS += obj/msdos/nec765.o
+MSDOSOBJS += obj/msdos/nec765.o 
 
 ifdef TINY_COMPILE
 	OBJS = $(TINY_OBJS)
@@ -821,6 +845,7 @@ obj/atari.a:    \
                 obj/mess/vidhrdw/a7800.o    \
                 obj/mess/machine/a7800.o    \
                 obj/mess/systems/a7800.o    \
+                obj/sndhrdw/exidy.o         \
                 obj/mess/vidhrdw/a2600.o    \
                 obj/mess/machine/a2600.o    \
                 obj/mess/systems/a2600.o    \
@@ -930,7 +955,6 @@ obj/ep128.a :   \
 obj/other.a :   \
                 obj/mess/systems/kim1.o     \
 
-
 # dependencies
 obj/cpu/z80/z80.o:  z80.c z80.h z80daa.h
 obj/cpu/i8085/i8085.o: i8085.c i8085.h i8085cpu.h i8085daa.h
@@ -954,6 +978,7 @@ makedir:
 maketree:
 	md obj
 	md obj\cpu
+	md obj\cpu\gensync
 	md obj\cpu\z80
 	md obj\cpu\m6502
 	md obj\cpu\h6280
@@ -989,6 +1014,7 @@ clean:
 
 cleandebug:
 	del obj\*.o
+	del obj\cpu\gensync\*.o
 	del obj\cpu\z80\*.o
 	del obj\cpu\z80\*.oa
 	del obj\cpu\z80\*.asm
@@ -1036,5 +1062,4 @@ messdir:
 	md obj\mess\systems
 	md obj\mess\vidhrdw
 	md obj\mess\sndhrdw
-
 

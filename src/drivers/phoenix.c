@@ -95,7 +95,7 @@ WRITEMEM(pleiads)
 
 
 
-INPUT_PORTS_START( phoenix_input_ports )
+INPUT_PORTS_START( phoenix )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
@@ -130,7 +130,7 @@ INPUT_PORTS_START( phoenix_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( phoenixt_input_ports )
+INPUT_PORTS_START( phoenixt )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
@@ -164,7 +164,7 @@ INPUT_PORTS_START( phoenixt_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( phoenix3_input_ports )
+INPUT_PORTS_START( phoenix3 )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
@@ -198,7 +198,7 @@ INPUT_PORTS_START( phoenix3_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( pleiads_input_ports )
+INPUT_PORTS_START( pleiads )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
@@ -312,23 +312,13 @@ MACHINE_DRIVER(pleiads)
 
 
 
-static const char *phoenix_sample_names[] =
-{
-	"*phoenix",
-	"shot8.wav",
-	"death8.wav",
-	"phoenix1.wav",
-	"phoenix2.wav",
-	0	/* end of array */
-};
-
 /***************************************************************************
 
   Game driver(s)
 
 ***************************************************************************/
 
-ROM_START( phoenix_rom )
+ROM_START( phoenix )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic45",         0x0000, 0x0800, 0x9f68086b )
 	ROM_LOAD( "ic46",         0x0800, 0x0800, 0x273a4a82 )
@@ -345,12 +335,12 @@ ROM_START( phoenix_rom )
 	ROM_LOAD( "ic39",         0x1000, 0x0800, 0x53413e8f )
 	ROM_LOAD( "ic40",         0x1800, 0x0800, 0x0be2ba91 )
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "ic40_b.bin",   0x0000, 0x0100, 0x79350b25 )	/* palette low bits */
 	ROM_LOAD( "ic41_a.bin",   0x0100, 0x0100, 0xe176b768 )	/* palette high bits */
 ROM_END
 
-ROM_START( phoenixt_rom )
+ROM_START( phoenixt )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "phoenix.45",   0x0000, 0x0800, 0x5b8c55a8 )
 	ROM_LOAD( "phoenix.46",   0x0800, 0x0800, 0xdbc942fa )
@@ -367,12 +357,12 @@ ROM_START( phoenixt_rom )
 	ROM_LOAD( "ic39",         0x1000, 0x0800, 0x53413e8f )
 	ROM_LOAD( "ic40",         0x1800, 0x0800, 0x0be2ba91 )
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "ic40_b.bin",   0x0000, 0x0100, 0x79350b25 )	/* palette low bits */
 	ROM_LOAD( "ic41_a.bin",   0x0100, 0x0100, 0xe176b768 )	/* palette high bits */
 ROM_END
 
-ROM_START( phoenix3_rom )
+ROM_START( phoenix3 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "phoenix3.45",  0x0000, 0x0800, 0xa362cda0 )
 	ROM_LOAD( "phoenix3.46",  0x0800, 0x0800, 0x5748f486 )
@@ -389,12 +379,12 @@ ROM_START( phoenix3_rom )
 	ROM_LOAD( "ic39",         0x1000, 0x0800, 0x53413e8f )
 	ROM_LOAD( "ic40",         0x1800, 0x0800, 0x0be2ba91 )
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "ic40_b.bin",   0x0000, 0x0100, 0x79350b25 )	/* palette low bits */
 	ROM_LOAD( "ic41_a.bin",   0x0100, 0x0100, 0xe176b768 )	/* palette high bits */
 ROM_END
 
-ROM_START( phoenixc_rom )
+ROM_START( phoenixc )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "phoenix.45",   0x0000, 0x0800, 0x5b8c55a8 )
 	ROM_LOAD( "phoenix.46",   0x0800, 0x0800, 0xdbc942fa )
@@ -411,12 +401,12 @@ ROM_START( phoenixc_rom )
 	ROM_LOAD( "phoenixc.39",  0x1000, 0x0800, 0xbb0525ed )
 	ROM_LOAD( "phoenixc.40",  0x1800, 0x0800, 0x4178aa4f )
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "ic40_b.bin",   0x0000, 0x0100, 0x79350b25 )	/* palette low bits */
 	ROM_LOAD( "ic41_a.bin",   0x0100, 0x0100, 0xe176b768 )	/* palette high bits */
 ROM_END
 
-ROM_START( pleiads_rom )
+ROM_START( pleiads )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic47.r1",      0x0000, 0x0800, 0x960212c8 )
 	ROM_LOAD( "ic48.r2",      0x0800, 0x0800, 0xb254217c )
@@ -433,12 +423,12 @@ ROM_START( pleiads_rom )
 	ROM_LOAD( "ic39.bin",     0x1000, 0x0800, 0x85866607 ) /* IC 27 on real board */
 	ROM_LOAD( "ic40.bin",     0x1800, 0x0800, 0xa841d511 ) /* IC 26 on real board */
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "7611-5.26",   0x0000, 0x0100, 0x7a1bcb1e )	/* palette low bits */
 	ROM_LOAD( "7611-5.33",   0x0100, 0x0100, 0xe38eeb83 )	/* palette high bits */
 ROM_END
 
-ROM_START( pleiadbl_rom )
+ROM_START( pleiadbl )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic45.bin",     0x0000, 0x0800, 0x93fc2958 )
 	ROM_LOAD( "ic46.bin",     0x0800, 0x0800, 0xe2b5b8cd )
@@ -455,12 +445,12 @@ ROM_START( pleiadbl_rom )
 	ROM_LOAD( "ic39.bin",     0x1000, 0x0800, 0x85866607 )
 	ROM_LOAD( "ic40.bin",     0x1800, 0x0800, 0xa841d511 )
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "7611-5.26",   0x0000, 0x0100, 0x7a1bcb1e )	/* palette low bits */
 	ROM_LOAD( "7611-5.33",   0x0100, 0x0100, 0xe38eeb83 )	/* palette high bits */
 ROM_END
 
-ROM_START( pleiadce_rom )
+ROM_START( pleiadce )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "pleiades.47",  0x0000, 0x0800, 0x711e2ba0 )
 	ROM_LOAD( "pleiades.48",  0x0800, 0x0800, 0x93a36943 )
@@ -477,7 +467,7 @@ ROM_START( pleiadce_rom )
 	ROM_LOAD( "ic39.bin",     0x1000, 0x0800, 0x85866607 )
 	ROM_LOAD( "ic40.bin",     0x1800, 0x0800, 0xa841d511 )
 
-	ROM_REGION(0x0200)	/* color PROMs */
+	ROM_REGIONX( 0x0200, REGION_PROMS )
 	ROM_LOAD( "7611-5.26",   0x0000, 0x0100, 0x7a1bcb1e )	/* palette low bits */
 	ROM_LOAD( "7611-5.33",   0x0100, 0x0100, 0xe38eeb83 )	/* palette high bits */
 ROM_END
@@ -548,7 +538,7 @@ static void hisave(void)
 
 #define CREDITS   "Richard Davies\nBrad Oliver\nMirko Buffoni\nNicola Salmoria\nShaun Stephenson\nAndrew Scott\nTim Lindquist (color info)\nMarco Cassili"
 
-struct GameDriver phoenix_driver =
+struct GameDriver driver_phoenix =
 {
 	__FILE__,
 	0,
@@ -561,23 +551,23 @@ struct GameDriver phoenix_driver =
 	&phoenix_machine_driver,
 	0,
 
-	phoenix_rom,
+	rom_phoenix,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	phoenix_input_ports,
+	input_ports_phoenix,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver phoenixt_driver =
+struct GameDriver driver_phoenixt =
 {
 	__FILE__,
-	&phoenix_driver,
+	&driver_phoenix,
 	"phoenixt",
 	"Phoenix (Taito)",
 	"1980",
@@ -587,23 +577,23 @@ struct GameDriver phoenixt_driver =
 	&phoenix_machine_driver,
 	0,
 
-	phoenixt_rom,
+	rom_phoenixt,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	phoenixt_input_ports,
+	input_ports_phoenixt,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver phoenix3_driver =
+struct GameDriver driver_phoenix3 =
 {
 	__FILE__,
-	&phoenix_driver,
+	&driver_phoenix,
 	"phoenix3",
 	"Phoenix (T.P.N.)",
 	"1980",
@@ -613,23 +603,23 @@ struct GameDriver phoenix3_driver =
 	&phoenix_machine_driver,
 	0,
 
-	phoenix3_rom,
+	rom_phoenix3,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	phoenix3_input_ports,
+	input_ports_phoenix3,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver phoenixc_driver =
+struct GameDriver driver_phoenixc =
 {
 	__FILE__,
-	&phoenix_driver,
+	&driver_phoenix,
 	"phoenixc",
 	"Phoenix (IRECSA, G.G.I Corp)",
 	"1981",
@@ -639,21 +629,21 @@ struct GameDriver phoenixc_driver =
 	&phoenix_machine_driver,
 	0,
 
-	phoenixc_rom,
+	rom_phoenixc,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	phoenixt_input_ports,
+	input_ports_phoenixt,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
 
-struct GameDriver pleiads_driver =
+struct GameDriver driver_pleiads =
 {
 	__FILE__,
 	0,
@@ -666,23 +656,23 @@ struct GameDriver pleiads_driver =
 	&pleiads_machine_driver,
 	0,
 
-	pleiads_rom,
+	rom_pleiads,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	pleiads_input_ports,
+	input_ports_pleiads,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver pleiadbl_driver =
+struct GameDriver driver_pleiadbl =
 {
 	__FILE__,
-	&pleiads_driver,
+	&driver_pleiads,
 	"pleiadbl",
 	"Pleiads (bootleg)",
 	"1981",
@@ -692,23 +682,23 @@ struct GameDriver pleiadbl_driver =
 	&pleiads_machine_driver,
 	0,
 
-	pleiadbl_rom,
+	rom_pleiadbl,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	pleiads_input_ports,
+	input_ports_pleiads,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver pleiadce_driver =
+struct GameDriver driver_pleiadce =
 {
 	__FILE__,
-	&pleiads_driver,
+	&driver_pleiads,
 	"pleiadce",
 	"Pleiads (Centuri)",
 	"1981",
@@ -718,14 +708,14 @@ struct GameDriver pleiadce_driver =
 	&pleiads_machine_driver,
 	0,
 
-	pleiadce_rom,
+	rom_pleiadce,
 	0, 0,
-	phoenix_sample_names,
+	0,
 	0,	/* sound_prom */
 
-	pleiads_input_ports,
+	input_ports_pleiads,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave

@@ -22,6 +22,10 @@
 
 ***************************************************************************/
 #include "mess/machine/pc.h"
+#include "driver.h"
+#include "sound/YM3812.h"
+
+#define ADLIB // YM3812/OPL2 Chip
 
 static struct MemoryReadAddress mda_readmem[] =
 {
@@ -60,6 +64,9 @@ static struct IOReadPort mda_readport[] =
 	{ 0x0213, 0x0213, pc_EXP_r },
 	{ 0x0278, 0x027b, pc_LPT3_r },
 	{ 0x0378, 0x037b, pc_LPT2_r },
+#ifdef ADLIB
+	{ 0x0388, 0x0388, YM3812_status_port_0_r },
+#endif
 	{ 0x03bc, 0x03bd, pc_LPT1_r },
 	{ 0x03f8, 0x03ff, pc_COM1_r },
 	{ 0x02f8, 0x02ff, pc_COM2_r },
@@ -83,6 +90,10 @@ static struct IOWritePort mda_writeport[] =
     { 0x0213, 0x0213, pc_EXP_w },
 	{ 0x0278, 0x027b, pc_LPT3_w },
 	{ 0x0378, 0x037b, pc_LPT2_w },
+#ifdef ADLIB
+	{ 0x0388, 0x0388, YM3812_control_port_0_w },
+	{ 0x0389, 0x0389, YM3812_write_port_0_w },
+#endif
 	{ 0x03bc, 0x03bd, pc_LPT1_w },
 	{ 0x03f8, 0x03ff, pc_COM1_w },
 	{ 0x02f8, 0x02ff, pc_COM2_w },
@@ -134,6 +145,9 @@ static struct IOReadPort cga_readport[] =
     { 0x0213, 0x0213, pc_EXP_r },
 	{ 0x0278, 0x027b, pc_LPT3_r },
 	{ 0x0378, 0x037b, pc_LPT2_r },
+#ifdef ADLIB
+	{ 0x0388, 0x0388, YM3812_status_port_0_r },
+#endif
 	{ 0x03bc, 0x03bd, pc_LPT1_r },
 	{ 0x03f8, 0x03ff, pc_COM1_r },
 	{ 0x02f8, 0x02ff, pc_COM2_r },
@@ -160,6 +174,10 @@ static struct IOWritePort cga_writeport[] =
 	{ 0x03bc, 0x03bd, pc_LPT1_w },
 	{ 0x03f8, 0x03ff, pc_COM1_w },
 	{ 0x02f8, 0x02ff, pc_COM2_w },
+#ifdef ADLIB
+	{ 0x0388, 0x0388, YM3812_control_port_0_w },
+	{ 0x0389, 0x0389, YM3812_write_port_0_w },
+#endif
 	{ 0x03e8, 0x03ef, pc_COM3_w },
 	{ 0x02e8, 0x02ef, pc_COM4_w },
 	{ 0x03f0, 0x03f7, pc_FDC_w },
@@ -209,6 +227,9 @@ static struct IOReadPort t1t_readport[] =
 	{ 0x0200, 0x0207, pc_JOY_r },
     { 0x0213, 0x0213, pc_EXP_r },
 	{ 0x0378, 0x037f, pc_t1t_p37x_r },
+#ifdef ADLIB
+	{ 0x0388, 0x0388, YM3812_status_port_0_r },
+#endif
     { 0x03bc, 0x03bd, pc_LPT1_r },
 	{ 0x03f8, 0x03ff, pc_COM1_r },
 	{ 0x02f8, 0x02ff, pc_COM2_r },
@@ -230,6 +251,10 @@ static struct IOWritePort t1t_writeport[] =
 	{ 0x0200, 0x0207, pc_JOY_w },
     { 0x0213, 0x0213, pc_EXP_w },
 	{ 0x0378, 0x037f, pc_t1t_p37x_w },
+#ifdef ADLIB
+	{ 0x0388, 0x0388, YM3812_control_port_0_w },
+	{ 0x0389, 0x0389, YM3812_write_port_0_w },
+#endif
     { 0x03bc, 0x03bd, pc_LPT1_w },
 	{ 0x03f8, 0x03ff, pc_COM1_w },
 	{ 0x02f8, 0x02ff, pc_COM2_w },
@@ -251,7 +276,7 @@ static unsigned char palette[] = {
     0x00,0x00,0x00
 };
 
-INPUT_PORTS_START( pc_mda_input_ports )
+INPUT_PORTS_START( pc_mda )
 	PORT_START /* IN0 */
 	PORT_BIT ( 0x80, 0x80,	 IPT_VBLANK )
 	PORT_BIT ( 0x7f, 0x7f,	 IPT_UNUSED )
@@ -321,7 +346,7 @@ INPUT_PORTS_START( pc_mda_input_ports )
 	PORT_BIT( 0x03, 0x03,	IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( pc_cga_input_ports )
+INPUT_PORTS_START( pc_cga )
 	PORT_START /* IN0 */
 	PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
 	PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
@@ -393,7 +418,7 @@ INPUT_PORTS_START( pc_cga_input_ports )
 	PORT_DIPSETTING(	0x01, "yes" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( pc_t1t_input_ports )
+INPUT_PORTS_START( pc_t1t )
 	PORT_START /* IN0 */
 	PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
 	PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
@@ -457,6 +482,25 @@ INPUT_PORTS_START( pc_t1t_input_ports )
 INPUT_PORTS_END
 
 static unsigned i86_address_mask = 0x000fffff;
+
+
+static struct CustomSound_interface pc_sound_interface = {
+	pc_sh_custom_start,
+	pc_sh_stop,
+	pc_sh_custom_update
+};
+
+#if defined(ADLIB)
+// irq line not connected to pc on adlib cards (and compatibles)
+static void irqhandler(int linestate) {}
+
+static struct YM3812interface ym3812_interface = {
+	1,
+	ym3812_StdClock, // I hope this is the clock used on the original Adlib Sound card
+	{255}, // volume adjustment in relation to speaker and tandy1000 sound neccessary
+	{irqhandler}
+};
+#endif
 
 static struct SN76496interface t1t_sound_interface = {
 	1,
@@ -525,6 +569,15 @@ static unsigned short mda_colortable[] = {
      0,10,
 };
 
+
+/* Initialise the mda palette */
+static void mda_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+	memcpy(sys_colortable,mda_colortable,sizeof(mda_colortable));
+}
+
+
 static struct MachineDriver mda_machine_driver =
 {
 	/* basic machine hardware */
@@ -552,7 +605,7 @@ static struct MachineDriver mda_machine_driver =
 	pc_mda_gfxdecodeinfo,						/* graphics decode info */
 	sizeof(palette) / sizeof(palette[0]) / 3,
 	sizeof(mda_colortable) / sizeof(mda_colortable[0]),
-	0,											/* convert color prom */
+	mda_init_palette,							/* init palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -561,10 +614,13 @@ static struct MachineDriver mda_machine_driver =
 	pc_mda_vh_screenrefresh,
 
 	/* sound hardware */
-	0,
-	0,/*pc_sh_start,*/
-	0,/*pc_sh_stop,*/
-	0
+	0,0,0,0,
+	{
+		{ SOUND_CUSTOM, &pc_sound_interface },
+#if defined(ADLIB)
+		{ SOUND_YM3812, &ym3812_interface },
+#endif
+	}
 };
 
 static struct GfxLayout CGA_charlayout =
@@ -742,13 +798,36 @@ static struct GfxDecodeInfo t1t_gfxdecodeinfo[] =
     { -1 } /* end of array */
 };
 
+
+
+
+
+/* Initialise the cga palette */
+static void cga_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+	memcpy(sys_colortable,cga_colortable,sizeof(cga_colortable));
+}
+/* Initialise the t1t palette */
+static void t1t_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+	memcpy(sys_colortable,t1t_colortable,sizeof(t1t_colortable));
+}
+
+
 static struct MachineDriver cga_machine_driver =
 {
     /* basic machine hardware */
     {
         {
+#if 1
             CPU_I86,
 			4772720,	/* 4,77 Mhz */
+#else // Turbo Turbo PC
+            CPU_V30,
+			30000000,
+#endif
 			0,
 			cga_readmem,cga_writemem,
 			cga_readport,cga_writeport,
@@ -769,7 +848,7 @@ static struct MachineDriver cga_machine_driver =
 	CGA_gfxdecodeinfo,							/* graphics decode info */
 	sizeof(palette) / sizeof(palette[0]) / 3,
 	sizeof(cga_colortable) / sizeof(cga_colortable[0]),
-	0,											/* convert color prom */
+	cga_init_palette,							/* init palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY | VIDEO_MODIFIES_PALETTE,
 	0,
@@ -778,10 +857,13 @@ static struct MachineDriver cga_machine_driver =
 	pc_cga_vh_screenrefresh,
 
     /* sound hardware */
-	0,
-	0,/*pc_sh_start,*/
-	0,/*pc_sh_stop,*/
-	0
+	0,0,0,0,
+	{
+		{ SOUND_CUSTOM, &pc_sound_interface },
+#if defined(ADLIB)
+		{ SOUND_YM3812, &ym3812_interface },
+#endif
+	}
 };
 
 static struct MachineDriver t1t_machine_driver =
@@ -811,7 +893,7 @@ static struct MachineDriver t1t_machine_driver =
 	t1t_gfxdecodeinfo,							/* graphics decode info */
 	sizeof(palette) / sizeof(palette[0]) / 3,
 	sizeof(t1t_colortable) / sizeof(t1t_colortable[0]),
-	0,											/* convert color prom */
+	t1t_init_palette,							/* init palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY | VIDEO_MODIFIES_PALETTE,
 	0,
@@ -819,16 +901,14 @@ static struct MachineDriver t1t_machine_driver =
 	pc_t1t_vh_stop,
 	pc_t1t_vh_screenrefresh,
 
-    /* sound hardware */
-	0,
-	0,/*pc_sh_start,*/
-	0,/*pc_sh_stop,*/
-	0,
+	/* sound hardware */
+	0,0,0,0,
 	{
-        {
-			SOUND_SN76496,
-			&t1t_sound_interface
-		}
+		{ SOUND_CUSTOM, &pc_sound_interface }, // is this available on a Tandy ?
+        	{ SOUND_SN76496, &t1t_sound_interface },
+#if defined(ADLIB)
+		{ SOUND_YM3812, &ym3812_interface },
+#endif
 	}
 };
 
@@ -849,13 +929,14 @@ struct GameDriver pc_driver =
     "198?",
     "IBM",
     "Juergen Buchmueller",
-	GAME_COMPUTER,
+	0,
     &mda_machine_driver,
 	0,
 
 	NULL,						/* rom module */
 	NULL,						/* load rom_file images */
 	NULL,						/* identify rom images */
+	0,						/* default file extensions */
     1,                          /* number of ROM slots */
     4,                          /* number of floppy drives supported */
     0,                          /* number of hard drives supported */
@@ -871,7 +952,7 @@ struct GameDriver pc_driver =
     0,                          /* color palette */
     0,                          /* color lookup table */
 
-    ORIENTATION_DEFAULT,        /* orientation */
+    GAME_COMPUTER|ORIENTATION_DEFAULT,        /* orientation */
 
     0,                          /* hiscore load */
     0,                          /* hiscore save */
@@ -886,7 +967,7 @@ static void pc_mda_rom_decode(void)
         Machine->memory_region[1][0x1000+i] = i;
 }
 
-ROM_START(pc_mda_rom)
+ROM_START(pc_mda)
 	ROM_REGION(0x100000)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
 	ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
@@ -904,13 +985,14 @@ struct GameDriver pcmda_driver =
 	"198?",
 	"IBM",
 	"Juergen Buchmueller",
-	GAME_COMPUTER,
+	0,
 	&mda_machine_driver,
 	0,
 
-	pc_mda_rom, 			/* rom module */
+	rom_pc_mda, 			/* rom module */
 	pc_rom_load,			/* load rom_file images */
 	pc_rom_id,				/* identify rom images */
+	0,						/* default file extensions */
 	1,						/* number of ROM slots */
 	4,						/* number of floppy drives supported */
 	2,						/* number of hard drives supported */
@@ -920,13 +1002,13 @@ struct GameDriver pcmda_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	pc_mda_input_ports, 	/* input ports */
+	input_ports_pc_mda, 	/* input ports */
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	mda_colortable, 		/* color lookup table */
+	0,				/* color palette */
+	0, 		/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER|ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
@@ -941,7 +1023,7 @@ static void CGA_rom_decode(void)
 		Machine->memory_region[1][0x1000+i] = i;
 }
 
-ROM_START(CGA_rom)
+ROM_START(CGA)
 	ROM_REGION(0x100000)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
 	ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
@@ -959,13 +1041,14 @@ struct GameDriver pccga_driver =
 	"198?",
 	"IBM",
 	"Juergen Buchmueller",
-	GAME_COMPUTER,
+	0,
     &cga_machine_driver,
 	0,
 
-	CGA_rom,				/* rom module */
+	rom_CGA,				/* rom module */
 	pc_rom_load,			/* load rom_file images */
 	pc_rom_id,				/* identify rom images */
+	0,						/* default file extensions */
 	1,						/* number of ROM slots */
 	4,						/* number of floppy drives supported */
 	2,						/* number of hard drives supported */
@@ -975,19 +1058,19 @@ struct GameDriver pccga_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	pc_cga_input_ports,
+	input_ports_pc_cga,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	cga_colortable, 		/* color lookup table */
+	0,				/* color palette */
+	0, 		/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER|ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(t1t_rom)
+ROM_START(t1t)
 	ROM_REGION(0x100000)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
     ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f)
@@ -1005,13 +1088,14 @@ struct GameDriver tandy1t_driver =
 	"1987",
 	"Tandy",
 	"Juergen Buchmueller\nCharles Mac Donald (technical info)",
-	GAME_COMPUTER|GAME_IMPERFECT_COLORS,
+	0,
 	&t1t_machine_driver,
 	0,
 
-	t1t_rom,				/* rom module */
+	rom_t1t,				/* rom module */
 	pc_rom_load,			/* load rom_file images */
 	pc_rom_id,				/* identify rom images */
+	0,						/* default file extensions */
 	1,						/* number of ROM slots */
 	4,						/* number of floppy drives supported */
 	2,						/* number of hard drives supported */
@@ -1021,16 +1105,17 @@ struct GameDriver tandy1t_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	pc_t1t_input_ports,
+	input_ports_pc_t1t,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	t1t_colortable, 		/* color lookup table */
+	0,				/* color palette */
+	0, 		/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER|GAME_IMPERFECT_COLORS|ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
+
 
 

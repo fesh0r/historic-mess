@@ -32,7 +32,7 @@ int pdp1_load_rom (void)
 	int i;
 
 	/* The spacewar! is mandatory for now. */
-	if (!(romfile = osd_fopen (Machine->gamedrv->name, "spacewar.bin",OSD_FILETYPE_ROM_CART, 0)))
+	if (!(romfile = osd_fopen (Machine->gamedrv->name, "spacewar.bin",OSD_FILETYPE_IMAGE_R, 0)))
 	{
 		if (errorlog) fprintf(errorlog,"PDP1: can't find SPACEWAR.BIN\n");
 		return 1;
@@ -104,7 +104,7 @@ void pdp1_init_machine(void)
 {
 	/* init pdp1 cpu */
 	extern_iot=pdp1_iot;
-	cpu_setOPbaseoverride(1,setOPbasefunc);
+	cpu_setOPbaseoverride(0,setOPbasefunc);
 }
 
 int pdp1_read_mem(int offset)

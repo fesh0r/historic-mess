@@ -93,7 +93,7 @@ int apple2_id_rom (const char *name, const char *gamename)
 	unsigned char magic[4];
 	int retval;
 
-	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_ROM_CART, 0))) return 0;
+	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_IMAGE_R, 0))) return 0;
 
 	retval = 0;
 	/* Verify the file is in Apple II format */

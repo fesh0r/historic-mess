@@ -17,7 +17,7 @@ int dragon_tapesize;
 int dragon_rom_load(void)
 {
 	void *fp;
-	
+
 	fp = NULL;
 	dragon_cart_inserted = 0;
 	dragon_tape = NULL;
@@ -26,7 +26,7 @@ int dragon_rom_load(void)
 	{
 		if (errorlog) fprintf(errorlog,"No image specified!\n");
 	}
-	else if (!(fp = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0)))
+	else if (!(fp = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0)))
 	{
 		if (errorlog) fprintf(errorlog,"Unable to locate image: %s\n",rom_name[0]);
 		return 1;
@@ -42,7 +42,7 @@ int dragon_rom_load(void)
 		}
 		osd_fread (fp, dragon_tape, dragon_tapesize);
 	}
-	
+
 	return 0;
 }
 

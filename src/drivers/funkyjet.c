@@ -174,7 +174,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /******************************************************************************/
 
-INPUT_PORTS_START( funkyjet_input_ports )
+INPUT_PORTS_START( funkyjet )
 	PORT_START	/* Player 1 controls */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -382,7 +382,7 @@ static struct MachineDriver funkyjet_machine_driver =
 
 /******************************************************************************/
 
-ROM_START( funkyjet_rom )
+ROM_START( funkyjet )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN( "jk00.12f", 0x00000, 0x40000, 0x712089c1 )
 	ROM_LOAD_ODD ( "jk01.13f", 0x00000, 0x40000, 0xbe3920d7 )
@@ -401,7 +401,7 @@ ROM_END
 
 /******************************************************************************/
 
-struct GameDriver funkyjet_driver =
+struct GameDriver driver_funkyjet =
 {
 	__FILE__,
 	0,
@@ -410,18 +410,18 @@ struct GameDriver funkyjet_driver =
 	"1992",
 	"[Data East] (Mitchell license)",
 	"Bryan McPhail",
-	GAME_NOT_WORKING,
+	0,
 	&funkyjet_machine_driver,
 	0,
 
-	funkyjet_rom,
+	rom_funkyjet,
 	0, 0,
 	0,
 	0,
 
-	funkyjet_input_ports,
+	input_ports_funkyjet,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };

@@ -20,7 +20,7 @@ unsigned char *taitosj_scroll;
 unsigned char *taitosj_colscrolly;
 unsigned char *taitosj_gfxpointer;
 unsigned char *taitosj_colorbank,*taitosj_video_priority;
-unsigned char *taitosj_collision_reg;
+static unsigned char taitosj_collision_reg[4];
 static unsigned char *dirtybuffer2,*dirtybuffer3;
 static struct osd_bitmap *taitosj_tmpbitmap[3];
 static struct osd_bitmap *sprite_sprite_collbitmap1,*sprite_sprite_collbitmap2;
@@ -806,6 +806,14 @@ void taitosj_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh)
 {
 	int offs,i;
 
+
+	/* update palette */
+	if (palette_recalc())
+	{
+		memset(dirtybuffer, 1, videoram_size);
+		memset(dirtybuffer2, 1, videoram_size);
+		memset(dirtybuffer3, 1, videoram_size);
+	}
 
 	/* decode modified characters */
 	for (offs = 0;offs < 256;offs++)

@@ -426,7 +426,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 };
 
 
-INPUT_PORTS_START( liquidk_input_ports )
+INPUT_PORTS_START( liquidk )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
@@ -505,7 +505,7 @@ INPUT_PORTS_START( liquidk_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( finalb )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
@@ -584,7 +584,7 @@ INPUT_PORTS_START( input_ports )
 	PORT_DIPSETTING(    0x80, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( growl_input_ports )
+INPUT_PORTS_START( growl )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
@@ -691,7 +691,7 @@ INPUT_PORTS_START( growl_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( megab_input_ports )
+INPUT_PORTS_START( megab )
 	PORT_START /* DSW A */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* Unused? */
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
@@ -1088,7 +1088,7 @@ static struct MachineDriver megab_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( liquidk_rom )
+ROM_START( liquidk )
 	ROM_REGION(0x80000)     /* 512k for 68000 code */
 	ROM_LOAD_EVEN( "lq09.bin",  0x00000, 0x20000, 0x6ae09eb9 )
 	ROM_LOAD_ODD ( "lq11.bin",  0x00000, 0x20000, 0x42d2be6e )
@@ -1108,7 +1108,7 @@ ROM_START( liquidk_rom )
 	ROM_LOAD( "lk_snd.bin",  0x00000, 0x80000, 0x474d45a4 )
 ROM_END
 
-ROM_START( liquidku_rom )
+ROM_START( liquidku )
 	ROM_REGION(0x80000)     /* 512k for 68000 code */
 	ROM_LOAD_EVEN( "lq09.bin",  0x00000, 0x20000, 0x6ae09eb9 )
 	ROM_LOAD_ODD ( "lq11.bin",  0x00000, 0x20000, 0x42d2be6e )
@@ -1128,7 +1128,7 @@ ROM_START( liquidku_rom )
 	ROM_LOAD( "lk_snd.bin",  0x00000, 0x80000, 0x474d45a4 )
 ROM_END
 
-ROM_START( mizubaku_rom )
+ROM_START( mizubaku )
 	ROM_REGION(0x80000)     /* 512k for 68000 code */
 	ROM_LOAD_EVEN( "lq09.bin",  0x00000, 0x20000, 0x6ae09eb9 )
 	ROM_LOAD_ODD ( "lq11.bin",  0x00000, 0x20000, 0x42d2be6e )
@@ -1177,7 +1177,7 @@ static void liquidk_hisave(void)
 	}
 }
 
-struct GameDriver liquidk_driver =
+struct GameDriver driver_liquidk =
 {
 	__FILE__,
 	0,
@@ -1190,22 +1190,22 @@ struct GameDriver liquidk_driver =
 	&liquidk_machine_driver,
 	0,
 
-	liquidk_rom,
+	rom_liquidk,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	liquidk_input_ports,
+	input_ports_liquidk,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_180,
 	liquidk_hiload, liquidk_hisave
 };
 
-struct GameDriver liquidku_driver =
+struct GameDriver driver_liquidku =
 {
 	__FILE__,
-	&liquidk_driver,
+	&driver_liquidk,
 	"liquidku",
 	"Liquid Kids (US)",
 	"1990",
@@ -1215,22 +1215,22 @@ struct GameDriver liquidku_driver =
 	&liquidk_machine_driver,
 	0,
 
-	liquidku_rom,
+	rom_liquidku,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	liquidk_input_ports,
+	input_ports_liquidk,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_180,
 	liquidk_hiload, liquidk_hisave
 };
 
-struct GameDriver mizubaku_driver =
+struct GameDriver driver_mizubaku =
 {
 	__FILE__,
-	&liquidk_driver,
+	&driver_liquidk,
 	"mizubaku",
 	"Mizubaku Daibouken (Japan)",
 	"1990",
@@ -1240,19 +1240,19 @@ struct GameDriver mizubaku_driver =
 	&liquidk_machine_driver,
 	0,
 
-	mizubaku_rom,
+	rom_mizubaku,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	liquidk_input_ports,
+	input_ports_liquidk,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_ROTATE_180,
 	liquidk_hiload, liquidk_hisave
 };
 
-ROM_START( finalb_rom )
+ROM_START( finalb )
 	ROM_REGION(0x40000)     /* 256k for 68000 code */
 	ROM_LOAD_EVEN( "fb_09.rom",  0x00000, 0x20000, 0x632f1ecd )
 	ROM_LOAD_ODD ( "fb_17.rom",  0x00000, 0x20000, 0xe91b2ec9 )
@@ -1277,7 +1277,7 @@ ROM_END
 
 
 
-struct GameDriver finalb_driver =
+struct GameDriver driver_finalb =
 {
 	__FILE__,
 	0,
@@ -1290,19 +1290,19 @@ struct GameDriver finalb_driver =
 	&finalb_machine_driver,
 	0,
 
-	finalb_rom,
+	rom_finalb,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_finalb,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-ROM_START( growl_rom )
+ROM_START( growl )
 	ROM_REGION(0x100000)     /* 1024k for 68000 code */
 	ROM_LOAD_EVEN( "growl_10.rom",  0x00000, 0x40000, 0xca81a20b )
 	ROM_LOAD_ODD ( "growl_08.rom",  0x00000, 0x40000, 0xaa35dd9e )
@@ -1325,7 +1325,7 @@ ROM_START( growl_rom )
 	ROM_LOAD( "growl_05.rom", 0x000000, 0x080000, 0xe29c0828 )
 ROM_END
 
-ROM_START( growlu_rom )
+ROM_START( growlu )
 	ROM_REGION(0x100000)     /* 1024k for 68000 code */
 	ROM_LOAD_EVEN( "growl_10.rom",  0x00000, 0x40000, 0xca81a20b )
 	ROM_LOAD_ODD ( "growl_08.rom",  0x00000, 0x40000, 0xaa35dd9e )
@@ -1348,7 +1348,7 @@ ROM_START( growlu_rom )
 	ROM_LOAD( "growl_05.rom", 0x000000, 0x080000, 0xe29c0828 )
 ROM_END
 
-ROM_START( runark_rom )
+ROM_START( runark )
 	ROM_REGION(0x100000)     /* 1024k for 68000 code */
 	ROM_LOAD_EVEN( "growl_10.rom",  0x00000, 0x40000, 0xca81a20b )
 	ROM_LOAD_ODD ( "growl_08.rom",  0x00000, 0x40000, 0xaa35dd9e )
@@ -1401,7 +1401,7 @@ static void growl_hisave(void)
 	}
 }
 
-struct GameDriver growl_driver =
+struct GameDriver driver_growl =
 {
 	__FILE__,
 	0,
@@ -1414,22 +1414,22 @@ struct GameDriver growl_driver =
 	&growl_machine_driver,
 	0,
 
-	growl_rom,
+	rom_growl,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	growl_input_ports,
+	input_ports_growl,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	growl_hiload, growl_hisave
 };
 
-struct GameDriver growlu_driver =
+struct GameDriver driver_growlu =
 {
 	__FILE__,
-	&growl_driver,
+	&driver_growl,
 	"growlu",
 	"Growl (US)",
 	"1990",
@@ -1439,22 +1439,22 @@ struct GameDriver growlu_driver =
 	&growl_machine_driver,
 	0,
 
-	growlu_rom,
+	rom_growlu,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	growl_input_ports,
+	input_ports_growl,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	growl_hiload, growl_hisave
 };
 
-struct GameDriver runark_driver =
+struct GameDriver driver_runark =
 {
 	__FILE__,
-	&growl_driver,
+	&driver_growl,
 	"runark",
 	"Runark (Japan)",
 	"1990",
@@ -1464,12 +1464,12 @@ struct GameDriver runark_driver =
 	&growl_machine_driver,
 	0,
 
-	runark_rom,
+	rom_runark,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	growl_input_ports,
+	input_ports_growl,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -1477,7 +1477,7 @@ struct GameDriver runark_driver =
 };
 
 
-ROM_START( megab_rom )
+ROM_START( megab )
 	ROM_REGION(0x100000)     /* 256k for 68000 code */
 	ROM_LOAD_EVEN( "c11-07",  0x00000, 0x20000, 0x11d228b6 )
 	ROM_LOAD_ODD ( "c11-08",  0x00000, 0x20000, 0xa79d4dca )
@@ -1501,7 +1501,7 @@ ROM_END
 
 
 
-struct GameDriver megab_driver =
+struct GameDriver driver_megab =
 {
 	__FILE__,
 	0,
@@ -1514,12 +1514,12 @@ struct GameDriver megab_driver =
 	&megab_machine_driver,
 	0,
 
-	megab_rom,
+	rom_megab,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	megab_input_ports,
+	input_ports_megab,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,

@@ -164,7 +164,7 @@ Sub_PortMap( srdmissn, 0x80, 0x84 )
 
 ***************************************************************************/
 
-INPUT_PORTS_START( gyrodine_input_ports )
+INPUT_PORTS_START( gyrodine )
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x03, "3" )
@@ -247,7 +247,7 @@ INPUT_PORTS_START( gyrodine_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( input_ports )	/* sonofphx, srdmissn */
+INPUT_PORTS_START( sonofphx )	/* sonofphx, srdmissn, airwolf? */
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x03, "3" )
@@ -330,7 +330,7 @@ INPUT_PORTS_START( input_ports )	/* sonofphx, srdmissn */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( flashgal_input_ports )
+INPUT_PORTS_START( flashgal )
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x03, "3" )
@@ -546,7 +546,7 @@ Machine_Driver( flashgal )
 
 ***************************************************************************/
 
-ROM_START( gyrodine_rom )
+ROM_START( gyrodine )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "a21.02", 0x0000, 0x2000, 0xc5ec4a50 )
 	ROM_LOAD( "a21.03", 0x2000, 0x2000, 0x4e9323bd )
@@ -571,7 +571,7 @@ ROM_START( gyrodine_rom )
 	ROM_LOAD( "a21.07", 0x1b000, 0x2000, 0x63623ba3 ) /* tiles - plane 1 */
 	ROM_LOAD( "a21.06", 0x1d000, 0x2000, 0x4cc969a9 ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "a21.16", 0x0000, 0x0100, 0xcc25fb56 ) /* red */
 	ROM_LOAD( "a21.17", 0x0100, 0x0100, 0xca054448 ) /* green */
 	ROM_LOAD( "a21.18", 0x0200, 0x0100, 0x23c0c449 ) /* blue */
@@ -582,7 +582,7 @@ ROM_START( gyrodine_rom )
 	ROM_LOAD( "a21.01", 0x0000, 0x2000, 0xb2ce0aa2 )
 ROM_END
 
-ROM_START( sonofphx_rom )
+ROM_START( sonofphx )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "5.f4",   0x0000, 0x2000, 0xe0d2c6cf )
 	ROM_LOAD( "6.h4",   0x2000, 0x2000, 0x3a0d0336 )
@@ -600,7 +600,7 @@ ROM_START( sonofphx_rom )
 	ROM_LOAD( "16.10h", 0x1b000, 0x2000, 0x7de5d39e ) /* tiles - plane 1 */
 	ROM_LOAD( "17.11h", 0x1d000, 0x2000, 0x0ba5f72c ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "r.1f",   0x0200, 0x0100, 0xb7f48b41 ) /* red */
 	ROM_LOAD( "g.1h",   0x0100, 0x0100, 0xacd7a69e ) /* green */
 	ROM_LOAD( "b.1j",   0x0000, 0x0100, 0x3ea35431 ) /* blue */
@@ -614,7 +614,7 @@ ROM_START( sonofphx_rom )
 	ROM_LOAD( "4.k2",   0x6000, 0x2000, 0x4f3695a1 )
 ROM_END
 
-ROM_START( repulse_rom )
+ROM_START( repulse )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "repulse.b5", 0x0000, 0x2000, 0xfb2b7c9d )
 	ROM_LOAD( "repulse.b6", 0x2000, 0x2000, 0x99129918 )
@@ -632,7 +632,7 @@ ROM_START( repulse_rom )
 	ROM_LOAD( "16.10h", 0x1b000, 0x2000, 0x7de5d39e ) /* tiles - plane 1 */
 	ROM_LOAD( "17.11h", 0x1d000, 0x2000, 0x0ba5f72c ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "r.1f",   0x0200, 0x0100, 0xb7f48b41 ) /* red */
 	ROM_LOAD( "g.1h",   0x0100, 0x0100, 0xacd7a69e ) /* green */
 	ROM_LOAD( "b.1j",   0x0000, 0x0100, 0x3ea35431 ) /* blue */
@@ -646,7 +646,7 @@ ROM_START( repulse_rom )
 	ROM_LOAD( "repulse.b4", 0x6000, 0x2000, 0x86b267f3 )
 ROM_END
 
-ROM_START( c99_rom )
+ROM_START( 99lstwar )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "99.4f",   0x0000, 0x2000, 0xe3cfc09f )
 	ROM_LOAD( "99.4h",   0x2000, 0x2000, 0xfd58c6e1 )
@@ -664,7 +664,7 @@ ROM_START( c99_rom )
 	ROM_LOAD( "16.10h", 0x1b000, 0x2000, 0x7de5d39e ) /* tiles - plane 1 */
 	ROM_LOAD( "17.11h", 0x1d000, 0x2000, 0x0ba5f72c ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "r.1f",   0x0200, 0x0100, 0xb7f48b41 ) /* red */
 	ROM_LOAD( "g.1h",   0x0100, 0x0100, 0xacd7a69e ) /* green */
 	ROM_LOAD( "b.1j",   0x0000, 0x0100, 0x3ea35431 ) /* blue */
@@ -678,7 +678,7 @@ ROM_START( c99_rom )
 	ROM_LOAD( "repulse.b4", 0x6000, 0x2000, 0x86b267f3 )
 ROM_END
 
-ROM_START( flashgal_rom )
+ROM_START( flashgal )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "15.4f",        0x0000, 0x2000, 0xcf5ad733 )
 	ROM_LOAD( "16.4h",        0x2000, 0x2000, 0x00c4851f )
@@ -697,7 +697,7 @@ ROM_START( flashgal_rom )
 	ROM_LOAD( "27.10h",       0x1b000, 0x2000, 0x8fbb49b5 ) /* tiles - plane 1 */
 	ROM_LOAD( "28.11h",       0x1d000, 0x2000, 0x26a8e5c3 ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "flashgal.prr", 0x0000, 0x0100, 0x02c4043f ) /* red */
 	ROM_LOAD( "flashgal.prg", 0x0100, 0x0100, 0x225938d1 ) /* green */
 	ROM_LOAD( "flashgal.prb", 0x0200, 0x0100, 0x1e0a1cd3 ) /* blue */
@@ -711,7 +711,7 @@ ROM_START( flashgal_rom )
 	ROM_LOAD( "14.2k",        0x6000, 0x2000, 0x552ca339 )
 ROM_END
 
-ROM_START( srdmissn_rom )
+ROM_START( srdmissn )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "5.t2",   0x0000, 0x4000, 0xa682b48c )
 	ROM_LOAD( "7.t3",   0x4000, 0x4000, 0x1719c58c )
@@ -728,7 +728,7 @@ ROM_START( srdmissn_rom )
 	ROM_LOAD( "18.10h", 0x1b000, 0x2000, 0x740eccd4 ) /* tiles - plane 0 */
 	ROM_LOAD( "16.11h", 0x1d000, 0x2000, 0xc1f4a5db ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "mr.1j",  0x0000, 0x0100, 0x110a436e ) /* red */
 	ROM_LOAD( "mg.1h",  0x0100, 0x0100, 0x0fbfd9f0 ) /* green */
 	ROM_LOAD( "mb.1f",  0x0200, 0x0100, 0xa342890c ) /* blue */
@@ -740,7 +740,7 @@ ROM_START( srdmissn_rom )
 	ROM_LOAD( "3.t8",   0x4000, 0x4000, 0x216be1e8 )
 ROM_END
 
-ROM_START( airwolf_rom )
+ROM_START( airwolf )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "b.2s",        0x0000, 0x8000, 0x8c993cce )
 
@@ -762,7 +762,7 @@ ROM_START( airwolf_rom )
 	ROM_LOAD( "10h_13.bin",  0x1b000, 0x2000, 0xcf0de5e9 ) /* tiles - plane 0 */
 	ROM_LOAD( "11h_12.bin",  0x1d000, 0x2000, 0x4050c048 ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "01j.bin",     0x0000, 0x0100, 0x6a94b2a3 ) /* red */
 	ROM_LOAD( "01h.bin",     0x0100, 0x0100, 0xec0923d3 ) /* green */
 	ROM_LOAD( "01f.bin",     0x0200, 0x0100, 0xade97052 ) /* blue */
@@ -773,7 +773,7 @@ ROM_START( airwolf_rom )
 	ROM_LOAD( "a.7s",        0x0000, 0x8000, 0xa3c7af5c )
 ROM_END
 
-ROM_START( skywolf_rom )
+ROM_START( skywolf )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "02s_03.bin",  0x0000, 0x4000, 0xa0891798 )
 	ROM_LOAD( "03s_04.bin",  0x4000, 0x4000, 0x5f515d46 )
@@ -790,7 +790,7 @@ ROM_START( skywolf_rom )
 	ROM_LOAD( "10h_13.bin",  0x1b000, 0x2000, 0xcf0de5e9 ) /* tiles - plane 0 */
 	ROM_LOAD( "11h_12.bin",  0x1d000, 0x2000, 0x4050c048 ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "01j.bin",     0x0000, 0x0100, 0x6a94b2a3 ) /* red */
 	ROM_LOAD( "01h.bin",     0x0100, 0x0100, 0xec0923d3 ) /* green */
 	ROM_LOAD( "01f.bin",     0x0200, 0x0100, 0xade97052 ) /* blue */
@@ -802,7 +802,7 @@ ROM_START( skywolf_rom )
 	ROM_LOAD( "08s_02.bin",  0x4000, 0x4000, 0x3d66bf26 )
 ROM_END
 
-ROM_START( skywolf2_rom )
+ROM_START( skywolf2 )
 	ROM_REGION( 0x10000 ) /* 64k for code */
 	ROM_LOAD( "z80_2.bin",   0x0000, 0x8000, 0x34db7bda )
 
@@ -818,7 +818,7 @@ ROM_START( skywolf2_rom )
 	ROM_LOAD( "10h_13.bin",  0x1b000, 0x2000, 0xcf0de5e9 ) /* tiles - plane 0 */
 	ROM_LOAD( "11h_12.bin",  0x1d000, 0x2000, 0x4050c048 ) /* tiles - plane 2 */
 
-	ROM_REGION( 0x340 ) /* PROMs */
+	ROM_REGIONX( 0x0340, REGION_PROMS )
 	ROM_LOAD( "01j.bin",     0x0000, 0x0100, 0x6a94b2a3 ) /* red */
 	ROM_LOAD( "01h.bin",     0x0100, 0x0100, 0xec0923d3 ) /* green */
 	ROM_LOAD( "01f.bin",     0x0200, 0x0100, 0xade97052 ) /* blue */
@@ -837,7 +837,7 @@ ROM_END
 
 ***************************************************************************/
 
-struct GameDriver gyrodine_driver =
+struct GameDriver driver_gyrodine =
 {
 	__FILE__,
 	0,
@@ -850,19 +850,19 @@ struct GameDriver gyrodine_driver =
 	&gyrodine_machine_driver,
 	0,
 
-	gyrodine_rom,
+	rom_gyrodine,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	gyrodine_input_ports,
+	input_ports_gyrodine,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver sonofphx_driver =
+struct GameDriver driver_sonofphx =
 {
 	__FILE__,
 	0,
@@ -875,22 +875,22 @@ struct GameDriver sonofphx_driver =
 	&sonofphx_machine_driver,
 	0,
 
-	sonofphx_rom,
+	rom_sonofphx,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver repulse_driver =
+struct GameDriver driver_repulse =
 {
 	__FILE__,
-	&sonofphx_driver,
+	&driver_sonofphx,
 	"repulse",
 	"Repulse",
 	"1985",
@@ -900,23 +900,23 @@ struct GameDriver repulse_driver =
 	&sonofphx_machine_driver,
 	0,
 
-	repulse_rom,
+	rom_repulse,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver c99_driver =
+struct GameDriver driver_99lstwar =
 {
 	__FILE__,
-	&sonofphx_driver,
-	"99",
+	&driver_sonofphx,
+	"99lstwar",
 	"'99 The Last War",
 	"1985",
 	"Proma",
@@ -925,19 +925,19 @@ struct GameDriver c99_driver =
 	&sonofphx_machine_driver,
 	0,
 
-	c99_rom,
+	rom_99lstwar,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver flashgal_driver =
+struct GameDriver driver_flashgal =
 {
 	__FILE__,
 	0,
@@ -950,19 +950,19 @@ struct GameDriver flashgal_driver =
 	&flashgal_machine_driver,
 	0,
 
-	flashgal_rom,
+	rom_flashgal,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	flashgal_input_ports,
+	input_ports_flashgal,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver srdmissn_driver =
+struct GameDriver driver_srdmissn =
 {
 	__FILE__,
 	0,
@@ -975,19 +975,19 @@ struct GameDriver srdmissn_driver =
 	&srdmissn_machine_driver,
 	0,
 
-	srdmissn_rom,
+	rom_srdmissn,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver airwolf_driver =
+struct GameDriver driver_airwolf =
 {
 	__FILE__,
 	0,
@@ -1000,22 +1000,22 @@ struct GameDriver airwolf_driver =
 	&srdmissn_machine_driver,
 	0,
 
-	airwolf_rom,
+	rom_airwolf,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver skywolf_driver =
+struct GameDriver driver_skywolf =
 {
 	__FILE__,
-	&airwolf_driver,
+	&driver_airwolf,
 	"skywolf",
 	"Sky Wolf (set 1)",
 	"1987",
@@ -1025,22 +1025,22 @@ struct GameDriver skywolf_driver =
 	&srdmissn_machine_driver,
 	0,
 
-	skywolf_rom,
+	rom_skywolf,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver skywolf2_driver =
+struct GameDriver driver_skywolf2 =
 {
 	__FILE__,
-	&airwolf_driver,
+	&driver_airwolf,
 	"skywolf2",
 	"Sky Wolf (set 2)",
 	"1987",
@@ -1050,14 +1050,14 @@ struct GameDriver skywolf2_driver =
 	&srdmissn_machine_driver,
 	0,
 
-	skywolf2_rom,
+	rom_skywolf2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_sonofphx,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
 };

@@ -93,7 +93,7 @@ int exerion_interrupt(void)
 	else return ignore_interrupt();
 }
 
-INPUT_PORTS_START( exerion_input_ports )
+INPUT_PORTS_START( exerion )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -290,7 +290,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( exerion_rom )
+ROM_START( exerion )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "exerion.07",   0x0000, 0x2000, 0x4c78d57d )
 	ROM_LOAD( "exerion.08",   0x2000, 0x2000, 0xdcadc1df )
@@ -306,7 +306,7 @@ ROM_START( exerion_rom )
 	ROM_LOAD( "exerion.11",   0x18000, 0x2000, 0xf0633a09 )	/* sprites */
 	ROM_LOAD( "exerion.10",   0x1a000, 0x2000, 0x80312de0 )
 
-	ROM_REGION(0x420)       /* color/lookup proms */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "exerion.e1",   0x0000, 0x020, 0x2befcc20 ) /* palette */
 	ROM_LOAD( "exerion.i8",   0x0020, 0x100, 0x31db0e08 ) /* fg char lookup table */
 	ROM_LOAD( "exerion.h10",  0x0120, 0x100, 0xcdd23f3e ) /* sprite lookup table */
@@ -317,7 +317,7 @@ ROM_START( exerion_rom )
 	ROM_LOAD( "exerion.05",   0x0000, 0x2000, 0x32f6bff5 )
 ROM_END
 
-ROM_START( exeriont_rom )
+ROM_START( exeriont )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "prom5.4p",     0x0000, 0x4000, 0x58b4dc1b )
 	ROM_LOAD( "prom6.4s",     0x4000, 0x2000, 0xfca18c2d )
@@ -332,7 +332,7 @@ ROM_START( exeriont_rom )
 	ROM_LOAD( "exerion.11",   0x18000, 0x2000, 0xf0633a09 )	/* sprites */
 	ROM_LOAD( "exerion.10",   0x1a000, 0x2000, 0x80312de0 )
 
-	ROM_REGION(0x420)       /* color/lookup proms */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "exerion.e1",   0x0000, 0x020, 0x2befcc20 ) /* palette */
 	ROM_LOAD( "exerion.i8",   0x0020, 0x100, 0x31db0e08 ) /* fg char lookup table */
 	ROM_LOAD( "exerion.h10",  0x0120, 0x100, 0xcdd23f3e ) /* sprite lookup table */
@@ -343,7 +343,7 @@ ROM_START( exeriont_rom )
 	ROM_LOAD( "exerion.05",   0x0000, 0x2000, 0x32f6bff5 )
 ROM_END
 
-ROM_START( exerionb_rom )
+ROM_START( exerionb )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "eb5.bin",      0x0000, 0x4000, 0xda175855 )
 	ROM_LOAD( "eb6.bin",      0x4000, 0x2000, 0x0dbe2eff )
@@ -358,7 +358,7 @@ ROM_START( exerionb_rom )
 	ROM_LOAD( "exerion.11",   0x18000, 0x2000, 0xf0633a09 )	/* sprites */
 	ROM_LOAD( "exerion.10",   0x1a000, 0x2000, 0x80312de0 )
 
-	ROM_REGION(0x420)       /* color/lookup proms */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "exerion.e1",   0x0000, 0x020, 0x2befcc20 ) /* palette */
 	ROM_LOAD( "exerion.i8",   0x0020, 0x100, 0x31db0e08 ) /* fg char lookup table */
 	ROM_LOAD( "exerion.h10",  0x0120, 0x100, 0xcdd23f3e ) /* sprite lookup table */
@@ -518,7 +518,7 @@ static void hisave(void)
 }
 
 
-struct GameDriver exerion_driver =
+struct GameDriver driver_exerion =
 {
 	__FILE__,
 	0,
@@ -527,71 +527,71 @@ struct GameDriver exerion_driver =
 	"1983",
 	"Jaleco",
 	"Brad Oliver\nJohn Butler\nGerald Vanderick (color info)",
-	GAME_WRONG_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	exerion_rom,
+	rom_exerion,
 	exerion_decode, 0,
 	0,
 	0,      /* sound_prom */
 
-	exerion_input_ports,
+	input_ports_exerion,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	hiload, hisave
 };
 
-struct GameDriver exeriont_driver =
+struct GameDriver driver_exeriont =
 {
 	__FILE__,
-	&exerion_driver,
+	&driver_exerion,
 	"exeriont",
 	"Exerion (Taito)",
 	"1983",
 	"Jaleco (Taito America license)",
 	"Brad Oliver\nJohn Butler\nGerald Vanderick (color info)",
-	GAME_WRONG_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	exeriont_rom,
+	rom_exeriont,
 	exerion_decode, 0,
 	0,
 	0,      /* sound_prom */
 
-	exerion_input_ports,
+	input_ports_exerion,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	hiload, hisave
 };
 
-struct GameDriver exerionb_driver =
+struct GameDriver driver_exerionb =
 {
 	__FILE__,
-	&exerion_driver,
+	&driver_exerion,
 	"exerionb",
 	"Exerion (bootleg)",
 	"1983",
 	"Jaleco",
 	"Brad Oliver\nJohn Butler\nGerald Vanderick (color info)",
-	GAME_WRONG_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	exerionb_rom,
+	rom_exerionb,
 	exerionb_decode, 0,
 	0,
 	0,      /* sound_prom */
 
-	exerion_input_ports,
+	input_ports_exerion,
 
-	PROM_MEMORY_REGION(2), 0, 0,
-	ORIENTATION_ROTATE_90,
+	0, 0, 0,
+	ORIENTATION_ROTATE_90 | GAME_WRONG_COLORS,
 
 	hiload, hisave
 };

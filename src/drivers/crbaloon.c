@@ -180,7 +180,7 @@ static struct IOWritePort writeport[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( crbaloon )
 	PORT_START
 	PORT_DIPNAME( 0x01, 0x01, "Test?" )
 	PORT_DIPSETTING(    0x01, "I/O Check?" )
@@ -324,7 +324,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( crbaloon_rom )
+ROM_START( crbaloon )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "cl01.bin",     0x0000, 0x0800, 0x9d4eef0b )
 	ROM_LOAD( "cl02.bin",     0x0800, 0x0800, 0x10f7a6f7 )
@@ -338,7 +338,7 @@ ROM_START( crbaloon_rom )
 	ROM_LOAD( "cl08.bin",     0x0800, 0x0800, 0xba898659 )
 ROM_END
 
-ROM_START( crbalon2_rom )
+ROM_START( crbalon2 )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "cl01.bin",     0x0000, 0x0800, 0x9d4eef0b )
 	ROM_LOAD( "crazybal.ep2", 0x0800, 0x0800, 0x87572086 )
@@ -402,7 +402,7 @@ static void hisave(void)
 
 
 
-struct GameDriver crbaloon_driver =
+struct GameDriver driver_crbaloon =
 {
 	__FILE__,
 	0,
@@ -415,12 +415,12 @@ struct GameDriver crbaloon_driver =
 	&machine_driver,
 	0,
 
-	crbaloon_rom,
+	rom_crbaloon,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_crbaloon,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
@@ -428,10 +428,10 @@ struct GameDriver crbaloon_driver =
 	hiload,hisave /* hsc 12/02/98 */
 };
 
-struct GameDriver crbalon2_driver =
+struct GameDriver driver_crbalon2 =
 {
 	__FILE__,
-	&crbaloon_driver,
+	&driver_crbaloon,
 	"crbalon2",
 	"Crazy Balloon (set 2)",
 	"1980",
@@ -441,12 +441,12 @@ struct GameDriver crbalon2_driver =
 	&machine_driver,
 	0,
 
-	crbalon2_rom,
+	rom_crbalon2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_crbaloon,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,

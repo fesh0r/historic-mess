@@ -116,7 +116,7 @@ static struct IOWritePort writeport[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( arabian )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
@@ -297,7 +297,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( arabian_rom )
+ROM_START( arabian )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic1rev2.87",       0x0000, 0x2000, 0x5e1c98b8 )
 	ROM_LOAD( "ic2rev2.88",       0x2000, 0x2000, 0x092f587e )
@@ -311,7 +311,7 @@ ROM_START( arabian_rom )
 	ROM_LOAD( "ic87.94",      0x6000, 0x2000, 0x82160b9a )	/* it at runtime - which is SLOW */
 ROM_END
 
-ROM_START( arabiana_rom )
+ROM_START( arabiana )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic1.87",       0x0000, 0x2000, 0x51e9a6b1 )
 	ROM_LOAD( "ic2.88",       0x2000, 0x2000, 0x1cdcc1ab )
@@ -363,7 +363,7 @@ static void arabian_hisave(void)
 
 
 
-struct GameDriver arabian_driver =
+struct GameDriver driver_arabian =
 {
 	__FILE__,
 	0,
@@ -372,45 +372,45 @@ struct GameDriver arabian_driver =
 	"1983",
 	"Sun Electronics",
 	"Jarek Burczynski (MAME driver)\nMarco Cassili",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	arabian_rom,
+	rom_arabian,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_arabian,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_IMPERFECT_COLORS,
 
 	arabian_hiload, arabian_hisave
 };
 
-struct GameDriver arabiana_driver =
+struct GameDriver driver_arabiana =
 {
 	__FILE__,
-	&arabian_driver,
+	&driver_arabian,
 	"arabiana",
 	"Arabian (Atari)",
 	"1983",
 	"[Sun Electronics] (Atari license)",
 	"Jarek Burczynski (MAME driver)\nMarco Cassili",
-	GAME_IMPERFECT_COLORS,
+	0,
 	&machine_driver,
 	0,
 
-	arabiana_rom,
+	rom_arabiana,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_arabian,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_IMPERFECT_COLORS,
 
 	arabian_hiload, arabian_hisave
 };

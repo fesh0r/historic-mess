@@ -113,7 +113,7 @@ static struct MemoryWriteAddress writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( cloud9 )
 	PORT_START	/* IN0 */
 	PORT_BIT ( 0x07, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE( 0x08, IP_ACTIVE_LOW )
@@ -260,7 +260,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( cloud9_rom )
+ROM_START( cloud9 )
 	ROM_REGION(0x14000)	/* 64k for code + extra VRAM space */
 	ROM_LOAD( "c9_6000.bin", 0x6000, 0x2000, 0xb5d95d98 )
 	ROM_LOAD( "c9_8000.bin", 0x8000, 0x2000, 0x49af8f22 )
@@ -315,7 +315,7 @@ static void hisave(void)
 
 ***************************************************************************/
 
-struct GameDriver cloud9_driver =
+struct GameDriver driver_cloud9 =
 {
 	__FILE__,
 	0,
@@ -328,12 +328,12 @@ struct GameDriver cloud9_driver =
 	&machine_driver,
 	0,
 
-	cloud9_rom,
+	rom_cloud9,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_cloud9,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

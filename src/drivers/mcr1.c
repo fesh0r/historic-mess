@@ -115,7 +115,7 @@ static struct MemoryWriteAddress writemem[] =
 static struct IOReadPort readport[] =
 {
 	{ 0x00, 0x04, mcr_port_04_dispatch_r },
-	{ 0x07, 0x07, mcr_sound_status_r },
+	{ 0x07, 0x07, ssio_status_r },
 	{ 0x10, 0x10, mcr_port_04_dispatch_r },
 	{ 0xf0, 0xf3, z80ctc_0_r },
 	{ -1 }
@@ -141,7 +141,7 @@ static struct IOWritePort writeport[] =
  *
  *************************************/
 
-INPUT_PORTS_START( solarfox_input_ports )
+INPUT_PORTS_START( solarfox )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -173,7 +173,7 @@ INPUT_PORTS_START( solarfox_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( kick_input_ports )
+INPUT_PORTS_START( kick )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -304,7 +304,7 @@ static void kick_init(void)
  *
  *************************************/
 
-ROM_START( solarfox_rom )
+ROM_START( solarfox )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "sfcpu.3b",     0x0000, 0x1000, 0x8c40f6eb )
 	ROM_LOAD( "sfcpu.4b",     0x1000, 0x1000, 0x4d47bd7e )
@@ -329,7 +329,7 @@ ROM_START( solarfox_rom )
 ROM_END
 
 
-ROM_START( kick_rom )
+ROM_START( kick )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1200a-v2.b3",  0x0000, 0x1000, 0x65924917 )
 	ROM_LOAD( "1300b-v2.b4",  0x1000, 0x1000, 0x27929f52 )
@@ -354,7 +354,7 @@ ROM_START( kick_rom )
 ROM_END
 
 
-ROM_START( kicka_rom )
+ROM_START( kicka )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "1200-a.b3",    0x0000, 0x1000, 0x22fa42ed )
 	ROM_LOAD( "1300-b.b4",    0x1000, 0x1000, 0xafaca819 )
@@ -386,7 +386,7 @@ ROM_END
  *
  *************************************/
 
-struct GameDriver solarfox_driver =
+struct GameDriver driver_solarfox =
 {
 	__FILE__,
 	0,
@@ -399,12 +399,12 @@ struct GameDriver solarfox_driver =
 	&machine_driver,
 	solarfox_init,
 
-	solarfox_rom,
+	rom_solarfox,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	solarfox_input_ports,
+	input_ports_solarfox,
 
 	0, 0, 0,
 	ORIENTATION_SWAP_XY,
@@ -413,7 +413,7 @@ struct GameDriver solarfox_driver =
 };
 
 
-struct GameDriver kick_driver =
+struct GameDriver driver_kick =
 {
 	__FILE__,
 	0,
@@ -426,12 +426,12 @@ struct GameDriver kick_driver =
 	&machine_driver,
 	kick_init,
 
-	kick_rom,
+	rom_kick,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	kick_input_ports,
+	input_ports_kick,
 
 	0, 0, 0,
 	ORIENTATION_SWAP_XY,
@@ -440,10 +440,10 @@ struct GameDriver kick_driver =
 };
 
 
-struct GameDriver kicka_driver =
+struct GameDriver driver_kicka =
 {
 	__FILE__,
-	&kick_driver,
+	&driver_kick,
 	"kicka",
 	"Kick (upright version)",
 	"1981",
@@ -453,12 +453,12 @@ struct GameDriver kicka_driver =
 	&machine_driver,
 	kick_init,
 
-	kicka_rom,
+	rom_kicka,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	kick_input_ports,
+	input_ports_kick,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,

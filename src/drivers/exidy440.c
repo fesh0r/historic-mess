@@ -258,7 +258,6 @@ void exidy440_sound_interrupt_clear(int offset, int data);
 /* video driver data & functions */
 extern UINT8 *spriteram;
 extern UINT8 *exidy440_imageram;
-extern UINT8 *exidy440_latched_x;
 extern UINT8 *exidy440_scanline;
 extern UINT8 exidy440_firq_vblank;
 extern UINT8 exidy440_firq_beam;
@@ -568,13 +567,13 @@ int showdown_pld_select2_r(int offset)
 
 static struct MemoryReadAddress readmem_cpu1[] =
 {
-	{ 0x0000, 0x1fff, MRA_RAM, &exidy440_imageram },
-	{ 0x2000, 0x209f, MRA_RAM, &spriteram },
+	{ 0x0000, 0x1fff, MRA_RAM },
+	{ 0x2000, 0x209f, MRA_RAM },
 	{ 0x20a0, 0x29ff, MRA_RAM },
 	{ 0x2a00, 0x2aff, exidy440_videoram_r },
 	{ 0x2b00, 0x2b00, exidy440_vertical_pos_r },
-	{ 0x2b01, 0x2b01, exidy440_horizontal_pos_r, &exidy440_latched_x },
-	{ 0x2b02, 0x2b02, MRA_RAM, &exidy440_scanline },
+	{ 0x2b01, 0x2b01, exidy440_horizontal_pos_r },
+	{ 0x2b02, 0x2b02, MRA_RAM },
 	{ 0x2b03, 0x2b03, input_r },
 	{ 0x2c00, 0x2dff, exidy440_paletteram_r },
 	{ 0x2e00, 0x2eff, io1_r },
@@ -587,8 +586,8 @@ static struct MemoryReadAddress readmem_cpu1[] =
 
 static struct MemoryWriteAddress writemem_cpu1[] =
 {
-	{ 0x0000, 0x1fff, MWA_RAM },
-	{ 0x2000, 0x209f, MWA_RAM },
+	{ 0x0000, 0x1fff, MWA_RAM, &exidy440_imageram },
+	{ 0x2000, 0x209f, MWA_RAM, &spriteram },
 	{ 0x20a0, 0x29ff, MWA_RAM },
 	{ 0x2a00, 0x2aff, exidy440_videoram_w },
 	{ 0x2b01, 0x2b01, exidy440_interrupt_clear_w },
@@ -612,8 +611,8 @@ static struct MemoryWriteAddress writemem_cpu1[] =
 
 static struct MemoryReadAddress readmem_cpu2[] =
 {
-	{ 0x8000, 0x8016, exidy440_m6844_r, &exidy440_m6844_data },
-	{ 0x8400, 0x8407, MRA_RAM, &exidy440_sound_volume },
+	{ 0x8000, 0x8016, exidy440_m6844_r },
+	{ 0x8400, 0x8407, MRA_RAM },
 	{ 0x8800, 0x8800, exidy440_sound_command_r },
 	{ 0x9800, 0x9800, MRA_NOP },
 	{ 0xa000, 0xbfff, MRA_RAM },
@@ -624,8 +623,8 @@ static struct MemoryReadAddress readmem_cpu2[] =
 
 static struct MemoryWriteAddress writemem_cpu2[] =
 {
-	{ 0x8000, 0x8016, exidy440_m6844_w },
-	{ 0x8400, 0x8407, exidy440_sound_volume_w },
+	{ 0x8000, 0x8016, exidy440_m6844_w, &exidy440_m6844_data },
+	{ 0x8400, 0x8407, exidy440_sound_volume_w, &exidy440_sound_volume },
 	{ 0x9400, 0x9403, MWA_RAM, &exidy440_sound_banks },
 	{ 0x9800, 0x9800, exidy440_sound_interrupt_clear },
 	{ 0xa000, 0xbfff, MWA_RAM },
@@ -661,7 +660,7 @@ static struct MemoryWriteAddress writemem_cpu2[] =
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
 
 
-INPUT_PORTS_START( crossbow_input_ports )
+INPUT_PORTS_START( crossbow )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -701,7 +700,7 @@ INPUT_PORTS_START( crossbow_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( cheyenne_input_ports )
+INPUT_PORTS_START( cheyenne )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -741,7 +740,7 @@ INPUT_PORTS_START( cheyenne_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( combat_input_ports )
+INPUT_PORTS_START( combat )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -781,7 +780,7 @@ INPUT_PORTS_START( combat_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( cracksht_input_ports )
+INPUT_PORTS_START( cracksht )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -821,7 +820,7 @@ INPUT_PORTS_START( cracksht_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( claypign_input_ports )
+INPUT_PORTS_START( claypign )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -857,7 +856,7 @@ INPUT_PORTS_START( claypign_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( chiller_input_ports )
+INPUT_PORTS_START( chiller )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -894,7 +893,7 @@ INPUT_PORTS_START( chiller_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( topsecex_input_ports )
+INPUT_PORTS_START( topsecex )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -941,7 +940,7 @@ INPUT_PORTS_START( topsecex_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( hitnmiss_input_ports )
+INPUT_PORTS_START( hitnmiss )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -981,7 +980,7 @@ INPUT_PORTS_START( hitnmiss_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( whodunit_input_ports )
+INPUT_PORTS_START( whodunit )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -1018,7 +1017,7 @@ INPUT_PORTS_START( whodunit_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( showdown_input_ports )
+INPUT_PORTS_START( showdown )
 	PORT_START				/* player inputs and logic board dips */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -1206,7 +1205,7 @@ static void showdown_init(void)
  *
  *************************************/
 
-ROM_START( crossbow_rom )
+ROM_START( crossbow )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "xbl-2.1a",   0x08000, 0x2000, 0xbd53ac46 )
 	ROM_LOAD( "xbl-2.3a",   0x0a000, 0x2000, 0x703e1376 )
@@ -1263,7 +1262,7 @@ ROM_START( crossbow_rom )
 ROM_END
 
 
-ROM_START( cheyenne_rom )
+ROM_START( cheyenne )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "cyl-1.1a",   0x08000, 0x2000, 0x504c3fa6 )
 	ROM_LOAD( "cyl-1.3a",   0x0a000, 0x2000, 0x09b7903b )
@@ -1317,7 +1316,7 @@ ROM_START( cheyenne_rom )
 ROM_END
 
 
-ROM_START( combat_rom )
+ROM_START( combat )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "1a",   0x08000, 0x2000, 0x159a573b )
 	ROM_LOAD( "3a",   0x0a000, 0x2000, 0x59ae51a7 )
@@ -1365,7 +1364,7 @@ ROM_START( combat_rom )
 ROM_END
 
 
-ROM_START( cracksht_rom )
+ROM_START( cracksht )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "csl2.1a",   0x08000, 0x2000, 0x16fd0171 )
 	ROM_LOAD( "csl2.3a",   0x0a000, 0x2000, 0x906f3209 )
@@ -1411,7 +1410,7 @@ ROM_START( cracksht_rom )
 ROM_END
 
 
-ROM_START( claypign_rom )
+ROM_START( claypign )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "claypige.1a",   0x08000, 0x2000, 0x446d7004 )
 	ROM_LOAD( "claypige.3a",   0x0a000, 0x2000, 0xdf39701b )
@@ -1444,7 +1443,7 @@ ROM_START( claypign_rom )
 ROM_END
 
 
-ROM_START( chiller_rom )
+ROM_START( chiller )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "chl3.1a",   0x08000, 0x2000, 0x996ad02e )
 	ROM_LOAD( "chl3.3a",   0x0a000, 0x2000, 0x17e6f904 )
@@ -1497,7 +1496,7 @@ ROM_START( chiller_rom )
 ROM_END
 
 
-ROM_START( topsecex_rom )
+ROM_START( topsecex )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "tsl1.a1",   0x08000, 0x2000, 0x30ff2142 )
 	ROM_LOAD( "tsl1.a3",   0x0a000, 0x2000, 0x9295e5b7 )
@@ -1557,7 +1556,7 @@ ROM_START( topsecex_rom )
 ROM_END
 
 
-ROM_START( hitnmiss_rom )
+ROM_START( hitnmiss )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "hml3.a1",   0x08000, 0x2000, 0xd79ae18e )
 	ROM_LOAD( "hml3.a3",   0x0a000, 0x2000, 0x61baf38b )
@@ -1604,7 +1603,7 @@ ROM_START( hitnmiss_rom )
 ROM_END
 
 
-ROM_START( hitnmis2_rom )
+ROM_START( hitnmis2 )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "hml2.a1",   0x08000, 0x2000, 0x322f7e83 )
 	ROM_LOAD( "hml2.a3",   0x0a000, 0x2000, 0x0e12a721 )
@@ -1652,7 +1651,7 @@ ROM_START( hitnmis2_rom )
 ROM_END
 
 
-ROM_START( whodunit_rom )
+ROM_START( whodunit )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "wdl8.1a",   0x08000, 0x2000, 0x50658904 )
 	ROM_LOAD( "wdl8.3a",   0x0a000, 0x2000, 0x5d1530f8 )
@@ -1710,7 +1709,7 @@ ROM_START( whodunit_rom )
 ROM_END
 
 
-ROM_START( showdown_rom )
+ROM_START( showdown )
 	ROM_REGION(0x50000)     /* 64k for code for the first CPU, plus lots of banked ROMs */
 	ROM_LOAD( "showda1.bin",   0x08000, 0x2000, 0xe4031507 )
 	ROM_LOAD( "showd3a.bin",   0x0a000, 0x2000, 0xe7de171e )
@@ -1772,7 +1771,7 @@ ROM_END
  *************************************/
 
 #define EXIDY440_DRIVER(name,year,fullname) \
-	struct GameDriver name##_driver =			\
+	struct GameDriver driver_##name =			\
 	{											\
 		__FILE__,								\
 		NULL,									\
@@ -1785,12 +1784,12 @@ ROM_END
 		&machine_driver,						\
 		name##_init,							\
 												\
-		name##_rom,								\
+		rom_##name,								\
 		0, 0,									\
 		0,										\
 		0,	/* sound_prom */					\
 												\
-		name##_input_ports,						\
+		input_ports_##name,						\
 												\
 		0,0,0,									\
 		ORIENTATION_DEFAULT,					\
@@ -1799,10 +1798,10 @@ ROM_END
 	};
 
 #define EXIDY440_CLONE_DRIVER(name,year,fullname,cloneof) \
-	struct GameDriver name##_driver =			\
+	struct GameDriver driver_##name =			\
 	{											\
 		__FILE__,								\
-		&cloneof##_driver,						\
+		&driver_##cloneof,						\
 		#name,									\
 		fullname,								\
 		#year,									\
@@ -1812,12 +1811,12 @@ ROM_END
 		&machine_driver,						\
 		cloneof##_init,							\
 												\
-		name##_rom,								\
+		rom_##name,								\
 		0, 0,									\
 		0,										\
 		0,	/* sound_prom */					\
 												\
-		cloneof##_input_ports,					\
+		input_ports_##cloneof,					\
 												\
 		0,0,0,									\
 		ORIENTATION_DEFAULT,					\

@@ -4,13 +4,13 @@
   Some code derived from Ed Swartz's V9T9.
 
   References :
-  The TI-99/4A Tech Pages <http://www.nouspikel.com/ti99/titech.htm>.  Great site.
+  * The TI-99/4A Tech Pages <http://www.nouspikel.com/ti99/titech.htm>.  Great site.
 
 Emulated :
-  All TI99 basic console hardware, except tape input, and a few tricks in TMS9901 emulation.
-  Cartidge with ROM (either non-paged or paged) and GROM (no GRAM or extra GPL ports).
-  Speech Synthesizer, with standard speech ROM (no speech ROM expansion).
-  Disk emulation (incomplete, but seems to work OK).
+  * All TI99 basic console hardware, except tape input, and a few tricks in TMS9901 emulation.
+  * Cartidge with ROM (either non-paged or paged) and GROM (no GRAM or extra GPL ports).
+  * Speech Synthesizer, with standard speech ROM (no speech ROM expansion).
+  * Disk emulation (incomplete, but seems to work OK).
 
   Compatibility looks quite good.
 */
@@ -20,9 +20,6 @@ Emulated :
 #include "mess/vidhrdw/tms9928a.h"
 #include <math.h>
 
-extern WD179X *wd[];
-
-
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -30,49 +27,22 @@ extern WD179X *wd[];
 #define FALSE 0
 #endif
 
+extern WD179X *wd[];
+
 static void tms9901_set_int2(int state);
+static void tms9901_init(void);
+static void tms9901_cleanup(void);
+
+
 
 /*================================================================
   General purpose code :
   initialization, cart loading, etc.
 ================================================================*/
 
-static char *cartidge_pages[2];
+static char *cartidge_pages[2] = {NULL, NULL};
 static int cartidge_paged;
 static int current_page;
-
-void ti99_init_machine(void)
-{
-  int i;
-
-  /* callback for the TMS9901 to be notified of changes to the TMS9928A INT* line
-     (connected to the TMS9901 INT2* line) */
-  TMS9928A_int_callback(tms9901_set_int2);
-
-  wd179x_init(1); /* initialize the floppy disk controller */
-  /* we set the thing to single density by hand */
-  for (i=0; i<2; i++)
-  {
-    wd179x_set_geometry(i, 40, 1, 9, 256, 0, 0);
-    wd[i]->density = DEN_FM_LO;
-  }
-
-  cartidge_pages[0] = NULL;
-  cartidge_pages[1] = NULL;
-
-  cartidge_paged = FALSE;
-}
-
-void ti99_stop_machine(void)
-{
-  if (cartidge_pages[0])
-     free(cartidge_pages[0]);
-
-  if (cartidge_pages[1])
-     free(cartidge_pages[1]);
-
-   wd179x_stop_drive();
-}
 
 /*
   Load ROM.  All files are in raw binary format.
@@ -84,9 +54,25 @@ int ti99_load_rom (void)
 {
   FILE *cartfile;
 
+  cartidge_paged = FALSE;
+
+  if (cartidge_pages[0])
+  {
+    free(cartidge_pages[0]);
+    cartidge_pages[0] = NULL;
+  }
+
+  if (cartidge_pages[1])
+  {
+    free(cartidge_pages[1]);
+    cartidge_pages[1] = NULL;
+  }
+
+  cpu_setbank(1, ROM + 0x6000);
+
   if (strlen(rom_name[0]))
   {
-    cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0);
+    cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0);
     if (cartfile == NULL)
     {
       if (errorlog)
@@ -100,7 +86,7 @@ int ti99_load_rom (void)
 
   if (strlen(rom_name[1]))
   {
-    cartfile = osd_fopen (Machine->gamedrv->name, rom_name[1], OSD_FILETYPE_ROM_CART, 0);
+    cartfile = osd_fopen (Machine->gamedrv->name, rom_name[1], OSD_FILETYPE_IMAGE_R, 0);
     if (cartfile == NULL)
     {
       if (errorlog)
@@ -119,8 +105,9 @@ int ti99_load_rom (void)
     cartidge_pages[1] = malloc(0x2000);
     current_page = 0;
     memcpy(cartidge_pages[0], ROM + 0x6000, 0x2000); /* save first page */
+    cpu_setbank(1, cartidge_pages[current_page]);
 
-    cartfile = osd_fopen (Machine->gamedrv->name, rom_name[2], OSD_FILETYPE_ROM_CART, 0);
+    cartfile = osd_fopen (Machine->gamedrv->name, rom_name[2], OSD_FILETYPE_IMAGE_R, 0);
     if (cartfile == NULL)
     {
       if (errorlog)
@@ -134,6 +121,46 @@ int ti99_load_rom (void)
 
   return 0;
 }
+
+/*
+  ti99_init_machine() ; launched AFTER ti99_load_rom...
+*/
+void ti99_init_machine(void)
+{
+  int i;
+
+  /* callback for the TMS9901 to be notified of changes to the TMS9928A INT* line
+     (connected to the TMS9901 INT2* line) */
+  TMS9928A_int_callback(tms9901_set_int2);
+
+  wd179x_init(1); /* initialize the floppy disk controller */
+  /* we set the thing to single density by hand */
+  for (i=0; i<2; i++)
+  {
+    wd179x_set_geometry(i, 40, 1, 9, 256, 0, 0);
+    wd[i]->density = DEN_FM_LO;
+  }
+
+  tms9901_init();
+}
+
+void ti99_stop_machine(void)
+{
+  if (cartidge_pages[0])
+  {
+    free(cartidge_pages[0]);
+    cartidge_pages[0] = NULL;
+  }
+
+  if (cartidge_pages[1])
+  {
+    free(cartidge_pages[1]);
+    cartidge_pages[1] = NULL;
+  }
+
+   wd179x_stop_drive();
+}
+
 
 /*
   ROM identification : currently does nothing.
@@ -191,10 +218,11 @@ int ti99_vblank_interrupt(void)
       at even address.
 
   As a consequence, I could not implement the 4-wait-state delay properly, and access to odd
-  address in the memory mapped registers area are not emulated properly.
+  address in the memory mapped registers area are not emulated properly either.
 
-  Fix : create 16-bit wide handlers (like cpu_readmen_24 or cpu_readmen_16lew).  I'll do this when
-  I have enough time.
+  Fix : create 16-bit wide handlers (like cpu_readmen_24 or cpu_readmen_16lew).  I asked Nicola
+  to add these in .36b9, but I have not checked if he did yet, and I'll have to update all drivers,
+  which will take some time.
 
 ================================================================*/
 
@@ -211,7 +239,8 @@ void ti99_wb_cartmem(int offset, int data)
     { /* if page number changed */
       current_page = new_page;
 
-      memcpy(ROM + 0x6000, cartidge_pages[current_page], 0x2000);
+      cpu_setbank(1, cartidge_pages[current_page]);
+      //memcpy(ROM + 0x6000, cartidge_pages[current_page], 0x2000);
     }
   }
 }
@@ -410,13 +439,10 @@ void ti99_wb_wgpl(int offset, int data)
       gpl_addr = ((gpl_addr & 0xFF) << 8) | (data & 0xFF);
     }
     else
-    {
-
-	  /* write GPL byte
-      if ((gpl_addr >= gram_start) && (gpl_addr <= gram_end))
-        gplseg[gpl_addr + ((long) page << 16)] = value;
-       increment gpl_addr (GPL wraps in 8k segments!) : */
-
+    { /* write GPL byte */
+      /*if ((gpl_addr >= gram_start) && (gpl_addr <= gram_end))
+        gplseg[gpl_addr + ((long) page << 16)] = value;*/
+      /* increment gpl_addr (GPL wraps in 8k segments!) : */
       gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
     }
   }
@@ -470,7 +496,7 @@ nota :
 */
 
 /* Masks for the three interrupts used on the TI99. */
-#define M_INT1 1    /* external interrupt (used by RS232 controler, for instance) */
+#define M_INT1 1    /* external interrupt (used by RS232 controller, for instance) */
 #define M_INT2 2    /* VDP interrupt */
 #define M_INT3 4    /* timer interrupt */
 
@@ -497,7 +523,7 @@ static int mode9901 = 0;
 /* MESS timer, used to emulate the decrementer register */
 static void *tms9901_timer = NULL;
 
-/* clock interval, loaded in decrementer when it reaches 0. 0 means decrementer off */
+/* clock interval, loaded in decrementer when it reaches 0.  0 means decrementer off */
 static int clockinvl = 0;
 
 /* when we go to timer mode, the decrementer is copied there to allow to read it reliably */
@@ -507,6 +533,32 @@ static int latchedtimer;
 when we quit timer mode (??) */
 static int clockinvlchanged;
 
+static void tms9901_field_interrupts(void);
+static void reset_tms9901_timer(void);
+
+static void tms9901_init(void)
+{
+  int_state = 0;
+  timer_int_pending = 0;
+  enabled_ints = 0;
+
+  tms9901_field_interrupts();
+
+  mode9901 = 0;
+
+  clockinvl = 0;
+  reset_tms9901_timer();
+}
+
+
+static void tms9901_cleanup(void)
+{
+  if (tms9901_timer)
+  {
+    timer_remove(tms9901_timer);
+    tms9901_timer = NULL;
+  }
+}
 
 /*
   should be called after any change to int_state or enabled_ints.
@@ -534,11 +586,10 @@ static void tms9901_field_interrupts(void)
 
     /* find which interrupt tripped us :
        we simply look for the first bit set to 1 in current_ints... */
-    /*int current_ints2 = current_ints;
-    level = 1;
-    while (! (current_ints2 & 1))
+    /*level = 1;
+    while (! (current_ints & 1))
     {
-      current_ints2 >>= 1;  // try next bit
+      current_ints >>= 1;  // try next bit
       level++;
     }*/
 
@@ -1161,5 +1212,8 @@ void ti99_DSKside(int offset, int data)
 
   wd179x_select_drive(DSKnum, DSKside, ti99_fdc_callback, floppy_name[DSKnum]);
 }
+
+
+
 
 

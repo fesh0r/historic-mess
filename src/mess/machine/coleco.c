@@ -29,7 +29,7 @@ int coleco_id_rom (const char *name, const char *gamename)
 
    	fprintf(errorlog,"---------coleco_id_rom-----\n");
      	fprintf(errorlog,"Gamename is %s \n",gamename);
-      fprintf(errorlog,"filetype is %d  \n",OSD_FILETYPE_ROM_CART);
+      fprintf(errorlog,"filetype is %d  \n",OSD_FILETYPE_IMAGE_R);
 
    }
 
@@ -37,7 +37,7 @@ int coleco_id_rom (const char *name, const char *gamename)
 	if (strlen(gamename)==0) return 1;
 
 
-	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_ROM_CART, 0))) return 0;
+	if (!(romfile = osd_fopen (name, gamename, OSD_FILETYPE_IMAGE_R, 0))) return 0;
 
 	retval = 0;
 	/* Verify the file is in Colecovision format */
@@ -59,7 +59,7 @@ int coleco_load_rom (void)
    {
 
    	fprintf(errorlog,"---------coleco_load_rom-----\n");
-      fprintf(errorlog,"filetype is %d  \n",OSD_FILETYPE_ROM_CART);
+      fprintf(errorlog,"filetype is %d  \n",OSD_FILETYPE_IMAGE_R);
       fprintf(errorlog,"Machine->game->name is %s  \n",Machine->gamedrv->name);
       fprintf(errorlog,"romname[0] is %s  \n",rom_name[0]);
    }
@@ -70,10 +70,10 @@ int coleco_load_rom (void)
 	{
 		if (errorlog) fprintf(errorlog,"Coleco - warning: no cartridge specified!\n");
 	}
-	else if (!(cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0)))
+	else if (!(cartfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0)))
 	{
 		/* try the parent directory */
-		if(!(cartfile = osd_fopen (Machine->gamedrv->clone_of->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0)))
+		if(!(cartfile = osd_fopen (Machine->gamedrv->clone_of->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0)))
 		{
 			if (errorlog)
 				fprintf(errorlog,"Coleco - Unable to locate cartridge: %s\n",rom_name[0]);

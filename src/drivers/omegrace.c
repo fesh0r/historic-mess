@@ -288,7 +288,7 @@ static struct MemoryReadAddress readmem[] =
 	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x4bff, MRA_RAM },
 	{ 0x5c00, 0x5cff, MRA_RAM }, /* NVRAM */
-	{ 0x8000, 0x8fff, MRA_RAM, &vectorram, &vectorram_size },
+	{ 0x8000, 0x8fff, MRA_RAM },
 	{ 0x9000, 0x9fff, MRA_ROM }, /* vector rom */
 	{ -1 }	/* end of table */
 
@@ -300,7 +300,7 @@ static struct MemoryWriteAddress writemem[] =
 	{ 0x0000, 0x3fff, MWA_ROM }, /* Omega Race tries to write there! */
 	{ 0x4000, 0x4bff, MWA_RAM },
 	{ 0x5c00, 0x5cff, MWA_RAM }, /* NVRAM */
-	{ 0x8000, 0x8fff, MWA_RAM }, /* vector ram */
+	{ 0x8000, 0x8fff, MWA_RAM, &vectorram, &vectorram_size }, /* vector ram */
 	{ 0x9000, 0x9fff, MWA_ROM }, /* vector rom */
 	{ -1 }	/* end of table */
 };
@@ -358,7 +358,7 @@ static struct IOWritePort sound_writeport[] =
 	{ -1 }  /* end of table */
 };
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( omegrace )
 	PORT_START /* SW0 */
 	PORT_DIPNAME( 0x03, 0x03, "1st Bonus Life" )
 	PORT_DIPSETTING (   0x00, "40k" )
@@ -437,27 +437,6 @@ INPUT_PORTS_END
 
 
 
-static struct GfxLayout fakelayout =
-{
-        1,1,
-        0,
-        1,
-        { 0 },
-        { 0 },
-        { 0 },
-        0
-};
-
-static struct GfxDecodeInfo gfxdecodeinfo[] =
-{
-        { 0, 0,      &fakelayout,     0, 256 },
-        { -1 } /* end of array */
-};
-
-static unsigned char color_prom[] = { VEC_PAL_BW };
-
-
-
 static struct AY8910interface ay8910_interface =
 {
 	2,	/* 2 chips */
@@ -500,9 +479,9 @@ static struct MachineDriver machine_driver =
 
 	/* video hardware */
 	400, 300, { 0, 1020, -10, 1010 },
-	gfxdecodeinfo,
+	0,
 	256,256,
-	avg_init_colors,
+	avg_init_palette_white,
 
 	VIDEO_TYPE_VECTOR,
 	0,
@@ -527,7 +506,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( omegrace_rom )
+ROM_START( omegrace )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "omega.m7",     0x0000, 0x1000, 0x0424d46e )
 	ROM_LOAD( "omega.l7",     0x1000, 0x1000, 0xedcd7a7d )
@@ -570,7 +549,7 @@ static void hisave(void)
 	}
 }
 
-struct GameDriver omegrace_driver =
+struct GameDriver driver_omegrace =
 {
 	__FILE__,
 	0,
@@ -583,14 +562,14 @@ struct GameDriver omegrace_driver =
 	&machine_driver,
 	0,
 
-	omegrace_rom,
+	rom_omegrace,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_omegrace,
 
-	color_prom, 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	hiload, hisave

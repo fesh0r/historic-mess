@@ -52,6 +52,14 @@ static unsigned char palette[] = {
 	0xff,0x80,0x00, /* ORANGE */
 };
 
+/* Initialise the palette */
+static void init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+
+}
+
+
 /* Dragon keyboard
 
        PB0 PB1 PB2 PB3 PB4 PB5 PB6 PB7
@@ -63,7 +71,7 @@ static unsigned char palette[] = {
   PA1: 8   9   :   ;   ,   -   .   /
   PA0: 0   1   2   3   4   5   6   7
  */
-INPUT_PORTS_START( dragon_input_ports )
+INPUT_PORTS_START( dragon )
 	PORT_START /* KEY ROW 0 */
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "0   ", KEYCODE_0, IP_JOY_NONE)
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "1  !", KEYCODE_1, IP_JOY_NONE)
@@ -153,7 +161,7 @@ INPUT_PORTS_END
   PA1: H   I   J   K   L   M   N   O
   PA0: @   A   B   C   D   E   F   G
  */
-INPUT_PORTS_START( coco_input_ports )
+INPUT_PORTS_START( coco )
 	PORT_START /* KEY ROW 0 */
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "@", KEYCODE_ASTERISK, IP_JOY_NONE)
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "A", KEYCODE_A, IP_JOY_NONE)
@@ -264,7 +272,7 @@ static struct MachineDriver d32_machine_driver =
 	0,							/* graphics decode info */
 	sizeof(palette) / sizeof(palette[0]) / 3,
 	0,
-	0,											/* convert color prom */
+	init_palette,								/* initialise palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -308,7 +316,7 @@ static struct MachineDriver coco_machine_driver =
 	0,							/* graphics decode info */
 	sizeof(palette) / sizeof(palette[0]) / 3,
 	0,
-	0,											/* convert color prom */
+	init_palette,								/* initialise palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -333,7 +341,7 @@ static struct MachineDriver coco_machine_driver =
 
 ***************************************************************************/
 
-ROM_START(d32_rom)
+ROM_START(d32)
 	ROM_REGION(0x10000)
 	ROM_LOAD("d32.rom",  0x8000, 0x4000, 0xe3879310)
 ROM_END
@@ -347,13 +355,14 @@ struct GameDriver dragon32_driver =
 	"1982",
 	"Dragon Data Ltd",
 	"Mathis Rosenhauer",
-	GAME_COMPUTER,
+	0,
     &d32_machine_driver,
 	0,
 
-	d32_rom,				/* rom module */
+	rom_d32,				/* rom module */
 	dragon_rom_load,			/* load rom_file images */
 	0,				/* identify rom images */
+	0, 						/* default file extensions */
 	1,						/* number of ROM slots */
 	0,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -363,19 +372,19 @@ struct GameDriver dragon32_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	dragon_input_ports,
+	input_ports_dragon,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
+	0,						/* color palette */
 	0, 		                /* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(coco_rom)
+ROM_START(coco)
 	ROM_REGION(0x10000)
 	ROM_LOAD("coco.rom",  0x8000, 0x4000, 0x2ea0fb7f)
 ROM_END
@@ -389,13 +398,14 @@ struct GameDriver coco_driver =
 	"1982",
 	"Radio Shack",
 	"Mathis Rosenhauer",
-	GAME_COMPUTER,
+	0,
     &coco_machine_driver,
 	0,
 
-	coco_rom,				/* rom module */
+	rom_coco,				/* rom module */
 	dragon_rom_load,			/* load rom_file images */
 	0,				/* identify rom images */
+	0,						/* default file extensions */
 	1,						/* number of ROM slots */
 	0,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -405,13 +415,13 @@ struct GameDriver coco_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	coco_input_ports,
+	input_ports_coco,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
+	0,						/* color palette */
 	0,              		/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,	/* flags */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */

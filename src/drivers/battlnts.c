@@ -22,7 +22,7 @@ void battlnts_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 static int battlnts_interrupt( void )
 {
 	if (K007342_is_INT_enabled())
-        return M6309_INT_IRQ;
+        return HD6309_INT_IRQ;
     else
         return ignore_interrupt();
 }
@@ -108,7 +108,7 @@ static struct MemoryWriteAddress battlnts_writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( battlnts_input_ports )
+INPUT_PORTS_START( battlnts )
 	PORT_START	/* DSW #1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
@@ -205,7 +205,7 @@ INPUT_PORTS_START( battlnts_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( thehustj_input_ports )
+INPUT_PORTS_START( thehustj )
 	PORT_START	/* DSW #1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
@@ -243,12 +243,11 @@ INPUT_PORTS_START( thehustj_input_ports )
 //	PORT_DIPSETTING(    0x00, "Invalid" )
 
 	PORT_START	/* DSW #2 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x03, 0x02, "Balls" )
+	PORT_DIPSETTING(    0x03, "1" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x01, "3" )
+	PORT_DIPSETTING(    0x00, "6" )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Cocktail ) )
@@ -344,7 +343,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct YM3812interface ym3812_interface =
 {
 	2,				/* 2 chips */
-	3579545,		/* 3.57945 MHz */
+	3000000, 		/* ? */
 	{ 50, 50 },
 	{ 0, 0 },
 };
@@ -354,7 +353,7 @@ static struct MachineDriver machine_driver =
 	/* basic machine hardware */
 	{
 		{
-			CPU_M6309,
+			CPU_HD6309,
 			3000000,		/* ? */
 			0,
 			battlnts_readmem,battlnts_writemem,0,0,
@@ -401,7 +400,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( battlnts_rom )
+ROM_START( battlnts )
 	ROM_REGION( 0x20000 ) /* code + banked roms */
 	ROM_LOAD( "g02.7e",     0x08000, 0x08000, 0xdbd8e17e )	/* fixed ROM */
 	ROM_LOAD( "g03.8e",     0x10000, 0x10000, 0x7bd44fef )	/* banked ROM */
@@ -414,7 +413,7 @@ ROM_START( battlnts_rom )
 	ROM_LOAD( "777c01.bin", 0x00000, 0x08000, 0xc21206e9 )
 ROM_END
 
-ROM_START( battlntj_rom )
+ROM_START( battlntj )
 	ROM_REGION( 0x20000 ) /* code + banked roms */
 	ROM_LOAD( "777e02.bin", 0x08000, 0x08000, 0xd631cfcb )	/* fixed ROM */
 	ROM_LOAD( "777e03.bin", 0x10000, 0x10000, 0x5ef1f4ef )	/* banked ROM */
@@ -427,7 +426,7 @@ ROM_START( battlntj_rom )
 	ROM_LOAD( "777c01.bin", 0x00000, 0x08000, 0xc21206e9 )
 ROM_END
 
-ROM_START( thehustl_rom )
+ROM_START( thehustl )
 	ROM_REGION( 0x20000 ) /* code + banked roms */
 	ROM_LOAD( "765-m02.7e",     0x08000, 0x08000, 0x934807b9 )	/* fixed ROM */
 	ROM_LOAD( "765-j03.8e",     0x10000, 0x10000, 0xa13fd751 )	/* banked ROM */
@@ -440,7 +439,7 @@ ROM_START( thehustl_rom )
 	ROM_LOAD( "765-j01.10a", 	0x00000, 0x08000, 0x77ae753e )
 ROM_END
 
-ROM_START( thehustj_rom )
+ROM_START( thehustj )
 	ROM_REGION( 0x20000 ) /* code + banked roms */
 	ROM_LOAD( "765-j02.7e",     0x08000, 0x08000, 0x2ac14c75 )	/* fixed ROM */
 	ROM_LOAD( "765-j03.8e",     0x10000, 0x10000, 0xa13fd751 )	/* banked ROM */
@@ -459,7 +458,7 @@ ROM_END
 
 ***************************************************************************/
 
-struct GameDriver battlnts_driver =
+struct GameDriver driver_battlnts =
 {
 	__FILE__,
 	0,
@@ -472,22 +471,22 @@ struct GameDriver battlnts_driver =
 	&machine_driver,
 	0,
 
-	battlnts_rom,
+	rom_battlnts,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	battlnts_input_ports,
+	input_ports_battlnts,
 
 	0, 0, 0,
     ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver battlntj_driver =
+struct GameDriver driver_battlntj =
 {
 	__FILE__,
-	&battlnts_driver,
+	&driver_battlnts,
 	"battlntj",
 	"Battlantis (Japan)",
 	"1987",
@@ -497,19 +496,19 @@ struct GameDriver battlntj_driver =
 	&machine_driver,
 	0,
 
-	battlntj_rom,
+	rom_battlntj,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	battlnts_input_ports,
+	input_ports_battlnts,
 
 	0, 0, 0,
     ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver thehustl_driver =
+struct GameDriver driver_thehustl =
 {
 	__FILE__,
 	0,
@@ -522,22 +521,22 @@ struct GameDriver thehustl_driver =
 	&machine_driver,
 	0,
 
-	thehustl_rom,
+	rom_thehustl,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	thehustj_input_ports,
+	input_ports_thehustj,
 
 	0, 0, 0,
     ORIENTATION_ROTATE_90,
 	0, 0
 };
 
-struct GameDriver thehustj_driver =
+struct GameDriver driver_thehustj =
 {
 	__FILE__,
-	&thehustl_driver,
+	&driver_thehustl,
 	"thehustj",
 	"The Hustler (Japan version J)",
 	"1987",
@@ -547,12 +546,12 @@ struct GameDriver thehustj_driver =
 	&machine_driver,
 	0,
 
-	thehustj_rom,
+	rom_thehustj,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	thehustj_input_ports,
+	input_ports_thehustj,
 
 	0, 0, 0,
     ORIENTATION_ROTATE_90,

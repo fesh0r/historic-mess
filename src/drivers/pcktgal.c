@@ -127,7 +127,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( pcktgal )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -378,7 +378,7 @@ static struct MachineDriver bootleg_machine_driver =
 
 /***************************************************************************/
 
-ROM_START( pcktgal_rom )
+ROM_START( pcktgal )
     ROM_REGION(0x14000)     /* 64k for code + 16k for banks */
     ROM_LOAD( "eb04.rom",     0x10000, 0x4000, 0x8215d60d )
 	ROM_CONTINUE(             0x04000, 0xc000)
@@ -394,12 +394,12 @@ ROM_START( pcktgal_rom )
 	ROM_LOAD( "eb03.rom",     0x10000, 0x8000, 0xcb029b02 )
 	ROM_CONTINUE(             0x08000, 0x8000)
 
-	ROM_REGION_DISPOSE(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "eb05.rom",   0x0000, 0x0200, 0x3b6198cb ) /* 82s147.084 */
 	ROM_LOAD( "eb06.rom",   0x0200, 0x0200, 0x1fbd4b59 ) /* 82s131.101 */
 ROM_END
 
-ROM_START( pcktgalb_rom )
+ROM_START( pcktgalb )
     ROM_REGION(0x14000)     /* 64k for code + 16k for banks */
     ROM_LOAD( "sexybill.001", 0x10000, 0x4000, 0x4acb3e84 )
 	ROM_CONTINUE(             0x04000, 0xc000)
@@ -416,12 +416,12 @@ ROM_START( pcktgalb_rom )
 	ROM_LOAD( "eb03.rom",     0x10000, 0x8000, 0xcb029b02 )
 	ROM_CONTINUE(             0x08000, 0x8000)
 
-	ROM_REGION_DISPOSE(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "eb05.rom",   0x0000, 0x0200, 0x3b6198cb ) /* 82s147.084 */
 	ROM_LOAD( "eb06.rom",   0x0200, 0x0200, 0x1fbd4b59 ) /* 82s131.101 */
 ROM_END
 
-ROM_START( pcktgal2_rom )
+ROM_START( pcktgal2 )
     ROM_REGION(0x14000)     /* 64k for code + 16k for banks */
     ROM_LOAD( "eb04-2.rom",   0x10000, 0x4000, 0x0c7f2905 )
 	ROM_CONTINUE(             0x04000, 0xc000)
@@ -437,12 +437,12 @@ ROM_START( pcktgal2_rom )
 	ROM_LOAD( "eb03-2.rom",   0x10000, 0x8000, 0x9408ffb4 )
 	ROM_CONTINUE(             0x08000, 0x8000)
 
-	ROM_REGION_DISPOSE(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "eb05.rom",   0x0000, 0x0200, 0x3b6198cb ) /* 82s147.084 */
 	ROM_LOAD( "eb06.rom",   0x0200, 0x0200, 0x1fbd4b59 ) /* 82s131.101 */
 ROM_END
 
-ROM_START( spool3_rom )
+ROM_START( spool3 )
     ROM_REGION(0x14000)     /* 64k for code + 16k for banks */
     ROM_LOAD( "eb04-2.rom",   0x10000, 0x4000, 0x0c7f2905 )
 	ROM_CONTINUE(             0x04000, 0xc000)
@@ -458,12 +458,12 @@ ROM_START( spool3_rom )
 	ROM_LOAD( "eb03-2.rom",   0x10000, 0x8000, 0x9408ffb4 )
 	ROM_CONTINUE(             0x08000, 0x8000)
 
-	ROM_REGION_DISPOSE(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "eb05.rom",   0x0000, 0x0200, 0x3b6198cb ) /* 82s147.084 */
 	ROM_LOAD( "eb06.rom",   0x0200, 0x0200, 0x1fbd4b59 ) /* 82s131.101 */
 ROM_END
 
-ROM_START( spool3i_rom )
+ROM_START( spool3i )
     ROM_REGION(0x14000)     /* 64k for code + 16k for banks */
     ROM_LOAD( "de1.bin",      0x10000, 0x4000, 0xa59980fe )
 	ROM_CONTINUE(             0x04000, 0xc000)
@@ -479,7 +479,7 @@ ROM_START( spool3i_rom )
 	ROM_LOAD( "eb03-2.rom",   0x10000, 0x8000, 0x9408ffb4 )
 	ROM_CONTINUE(             0x08000, 0x8000)
 
-	ROM_REGION_DISPOSE(0x0400)	/* color PROMs */
+	ROM_REGIONX( 0x0400, REGION_PROMS )
 	ROM_LOAD( "eb05.rom",   0x0000, 0x0200, 0x3b6198cb ) /* 82s147.084 */
 	ROM_LOAD( "eb06.rom",   0x0200, 0x0200, 0x1fbd4b59 ) /* 82s131.101 */
 ROM_END
@@ -524,7 +524,7 @@ static void pcktgal_decode(void)
 
 /***************************************************************************/
 
-struct GameDriver pcktgal_driver =
+struct GameDriver driver_pcktgal =
 {
 	__FILE__,
 	0,
@@ -537,23 +537,23 @@ struct GameDriver pcktgal_driver =
 	&machine_driver,
 	0,
 
-	pcktgal_rom,
+	rom_pcktgal,
 	0, pcktgal_decode,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_pcktgal,
 
-	PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0
 };
 
-struct GameDriver pcktgalb_driver =
+struct GameDriver driver_pcktgalb =
 {
 	__FILE__,
-	&pcktgal_driver,
+	&driver_pcktgal,
 	"pcktgalb",
 	"Pocket Gal (bootleg)",
 	"1989",
@@ -563,23 +563,23 @@ struct GameDriver pcktgalb_driver =
 	&bootleg_machine_driver,
 	0,
 
-	pcktgalb_rom,
+	rom_pcktgalb,
 	0, deco222_decode,
 	0,
 	0,
 
-	input_ports,
+	input_ports_pcktgal,
 
-	PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0
 };
 
-struct GameDriver pcktgal2_driver =
+struct GameDriver driver_pcktgal2 =
 {
 	__FILE__,
-	&pcktgal_driver,
+	&driver_pcktgal,
 	"pcktgal2",
 	"Pocket Gal 2 (World?)",
 	"1989",
@@ -589,23 +589,23 @@ struct GameDriver pcktgal2_driver =
 	&machine_driver,
 	0,
 
-	pcktgal2_rom,
+	rom_pcktgal2,
 	graphics_decode, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_pcktgal,
 
-	PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0
 };
 
-struct GameDriver spool3_driver =
+struct GameDriver driver_spool3 =
 {
 	__FILE__,
-	&pcktgal_driver,
+	&driver_pcktgal,
 	"spool3",
 	"Super Pool III (World?)",
 	"1989",
@@ -615,23 +615,23 @@ struct GameDriver spool3_driver =
 	&machine_driver,
 	0,
 
-	spool3_rom,
+	rom_spool3,
 	graphics_decode, 0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_pcktgal,
 
-	PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0
 };
 
-struct GameDriver spool3i_driver =
+struct GameDriver driver_spool3i =
 {
 	__FILE__,
-	&pcktgal_driver,
+	&driver_pcktgal,
 	"spool3i",
 	"Super Pool III (I-Vics)",
 	"1990",
@@ -641,14 +641,14 @@ struct GameDriver spool3i_driver =
 	&machine_driver,
 	0,
 
-	spool3i_rom,
+	rom_spool3i,
 	graphics_decode, 0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_pcktgal,
 
-	PROM_MEMORY_REGION(3), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0

@@ -256,7 +256,7 @@ int twincobr_interrupt(void)
 static struct MemoryReadAddress readmem[] =
 {
 	{ 0x000000, 0x02ffff, MRA_ROM },
-	{ 0x030000, 0x033fff, twincobr_68k_dsp_r, &twincobr_68k_dsp_ram },	/* 68K and DSP shared RAM */
+	{ 0x030000, 0x033fff, twincobr_68k_dsp_r },	/* 68K and DSP shared RAM */
 	{ 0x040000, 0x040fff, MRA_BANK1 },				/* sprite ram data */
 	{ 0x050000, 0x050dff, paletteram_word_r },
 	{ 0x078000, 0x078003, fshark_DSW_input_r },		/* Flying Shark - DSW1 & 2 */
@@ -355,7 +355,7 @@ static struct IOWritePort DSP_writeport[] =
 };
 
 
-INPUT_PORTS_START( twincobr_input_ports )
+INPUT_PORTS_START( twincobr )
 	PORT_START
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
@@ -439,7 +439,7 @@ INPUT_PORTS_START( twincobr_input_ports )
 	PORT_DIPSETTING(	0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( twincobu_input_ports )
+INPUT_PORTS_START( twincobu )
 	PORT_START
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
@@ -523,7 +523,7 @@ INPUT_PORTS_START( twincobu_input_ports )
 	PORT_DIPSETTING(	0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( ktiger_input_ports )
+INPUT_PORTS_START( ktiger )
 	PORT_START
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
@@ -607,7 +607,7 @@ INPUT_PORTS_START( ktiger_input_ports )
 	PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( fshark_input_ports )
+INPUT_PORTS_START( fshark )
 	PORT_START
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
@@ -690,7 +690,7 @@ INPUT_PORTS_START( fshark_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( skyshark_input_ports )
+INPUT_PORTS_START( skyshark )
 	PORT_START
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
@@ -772,7 +772,7 @@ INPUT_PORTS_START( skyshark_input_ports )
 	PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( hishouza_input_ports )
+INPUT_PORTS_START( hishouza )
 	PORT_START
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
@@ -987,7 +987,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( twincobr_rom )
+ROM_START( twincobr )
 	ROM_REGION(0x30000)		/* 3*64k for code */
 	ROM_LOAD_EVEN( "tc16",		0x00000, 0x10000, 0x07f64d13 )
 	ROM_LOAD_ODD ( "tc14",		0x00000, 0x10000, 0x41be6978 )
@@ -1019,7 +1019,7 @@ ROM_START( twincobr_rom )
 	ROM_LOAD_ODD ( "tc2a",		0x0000, 0x0800, 0xd6d878c9 )
 ROM_END
 
-ROM_START( twincobu_rom )
+ROM_START( twincobu )
 	ROM_REGION(0x30000)		/* 3*64k for code */
 	ROM_LOAD_EVEN( "tc16",			0x00000, 0x10000, 0x07f64d13 )
 	ROM_LOAD_ODD ( "tc14",			0x00000, 0x10000, 0x41be6978 )
@@ -1051,7 +1051,7 @@ ROM_START( twincobu_rom )
 	ROM_LOAD_ODD ( "dsp_21.bin",	0x0000, 0x0800, 0x2d135376 )
 ROM_END
 
-ROM_START( ktiger_rom )
+ROM_START( ktiger )
 	ROM_REGION(0x30000)		/* 3*64k for code */
 	ROM_LOAD_EVEN( "tc16",		0x00000, 0x10000, 0x07f64d13 )
 	ROM_LOAD_ODD ( "tc14",		0x00000, 0x10000, 0x41be6978 )
@@ -1083,7 +1083,7 @@ ROM_START( ktiger_rom )
 	ROM_LOAD_ODD ( "dsp-21",	0x0000, 0x0800, BADCRC( 0x33d99bc2 ) )
 ROM_END
 
-ROM_START( fshark_rom )
+ROM_START( fshark )
 	ROM_REGION(0x20000)		/* 2*64k for code */
 	ROM_LOAD_EVEN( "b02_18-1.rom",	0x00000, 0x10000, 0x04739e02 )
 	ROM_LOAD_ODD ( "b02_17-1.rom",	0x00000, 0x10000, 0xfd6ef7a8 )
@@ -1117,7 +1117,7 @@ ROM_START( fshark_rom )
 	ROM_LOAD_ODD ( "dsp.msb",	0x0000, 0x0800, BADCRC( 0x963ce23d ) )
 ROM_END
 
-ROM_START( skyshark_rom )
+ROM_START( skyshark )
 	ROM_REGION(0x20000)		/* 2*64k for code */
 	ROM_LOAD_EVEN( "18-2",		0x00000, 0x10000, 0x888e90f3 )
 	ROM_LOAD_ODD ( "17-2",		0x00000, 0x10000, 0x066d67be )
@@ -1151,7 +1151,7 @@ ROM_START( skyshark_rom )
 	ROM_LOAD_ODD ( "dsp.msb",	0x0000, 0x0800, BADCRC( 0x963ce23d ) )
 ROM_END
 
-ROM_START( hishouza_rom )
+ROM_START( hishouza )
 	ROM_REGION(0x20000)		/* 2*64k for code */
 	ROM_LOAD_EVEN( "b02-18.rom",	0x00000, 0x10000, 0x4444bb94 )
 	ROM_LOAD_ODD ( "b02-17.rom",	0x00000, 0x10000, 0xcdac7228 )
@@ -1202,7 +1202,7 @@ ROM_START( hishouza_rom )
 #endif
 ROM_END
 
-ROM_START( fsharkbt_rom )
+ROM_START( fsharkbt )
 	ROM_REGION(0x20000)		/* 2*64k for code */
 	ROM_LOAD_EVEN( "r18",		0x00000, 0x10000, 0xef30f563 )
 	ROM_LOAD_ODD ( "r17",		0x00000, 0x10000, 0x0e18d25f )
@@ -1450,7 +1450,7 @@ static void twincobr_hisave(void)
 }
 
 
-struct GameDriver twincobr_driver =
+struct GameDriver driver_twincobr =
 {
 	__FILE__,
 	0,
@@ -1462,20 +1462,20 @@ struct GameDriver twincobr_driver =
 	0,
 	&machine_driver,
 	twincobr_hiscore_init_tests,
-	twincobr_rom,
+	rom_twincobr,
 	twincobr_decode, 0,
 	0,
 	0,
-	twincobr_input_ports,
+	input_ports_twincobr,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	twincobr_hiload, twincobr_hisave
 };
 
-struct GameDriver twincobu_driver =
+struct GameDriver driver_twincobu =
 {
 	__FILE__,
-	&twincobr_driver,
+	&driver_twincobr,
 	"twincobu",
 	"Twin Cobra (US)",
 	"1987",
@@ -1484,20 +1484,20 @@ struct GameDriver twincobu_driver =
 	0,
 	&machine_driver,
 	twincobr_hiscore_init_tests,
-	twincobu_rom,
+	rom_twincobu,
 	0, 0,
 	0,
 	0,
-	twincobu_input_ports,
+	input_ports_twincobu,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	0, 0
 };
 
-struct GameDriver ktiger_driver =
+struct GameDriver driver_ktiger =
 {
 	__FILE__,
-	&twincobr_driver,
+	&driver_twincobr,
 	"ktiger",
 	"Kyukyoku Tiger (Japan)",
 	"1987",
@@ -1506,17 +1506,17 @@ struct GameDriver ktiger_driver =
 	0,
 	&machine_driver,
 	ktiger_hiscore_init_tests,
-	ktiger_rom,
+	rom_ktiger,
 	0, 0,
 	0,
 	0,
-	ktiger_input_ports,
+	input_ports_ktiger,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	twincobr_hiload, twincobr_hisave
 };
 
-struct GameDriver fshark_driver =
+struct GameDriver driver_fshark =
 {
 	__FILE__,
 	0,
@@ -1528,20 +1528,20 @@ struct GameDriver fshark_driver =
 	0,
 	&machine_driver,
 	fshark_hiscore_init_tests,
-	fshark_rom,
+	rom_fshark,
 	0, 0,
 	0,
 	0,
-	fshark_input_ports,
+	input_ports_fshark,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	twincobr_hiload, twincobr_hisave
 };
 
-struct GameDriver skyshark_driver =
+struct GameDriver driver_skyshark =
 {
 	__FILE__,
-	&fshark_driver,
+	&driver_fshark,
 	"skyshark",
 	"Sky Shark (US)",
 	"1987",
@@ -1550,20 +1550,20 @@ struct GameDriver skyshark_driver =
 	0,
 	&machine_driver,
 	fshark_hiscore_init_tests,
-	skyshark_rom,
+	rom_skyshark,
 	0, 0,
 	0,
 	0,
-	skyshark_input_ports,
+	input_ports_skyshark,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	twincobr_hiload, twincobr_hisave
 };
 
-struct GameDriver hishouza_driver =
+struct GameDriver driver_hishouza =
 {
 	__FILE__,
-	&fshark_driver,
+	&driver_fshark,
 	"hishouza",
 	"Hishou Zame (Japan)",
 	"1987",
@@ -1572,20 +1572,20 @@ struct GameDriver hishouza_driver =
 	0,
 	&machine_driver,
 	fshark_hiscore_init_tests,
-	hishouza_rom,
+	rom_hishouza,
 	fsharkbt_decode, 0,
 	0,
 	0,
-	hishouza_input_ports,
+	input_ports_hishouza,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	twincobr_hiload, twincobr_hisave
 };
 
-struct GameDriver fsharkbt_driver =
+struct GameDriver driver_fsharkbt =
 {
 	__FILE__,
-	&fshark_driver,
+	&driver_fshark,
 	"fsharkbt",
 	"Flying Shark (bootleg)",
 	"1987",
@@ -1594,11 +1594,11 @@ struct GameDriver fsharkbt_driver =
 	0,
 	&machine_driver,
 	fshark_hiscore_init_tests,
-	fsharkbt_rom,
+	rom_fsharkbt,
 	fsharkbt_decode, 0,
 	0,
 	0,
-	skyshark_input_ports,
+	input_ports_skyshark,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	twincobr_hiload, twincobr_hisave

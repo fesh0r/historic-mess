@@ -108,7 +108,7 @@ static struct IOWritePort sound_writeport[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( shisen )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -312,7 +312,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( sichuan2_rom )
+ROM_START( sichuan2 )
 	ROM_REGION(0x30000)	/* 64k+128k for main CPU */
 	ROM_LOAD( "ic06.06",      0x00000, 0x10000, 0x98a2459b )
 	ROM_RELOAD(               0x10000, 0x10000 )
@@ -346,7 +346,7 @@ ROM_START( sichuan2_rom )
 	ROM_LOAD( "ic05.05",      0x30000, 0x10000, 0x92ffe22a )
 ROM_END
 
-ROM_START( sichuana_rom )
+ROM_START( sichuana )
 	ROM_REGION(0x30000)	/* 64k+128k for main CPU */
 	ROM_LOAD( "sichuan.a6",      0x00000, 0x10000, 0xf8ac05ef )
 	ROM_RELOAD(               0x10000, 0x10000 )
@@ -382,7 +382,7 @@ ROM_END
 
 
 
-ROM_START( shisen_rom )
+ROM_START( shisen )
 	ROM_REGION(0x30000)	/* 64k+128k for main CPU */
 	ROM_LOAD( "a-27-a.rom",   0x00000, 0x20000, 0xde2ecf05 )
 	ROM_RELOAD(               0x10000, 0x20000 )
@@ -454,7 +454,7 @@ static void sichuan2_hisave(void)
 
 
 
-struct GameDriver sichuan2_driver =
+struct GameDriver driver_sichuan2 =
 {
 	__FILE__,
 	0,
@@ -467,12 +467,12 @@ struct GameDriver sichuan2_driver =
 	&machine_driver,
 	0,
 
-        sichuan2_rom,
+        rom_sichuan2,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_shisen,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -480,10 +480,10 @@ struct GameDriver sichuan2_driver =
 	sichuan2_hiload, sichuan2_hisave
 };
 
-struct GameDriver sichuana_driver =
+struct GameDriver driver_sichuana =
 {
 	__FILE__,
-	&sichuan2_driver,
+	&driver_sichuan2,
 	"sichuana",
 	"Sichuan II (hack ?) (set 2)",
 	"1989",
@@ -493,12 +493,12 @@ struct GameDriver sichuana_driver =
 	&machine_driver,
 	0,
 
-        sichuana_rom,
+        rom_sichuana,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_shisen,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -506,10 +506,10 @@ struct GameDriver sichuana_driver =
 	sichuan2_hiload, sichuan2_hisave
 };
 
-struct GameDriver shisen_driver =
+struct GameDriver driver_shisen =
 {
 	__FILE__,
-	&sichuan2_driver,
+	&driver_sichuan2,
 	"shisen",
 	"Shisensho - Joshiryo-Hen (Japan)",
 	"1989",
@@ -519,12 +519,12 @@ struct GameDriver shisen_driver =
 	&machine_driver,
 	0,
 
-	shisen_rom,
+	rom_shisen,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_shisen,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

@@ -112,7 +112,7 @@ static struct MemoryWriteAddress pdp1_writemem[] =
 	{ -1 }  /* end of table */
 };
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( pdp1 )
 
     PORT_START      /* IN0 */
 	PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN, "Spin Left Player 1", KEYCODE_A, IP_JOY_DEFAULT )
@@ -165,6 +165,14 @@ static unsigned short colortable[] =
 	0x01, 0x00,
 };
 
+/* Initialise the palette */
+static void pdp1_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+	memcpy(sys_colortable,colortable,sizeof(colortable));
+}
+
+
 /* note I don't know about the speed of the machine, I only know
  * how long each instruction takes in micro seconds
  * below speed should therefore also be read in something like
@@ -194,7 +202,7 @@ static struct MachineDriver pdp1_machine_driver =
 	sizeof(palette) / sizeof(palette[0]) / 3,
 	sizeof(colortable) / sizeof(colortable[0]),
 
-	0,
+	pdp1_init_palette,
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -240,6 +248,7 @@ struct GameDriver pdp1_driver =
 	0,
 	pdp1_load_rom,
 	pdp1_id_rom,
+	0,		/* defualt file extensions */
 	0,      /* number of ROM slots */
 	0,      /* number of floppy drives supported */
 	0,      /* number of hard drives supported */
@@ -248,9 +257,9 @@ struct GameDriver pdp1_driver =
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_pdp1,
 
-	0, palette, colortable,
+	0, /*palette*/0, /*colortable*/0,
 	ORIENTATION_DEFAULT,
 
 	0, 0,

@@ -89,7 +89,7 @@ static struct MemoryWriteAddress writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( galpanic )
 	PORT_START
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
@@ -219,7 +219,7 @@ static struct MachineDriver machine_driver =
 	1024, 1024,
 	0,
 
-	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_SUPPORTS_16BIT,
+	VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
 	0,
 	galpanic_vh_start,
 	galpanic_vh_stop,
@@ -243,7 +243,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( galpanic_rom )
+ROM_START( galpanic )
 	ROM_REGION(0x400000)	/* 68000 code */
 	ROM_LOAD_EVEN( "pm110.4m2",    0x000000, 0x080000, 0xae6b17a8 )
 	ROM_LOAD_ODD ( "pm109.4m1",    0x000000, 0x080000, 0xb85d792d )
@@ -271,7 +271,7 @@ ROM_END
 
 
 
-struct GameDriver galpanic_driver =
+struct GameDriver driver_galpanic =
 {
 	__FILE__,
 	0,
@@ -284,14 +284,14 @@ struct GameDriver galpanic_driver =
 	&machine_driver,
 	0,
 
-	galpanic_rom,
+	rom_galpanic,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_galpanic,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_REQUIRES_16BIT,
 	0, 0
 };

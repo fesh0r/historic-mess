@@ -10,12 +10,12 @@
 #include "info.h"
 #include "vidhrdw/vector.h"
 #include "datafile.h"
+#include <stdarg.h>
 
 #ifdef MESS
- #include "mess/mess.h"
- image_details image;
+  #include "mess/mess.h"
+  image_details image;
 #endif
-
 
 extern int mame_debug;
 
@@ -2395,13 +2395,13 @@ static int displaygameinfo(int selected)
 		sprintf(&buf[strlen(buf)],"%d x %d (%s) %d Hz\n",
 				Machine->drv->visible_area.max_x - Machine->drv->visible_area.min_x + 1,
 				Machine->drv->visible_area.max_y - Machine->drv->visible_area.min_y + 1,
-				(Machine->gamedrv->orientation & ORIENTATION_SWAP_XY) ? "V" : "H",
+				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
 				Machine->drv->frames_per_second);
 #if 0
 		sprintf(&buf[strlen(buf)],"pixel aspect ratio %d:%d\n",
 				pixelx,pixely);
 		sprintf(&buf[strlen(buf)],"%d colors ",Machine->drv->total_colors);
-		if (Machine->drv->video_attributes & VIDEO_SUPPORTS_16BIT)
+		if (Machine->gamedrv->flags & GAME_REQUIRES_16BIT)
 			strcat(buf,"(16-bit required)\n");
 		else if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
 			strcat(buf,"(dynamic)\n");
@@ -2455,6 +2455,7 @@ static int displaygameinfo(int selected)
 
 	return sel + 1;
 }
+
 
 #ifdef MESS
 static int displayimageinfo(int selected)
@@ -2538,7 +2539,9 @@ int showgamewarnings(void)
 	int i;
 	char buf[2048];
 
-	if (Machine->gamedrv->flags)
+	if (Machine->gamedrv->flags &
+			(GAME_NOT_WORKING | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
+			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND))
 	{
 		int done;
 
@@ -2646,7 +2649,6 @@ int showgamewarnings(void)
 		osd_poll_joysticks();
 	}
 	#endif
-
 
 	osd_clearbitmap(Machine->scrbitmap);
 	/* make sure that the screen is really cleared, in case autoframeskip kicked in */
@@ -3028,6 +3030,7 @@ enum { UI_SWITCH = 0,UI_DEFKEY,UI_DEFJOY,UI_KEY,UI_JOY,UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_IMAGEINFO, UI_HISTORY,
 		UI_CHEAT,UI_RESET,UI_MEMCARD,UI_EXIT };
 #endif
+
 
 #define MAX_SETUPMENU_ITEMS 20
 static const char *menu_item[MAX_SETUPMENU_ITEMS];
@@ -3654,9 +3657,12 @@ static void displaymessage(const char *text)
 static char messagetext[80];
 static int messagecounter;
 
-void usrintf_showmessage(const char *text)
+void CLIB_DECL usrintf_showmessage(const char *text,...)
 {
-	strcpy(messagetext,text);
+	va_list arg;
+	va_start(arg,text);
+	vsprintf(messagetext,text,arg);
+	va_end(arg);
 	messagecounter = 2 * Machine->drv->frames_per_second;
 }
 

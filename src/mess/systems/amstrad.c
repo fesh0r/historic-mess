@@ -670,6 +670,15 @@ unsigned char	amstrad_palette[32*3]=
 	0x080,0x080,0x0ff,	/* pastel blue */
 };
 
+
+/* Initialise the palette */
+static void amstrad_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,amstrad_palette,sizeof(amstrad_palette));
+	memcpy(sys_colortable,amstrad_colour_table,sizeof(amstrad_colour_table));
+}
+
+
 /* Memory is banked in 16k blocks. The ROM can
 be paged into bank 0 and bank 3. */
 static struct MemoryReadAddress readmem_amstrad[] =
@@ -729,7 +738,7 @@ static struct AY8910interface amstrad_ay_interface =
 	{ 0 }
 };
 
-INPUT_PORTS_START(amstrad_input_ports)
+INPUT_PORTS_START(amstrad)
 	/* keyboard row 0 */
 	PORT_START
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN, "Cursor Up", KEYCODE_UP,IP_JOY_NONE)
@@ -883,7 +892,7 @@ decode info */
         32, 						/* total colours
 */
 	  32,                                  	/* color table len */
-        0,                                      /* convert color prom */
+        amstrad_init_palette,         /* init palette */
 
         VIDEO_TYPE_RASTER, /* video attributes */
         0,							/* MachineLayer */
@@ -918,7 +927,7 @@ decode info */
 
 /* I am loading the roms outside of the Z80 memory area, because they
 are banked. */
-ROM_START(amstrad_rom)
+ROM_START(amstrad)
         /* this defines the total memory size - 64k ram, 16k OS, 16k BASIC, 16k DOS */
         ROM_REGION(0x01c000)
         /* load the os to offset 0x01000 from memory base */
@@ -926,7 +935,7 @@ ROM_START(amstrad_rom)
         ROM_LOAD("cpcados.rom",0x18000,0x4000, 0x1fe22ecd)
 ROM_END
 
-ROM_START(kccompact_rom)
+ROM_START(kccompact)
         ROM_REGION(0x01c000)
         ROM_LOAD("kccos.rom", 0x10000,0x04000, 0x7f9ab3f7)
         ROM_LOAD("kccbas.rom",0x14000,0x04000, 0xca6af63d)
@@ -943,31 +952,32 @@ struct GameDriver cpc6128_driver =
 	"1985",
 	"Amstrad plc",
 	"Kevin Thacker [MESS driver]", /* credits */
-	GAME_COMPUTER,
+	0,
 	&amstrad_machine_driver,		/* MachineDriver */
 	0,
-        amstrad_rom,
-        amstrad_rom_load,
+	rom_amstrad,
+	amstrad_rom_load,
 	amstrad_rom_id,         /* load rom_file images */
-	0,                      /* number of ROM slots */
+	0,						/* default file extension */
+        1,                      /* number of ROM slots */
 	2,                      /* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
 	0,                      /* number of cassette drives supported */
-        0,                      /* rom decoder */
-        0,                      /* opcode decoder */
-        0,                      /* pointer to sample names */
-        0,                      /* sound_prom */
+	0,                      /* rom decoder */
+	0,                      /* opcode decoder */
+	0,                      /* pointer to sample names */
+	0,                      /* sound_prom */
 
-        amstrad_input_ports,
+	input_ports_amstrad,
 
-        0,                      /* color_prom */
-        amstrad_palette,          /* color palette */
-        amstrad_colour_table,       /* color lookup table */
+	0,                      /* color_prom */
+	0,
+	0,
 
-        ORIENTATION_DEFAULT,    /* orientation */
+	GAME_COMPUTER|ORIENTATION_DEFAULT,    /* orientation */
 
-        0,                      /* hiscore load */
-        0                       /* hiscore save */
+	0,                      /* hiscore load */
+	0                       /* hiscore save */
 };
 
 /* amstrad cpc 6128 game driver */
@@ -980,29 +990,30 @@ struct GameDriver kccomp_driver =
     "19??",
     "Veb Mikroelektronik ", /*<<wilhelm pieck>> mulhausen*/
 	"Kevin Thacker [MESS driver]", /* credits */
-    GAME_COMPUTER,
+    0,
 	&amstrad_machine_driver,		/* MachineDriver */
 	0,
-        kccompact_rom,
-        amstrad_rom_load,
+    rom_kccompact,
+    amstrad_rom_load,
 	amstrad_rom_id,         /* load rom_file images */
-	0,                      /* number of ROM slots */
+	0,						/* default file extension */
+    1,                      /* number of ROM slots */
 	2,                      /* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
 	0,                      /* number of cassette drives supported */
-        0,                      /* rom decoder */
-        0,                      /* opcode decoder */
-        0,                      /* pointer to sample names */
-        0,                      /* sound_prom */
+    0,                      /* rom decoder */
+    0,                      /* opcode decoder */
+    0,                      /* pointer to sample names */
+    0,                      /* sound_prom */
 
-        amstrad_input_ports,
+    input_ports_amstrad,
 
-        0,                      /* color_prom */
-        amstrad_palette,          /* color palette */
-        amstrad_colour_table,       /* color lookup table */
+    0,                      /* color_prom */
+    0,          /* color palette */
+    0,       /* color lookup table */
 
-        ORIENTATION_DEFAULT,    /* orientation */
+    GAME_COMPUTER|ORIENTATION_DEFAULT,    /* orientation */
 
-        0,                      /* hiscore load */
-        0                       /* hiscore save */
+    0,                      /* hiscore load */
+    0                       /* hiscore save */
 };

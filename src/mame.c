@@ -142,11 +142,16 @@ int run_game(int game)
 	Machine->drv = drv = gamedrv->drv;
 
 	/* copy configuration */
+	if (options.color_depth == 16 ||
+			(options.color_depth != 8 && (Machine->gamedrv->flags & GAME_REQUIRES_16BIT)))
+		Machine->color_depth = 16;
+	else
+		Machine->color_depth = 8;
 	Machine->sample_rate = options.samplerate;
 	Machine->sample_bits = options.samplebits;
 
 	/* get orientation right */
-	Machine->orientation = gamedrv->orientation;
+	Machine->orientation = gamedrv->flags & ORIENTATION_MASK;
 	Machine->ui_orientation = ORIENTATION_DEFAULT;
 	if (options.norotate)
 		Machine->orientation = ORIENTATION_DEFAULT;
@@ -254,6 +259,15 @@ int run_game(int game)
 ***************************************************************************/
 int init_machine(void)
 {
+	int i;
+
+	for (i = 0;i < MAX_MEMORY_REGIONS;i++)
+	{
+		Machine->memory_region[i] = 0;
+		Machine->memory_region_length[i] = 0;
+		Machine->memory_region_type[i] = 0;
+	}
+
 	if (gamedrv->input_ports)
 	{
 		int total;
@@ -346,9 +360,6 @@ int init_machine(void)
 	}
 	#endif
 
-	/* read audio samples if available */
-	Machine->samples = readsamples(gamedrv->samplenames,gamedrv->name);
-
 	/* Mish:  Multi-session safety - set spriteram size to zero before memory map is set up */
 	spriteram_size=spriteram_2_size=0;
 
@@ -378,9 +389,6 @@ void shutdown_machine(void)
 {
 	int i;
 
-	/* free audio samples */
-	freesamples(Machine->samples);
-	Machine->samples = 0;
 
 	/* ASG 971007 free memory element map */
 	shutdownmemoryhandler();
@@ -391,6 +399,7 @@ void shutdown_machine(void)
 		free(Machine->memory_region[i]);
 		Machine->memory_region[i] = 0;
 		Machine->memory_region_length[i] = 0;
+		Machine->memory_region_type[i] = 0;
 	}
 
 	/* free the memory allocated for input ports definition */
@@ -458,7 +467,7 @@ static int vh_open(void)
 			start &= ~(drv->gfxdecodeinfo[i].gfxlayout->charincrement-1);
 			len = drv->gfxdecodeinfo[i].gfxlayout->total *
 					drv->gfxdecodeinfo[i].gfxlayout->charincrement;
-			avail = Machine->memory_region_length[drv->gfxdecodeinfo[i].memory_region]
+			avail = memory_region_length(drv->gfxdecodeinfo[i].memory_region)
 					- (drv->gfxdecodeinfo[i].start & ~(drv->gfxdecodeinfo[i].gfxlayout->charincrement/8-1));
 			if ((start + len) / 8 > avail)
 			{
@@ -468,7 +477,7 @@ static int vh_open(void)
 				return 1;
 			}
 
-			if ((Machine->gfx[i] = decodegfx(Machine->memory_region[drv->gfxdecodeinfo[i].memory_region]
+			if ((Machine->gfx[i] = decodegfx(memory_region(drv->gfxdecodeinfo[i].memory_region)
 					+ drv->gfxdecodeinfo[i].start,
 					drv->gfxdecodeinfo[i].gfxlayout)) == 0)
 			{
@@ -485,6 +494,7 @@ static int vh_open(void)
 	/* create the display bitmap, and allocate the palette */
 	if ((Machine->scrbitmap = osd_create_display(
 			drv->screen_width,drv->screen_height,
+			Machine->color_depth,
 			drv->video_attributes)) == 0)
 	{
 		vh_close();
@@ -586,35 +596,23 @@ int run_machine(void)
 		{
 			if (sound_start() == 0) /* start the audio hardware */
 			{
-				const struct RomModule *romp = gamedrv->rom;
 				int	region;
 
-				if (romp)
+				/* free memory regions allocated with ROM_REGION_DISPOSE (typically gfx roms) */
+				for (region = 0; region < MAX_MEMORY_REGIONS; region++)
 				{
-					/* free memory regions allocated with ROM_REGION_DISPOSE (typically gfx roms) */
-					for (region = 0; romp->name || romp->offset || romp->length; region++)
+					if (Machine->memory_region_type[region] & REGIONFLAG_DISPOSE)
 					{
-						if (romp->offset & ROMFLAG_DISPOSE)
-						{
-							free (Machine->memory_region[region]);
-							Machine->memory_region[region] = 0;
-						}
-						do { romp++; } while (romp->length);
+						free (Machine->memory_region[region]);
+						Machine->memory_region[region] = 0;
 					}
 				}
 
 				if (settingsloaded == 0)
 				{
 					/* if there is no saved config, it must be first time we run this game, */
-					/* so show the disclaimer and driver credits. */
-					if (!options.gui_host)
-					{
-						/* LBO - If the host port has a gui, skip this message under the assumption */
-						/* that the host will take care of printing the message once. The best */
-						/* opportunity for a gui to do this is IMHO before the front-end has */
-						/* been displayed. */
-						if (showcopyright()) goto userquit;
-					}
+					/* so show the disclaimer. */
+					if (showcopyright()) goto userquit;
 				}
 
 				if (showgamewarnings() == 0)  /* show info about incorrect behaviour (wrong colors etc.) */

@@ -28,7 +28,7 @@ void cps2_qsound_sharedram_w(int offset,int data)
 }
 
 #define CPS2_GAME_DRIVER(NAME,DESCRIPTION,YEAR,MANUFACTURER,ORIENTATION) \
-struct GameDriver NAME##_driver =  \
+struct GameDriver driver_##NAME =  \
 {                                  \
 	__FILE__,                      \
     0,                             \
@@ -40,11 +40,11 @@ struct GameDriver NAME##_driver =  \
 	0,                             \
 	&NAME##_machine_driver,        \
 	0,                             \
-	NAME##_rom,                    \
+	rom_##NAME,                    \
     cps2_decode, 0,                \
 	0,                             \
 	0,                             \
-	NAME##_input_ports,            \
+	input_ports_##NAME,            \
 	0, 0, 0,                       \
 	ORIENTATION,                   \
 	0, 0                           \
@@ -159,7 +159,7 @@ static struct MachineDriver CPS1_DRVNAME##_machine_driver =            \
 	{ { SOUND_CUSTOM, &custom_interface } } \
 };
 
-INPUT_PORTS_START( sfa_input_ports )
+INPUT_PORTS_START( sfa )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
@@ -206,17 +206,17 @@ INPUT_PORTS_START( sfa_input_ports )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 INPUT_PORTS_END
 
-#define ssf2j_input_ports       sfa_input_ports
-#define sfz_input_ports         sfa_input_ports
-#define ssf2_input_ports        sfa_input_ports
-#define dadtod_input_ports      sfa_input_ports
-#define avsp_input_ports        sfa_input_ports
-#define vmj_input_ports         sfa_input_ports
-#define vphj_input_ports        sfa_input_ports
-#define msh_input_ports         sfa_input_ports
-#define xmencota_input_ports    sfa_input_ports
-#define vsavior_input_ports     sfa_input_ports
-#define xmnvssf_input_ports     sfa_input_ports
+#define input_ports_ssf2j      input_ports_sfa
+#define input_ports_sfz        input_ports_sfa
+#define input_ports_ssf2       input_ports_sfa
+#define input_ports_dadtod     input_ports_sfa
+#define input_ports_avsp       input_ports_sfa
+#define input_ports_vmj        input_ports_sfa
+#define input_ports_vphj       input_ports_sfa
+#define input_ports_msh        input_ports_sfa
+#define input_ports_xmencota   input_ports_sfa
+#define input_ports_vsavior    input_ports_sfa
+#define input_ports_xmnvssf    input_ports_sfa
 
 
 CPS2_MACHINE_DRIVER( ssf2j,     CPS2_DEFAULT_CPU_SPEED )
@@ -231,7 +231,7 @@ CPS2_MACHINE_DRIVER( xmencota,  CPS2_DEFAULT_CPU_SPEED )
 CPS2_MACHINE_DRIVER( vsavior,   CPS2_DEFAULT_CPU_SPEED )
 CPS2_MACHINE_DRIVER( xmnvssf,   CPS2_DEFAULT_CPU_SPEED )
 
-ROM_START( ssf2j_rom )
+ROM_START( ssf2j )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("ssfj03.bin", 0x000000, 0x80000, 0x7eb0efed )
     ROM_LOAD_WIDE_SWAP("ssfj04.bin", 0x080000, 0x80000, 0xd7322164 )
@@ -265,7 +265,7 @@ ROM_START( ssf2j_rom )
 ROM_END
 
 
-ROM_START( sfa_rom )
+ROM_START( sfa )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("sfze_03d.rom", 0x000000, 0x80000, 0xebf2054d )
     ROM_LOAD_WIDE_SWAP("sfze_04c.rom", 0x080000, 0x80000, 0x8b73b0e5 )
@@ -306,7 +306,7 @@ ROM_START( sfa_rom )
     ROM_LOAD( "sfz_12-d.rom",   0x380000, 0x80000, 0x545f3cc3 )
 ROM_END
 
-ROM_START( sfz_rom )
+ROM_START( sfz )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("sfzjp03d.bin", 0x000000, 0x80000, 0xf5444120 )
     ROM_LOAD_WIDE_SWAP("sfzjp04c.bin", 0x080000, 0x80000, 0x8b73b0e5 )
@@ -329,7 +329,7 @@ ROM_START( sfz_rom )
     ROM_LOAD( "sfzj_s12.bin",   0x200000, 0x200000, 0x8bdbc4b4 )
 ROM_END
 
-ROM_START( dadtod_rom )
+ROM_START( dadtod )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("dadu-03b.bin", 0x000000, 0x80000, 0xa519905f )
     ROM_LOAD_WIDE_SWAP("dadu-04b.bin", 0x080000, 0x80000, 0x52562d38 )
@@ -356,7 +356,7 @@ ROM_START( dadtod_rom )
     ROM_LOAD( "dad-12m.bin",   0x200000, 0x200000, 0x2f0b5a4e )
 ROM_END
 
-ROM_START( avsp_rom )
+ROM_START( avsp )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("avsp.3", 0x000000, 0x80000, 0x42757950 )
     ROM_LOAD_WIDE_SWAP("avsp.4", 0x080000, 0x80000, 0x5abcdee6 )
@@ -382,7 +382,7 @@ ROM_START( avsp_rom )
     ROM_LOAD( "avsp.12",   0x200000, 0x200000, 0xf4110d49 )
 ROM_END
 
-ROM_START( vmj_rom )
+ROM_START( vmj )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("vmj_03a.bin", 0x000000, 0x80000, 0xf55d3722 )
     ROM_LOAD_WIDE_SWAP("vmj_04b.bin", 0x080000, 0x80000, 0x4d9c43c4 )
@@ -414,7 +414,7 @@ ROM_START( vmj_rom )
 ROM_END
 
 
-ROM_START( vphj_rom )
+ROM_START( vphj )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("vphjp03b.bin", 0x000000, 0x80000, 0x679c3fa9 )
     ROM_LOAD_WIDE_SWAP("vphjp04a.bin", 0x080000, 0x80000, 0xeb6e71e4 )
@@ -445,7 +445,7 @@ ROM_START( vphj_rom )
     ROM_LOAD( "vphj_s12.bin",   0x200000, 0x200000, 0xfbd3cd90 )
 ROM_END
 
-ROM_START( msh_rom )
+ROM_START( msh )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("msh.3", 0x000000, 0x80000, 0xd2805bdd )
     ROM_LOAD_WIDE_SWAP("msh.4", 0x080000, 0x80000, 0x743f96ff )
@@ -485,7 +485,7 @@ ROM_START( msh_rom )
 ROM_END
 
 
-ROM_START( xmencota_rom )
+ROM_START( xmencota )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("xcota.3", 0x000000, 0x80000, 0x0bafeb0e )
     ROM_LOAD_WIDE_SWAP("xcota.4", 0x080000, 0x80000, 0xc29bdae3 )
@@ -523,7 +523,7 @@ ROM_START( xmencota_rom )
     ROM_LOAD( "xcota.12",   0x200000, 0x200000, 0x729c188f )
 ROM_END
 
-ROM_START( vsavior_rom )
+ROM_START( vsavior )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("vsavior.3", 0x000000, 0x80000, 0x1f295274 )
     ROM_LOAD_WIDE_SWAP("vsavior.4", 0x080000, 0x80000, 0xc46adf81 )
@@ -566,7 +566,7 @@ ROM_START( vsavior_rom )
 	ROM_LOAD( "vsavior.12b",   0x600000, 0x200000, 0xc80293e6 )
 ROM_END
 
-ROM_START( xmnvssf_rom )
+ROM_START( xmnvssf )
     ROM_REGION(CODE_SIZE)      /* 68000 code */
     ROM_LOAD_WIDE_SWAP("xmnvssf.3", 0x000000, 0x80000, 0x5481155a )
     ROM_LOAD_WIDE_SWAP("xmnvssf.4", 0x080000, 0x80000, 0x1e236388 )
@@ -631,7 +631,7 @@ CPS2_GAME_DRIVER(xmnvssf, "X-Men Vs. Street Fighter",           "199?","Capcom",
 ***************************************************************************/
 
 #define CPSX_GAME_DRIVER(NAME,DESCRIPTION,YEAR,MANUFACTURER,ORIENTATION) \
-struct GameDriver NAME##_driver =  \
+struct GameDriver driver_##NAME =  \
 {                                  \
 	__FILE__,                      \
 	0,                             \
@@ -643,11 +643,11 @@ struct GameDriver NAME##_driver =  \
 	0,                             \
 	&NAME##_machine_driver,        \
 	0,                             \
-	NAME##_rom,                    \
+	rom_##NAME,                    \
     0, 0,                          \
 	0,                             \
 	0,                             \
-	NAME##_input_ports,            \
+	input_ports_##NAME,            \
 	0, 0, 0,                       \
 	ORIENTATION,                   \
 	0, 0                           \
@@ -690,11 +690,11 @@ static struct MachineDriver CPS1_DRVNAME##_machine_driver =            \
 	{ { SOUND_CUSTOM, &custom_interface } } \
 };
 
-#define sfex_input_ports    sfa_input_ports
+#define input_ports_sfex    input_ports_sfa
 
 CPSX_MACHINE_DRIVER( sfex,       CPS2_DEFAULT_CPU_SPEED )
 
-ROM_START( sfex_rom )
+ROM_START( sfex )
     ROM_REGION(CODE_SIZE)      /* PSX code */
     ROM_LOAD("sfe-04",  0x000000, 0x80000, 0xffffffff )
     ROM_LOAD("sfe-05m", 0x080000, 0x80000, 0xffffffff )

@@ -187,7 +187,7 @@ NB: row 7 contains some originally unused bits
     only the shift bit was there in the TRS80
 ***************************************************************************/
 
-INPUT_PORTS_START( trs80_input_ports )
+INPUT_PORTS_START( trs80 )
 	PORT_START /* IN0 */
 	PORT_BITX(	  0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy Disc Drives",   IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "On" )
@@ -351,6 +351,7 @@ static struct GfxDecodeInfo trs80_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+
 /* some colors for the DOS frontend and selectable fore-/background */
 static unsigned char trs80_palette[9*3] =
 {
@@ -376,6 +377,16 @@ static unsigned short trs80_colortable[8*2] =
 	8,7,    /* white on gray */
 	7,8,    /* gray on white */
 };
+
+
+
+/* Initialise the palette */
+static void trs80_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,trs80_palette,sizeof(trs80_palette));
+	memcpy(sys_colortable,trs80_colortable,sizeof(trs80_colortable));
+}
+
 
 static struct DACinterface trs80_DAC_interface =
 {
@@ -408,7 +419,7 @@ static struct MachineDriver machine_driver_model1 =
 	{ 0*FW*2,64*FW*2-1,0*FH*3,16*FH*3-1},   /* visible_area */
 	trs80_gfxdecodeinfo,                    /* graphics decode info */
 	9, 16,                                  /* colors used for the characters */
-	0,                                      /* convert color prom */
+	trs80_init_palette,                     /* init palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
@@ -475,7 +486,7 @@ static struct MachineDriver machine_driver_model3 =
 
 ***************************************************************************/
 
-ROM_START(trs80_rom)
+ROM_START(trs80)
 	ROM_REGION(0x10000)
 	ROM_LOAD("trs80.rom",   0x0000, 0x3000, 0xd6fd9041)
 
@@ -484,7 +495,7 @@ ROM_START(trs80_rom)
 ROM_END
 
 
-ROM_START(trs80_m3_rom)
+ROM_START(trs80_m3)
 	ROM_REGION(0x10000)
 	ROM_LOAD("trs80.rom",   0x0000, 0x3000, 0xd6fd9041)
 
@@ -530,13 +541,14 @@ struct GameDriver trs80_driver =
 	"1978",
 	"Tandy Radio Shack",
 	"Juergen Buchmueller [MESS driver]",
-	GAME_COMPUTER,
+	0,
 	&machine_driver_model1,
 	0,
 
-	trs80_rom,
+	rom_trs80,
 	trs80_rom_load,         /* load rom_file images */
 	trs80_rom_id,           /* identify rom images */
+	0,						/* file extensions */
 	1,                      /* number of ROM slots - in this case, a CMD binary */
 	4,                      /* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
@@ -546,13 +558,13 @@ struct GameDriver trs80_driver =
 	0,                      /* pointer to sample names */
 	0,                      /* sound_prom */
 
-	trs80_input_ports,
+	input_ports_trs80,
 
 	0,                      /* color_prom */
-	trs80_palette,          /* color palette */
-	trs80_colortable,       /* color lookup table */
+	/*trs80_palette*/0,          /* color palette */
+	/*trs80_colortable*/0,       /* color lookup table */
 
-	ORIENTATION_DEFAULT,    /* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,    /* orientation */
 
 	0,                      /* hiscore load */
 	0,                      /* hiscore save */
@@ -567,13 +579,14 @@ struct GameDriver trs80m3_driver =
 	"19??",
 	"Tandy",
 	"Juergen Buchmueller [MESS driver]",
-	GAME_NOT_WORKING,
+	0,
 	&machine_driver_model3,
 	0,
 
-	trs80_m3_rom,
+	rom_trs80_m3,
 	trs80_rom_load,         /* load rom_file images */
 	trs80_rom_id,           /* identify rom images */
+	0,						/* file extensions */
 	1,                      /* number of ROM slots - in this case, a CMD binary */
 	4,                      /* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
@@ -583,13 +596,13 @@ struct GameDriver trs80m3_driver =
 	0,                      /* pointer to sample names */
 	0,                      /* sound_prom */
 
-	trs80_input_ports,
+	input_ports_trs80,
 
 	0,                      /* color_prom */
-	trs80_palette,          /* color palette */
-	trs80_colortable,       /* color lookup table */
+	/*trs80_palette*/0,          /* color palette */
+	/*trs80_colortable*/0,       /* color lookup table */
 
-	ORIENTATION_DEFAULT,    /* orientation */
+	GAME_NOT_WORKING | ORIENTATION_DEFAULT,    /* orientation */
 
 	0,                      /* hiscore load */
 	0,                      /* hiscore save */

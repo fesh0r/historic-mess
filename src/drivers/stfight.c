@@ -323,7 +323,7 @@ static struct MemoryWriteAddress writemem_cpu2[] =
 };
 
 
-INPUT_PORTS_START( stfight_input_ports )
+INPUT_PORTS_START( stfight )
 	PORT_START	/* PLAYER 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -565,7 +565,7 @@ static struct MachineDriver stfight_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( empcity_rom )
+ROM_START( empcity )
 	ROM_REGION(0x18000)	        /* 64k for the first CPU */
 	ROM_LOAD( "ec_01.rom",  0x00000, 0x8000, 0xfe01d9b1 )
 	ROM_LOAD( "ec_02.rom",  0x10000, 0x8000, 0xb3cf1ef7 )	/* bank switched */
@@ -605,7 +605,7 @@ ROM_START( empcity_rom )
 	ROM_LOAD( "sf18.bin",   0x00000, 0x8000, 0x68acd627 )
 	ROM_LOAD( "sf19.bin",   0x08000, 0x8000, 0x5170a057 )
 
-	ROM_REGION(0x0800)	/* PROMs */
+	ROM_REGIONX( 0x0800, REGION_PROMS )
 	ROM_LOAD( "82s129.006", 0x0000, 0x0100, 0xf9424b5b )	/* text lookup table */
 	ROM_LOAD( "82s129.002", 0x0100, 0x0100, 0xc883d49b )	/* fg lookup table */
 	ROM_LOAD( "82s129.003", 0x0200, 0x0100, 0xaf81882a )
@@ -616,7 +616,7 @@ ROM_START( empcity_rom )
 	ROM_LOAD( "82s129.015", 0x0700, 0x0100, 0x0eaf5158 )	/* timing? (not used) */
 ROM_END
 
-ROM_START( stfight_rom )
+ROM_START( stfight )
 	ROM_REGION(0x18000)	        /* 64k for the first CPU */
 	ROM_LOAD( "a-1.4q",     0x00000, 0x8000, 0xff83f316 )
 	ROM_LOAD( "sf02.bin",   0x10000, 0x8000, 0xe626ce9e )	/* bank switched */
@@ -656,7 +656,7 @@ ROM_START( stfight_rom )
 	ROM_LOAD( "sf18.bin",   0x00000, 0x8000, 0x68acd627 )
 	ROM_LOAD( "sf19.bin",   0x08000, 0x8000, 0x5170a057 )
 
-	ROM_REGION(0x0800)	/* PROMs */
+	ROM_REGIONX( 0x0800, REGION_PROMS )
 	ROM_LOAD( "82s129.006", 0x0000, 0x0100, 0xf9424b5b )	/* text lookup table */
 	ROM_LOAD( "82s129.002", 0x0100, 0x0100, 0xc883d49b )	/* fg lookup table */
 	ROM_LOAD( "82s129.003", 0x0200, 0x0100, 0xaf81882a )
@@ -704,7 +704,7 @@ static void stfight_hisave( void )
 
 
 
-struct GameDriver empcity_driver =
+struct GameDriver driver_empcity =
 {
 	__FILE__,
 	0,
@@ -717,23 +717,23 @@ struct GameDriver empcity_driver =
 	&stfight_machine_driver,
 	0,
 
-	empcity_rom,
+	rom_empcity,
     0,stfight_decode,
 	0,
 	0,	/* sound_prom */
 
-	stfight_input_ports,
+	input_ports_stfight,
 
-	PROM_MEMORY_REGION(9), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	stfight_hiload, stfight_hisave
 };
 
-struct GameDriver stfight_driver =
+struct GameDriver driver_stfight =
 {
 	__FILE__,
-	&empcity_driver,
+	&driver_empcity,
 	"stfight",
 	"Street Fight (Germany)",
 	"1986",
@@ -743,14 +743,14 @@ struct GameDriver stfight_driver =
 	&stfight_machine_driver,
 	0,
 
-	stfight_rom,
+	rom_stfight,
     0,stfight_decode,
 	0,
 	0,	/* sound_prom */
 
-	stfight_input_ports,
+	input_ports_stfight,
 
-	PROM_MEMORY_REGION(9), 0, 0,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	stfight_hiload, stfight_hisave

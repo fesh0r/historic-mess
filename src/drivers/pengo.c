@@ -14,7 +14,6 @@ read:
 9040      DSW0
 9080      IN1
 90c0      IN0
-see the input_ports definition below for details on the input bits
 
 write:
 8ff2-8ffd 6 pairs of two bytes:
@@ -99,7 +98,7 @@ static struct MemoryWriteAddress writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( pengo )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY )
@@ -284,7 +283,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( pengo_rom )
+ROM_START( pengo )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic8",          0x0000, 0x1000, 0xf37066a8 )
 	ROM_LOAD( "ic7",          0x1000, 0x1000, 0xbaf48143 )
@@ -299,7 +298,7 @@ ROM_START( pengo_rom )
 	ROM_LOAD( "ic92",         0x0000, 0x2000, 0xd7eec6cd )
 	ROM_LOAD( "ic105",        0x2000, 0x2000, 0x5bfd26e9 )
 
-	ROM_REGION(0x0420)	/* color PROMs */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "pr1633.078",   0x0000, 0x0020, 0x3a5844ec )
 	ROM_LOAD( "pr1634.088",   0x0020, 0x0400, 0x766b139b )
 
@@ -308,7 +307,7 @@ ROM_START( pengo_rom )
 	ROM_LOAD( "pr1636.070",   0x0100, 0x0100, 0x77245b66 )	/* timing - not used */
 ROM_END
 
-ROM_START( pengo2_rom )
+ROM_START( pengo2 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "ic8.2",        0x0000, 0x1000, 0xe4924b7b )
 	ROM_LOAD( "ic7.2",        0x1000, 0x1000, 0x72e7775d )
@@ -323,7 +322,7 @@ ROM_START( pengo2_rom )
 	ROM_LOAD( "ic92",         0x0000, 0x2000, 0xd7eec6cd )
 	ROM_LOAD( "ic105",        0x2000, 0x2000, 0x5bfd26e9 )
 
-	ROM_REGION(0x0420)	/* color PROMs */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "pr1633.078",   0x0000, 0x0020, 0x3a5844ec )
 	ROM_LOAD( "pr1634.088",   0x0020, 0x0400, 0x766b139b )
 
@@ -332,7 +331,7 @@ ROM_START( pengo2_rom )
 	ROM_LOAD( "pr1636.070",   0x0100, 0x0100, 0x77245b66 )	/* timing - not used */
 ROM_END
 
-ROM_START( pengo2u_rom )
+ROM_START( pengo2u )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "pengo.u8",     0x0000, 0x1000, 0x3dfeb20e )
 	ROM_LOAD( "pengo.u7",     0x1000, 0x1000, 0x1db341bd )
@@ -347,7 +346,7 @@ ROM_START( pengo2u_rom )
 	ROM_LOAD( "ic92",         0x0000, 0x2000, 0xd7eec6cd )
 	ROM_LOAD( "ic105",        0x2000, 0x2000, 0x5bfd26e9 )
 
-	ROM_REGION(0x0420)	/* color PROMs */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "pr1633.078",   0x0000, 0x0020, 0x3a5844ec )
 	ROM_LOAD( "pr1634.088",   0x0020, 0x0400, 0x766b139b )
 
@@ -356,7 +355,7 @@ ROM_START( pengo2u_rom )
 	ROM_LOAD( "pr1636.070",   0x0100, 0x0100, 0x77245b66 )	/* timing - not used */
 ROM_END
 
-ROM_START( penta_rom )
+ROM_START( penta )
 	ROM_REGION(0x10000)     /* 64k for code */
 	ROM_LOAD( "008_pn01.bin", 0x0000, 0x1000, 0x22f328df )
 	ROM_LOAD( "007_pn05.bin", 0x1000, 0x1000, 0x15bbc7d3 )
@@ -371,7 +370,7 @@ ROM_START( penta_rom )
 	ROM_LOAD( "092_pn09.bin", 0x0000, 0x2000, 0x6afeba9d )
 	ROM_LOAD( "ic105",        0x2000, 0x2000, 0x5bfd26e9 )
 
-	ROM_REGION(0x0420)	/* color PROMs */
+	ROM_REGIONX( 0x0420, REGION_PROMS )
 	ROM_LOAD( "pr1633.078",   0x0000, 0x0020, 0x3a5844ec )
 	ROM_LOAD( "pr1634.088",   0x0020, 0x0400, 0x766b139b )
 
@@ -523,7 +522,7 @@ static void hisave(void)
 
 
 
-struct GameDriver pengo_driver =
+struct GameDriver driver_pengo =
 {
 	__FILE__,
 	0,
@@ -536,23 +535,23 @@ struct GameDriver pengo_driver =
 	&machine_driver,
 	0,
 
-	pengo_rom,
+	rom_pengo,
 	0, pengo_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pengo,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver pengo2_driver =
+struct GameDriver driver_pengo2 =
 {
 	__FILE__,
-	&pengo_driver,
+	&driver_pengo,
 	"pengo2",
 	"Pengo (set 2)",
 	"1982",
@@ -562,23 +561,23 @@ struct GameDriver pengo2_driver =
 	&machine_driver,
 	0,
 
-	pengo2_rom,
+	rom_pengo2,
 	0, pengo_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pengo,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	pengo2_hiload, hisave
 };
 
-struct GameDriver pengo2u_driver =
+struct GameDriver driver_pengo2u =
 {
 	__FILE__,
-	&pengo_driver,
+	&driver_pengo,
 	"pengo2u",
 	"Pengo (set 2 not encrypted)",
 	"1982",
@@ -588,23 +587,23 @@ struct GameDriver pengo2u_driver =
 	&machine_driver,
 	0,
 
-	pengo2u_rom,
+	rom_pengo2u,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pengo,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	pengo2_hiload, hisave
 };
 
-struct GameDriver penta_driver =
+struct GameDriver driver_penta =
 {
 	__FILE__,
-	&pengo_driver,
+	&driver_pengo,
 	"penta",
 	"Penta",
 	"1982",
@@ -614,14 +613,14 @@ struct GameDriver penta_driver =
 	&machine_driver,
 	0,
 
-	penta_rom,
+	rom_penta,
 	0, penta_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_pengo,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave

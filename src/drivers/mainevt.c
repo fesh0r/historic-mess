@@ -252,7 +252,7 @@ static struct MemoryWriteAddress dv_sound_writemem[] =
 
 /*****************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( mainevt )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -344,12 +344,12 @@ INPUT_PORTS_START( input_ports )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x18, 0x18, "Bonus Energy" )
+	PORT_DIPNAME( 0x18, 0x10, "Bonus Energy" )
 	PORT_DIPSETTING(    0x00, "60" )
 	PORT_DIPSETTING(    0x08, "70" )
 	PORT_DIPSETTING(    0x10, "80" )
 	PORT_DIPSETTING(    0x18, "90" )
-	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Difficulty ) )
+	PORT_DIPNAME( 0x60, 0x40, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x60, "Easy" )
 	PORT_DIPSETTING(    0x40, "Normal" )
 	PORT_DIPSETTING(    0x20, "Difficult" )
@@ -372,7 +372,118 @@ INPUT_PORTS_START( input_ports )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( dv_input_ports )
+INPUT_PORTS_START( ringohja )
+	PORT_START	/* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN4 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START	/* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START	/* IN1 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* IN2 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, "4 Coins/5 Credits" )
+	PORT_DIPSETTING(    0x03, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_5C ) )
+	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x09, DEF_STR( 1C_7C ) )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x50, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, "4 Coins/5 Credits" )
+	PORT_DIPSETTING(    0x30, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 2C_5C ) )
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
+
+ 	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x18, 0x10, "Bonus Energy" )
+	PORT_DIPSETTING(    0x00, "60" )
+	PORT_DIPSETTING(    0x08, "70" )
+	PORT_DIPSETTING(    0x10, "80" )
+	PORT_DIPSETTING(    0x18, "90" )
+	PORT_DIPNAME( 0x60, 0x40, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x60, "Easy" )
+	PORT_DIPSETTING(    0x40, "Normal" )
+	PORT_DIPSETTING(    0x20, "Difficult" )
+	PORT_DIPSETTING(    0x00, "Very Difficult" )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( dv )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -521,7 +632,7 @@ static struct MachineDriver machine_driver =
 	/* basic machine hardware */
 	{
  		{
-			CPU_M6309,
+			CPU_HD6309,
 			3000000,	/* ?? */
 			0,
 			readmem,writemem,0,0,
@@ -570,7 +681,7 @@ static struct MachineDriver dv_machine_driver =
 	/* basic machine hardware */
 	{
  		{
-			CPU_M6309,
+			CPU_HD6309,
 			3000000,	/* ?? */
 			0,
 			dv_readmem,dv_writemem,0,0,
@@ -622,7 +733,7 @@ static struct MachineDriver dv_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( mainevt_rom )
+ROM_START( mainevt )
 	ROM_REGION(0x40000)
 	ROM_LOAD( "799c02.k11",   0x10000, 0x08000, 0xe2e7dbd5 )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -651,7 +762,7 @@ ROM_START( mainevt_rom )
 	ROM_LOAD( "63s141n.bin",  0x0000, 0x0100, 0x61f6c8d1 )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( mainevt2_rom )
+ROM_START( mainevt2 )
 	ROM_REGION(0x40000)
 	ROM_LOAD( "02",           0x10000, 0x08000, 0xc143596b )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -680,7 +791,36 @@ ROM_START( mainevt2_rom )
 	ROM_LOAD( "63s141n.bin",  0x0000, 0x0100, 0x61f6c8d1 )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( devstors_rom )
+ROM_START( ringohja )
+	ROM_REGION(0x40000)
+	ROM_LOAD( "799n02.k11",   0x10000, 0x08000, 0xf9305dd0 )
+	ROM_CONTINUE(             0x08000, 0x08000 )
+
+    ROM_REGION(0x20000)	/* graphics (addressable by the main CPU) */
+	ROM_LOAD_GFX_EVEN( "799c06.f22",   0x00000, 0x08000, 0xf839cb58 )
+	ROM_LOAD_GFX_ODD ( "799c07.h22",   0x00000, 0x08000, 0x176df538 )
+	ROM_LOAD_GFX_EVEN( "799c08.j22",   0x10000, 0x08000, 0xd01e0078 )
+	ROM_LOAD_GFX_ODD ( "799c09.k22",   0x10000, 0x08000, 0x9baec75e )
+
+    ROM_REGION(0x100000)	/* graphics (addressable by the main CPU) */
+	ROM_LOAD( "799b04.h4",    0x00000, 0x80000, 0x323e0c2b )
+	ROM_LOAD( "799b05.k4",    0x80000, 0x80000, 0x571c5831 )
+
+	ROM_REGION(0x10000)	/* 64k for the audio CPU */
+	ROM_LOAD( "799c01.f7",    0x00000, 0x08000, 0x447c4c5c )
+
+	ROM_REGION(0x80000)	/* 512k for 007232 samples */
+	ROM_LOAD( "799b03.d4",    0x00000, 0x80000, 0xf1cfd342 )
+
+	ROM_REGION(0xa0000)	/* 128+512k for the UPD7759C samples */
+	/* 00000-1ffff space where the following ROM is bank switched */
+	ROM_LOAD( "799b06.c22",   0x20000, 0x80000, 0x2c8c47d7 )
+
+	ROM_REGION(0x0100)	/* PROMs */
+	ROM_LOAD( "63s141n.bin",  0x0000, 0x0100, 0x61f6c8d1 )	/* priority encoder (not used) */
+ROM_END
+
+ROM_START( devstors )
 	ROM_REGION(0x40000)
 	ROM_LOAD( "890-z02.k11",  0x10000, 0x08000, 0xebeb306f )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -705,7 +845,7 @@ ROM_START( devstors_rom )
 	ROM_LOAD( "devaprom.bin", 0x0000, 0x0100, 0xd3620106 )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( devstor2_rom )
+ROM_START( devstor2 )
 	ROM_REGION(0x40000)
 	ROM_LOAD( "dev-x02.rom",  0x10000, 0x08000, 0xe58ebb35 )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -730,7 +870,7 @@ ROM_START( devstor2_rom )
 	ROM_LOAD( "devaprom.bin", 0x0000, 0x0100, 0xd3620106 )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( garuka_rom )
+ROM_START( garuka )
 	ROM_REGION(0x40000)
 	ROM_LOAD( "890w02.bin",   0x10000, 0x08000, 0xb2f6f538 )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -801,7 +941,7 @@ static void gfx_untangle(void)
 
 
 
-struct GameDriver mainevt_driver =
+struct GameDriver driver_mainevt =
 {
 	__FILE__,
 	0,
@@ -814,12 +954,12 @@ struct GameDriver mainevt_driver =
 	&machine_driver,
 	0,
 
-	mainevt_rom,
+	rom_mainevt,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_mainevt,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -827,10 +967,10 @@ struct GameDriver mainevt_driver =
 	hiload, hisave
 };
 
-struct GameDriver mainevt2_driver =
+struct GameDriver driver_mainevt2 =
 {
 	__FILE__,
-	&mainevt_driver,
+	&driver_mainevt,
 	"mainevt2",
 	"The Main Event (version F)",
 	"1988",
@@ -840,12 +980,12 @@ struct GameDriver mainevt2_driver =
 	&machine_driver,
 	0,
 
-	mainevt2_rom,
+	rom_mainevt2,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_mainevt,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -853,7 +993,33 @@ struct GameDriver mainevt2_driver =
 	hiload, hisave
 };
 
-struct GameDriver devstors_driver =
+struct GameDriver driver_ringohja =
+{
+	__FILE__,
+	&driver_mainevt,
+	"ringohja",
+	"Ring no Ohja (Japan)",
+	"1988",
+	"Konami",
+	"Bryan McPhail",
+	0,
+	&machine_driver,
+	0,
+
+	rom_ringohja,
+	gfx_untangle, 0,
+	0,
+	0,	/* sound_prom */
+
+	input_ports_ringohja,
+
+	0, 0, 0,
+	ORIENTATION_DEFAULT,
+
+	hiload, hisave
+};
+
+struct GameDriver driver_devstors =
 {
 	__FILE__,
 	0,
@@ -862,71 +1028,71 @@ struct GameDriver devstors_driver =
 	"1988",
 	"Konami",
 	"Bryan McPhail",
-	GAME_NOT_WORKING,
+	0,
 	&dv_machine_driver,
 	0,
 
-	devstors_rom,
+	rom_devstors,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	dv_input_ports,
+	input_ports_dv,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_NOT_WORKING,
 
 	0,0
 };
 
-struct GameDriver devstor2_driver =
+struct GameDriver driver_devstor2 =
 {
 	__FILE__,
-	&devstors_driver,
+	&driver_devstors,
  	"devstor2",
 	"Devastators (version X)",
 	"1988",
 	"Konami",
 	"Bryan McPhail",
-	GAME_NOT_WORKING,
+	0,
 	&dv_machine_driver,
 	0,
 
-	devstor2_rom,
+	rom_devstor2,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	dv_input_ports,
+	input_ports_dv,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_NOT_WORKING,
 
 	0,0
 };
 
-struct GameDriver garuka_driver =
+struct GameDriver driver_garuka =
 {
 	__FILE__,
-	&devstors_driver,
+	&driver_devstors,
  	"garuka",
 	"Garuka (Japan)",
 	"1988",
 	"Konami",
 	"Bryan McPhail",
-	GAME_NOT_WORKING,
+	0,
 	&dv_machine_driver,
 	0,
 
-	garuka_rom,
+	rom_garuka,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	dv_input_ports,
+	input_ports_dv,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_NOT_WORKING,
 
 	0,0
 };

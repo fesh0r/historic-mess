@@ -61,6 +61,7 @@
 
 #include "driver.h"
 #include "cpu/m6502/m6502.h"
+#include "vidhrdw/generic.h"
 
 
 int  leprechn_vh_start(void);
@@ -69,8 +70,6 @@ void leprechn_vh_stop(void);
 void leprechn_graphics_command_w(int offset,int data);
 int  leprechn_graphics_data_r(int offset);
 void leprechn_graphics_data_w(int offset,int data);
-
-void leprechn_vh_screenrefresh(struct osd_bitmap *bitmap,int full_refresh);
 
 void leprechn_input_port_select_w(int offset,int data);
 int  leprechn_input_port_r(int offset);
@@ -140,7 +139,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 	{ -1 }  /* end of table */
 };
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( leprechn )
 	// All of these ports are read indirectly through 2800/2801
 	PORT_START      /* Input Port 0 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT ) // This is called "Slam" in the game
@@ -221,7 +220,7 @@ INPUT_PORTS_END
 
 
 /* RGBI palette. Is it correct? */
-unsigned char leprechn_palette[16 * 3] =
+static unsigned char palette[16 * 3] =
 {
 	0x00, 0x00, 0x00,
 	0xff, 0x00, 0x00,
@@ -240,6 +239,11 @@ unsigned char leprechn_palette[16 * 3] =
 	0x40, 0xff, 0xff,
 	0xff, 0xff, 0xff
 };
+static void init_palette(unsigned char *game_palette, unsigned short *game_colortable,const unsigned char *color_prom)
+{
+	memcpy(game_palette,palette,sizeof(palette));
+}
+
 
 
 static struct AY8910interface ay8910_interface =
@@ -285,14 +289,14 @@ static struct MachineDriver leprechn_machine_driver =
 	/* video hardware */
 	256, 256, { 0, 256-1, 0, 256-1 },
 	0,
-	sizeof(leprechn_palette)/3, 0,
-	0,
+	sizeof(palette) / sizeof(palette[0]) / 3, 0,
+	init_palette,
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY,
 	0,
 	leprechn_vh_start,
 	leprechn_vh_stop,
-	leprechn_vh_screenrefresh,
+	generic_bitmapped_vh_screenrefresh,
 
 	/* sound hardware */
 	0,0,0,0,
@@ -311,7 +315,7 @@ static struct MachineDriver leprechn_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( leprechn_rom )
+ROM_START( leprechn )
 	ROM_REGION(0x10000)  /* 64k for the main CPU */
 	ROM_LOAD( "lep1",         0x8000, 0x1000, 0x2c4a46ca )
 	ROM_LOAD( "lep2",         0x9000, 0x1000, 0x6ed26b3e )
@@ -330,7 +334,7 @@ ROM_START( leprechn_rom )
 	ROM_LOAD( "lepsound",     0xf000, 0x1000, 0x6651e294 )
 ROM_END
 
-ROM_START( potogold_rom )
+ROM_START( potogold )
 	ROM_REGION(0x10000)  /* 64k for the main CPU */
 	ROM_LOAD( "pog.pg1",      0x8000, 0x1000, 0x9f1dbda6 )
 	ROM_LOAD( "pog.pg2",      0x9000, 0x1000, 0xa70e3811 )
@@ -390,7 +394,7 @@ static void hisave(void)
 
 
 
-struct GameDriver leprechn_driver =
+struct GameDriver driver_leprechn =
 {
 	__FILE__,
 	0,
@@ -403,24 +407,24 @@ struct GameDriver leprechn_driver =
 	&leprechn_machine_driver,
 	0,
 
-	leprechn_rom,
+	rom_leprechn,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_leprechn,
 
-	0, leprechn_palette, 0,
+	0, 0, 0,
 
 	ORIENTATION_DEFAULT,  // Upright game
 
 	hiload, hisave
 };
 
-struct GameDriver potogold_driver =
+struct GameDriver driver_potogold =
 {
 	__FILE__,
-	&leprechn_driver,
+	&driver_leprechn,
 	"potogold",
 	"Pot of Gold",
 	"1982",
@@ -430,14 +434,14 @@ struct GameDriver potogold_driver =
 	&leprechn_machine_driver,
 	0,
 
-	potogold_rom,
+	rom_potogold,
 	0, 0,
 	0,
 	0,      /* sound_prom */
 
-	input_ports,
+	input_ports_leprechn,
 
-	0, leprechn_palette, 0,
+	0, 0, 0,
 
 	ORIENTATION_DEFAULT,  // Upright game
 

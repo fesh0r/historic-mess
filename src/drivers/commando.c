@@ -112,7 +112,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( commando )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
@@ -308,7 +308,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( commando_rom )
+ROM_START( commando )
 	ROM_REGION(0x1c000)	/* 64k for code */
 	ROM_LOAD( "m09_cm04.bin", 0x0000, 0x8000, 0x8438b694 )
 	ROM_LOAD( "m08_cm03.bin", 0x8000, 0x4000, 0x35486542 )
@@ -328,7 +328,7 @@ ROM_START( commando_rom )
 	ROM_LOAD( "h08_vt09.bin", 0x2c000, 0x4000, 0x98703982 )
 	ROM_LOAD( "h09_vt10.bin", 0x30000, 0x4000, 0xf069d2f8 )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "01d_vtb1.bin", 0x0000, 0x0100, 0x3aba15a1 )
 	ROM_LOAD( "02d_vtb2.bin", 0x0100, 0x0100, 0x88865754 )
 	ROM_LOAD( "03d_vtb3.bin", 0x0200, 0x0100, 0x4c14c3f6 )
@@ -337,7 +337,7 @@ ROM_START( commando_rom )
 	ROM_LOAD( "f09_cm02.bin", 0x0000, 0x4000, 0xf9cc4a74 )
 ROM_END
 
-ROM_START( commandu_rom )
+ROM_START( commandu )
 	ROM_REGION(0x1c000)	/* 64k for code */
 	ROM_LOAD( "u4-f",         0x0000, 0x8000, 0xa6118935 )
 	ROM_LOAD( "u3-f",         0x8000, 0x4000, 0x24f49684 )
@@ -357,7 +357,7 @@ ROM_START( commandu_rom )
 	ROM_LOAD( "h08_vt09.bin", 0x2c000, 0x4000, 0x98703982 )
 	ROM_LOAD( "h09_vt10.bin", 0x30000, 0x4000, 0xf069d2f8 )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "01d_vtb1.bin", 0x0000, 0x0100, 0x3aba15a1 )
 	ROM_LOAD( "02d_vtb2.bin", 0x0100, 0x0100, 0x88865754 )
 	ROM_LOAD( "03d_vtb3.bin", 0x0200, 0x0100, 0x4c14c3f6 )
@@ -366,7 +366,7 @@ ROM_START( commandu_rom )
 	ROM_LOAD( "f09_cm02.bin", 0x0000, 0x4000, 0xf9cc4a74 )
 ROM_END
 
-ROM_START( commandj_rom )
+ROM_START( commandj )
 	ROM_REGION(0x1c000)	/* 64k for code */
 	ROM_LOAD( "09m_so04.bin", 0x0000, 0x8000, 0xd3f2bfb3 )
 	ROM_LOAD( "08m_so03.bin", 0x8000, 0x4000, 0xed01f472 )
@@ -386,7 +386,7 @@ ROM_START( commandj_rom )
 	ROM_LOAD( "h08_vt09.bin", 0x2c000, 0x4000, 0x98703982 )
 	ROM_LOAD( "h09_vt10.bin", 0x30000, 0x4000, 0xf069d2f8 )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "01d_vtb1.bin", 0x0000, 0x0100, 0x3aba15a1 )
 	ROM_LOAD( "02d_vtb2.bin", 0x0100, 0x0100, 0x88865754 )
 	ROM_LOAD( "03d_vtb3.bin", 0x0200, 0x0100, 0x4c14c3f6 )
@@ -395,7 +395,7 @@ ROM_START( commandj_rom )
 	ROM_LOAD( "09f_so02.bin", 0x0000, 0x4000, 0xca20aca5 )
 ROM_END
 
-ROM_START( spaceinv_rom )
+ROM_START( spaceinv )
 	ROM_REGION(0x1c000)	/* 64k for code */
 	ROM_LOAD( "u4",           0x0000, 0x8000, 0x834ba0de )
 	ROM_LOAD( "u3",           0x8000, 0x4000, 0x07e4ee3a )
@@ -415,7 +415,7 @@ ROM_START( spaceinv_rom )
 	ROM_LOAD( "h08_vt09.bin", 0x2c000, 0x4000, 0x98703982 )
 	ROM_LOAD( "h09_vt10.bin", 0x30000, 0x4000, 0xf069d2f8 )
 
-	ROM_REGION(0x0300)	/* color PROMs */
+	ROM_REGIONX( 0x0300, REGION_PROMS )
 	ROM_LOAD( "01d_vtb1.bin", 0x0000, 0x0100, 0x3aba15a1 )
 	ROM_LOAD( "02d_vtb2.bin", 0x0100, 0x0100, 0x88865754 )
 	ROM_LOAD( "03d_vtb3.bin", 0x0200, 0x0100, 0x4c14c3f6 )
@@ -505,7 +505,7 @@ static void hisave(void)
 
 
 
-struct GameDriver commando_driver =
+struct GameDriver driver_commando =
 {
 	__FILE__,
 	0,
@@ -518,23 +518,23 @@ struct GameDriver commando_driver =
 	&machine_driver,
 	0,
 
-	commando_rom,
+	rom_commando,
 	0, commando_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_commando,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver commandu_driver =
+struct GameDriver driver_commandu =
 {
 	__FILE__,
-	&commando_driver,
+	&driver_commando,
 	"commandu",
 	"Commando (US)",
 	"1985",
@@ -544,23 +544,23 @@ struct GameDriver commandu_driver =
 	&machine_driver,
 	0,
 
-	commandu_rom,
+	rom_commandu,
 	0, commando_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_commando,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver commandj_driver =
+struct GameDriver driver_commandj =
 {
 	__FILE__,
-	&commando_driver,
+	&driver_commando,
 	"commandj",
 	"Senjo no Ookami",
 	"1985",
@@ -570,23 +570,23 @@ struct GameDriver commandj_driver =
 	&machine_driver,
 	0,
 
-	commandj_rom,
+	rom_commandj,
 	0, commando_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_commando,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave
 };
 
-struct GameDriver spaceinv_driver =
+struct GameDriver driver_spaceinv =
 {
 	__FILE__,
-	&commando_driver,
+	&driver_commando,
 	"spaceinv",
 	"Space Invasion",
 	"1985",
@@ -596,14 +596,14 @@ struct GameDriver spaceinv_driver =
 	&machine_driver,
 	0,
 
-	spaceinv_rom,
+	rom_spaceinv,
 	0, spaceinv_decode,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_commando,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	hiload, hisave

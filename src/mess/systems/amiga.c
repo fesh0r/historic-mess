@@ -54,7 +54,7 @@ static struct MemoryWriteAddress writemem[] =
 /**************************************************************************
 ***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( amiga )
 	PORT_START
 INPUT_PORTS_END
 
@@ -88,7 +88,7 @@ static struct MachineDriver machine_driver_ntsc =
 	4096, 4096,						/* number of colors, colortable size */
 	amiga_init_palette,				/* convert color prom */
 
-	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_16BIT | VIDEO_UPDATE_BEFORE_VBLANK,
+	VIDEO_TYPE_RASTER | GAME_REQUIRES_16BIT | VIDEO_UPDATE_BEFORE_VBLANK,
 	0,
 	amiga_vh_start,
 	amiga_vh_stop,
@@ -104,7 +104,7 @@ static struct MachineDriver machine_driver_ntsc =
 
 ***************************************************************************/
 
-ROM_START( amiga_rom )
+ROM_START( amiga )
 	ROM_REGION(0x1000000) /* for ram, etc */
 	//ROM_LOAD( "kick13.rom",  0xf80000, 0x80000, 0xfa180000 )
 	ROM_LOAD( "kick13.rom",  0xf80000, 0x80000, 0xf6290043)
@@ -130,13 +130,14 @@ struct GameDriver amiga_driver =
 	"1984",
 	"Commodore Busines Machines Co.",
 	"Ernesto Corvi",
-	GAME_NOT_WORKING | GAME_COMPUTER,
+	0,
 	&machine_driver_ntsc,
 	0,
 
-	amiga_rom,
+	rom_amiga,
 	0,						/* load rom_file images */
 	0,						/* identify rom images */
+	0,						/* default extensions */
 	0,						/* number of ROM slots - in this case, a CMD binary */
 	4,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -146,13 +147,13 @@ struct GameDriver amiga_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	input_ports,
+	input_ports_amiga,
 
 	0,						/* color_prom */
 	0,						/* color palette */
 	0,						/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_NOT_WORKING | GAME_COMPUTER | ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0						/* hiscore save */

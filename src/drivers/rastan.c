@@ -164,7 +164,7 @@ static struct MemoryWriteAddress rastan_s_writemem[] =
 
 
 
-INPUT_PORTS_START( rastan_input_ports )
+INPUT_PORTS_START( rastan )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -242,7 +242,7 @@ INPUT_PORTS_START( rastan_input_ports )
 INPUT_PORTS_END
 
 /* same as rastan, coinage is different */
-INPUT_PORTS_START( rastsaga_input_ports )
+INPUT_PORTS_START( rastsaga )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
@@ -367,12 +367,28 @@ static struct YM2151interface ym2151_interface =
 	{ rastan_bankswitch_w }
 };
 
+
+struct ADPCMsample rastan_samples[] =
+{
+	{ 0x00, 0x0000, 0x0200*2 },
+	{ 0x02, 0x0200, 0x0500*2 },
+	{ 0x07, 0x0700, 0x2100*2 },
+	{ 0x28, 0x2800, 0x3b00*2 },
+	{ 0x63, 0x6300, 0x4e00*2 },
+	{ 0xb1, 0xb100, 0x1600*2 }
+};
+
+static void adpcm_init(const struct ADPCMinterface *adpcm_intf, struct ADPCMsample *sample_list, int max)
+{
+	memcpy(sample_list,rastan_samples,sizeof(rastan_samples));
+}
+
 static struct ADPCMinterface adpcm_interface =
 {
 	1,			/* 1 chip */
 	8000,       /* 8000Hz playback */
 	3,			/* memory region 3 */
-	0,			/* init function */
+	adpcm_init,	/* init function */
 	{ 60 }
 };
 
@@ -436,7 +452,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( rastan_rom )
+ROM_START( rastan )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "ic19_38.bin", 0x00000, 0x10000, 0x1c91dbb1 )
 	ROM_LOAD_ODD ( "ic07_37.bin", 0x00000, 0x10000, 0xecf20bdd )
@@ -463,7 +479,7 @@ ROM_START( rastan_rom )
 	ROM_LOAD( "ic76_20.bin", 0x0000, 0x10000, 0xfd1a34cc ) /* samples are 4bit ADPCM */
 ROM_END
 
-ROM_START( rastanu_rom )
+ROM_START( rastanu )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "ic19_38.bin", 0x00000, 0x10000, 0x1c91dbb1 )
 	ROM_LOAD_ODD ( "ic07_37.bin", 0x00000, 0x10000, 0xecf20bdd )
@@ -490,7 +506,7 @@ ROM_START( rastanu_rom )
 	ROM_LOAD( "ic76_20.bin", 0x0000, 0x10000, 0xfd1a34cc ) /* samples are 4bit ADPCM */
 ROM_END
 
-ROM_START( rastanu2_rom )
+ROM_START( rastanu2 )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "rs19_38.bin", 0x00000, 0x10000, 0xa38ac909 )
 	ROM_LOAD_ODD ( "b04-21.7",    0x00000, 0x10000, 0x7c8dde9a )
@@ -517,7 +533,7 @@ ROM_START( rastanu2_rom )
 	ROM_LOAD( "ic76_20.bin", 0x0000, 0x10000, 0xfd1a34cc ) /* samples are 4bit ADPCM */
 ROM_END
 
-ROM_START( rastsaga_rom )
+ROM_START( rastsaga )
 	ROM_REGION(0x60000)	/* 6*64k for 68000 code */
 	ROM_LOAD_EVEN( "rs19_38.bin", 0x00000, 0x10000, 0xa38ac909 )
 	ROM_LOAD_ODD ( "rs07_37.bin", 0x00000, 0x10000, 0xbad60872 )
@@ -543,16 +559,6 @@ ROM_START( rastsaga_rom )
 	ROM_REGION(0x10000)	/* 64k for the samples */
 	ROM_LOAD( "ic76_20.bin", 0x0000, 0x10000, 0xfd1a34cc ) /* samples are 4bit ADPCM */
 ROM_END
-
-
-ADPCM_SAMPLES_START(rastan_samples)
-	ADPCM_SAMPLE(0x00, 0x0000, 0x0200*2)
-	ADPCM_SAMPLE(0x02, 0x0200, 0x0500*2)
-	ADPCM_SAMPLE(0x07, 0x0700, 0x2100*2)
-	ADPCM_SAMPLE(0x28, 0x2800, 0x3b00*2)
-	ADPCM_SAMPLE(0x63, 0x6300, 0x4e00*2)
-	ADPCM_SAMPLE(0xb1, 0xb100, 0x1600*2)
-ADPCM_SAMPLES_END
 
 
 
@@ -601,7 +607,7 @@ static void rastan_hisave(void)
 
 
 
-struct GameDriver rastan_driver =
+struct GameDriver driver_rastan =
 {
 	__FILE__,
 	0,
@@ -614,12 +620,12 @@ struct GameDriver rastan_driver =
 	&machine_driver,
 	0,
 
-	rastan_rom,
+	rom_rastan,
 	0, 0,
 	0,
-	rastan_samples,	/* sound_prom */
+	0,	/* sound_prom */
 
-	rastan_input_ports,
+	input_ports_rastan,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -627,10 +633,10 @@ struct GameDriver rastan_driver =
 };
 
 /* IDENTICAL to rastan, only differennce is copyright notice and Coin B coinage */
-struct GameDriver rastanu_driver =
+struct GameDriver driver_rastanu =
 {
 	__FILE__,
-	&rastan_driver,
+	&driver_rastan,
 	"rastanu",
 	"Rastan (US set 1)",
 	"1987",
@@ -640,22 +646,22 @@ struct GameDriver rastanu_driver =
 	&machine_driver,
 	0,
 
-	rastanu_rom,
+	rom_rastanu,
 	0, 0,
 	0,
-	rastan_samples,	/* sound_prom */
+	0,	/* sound_prom */
 
-	rastsaga_input_ports,
+	input_ports_rastsaga,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	rastan_hiload, rastan_hisave
 };
 
-struct GameDriver rastanu2_driver =
+struct GameDriver driver_rastanu2 =
 {
 	__FILE__,
-	&rastan_driver,
+	&driver_rastan,
 	"rastanu2",
 	"Rastan (US set 2)",
 	"1987",
@@ -665,22 +671,22 @@ struct GameDriver rastanu2_driver =
 	&machine_driver,
 	0,
 
-	rastanu2_rom,
+	rom_rastanu2,
 	0, 0,
 	0,
-	rastan_samples,	/* sound_prom */
+	0,	/* sound_prom */
 
-	rastsaga_input_ports,
+	input_ports_rastsaga,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	rastan_hiload, rastan_hisave
 };
 
-struct GameDriver rastsaga_driver =
+struct GameDriver driver_rastsaga =
 {
 	__FILE__,
-	&rastan_driver,
+	&driver_rastan,
 	"rastsaga",
 	"Rastan Saga (Japan)",
 	"1987",
@@ -690,12 +696,12 @@ struct GameDriver rastsaga_driver =
 	&machine_driver,
 	0,
 
-	rastsaga_rom,
+	rom_rastsaga,
 	0, 0,
 	0,
-	rastan_samples,	/* sound_prom */
+	0,	/* sound_prom */
 
-	rastsaga_input_ports,
+	input_ports_rastsaga,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
@@ -715,12 +721,12 @@ struct GameDriver rastsaga_driver =
 ** directory of mame.exe
 */
 
-ROM_START( ymcym_rom )
+ROM_START( ymcym )
 	ROM_REGION(0x10000)
 	ROM_REGION(0x1000)
 ROM_END
 
-INPUT_PORTS_START( ymcym_input_ports )
+INPUT_PORTS_START( ymcym )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
@@ -833,7 +839,7 @@ static struct MachineDriver ymcym_machine =
 	}
 };
 
-struct GameDriver cymplay_driver =
+struct GameDriver driver_cymplay =
 {
 	__FILE__,
 	0,
@@ -846,12 +852,12 @@ struct GameDriver cymplay_driver =
 	&ymcym_machine,
 	0,
 
-	ymcym_rom,
+	rom_ymcym,
 	0, 0,
 	0,
 	0,
 
-	ymcym_input_ports,
+	input_ports_ymcym,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -1005,7 +1011,7 @@ static struct MachineDriver ymtest_machine =
 	}
 };
 
-struct GameDriver ymtest_driver =
+struct GameDriver driver_ymtest =
 {
 	__FILE__,
 	0,
@@ -1018,12 +1024,12 @@ struct GameDriver ymtest_driver =
 	&ymtest_machine,
 	0,
 
-	ymcym_rom,
+	rom_ymcym,
 	0, 0,
 	0,
 	0,
 
-	ymcym_input_ports,
+	input_ports_ymcym,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,

@@ -1441,7 +1441,7 @@ static void patch_z80code( int offset, int data ){
 
 /***************************************************************************/
 // sys16A
-ROM_START( alexkidd_rom )
+ROM_START( alexkidd )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr10427.26", 0x000000, 0x10000, 0xf6e3dd29 )
 	ROM_LOAD_EVEN( "epr10429.42", 0x000000, 0x10000, 0xbdf49eca )
@@ -1476,7 +1476,7 @@ ROM_START( alexkidd_rom )
 	ROM_LOAD( "10436.2", 0x8000, 0x8000, 0x96c76613 )
 ROM_END
 
-ROM_START( alexkidda_rom )
+ROM_START( alexkidda )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "10445.26", 0x000000, 0x10000, 0x25ce5b6f )
 	ROM_LOAD_EVEN( "10447.43", 0x000000, 0x10000, 0x29e87f71 )
@@ -1580,7 +1580,7 @@ static void alexkidd_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( alexkidd_input_ports )
+INPUT_PORTS_START( alexkidd )
 	SYS16_JOY1_SWAPPEDBUTTONS
 	SYS16_JOY2_SWAPPEDBUTTONS
 	SYS16_SERVICE
@@ -1646,7 +1646,7 @@ static void alexkidd_hisave(void)
 	}
 }
 
-struct GameDriver alexkidd_driver =
+struct GameDriver driver_alexkidd =
 {
 	__FILE__,
 	0,
@@ -1655,23 +1655,23 @@ struct GameDriver alexkidd_driver =
 	"1986",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&alexkidd_machine_driver,
 	sys16_onetime_init_machine,
-	alexkidd_rom,
+	rom_alexkidd,
 	alexkidd_sprite_decode, 0,
 	0,
 	0,
-	alexkidd_input_ports,
+	input_ports_alexkidd,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver alexkida_driver =
+struct GameDriver driver_alexkida =
 {
 	__FILE__,
-	&alexkidd_driver,
+	&driver_alexkidd,
 	"alexkida",
 	"Alex Kidd (set 2)",
 	"1986",
@@ -1680,11 +1680,11 @@ struct GameDriver alexkida_driver =
 	0,
 	&alexkidd_machine_driver,
 	sys16_onetime_init_machine,
-	alexkidda_rom,
+	rom_alexkidda,
 	alexkidd_sprite_decode, 0,
 	0,
 	0,
-	alexkidd_input_ports,
+	input_ports_alexkidd,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	alexkidd_hiload, alexkidd_hisave
@@ -1692,7 +1692,7 @@ struct GameDriver alexkida_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( aliensyn_rom )
+ROM_START( aliensyn )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "11080.a1", 0x00000, 0x8000, 0xfe7378d9 )
 	ROM_LOAD_EVEN( "11083.a4", 0x00000, 0x8000, 0xcb2ad9b3 )
@@ -1724,7 +1724,7 @@ ROM_START( aliensyn_rom )
 ROM_END
 
 // sys16A - use a different sound chip?
-ROM_START( aliensya_rom )
+ROM_START( aliensya )
 	ROM_REGION( 0x030000 ) /* 68000 code. I guessing the order a bit here */
 	ROM_LOAD_ODD ( "10806", 0x00000, 0x8000, 0x9f7f8fdd )
 	ROM_LOAD_EVEN( "10808", 0x00000, 0x8000, 0xe669929f )
@@ -1755,7 +1755,7 @@ ROM_START( aliensya_rom )
 	ROM_LOAD( "10708", 0x20000, 0x8000, 0x5921ef52 )
 ROM_END
 
-ROM_START( aliensyb_rom )
+ROM_START( aliensyb )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "as_typeb.a1", 0x00000, 0x8000, 0x4cd134df )
 	ROM_LOAD_EVEN( "as_typeb.a4", 0x00000, 0x8000, 0x17bf5304 )
@@ -1852,7 +1852,7 @@ static void aliensyn_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( aliensyn_input_ports )
+INPUT_PORTS_START( aliensyn )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -1931,7 +1931,7 @@ static void aliensyn_hisave(void)
 	}
 }
 
-struct GameDriver aliensyn_driver =
+struct GameDriver driver_aliensyn =
 {
 	__FILE__,
 	0,
@@ -1943,63 +1943,63 @@ struct GameDriver aliensyn_driver =
 	0,
 	&aliensyn_machine_driver,
 	aliensyn_onetime_init_machine,
-	aliensyn_rom,
+	rom_aliensyn,
 	aliensyn_sprite_decode, 0,
 	0,
 	0,
-	aliensyn_input_ports,
+	input_ports_aliensyn,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	aliensyn_hiload, aliensyn_hisave
 };
 
-struct GameDriver aliensya_driver =
+struct GameDriver driver_aliensya =
 {
 	__FILE__,
-	&aliensyn_driver,
+	&driver_aliensyn,
 	"aliensya",
 	"Alien Syndrome (set 2)",
 	"1987",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&aliensyn_machine_driver,
 	aliensyn_onetime_init_machine,
-	aliensya_rom,
+	rom_aliensya,
 	aliensyn_sprite_decode, 0,
 	0,
 	0,
-	aliensyn_input_ports,
+	input_ports_aliensyn,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver aliensyb_driver =
+struct GameDriver driver_aliensyb =
 {
 	__FILE__,
-	&aliensyn_driver,
+	&driver_aliensyn,
 	"aliensyb",
 	"Alien Syndrome (set 3)",
 	"1987",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&aliensyn_machine_driver,
 	aliensyn_onetime_init_machine,
-	aliensyb_rom,
+	rom_aliensyb,
 	aliensyn_sprite_decode, 0,
 	0,
 	0,
-	aliensyn_input_ports,
+	input_ports_aliensyn,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /***************************************************************************/
 // sys16B
-ROM_START( altbeast_rom )
+ROM_START( altbeast )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "11704", 0x000000, 0x20000, 0x33bbcf07 )
 	ROM_LOAD_EVEN( "11705", 0x000000, 0x20000, 0x57dc5c7a )
@@ -2034,7 +2034,7 @@ ROM_START( altbeast_rom )
 ROM_END
 
 // sys16B
-ROM_START( altbeas2_rom )
+ROM_START( altbeas2 )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr11739", 0x000000, 0x20000, 0xe466eb65 )
 	ROM_LOAD_EVEN( "epr11740", 0x000000, 0x20000, 0xce227542 )
@@ -2151,7 +2151,7 @@ static void altbeast_sprite_decode( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( altbeast_input_ports )
+INPUT_PORTS_START( altbeast )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -2218,7 +2218,7 @@ static void altbeast_hisave(void)
 	}
 }
 
-struct GameDriver altbeast_driver =
+struct GameDriver driver_altbeast =
 {
 	__FILE__,
 	0,
@@ -2230,11 +2230,11 @@ struct GameDriver altbeast_driver =
 	0,
 	&altbeast_machine_driver,
 	sys16_onetime_init_machine,
-	altbeast_rom,
+	rom_altbeast,
 	altbeast_sprite_decode, 0,
 	0,
 	0,
-	altbeast_input_ports,
+	input_ports_altbeast,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	altbeast_hiload, altbeast_hisave
@@ -2243,10 +2243,10 @@ struct GameDriver altbeast_driver =
 MACHINE_DRIVER_7759( altbeas2_machine_driver, \
 	altbeast_readmem,altbeast_writemem,altbeas2_init_machine, gfx2,upd7759_interface )
 
-struct GameDriver altbeas2_driver =
+struct GameDriver driver_altbeas2 =
 {
 	__FILE__,
-	&altbeast_driver,
+	&driver_altbeast,
 	"altbeas2",
 	"Altered Beast (Version 2)",
 	"1988",
@@ -2255,11 +2255,11 @@ struct GameDriver altbeas2_driver =
 	0,
 	&altbeas2_machine_driver,
 	sys16_onetime_init_machine,
-	altbeas2_rom,
+	rom_altbeas2,
 	altbeast_sprite_decode, 0,
 	0,
 	0,
-	altbeast_input_ports,
+	input_ports_altbeast,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	altbeast_hiload, altbeast_hisave
@@ -2267,7 +2267,7 @@ struct GameDriver altbeas2_driver =
 
 /***************************************************************************/
 // sys18
-ROM_START( astorm_rom )
+ROM_START( astorm )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr13084.bin", 0x000000, 0x40000, 0x9687b38f )
 	ROM_LOAD_EVEN( "epr13085.bin", 0x000000, 0x40000, 0x15f74e2d )
@@ -2295,7 +2295,7 @@ ROM_START( astorm_rom )
 	ROM_LOAD( "epr13078.bin", 0xb0000, 0x40000, 0x15684dc5 )
 ROM_END
 
-ROM_START( astormbl_rom )
+ROM_START( astormbl )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "astorm.a5", 0x000000, 0x40000, 0xefe9711e )
 	ROM_LOAD_EVEN( "astorm.a6", 0x000000, 0x40000, 0x7682ed3e )
@@ -2499,7 +2499,7 @@ static void astormbl_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( astormbl_input_ports )
+INPUT_PORTS_START( astormbl )
 	PORT_START /* player 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -2602,7 +2602,7 @@ static void astorm_hisave(void)
 	}
 }
 
-struct GameDriver astorm_driver =
+struct GameDriver driver_astorm =
 {
 	__FILE__,
 	0,
@@ -2611,23 +2611,23 @@ struct GameDriver astorm_driver =
 	"1990",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&astormbl_machine_driver,
 	astormbl_onetime_init_machine,
-	astorm_rom,
+	rom_astorm,
 	astormbl_sprite_decode, 0,
 	0,
 	0,
-	astormbl_input_ports,
+	input_ports_astormbl,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver astormbl_driver =
+struct GameDriver driver_astormbl =
 {
 	__FILE__,
-	&astorm_driver,
+	&driver_astorm,
 	"astormbl",
 	"Alien Storm (bootleg)",
 	"????",
@@ -2636,11 +2636,11 @@ struct GameDriver astormbl_driver =
 	0,
 	&astormbl_machine_driver,
 	astormbl_onetime_init_machine,
-	astormbl_rom,
+	rom_astormbl,
 	astormbl_sprite_decode, 0,
 	0,
 	0,
-	astormbl_input_ports,
+	input_ports_astormbl,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	astorm_hiload, astorm_hisave
@@ -2648,7 +2648,7 @@ struct GameDriver astormbl_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( atomicp_rom )
+ROM_START( atomicp )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "ap-t1.bin", 0x000000, 0x10000, 0x5c65fe56 )
 	ROM_LOAD_EVEN( "ap-t2.bin", 0x000000, 0x10000, 0x97421047 )
@@ -2736,7 +2736,7 @@ static void atomicp_sprite_decode( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( atomicp_input_ports )
+INPUT_PORTS_START( atomicp )
 
 PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
@@ -2888,7 +2888,7 @@ static void atomicp_hisave(void)
 	}
 }
 
-struct GameDriver atomicp_driver =
+struct GameDriver driver_atomicp =
 {
 	__FILE__,
 	0,
@@ -2900,11 +2900,11 @@ struct GameDriver atomicp_driver =
 	0,
 	&atomicp_machine_driver,
 	sys16_onetime_init_machine,
-	atomicp_rom,
+	rom_atomicp,
 	atomicp_sprite_decode, 0,
 	0,
 	0,
-	atomicp_input_ports,
+	input_ports_atomicp,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	atomicp_hiload, atomicp_hisave
@@ -2917,7 +2917,7 @@ struct GameDriver atomicp_driver =
 
 ***************************************************************************/
 // sys16B
-ROM_START( aurail_rom )
+ROM_START( aurail )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "13576", 0x000000, 0x20000, 0x1e428d94 )
 	ROM_LOAD_EVEN( "13577", 0x000000, 0x20000, 0x6701b686 )
@@ -2957,7 +2957,7 @@ ROM_START( aurail_rom )
 	ROM_LOAD( "aurail.a12", 0x30000,0x20000, 0xd3d9aaf9 )
 ROM_END
 
-ROM_START( auraila_rom )
+ROM_START( auraila )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 // custom cpu 317-0168
 	ROM_LOAD_ODD ( "epr13468.a5", 0x000000, 0x20000, 0xce092218 )
@@ -3086,7 +3086,7 @@ static void aurail_program_decode (void)
 
 /***************************************************************************/
 
-INPUT_PORTS_START( aurail_input_ports )
+INPUT_PORTS_START( aurail )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -3152,7 +3152,7 @@ static void aurail_hisave(void)
 	}
 }
 
-struct GameDriver aurail_driver =
+struct GameDriver driver_aurail =
 {
 	__FILE__,
 	0,
@@ -3164,20 +3164,20 @@ struct GameDriver aurail_driver =
 	0,
 	&aurail_machine_driver,
 	sys16_onetime_init_machine,
-	aurail_rom,
+	rom_aurail,
 	aurail_sprite_decode, 0,
 	0,
 	0,
-	aurail_input_ports,
+	input_ports_aurail,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	aurail_hiload, aurail_hisave
 };
 
-struct GameDriver auraila_driver =
+struct GameDriver driver_auraila =
 {
 	__FILE__,
-	&aurail_driver,
+	&driver_aurail,
 	"auraila",
 	"Aurail (set 2)",
 	"1990",
@@ -3186,11 +3186,11 @@ struct GameDriver auraila_driver =
 	0,
 	&aurail_machine_driver,
 	sys16_onetime_init_machine,
-	auraila_rom,
+	rom_auraila,
 	aurail_sprite_decode, aurail_program_decode,
 	0,
 	0,
-	aurail_input_ports,
+	input_ports_aurail,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	aurail_hiload, aurail_hisave
@@ -3199,7 +3199,7 @@ struct GameDriver auraila_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( bayroute_rom )
+ROM_START( bayroute )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "br.1a", 0x000000, 0x10000, 0x76954bf3 )
 	ROM_LOAD_EVEN( "br.4a", 0x000000, 0x10000, 0x91c6424b )
@@ -3230,7 +3230,7 @@ ROM_START( bayroute_rom )
 	ROM_LOAD( "mpr12461.a12", 0x30000, 0x20000, 0xb03b8b46 )
 ROM_END
 
-ROM_START( bayrouta_rom )
+ROM_START( bayrouta )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 // custom cpu 317-0116
 	ROM_LOAD_ODD ( "epr12516.a5", 0x000000, 0x20000, 0x4ff0353f )
@@ -3256,7 +3256,7 @@ ROM_START( bayrouta_rom )
 	ROM_LOAD( "mpr12461.a12", 0x30000, 0x20000, 0xb03b8b46 )
 ROM_END
 
-ROM_START( bayrtbl1_rom )
+ROM_START( bayrtbl1 )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "b2.bin", 0x000000, 0x10000, 0xecd9cd0e )
 	ROM_LOAD_EVEN( "b4.bin", 0x000000, 0x10000, 0xeb6646ae )
@@ -3287,7 +3287,7 @@ ROM_START( bayrtbl1_rom )
 	ROM_LOAD( "mpr12461.a12", 0x30000, 0x20000, 0xb03b8b46 )
 ROM_END
 
-ROM_START( bayrtbl2_rom )
+ROM_START( bayrtbl2 )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "br_06", 0x000000, 0x10000, 0x3db42313 )
 	ROM_LOAD_EVEN( "br_04", 0x000000, 0x10000, 0x2e33ebfc )
@@ -3390,7 +3390,7 @@ static void bayrtbl1_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( bayroute_input_ports )
+INPUT_PORTS_START( bayroute )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -3458,7 +3458,7 @@ static void bayroute_hisave(void)
 	}
 }
 
-struct GameDriver bayroute_driver =
+struct GameDriver driver_bayroute =
 {
 	__FILE__,
 	0,
@@ -3470,79 +3470,79 @@ struct GameDriver bayroute_driver =
 	0,
 	&bayroute_machine_driver,
 	sys16_onetime_init_machine,
-	bayroute_rom,
+	rom_bayroute,
 	bayroute_sprite_decode, 0,
 	0,
 	0,
-	bayroute_input_ports,
+	input_ports_bayroute,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	bayroute_hiload, bayroute_hisave
 };
 
-struct GameDriver bayrouta_driver =
+struct GameDriver driver_bayrouta =
 {
 	__FILE__,
-	&bayroute_driver,
+	&driver_bayroute,
 	"bayrouta",
 	"Bay Route (set 2)",
 	"1989",
 	"Sunsoft / Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&bayroute_machine_driver,
 	sys16_onetime_init_machine,
-	bayrouta_rom,
+	rom_bayrouta,
 	bayrouta_sprite_decode, 0,
 	0,
 	0,
-	bayroute_input_ports,
+	input_ports_bayroute,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver bayrtbl1_driver =
+struct GameDriver driver_bayrtbl1 =
 {
 	__FILE__,
-	&bayroute_driver,
+	&driver_bayroute,
 	"bayrtbl1",
 	"Bay Route (bootleg set 1)",
 	"1989",
 	"bootleg",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&bayroute_machine_driver,
 	sys16_onetime_init_machine,
-	bayrtbl1_rom,
+	rom_bayrtbl1,
 	bayrtbl1_sprite_decode, 0,
 	0,
 	0,
-	bayroute_input_ports,
+	input_ports_bayroute,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver bayrtbl2_driver =
+struct GameDriver driver_bayrtbl2 =
 {
 	__FILE__,
-	&bayroute_driver,
+	&driver_bayroute,
 	"bayrtbl2",
 	"Bay Route (bootleg set 2)",
 	"1989",
 	"bootleg",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&bayroute_machine_driver,
 	sys16_onetime_init_machine,
-	bayrtbl2_rom,
+	rom_bayrtbl2,
 	bayrtbl1_sprite_decode, 0,
 	0,
 	0,
-	bayroute_input_ports,
+	input_ports_bayroute,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
@@ -3552,7 +3552,7 @@ struct GameDriver bayrtbl2_driver =
 
 ***************************************************************************/
 // pre16
-ROM_START( bodyslam_rom )
+ROM_START( bodyslam )
 	ROM_REGION( 0x30000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr10063.b6", 0x000000, 0x8000, 0xdd849a16 )
 	ROM_LOAD_EVEN( "epr10066.b9", 0x000000, 0x8000, 0x6cd53290 )
@@ -3589,6 +3589,46 @@ ROM_START( bodyslam_rom )
 	ROM_LOAD( "epr10030.c2", 0x08000, 0x8000, 0xdcc1df0b )
 	ROM_LOAD( "epr10031.c3", 0x10000, 0x8000, 0xea3c4472 )
 	ROM_LOAD( "epr10032.c4", 0x18000, 0x8000, 0x0aabebce )
+
+ROM_END
+
+ROM_START( dumpmtmt )
+	ROM_REGION( 0x30000 ) /* 68000 code */
+	ROM_LOAD_ODD ( "7701a.bin", 0x000000, 0x8000, 0x786d1009 )
+	ROM_LOAD_EVEN( "7704a.bin", 0x000000, 0x8000, 0x96de6c7b )
+	ROM_LOAD_ODD ( "7702a.bin", 0x010000, 0x8000, 0x2241a8fd )
+	ROM_LOAD_EVEN( "7705a.bin", 0x010000, 0x8000, 0xfc584391 )
+	ROM_LOAD_ODD ( "7703a.bin", 0x020000, 0x8000, 0xfcb0cd40 )
+	ROM_LOAD_EVEN( "7706a.bin", 0x020000, 0x8000, 0x6bbcc9d0 )
+
+	ROM_REGION( 0x18000 ) /* tiles */
+	ROM_LOAD( "7707a.bin",  0x00000, 0x8000, 0x45318738 ) /* plane 1 */
+	ROM_LOAD( "7708a.bin",  0x08000, 0x8000, 0x411be9a4 ) /* plane 2 */
+	ROM_LOAD( "7709a.bin",  0x10000, 0x8000, 0x74ceb5a8 ) /* plane 3 */
+
+	ROM_REGION( 0x50000*2 ) /* sprites */
+	ROM_LOAD( "7715.bin",  0x000000, 0x08000, 0xbf47e040 )
+	ROM_RELOAD(               0x040000, 0x08000 )
+	ROM_LOAD( "7719.bin",  0x008000, 0x08000, 0xfa5c5d6c )
+	ROM_RELOAD(               0x048000, 0x08000 )
+	ROM_LOAD( "epr10013.c6",  0x010000, 0x08000, 0x9a0919c5 )	/* 7716 */
+	ROM_LOAD( "epr10017.b3",  0x018000, 0x08000, 0x62aafd95 )	/* 7720 */
+	ROM_LOAD( "7717.bin",  0x020000, 0x08000, 0xfa64c86d )
+	ROM_LOAD( "7721.bin",  0x028000, 0x08000, 0x62a9143e )
+	ROM_LOAD( "epr10015.c8",  0x030000, 0x08000, 0x582d3b6a )	/* 7718 */
+	ROM_LOAD( "epr10019.b5",  0x038000, 0x08000, 0xe020c38b )	/* 7722 */
+
+	ROM_REGION( 0x30000 ) /* sound CPU */
+	ROM_LOAD( "7710a.bin", 0x00000, 0x8000, 0xa19b8ba8 )
+
+	ROM_REGION(0x1000)      /* 4k for 7751 onboard ROM */
+	ROM_LOAD( "7751.bin",     0x0000, 0x0400, 0x6a9534fc ) /* 7751 - U34 */
+
+	ROM_REGION( 0x20000 ) /* 7751 sound data */
+	ROM_LOAD( "7711.bin", 0x00000, 0x8000, 0xefa9aabd )
+	ROM_LOAD( "7712.bin", 0x08000, 0x8000, 0x7bcd85cf )
+	ROM_LOAD( "7713.bin", 0x10000, 0x8000, 0x33f292e7 )
+	ROM_LOAD( "7714.bin", 0x18000, 0x8000, 0x8fd48c47 )
 
 ROM_END
 
@@ -3717,7 +3757,7 @@ static void bodyslam_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( bodyslam_input_ports )
+INPUT_PORTS_START( bodyslam )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -3786,7 +3826,7 @@ static void bodyslam_hisave(void)
 	}
 }
 
-struct GameDriver bodyslam_driver =
+struct GameDriver driver_bodyslam =
 {
 	__FILE__,
 	0,
@@ -3798,18 +3838,41 @@ struct GameDriver bodyslam_driver =
 	0,
 	&bodyslam_machine_driver,
 	bodyslam_onetime_init_machine,
-	bodyslam_rom,
+	rom_bodyslam,
 	bodyslam_sprite_decode, 0,
 	0,
 	0,
-	bodyslam_input_ports,
+	input_ports_bodyslam,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	bodyslam_hiload, bodyslam_hisave
 };
+
+struct GameDriver driver_dumpmtmt =
+{
+	__FILE__,
+	&driver_bodyslam,
+	"dumpmtmt",
+	"Dump Matsumoto (Japan)",
+	"1986",
+	"Sega",
+	SYS16_CREDITS,
+	0,
+	&bodyslam_machine_driver,
+	bodyslam_onetime_init_machine,
+	rom_dumpmtmt,
+	bodyslam_sprite_decode, 0,
+	0,
+	0,
+	input_ports_bodyslam,
+	0, 0, 0,
+	ORIENTATION_DEFAULT,
+	bodyslam_hiload, bodyslam_hisave
+};
+
 /***************************************************************************/
 // sys16B
-ROM_START( dduxbl_rom )
+ROM_START( dduxbl )
 	ROM_REGION( 0x0c0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "dduxb05.bin", 0x000000, 0x20000, 0x459d1237 )
 	ROM_LOAD_EVEN( "dduxb03.bin", 0x000000, 0x20000, 0xe7526012 )
@@ -3949,7 +4012,7 @@ static void dduxbl_sprite_decode (void)
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( dduxbl_input_ports )
+INPUT_PORTS_START( dduxbl )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -4018,7 +4081,7 @@ static void ddux_hisave(void)
 }
 
 
-struct GameDriver dduxbl_driver =
+struct GameDriver driver_dduxbl =
 {
 	__FILE__,
 	0,
@@ -4030,11 +4093,11 @@ struct GameDriver dduxbl_driver =
 	0,
 	&dduxbl_machine_driver,
 	sys16_onetime_init_machine,
-	dduxbl_rom,
+	rom_dduxbl,
 	dduxbl_sprite_decode, 0,
 	0,
 	0,
-	dduxbl_input_ports,
+	input_ports_dduxbl,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	ddux_hiload, ddux_hisave
@@ -4042,7 +4105,7 @@ struct GameDriver dduxbl_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( eswat_rom )
+ROM_START( eswat )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "12656", 0x000000, 0x40000, 0xbe3f9d28 )
 	ROM_LOAD_EVEN( "12657", 0x000000, 0x40000, 0xcfb935e9 )
@@ -4065,7 +4128,7 @@ ROM_START( eswat_rom )
 	ROM_LOAD( "e12616r",0x10000, 0x20000, 0xf213fa4a )
 ROM_END
 
-ROM_START( eswatbl_rom )
+ROM_START( eswatbl )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "eswat_f.rom", 0x000000, 0x10000, 0xf7b2d388 )
 	ROM_LOAD_EVEN( "eswat_c.rom", 0x000000, 0x10000, 0x1028cc81 )
@@ -4177,7 +4240,7 @@ static void eswatbl_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( eswatbl_input_ports )
+INPUT_PORTS_START( eswatbl )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -4246,7 +4309,7 @@ static void eswat_hisave(void)
 	}
 }
 
-struct GameDriver eswat_driver =
+struct GameDriver driver_eswat =
 {
 	__FILE__,
 	0,
@@ -4255,23 +4318,23 @@ struct GameDriver eswat_driver =
 	"1989",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&eswatbl_machine_driver,
 	eswatbl_onetime_init_machine,
-	eswat_rom,
+	rom_eswat,
 	eswatbl_sprite_decode, 0,
 	0,
 	0,
-	eswatbl_input_ports,
+	input_ports_eswatbl,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	eswat_hiload, eswat_hisave
 };
 
-struct GameDriver eswatbl_driver =
+struct GameDriver driver_eswatbl =
 {
 	__FILE__,
-	&eswat_driver,
+	&driver_eswat,
 	"eswatbl",
 	"E-Swat (bootleg)",
 	"1989",
@@ -4280,11 +4343,11 @@ struct GameDriver eswatbl_driver =
 	0,
 	&eswatbl_machine_driver,
 	eswatbl_onetime_init_machine,
-	eswatbl_rom,
+	rom_eswatbl,
 	eswatbl_sprite_decode, 0,
 	0,
 	0,
-	eswatbl_input_ports,
+	input_ports_eswatbl,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	0, 0
@@ -4292,7 +4355,7 @@ struct GameDriver eswatbl_driver =
 
 /***************************************************************************/
 // sys16A
-ROM_START( fantzone_rom )
+ROM_START( fantzone )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "7382.26", 0x000000, 0x8000, 0x3fda7416 )
 	ROM_LOAD_EVEN( "7385.43", 0x000000, 0x8000, 0x5cb64450 )
@@ -4417,7 +4480,7 @@ static void fantzone_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( fantzone_input_ports )
+INPUT_PORTS_START( fantzone )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -4485,7 +4548,7 @@ static void fantzone_hisave(void)
 	}
 }
 
-struct GameDriver fantzone_driver =
+struct GameDriver driver_fantzone =
 {
 	__FILE__,
 	0,
@@ -4497,11 +4560,11 @@ struct GameDriver fantzone_driver =
 	0,
 	&fantzone_machine_driver,
 	sys16_onetime_init_machine,
-	fantzone_rom,
+	rom_fantzone,
 	fantzone_sprite_decode, 0,
 	0,
 	0,
-	fantzone_input_ports,
+	input_ports_fantzone,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	fantzone_hiload, fantzone_hisave
@@ -4509,7 +4572,7 @@ struct GameDriver fantzone_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( fpoint_rom )
+ROM_START( fpoint )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "12590b.bin", 0x000000, 0x10000, 0x75256e3d )
 	ROM_LOAD_EVEN( "12591b.bin", 0x000000, 0x10000, 0x248b3e1b )
@@ -4527,7 +4590,7 @@ ROM_START( fpoint_rom )
 	ROM_LOAD( "12592.bin", 0x0000, 0x8000, 0x9a8c11bb )
 ROM_END
 
-ROM_START( fpointbl_rom )
+ROM_START( fpointbl )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "flpoint.002", 0x000000, 0x10000, 0x4dff2ee8 )
 	ROM_LOAD_EVEN( "flpoint.003", 0x000000, 0x10000, 0x4d6df514 )
@@ -4643,7 +4706,7 @@ static void fpointbl_sprite_decode (void)
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( fpointbl_input_ports )
+INPUT_PORTS_START( fpointbl )
 PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 )
@@ -4732,7 +4795,7 @@ static void fpoint_hisave(void)
 }
 
 
-struct GameDriver fpoint_driver =
+struct GameDriver driver_fpoint =
 {
 	__FILE__,
 	0,
@@ -4741,23 +4804,23 @@ struct GameDriver fpoint_driver =
 	"1989",
 	"Sega",		//??
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&fpointbl_machine_driver,
 	sys16_onetime_init_machine,
-	fpoint_rom,
+	rom_fpoint,
 	fpoint_sprite_decode, 0,
 	0,
 	0,
-	fpointbl_input_ports,
+	input_ports_fpointbl,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver fpointbl_driver =
+struct GameDriver driver_fpointbl =
 {
 	__FILE__,
-	&fpoint_driver,
+	&driver_fpoint,
 	"fpointbl",
 	"Flash Point (bootleg)",
 	"1989",
@@ -4766,11 +4829,11 @@ struct GameDriver fpointbl_driver =
 	0,
 	&fpointbl_machine_driver,
 	sys16_onetime_init_machine,
-	fpointbl_rom,
+	rom_fpointbl,
 	fpointbl_sprite_decode, 0,
 	0,
 	0,
-	fpointbl_input_ports,
+	input_ports_fpointbl,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	fpoint_hiload, fpoint_hisave
@@ -4778,7 +4841,7 @@ struct GameDriver fpointbl_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( goldnaxe_rom )
+ROM_START( goldnaxe )
 	ROM_REGION( 0x0c0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr12522.a5", 0x00000, 0x20000, 0xb6c35160 )
 	ROM_LOAD_EVEN( "epr12523.a7", 0x00000, 0x20000, 0x8e6128d7 )
@@ -4804,7 +4867,7 @@ ROM_START( goldnaxe_rom )
 	ROM_LOAD( "mpr12384.a11", 0x10000, 0x20000, 0x6218d8e7 )
 ROM_END
 
-ROM_START( goldnabl_rom )
+ROM_START( goldnabl )
 	ROM_REGION( 0x0c0000 ) /* 68000 code */
 // protected code
 	ROM_LOAD_ODD ( "ga4.a20", 0x00000, 0x10000, 0x83eabdf5 )
@@ -4956,7 +5019,7 @@ static void goldnabl_sprite_decode( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( goldnaxe_input_ports )
+INPUT_PORTS_START( goldnaxe )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -5021,7 +5084,7 @@ static void goldnaxe_hisave(void)
 	}
 }
 
-struct GameDriver goldnaxe_driver =
+struct GameDriver driver_goldnaxe =
 {
 	__FILE__,
 	0,
@@ -5033,42 +5096,42 @@ struct GameDriver goldnaxe_driver =
 	0,
 	&goldnaxe_machine_driver,
 	sys16_onetime_init_machine,
-	goldnaxe_rom,
+	rom_goldnaxe,
 	goldnaxe_sprite_decode, 0,
 	0,
 	0,
-	goldnaxe_input_ports,
+	input_ports_goldnaxe,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	goldnaxe_hiload, goldnaxe_hisave
 };
 
-struct GameDriver goldnabl_driver =
+struct GameDriver driver_goldnabl =
 {
 	__FILE__,
-	&goldnaxe_driver,
+	&driver_goldnaxe,
 	"goldnabl",
 	"Golden Axe (bootleg)",
 	"1989",
 	"bootleg",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&goldnaxe_machine_driver,
 	sys16_onetime_init_machine,
-	goldnabl_rom,
+	rom_goldnabl,
 	goldnabl_sprite_decode, 0,
 	0,
 	0,
-	goldnaxe_input_ports,
+	input_ports_goldnaxe,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 
 /***************************************************************************/
 // sys16B
-ROM_START( goldnaxa_rom )
+ROM_START( goldnaxa )
 	ROM_REGION( 0x0c0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr12544.a1", 0x00000, 0x40000, 0x5e38f668 )
 	ROM_LOAD_EVEN( "epr12545.a2", 0x00000, 0x40000, 0xa97c4e4d )
@@ -5091,7 +5154,7 @@ ROM_START( goldnaxa_rom )
 	ROM_LOAD( "mpr12384.a11", 0x10000, 0x20000, 0x6218d8e7 )
 ROM_END
 
-ROM_START( goldnaxb_rom )
+ROM_START( goldnaxb )
 	ROM_REGION( 0x0c0000 ) /* 68000 code */
 // Custom 68000 ver 317-0110
 	ROM_LOAD_ODD ( "epr12388.a1", 0x00000, 0x40000, 0x72952a93 )
@@ -5115,7 +5178,7 @@ ROM_START( goldnaxb_rom )
 	ROM_LOAD( "mpr12384.a11", 0x10000, 0x20000, 0x6218d8e7 )
 ROM_END
 
-ROM_START( goldnaxc_rom )
+ROM_START( goldnaxc )
 	ROM_REGION( 0x0c0000 ) /* 68000 code */
 // Custom 68000 ver 317-0122
 	ROM_LOAD_ODD ( "epr12542.a1", 0x00000, 0x40000, 0xb7994d3c )
@@ -5259,10 +5322,10 @@ static void goldnaxa_init_machine( void ){
 MACHINE_DRIVER_7759( goldnaxa_machine_driver, \
 	goldnaxa_readmem,goldnaxa_writemem,goldnaxa_init_machine, gfx2,upd7759_interface )
 
-struct GameDriver goldnaxa_driver =
+struct GameDriver driver_goldnaxa =
 {
 	__FILE__,
-	&goldnaxe_driver,
+	&driver_goldnaxe,
 	"goldnaxa",
 	"Golden Axe (Version 2)",
 	"1989",
@@ -5271,63 +5334,63 @@ struct GameDriver goldnaxa_driver =
 	0,
 	&goldnaxa_machine_driver,
 	sys16_onetime_init_machine,
-	goldnaxa_rom,
+	rom_goldnaxa,
 	goldnaxe_sprite_decode, 0,
 	0,
 	0,
-	goldnaxe_input_ports,
+	input_ports_goldnaxe,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	goldnaxe_hiload, goldnaxe_hisave
 };
 
-struct GameDriver goldnaxb_driver =
+struct GameDriver driver_goldnaxb =
 {
 	__FILE__,
-	&goldnaxe_driver,
+	&driver_goldnaxe,
 	"goldnaxb",
 	"Golden Axe (Version 2 317-0110)",
 	"1989",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&goldnaxa_machine_driver,
 	sys16_onetime_init_machine,
-	goldnaxb_rom,
+	rom_goldnaxb,
 	goldnaxe_sprite_decode, 0,
 	0,
 	0,
-	goldnaxe_input_ports,
+	input_ports_goldnaxe,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver goldnaxc_driver =
+struct GameDriver driver_goldnaxc =
 {
 	__FILE__,
-	&goldnaxe_driver,
+	&driver_goldnaxe,
 	"goldnaxc",
 	"Golden Axe (Version 2 317-0122)",
 	"1989",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&goldnaxa_machine_driver,
 	sys16_onetime_init_machine,
-	goldnaxc_rom,
+	rom_goldnaxc,
 	goldnaxe_sprite_decode, 0,
 	0,
 	0,
-	goldnaxe_input_ports,
+	input_ports_goldnaxe,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /***************************************************************************/
 // sys16B
-ROM_START( hwchamp_rom )
+ROM_START( hwchamp )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "rom0-o.bin", 0x000000, 0x20000, 0x25180124 )
 	ROM_LOAD_EVEN( "rom0-e.bin", 0x000000, 0x20000, 0xe5abfed7 )
@@ -5500,7 +5563,7 @@ static void hwchamp_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( hwchamp_input_ports )
+INPUT_PORTS_START( hwchamp )
 
 PORT_START	/* Monitor */
 	PORT_ANALOG ( 0xff, 0x80, IPT_PADDLE  , 70, 4, 0, 0x0, 0xff )
@@ -5581,7 +5644,7 @@ static void hwchamp_hisave(void)
 	}
 }
 
-struct GameDriver hwchamp_driver =
+struct GameDriver driver_hwchamp =
 {
 	__FILE__,
 	0,
@@ -5593,11 +5656,11 @@ struct GameDriver hwchamp_driver =
 	0,
 	&hwchamp_machine_driver,
 	sys16_onetime_init_machine,
-	hwchamp_rom,
+	rom_hwchamp,
 	hwchamp_sprite_decode, 0,
 	0,
 	0,
-	hwchamp_input_ports,
+	input_ports_hwchamp,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hwchamp_hiload, hwchamp_hisave
@@ -5605,7 +5668,7 @@ struct GameDriver hwchamp_driver =
 
 /***************************************************************************/
 // pre16
-ROM_START( mjleague_rom )
+ROM_START( mjleague )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr-7401.06b", 0x000000, 0x8000, 0x2befa5e0 )
 	ROM_LOAD_EVEN( "epr-7404.09b", 0x000000, 0x8000, 0xec1655b5 )
@@ -5779,7 +5842,7 @@ static void mjleague_sprite_decode( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( mjleague_input_ports )
+INPUT_PORTS_START( mjleague )
 
 PORT_START /* player 1 button fake */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -5849,7 +5912,7 @@ INPUT_PORTS_END
 MACHINE_DRIVER_7751( mjleague_machine_driver, \
 	mjleague_readmem,mjleague_writemem,mjleague_init_machine, gfx1)
 
-struct GameDriver mjleague_driver =
+struct GameDriver driver_mjleague =
 {
 	__FILE__,
 	0,
@@ -5861,11 +5924,11 @@ struct GameDriver mjleague_driver =
 	0,
 	&mjleague_machine_driver,
 	sys16_onetime_init_machine,
-	mjleague_rom,
+	rom_mjleague,
 	mjleague_sprite_decode, 0,
 	0,
 	0,
-	mjleague_input_ports,
+	input_ports_mjleague,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	0, 0
@@ -5873,7 +5936,7 @@ struct GameDriver mjleague_driver =
 
 /***************************************************************************/
 // sys18
-ROM_START( moonwalk_rom )
+ROM_START( moonwalk )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 // custom cpu 317-0159
 	ROM_LOAD_ODD ( "epr13234.a5", 0x000000, 0x40000, 0xc9fd20f2 )
@@ -5903,7 +5966,7 @@ ROM_START( moonwalk_rom )
 ROM_END
 
 // sys18
-ROM_START( moonwlkb_rom )
+ROM_START( moonwlkb )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "moonwlkb.05", 0x000000, 0x10000, 0xc483f29f )
 	ROM_LOAD_EVEN( "moonwlkb.01", 0x000000, 0x10000, 0xf49cdb16 )
@@ -6080,7 +6143,7 @@ static void moonwlkb_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( moonwlkb_input_ports )
+INPUT_PORTS_START( moonwlkb )
 
 PORT_START /* player 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -6189,7 +6252,7 @@ static void moonwalk_hisave(void)
 
 
 
-struct GameDriver moonwalk_driver =
+struct GameDriver driver_moonwalk =
 {
 	__FILE__,
 	0,
@@ -6198,23 +6261,23 @@ struct GameDriver moonwalk_driver =
 	"1990",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&moonwlkb_machine_driver,
 	moonwlkb_onetime_init_machine,
-	moonwalk_rom,
+	rom_moonwalk,
 	moonwlkb_sprite_decode, 0,
 	0,
 	0,
-	moonwlkb_input_ports,
+	input_ports_moonwlkb,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver moonwlkb_driver =
+struct GameDriver driver_moonwlkb =
 {
 	__FILE__,
-	&moonwalk_driver,
+	&driver_moonwalk,
 	"moonwlkb",
 	"Moon Walker (bootleg)",
 	"????",
@@ -6223,11 +6286,11 @@ struct GameDriver moonwlkb_driver =
 	0,
 	&moonwlkb_machine_driver,
 	moonwlkb_onetime_init_machine,
-	moonwlkb_rom,
+	rom_moonwlkb,
 	moonwlkb_sprite_decode, 0,
 	0,
 	0,
-	moonwlkb_input_ports,
+	input_ports_moonwlkb,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	moonwalk_hiload, moonwalk_hisave
@@ -6235,7 +6298,7 @@ struct GameDriver moonwlkb_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( passsht_rom )
+ROM_START( passsht )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr11870.a1", 0x000000, 0x10000, 0xdf43ebcf )
 	ROM_LOAD_EVEN( "epr11871.a4", 0x000000, 0x10000, 0x0f9ccea5 )
@@ -6261,7 +6324,7 @@ ROM_START( passsht_rom )
 	ROM_LOAD( "epr11861.a11", 0x28000, 0x08000, 0x38b54a71 )
 ROM_END
 
-ROM_START( passshtb_rom )
+ROM_START( passshtb )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "pass4_2p.bin", 0x000000, 0x10000, 0x06ac6d5d )
 	ROM_LOAD_EVEN( "pass3_2p.bin", 0x000000, 0x10000, 0x26bb9299 )
@@ -6348,7 +6411,7 @@ static void passshtb_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( passshtb_input_ports )
+INPUT_PORTS_START( passshtb )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -6417,7 +6480,7 @@ static void passsht_hisave(void)
 	}
 }
 
-struct GameDriver passsht_driver =
+struct GameDriver driver_passsht =
 {
 	__FILE__,
 	0,
@@ -6426,23 +6489,23 @@ struct GameDriver passsht_driver =
 	"????",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&passshtb_machine_driver,
 	sys16_onetime_init_machine,
-	passsht_rom,
+	rom_passsht,
 	passshtb_sprite_decode, 0,
 	0,
 	0,
-	passshtb_input_ports,
+	input_ports_passshtb,
 	0, 0, 0,
-	ORIENTATION_ROTATE_270,
+	ORIENTATION_ROTATE_270 | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver passshtb_driver =
+struct GameDriver driver_passshtb =
 {
 	__FILE__,
-	&passsht_driver,
+	&driver_passsht,
 	"passshtb",
 	"Passing Shot (2 Players) (bootleg)",
 	"????",
@@ -6451,11 +6514,11 @@ struct GameDriver passshtb_driver =
 	0,
 	&passshtb_machine_driver,
 	sys16_onetime_init_machine,
-	passshtb_rom,
+	rom_passshtb,
 	passshtb_sprite_decode, 0,
 	0,
 	0,
-	passshtb_input_ports,
+	input_ports_passshtb,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	passsht_hiload, passsht_hisave
@@ -6463,7 +6526,7 @@ struct GameDriver passshtb_driver =
 
 /***************************************************************************/
 // pre16
-ROM_START( quartet_rom )
+ROM_START( quartet )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr7455a.6b",  0x000000, 0x8000, 0x01631ab2 )
 	ROM_LOAD_EVEN( "epr7458a.9b",  0x000000, 0x8000, 0x42e7b23e )
@@ -6584,7 +6647,7 @@ static void quartet_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( quartet_input_ports )
+INPUT_PORTS_START( quartet )
 	// Player 1
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY  )
@@ -6692,7 +6755,7 @@ static void quartet_hisave(void)
 }
 
 
-struct GameDriver quartet_driver =
+struct GameDriver driver_quartet =
 {
 	__FILE__,
 	0,
@@ -6704,11 +6767,11 @@ struct GameDriver quartet_driver =
 	0,
 	&quartet_machine_driver,
 	sys16_onetime_init_machine,
-	quartet_rom,
+	rom_quartet,
 	quartet_sprite_decode, 0,
 	0,
 	0,
-	quartet_input_ports,
+	input_ports_quartet,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	quartet_hiload, quartet_hisave
@@ -6716,7 +6779,7 @@ struct GameDriver quartet_driver =
 
 /***************************************************************************/
 // pre16
-ROM_START( quartet2_rom )
+ROM_START( quartet2 )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "quartet2.b6",  0x000000, 0x8000, 0x50f50b08 )
 	ROM_LOAD_EVEN( "quartet2.b9",  0x000000, 0x8000, 0x67177cd8 )
@@ -6829,7 +6892,7 @@ static void quartet2_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( quartet2_input_ports )
+INPUT_PORTS_START( quartet2 )
 	SYS16_JOY1_SWAPPEDBUTTONS
 	SYS16_JOY2_SWAPPEDBUTTONS
 	SYS16_SERVICE
@@ -6866,10 +6929,10 @@ INPUT_PORTS_END
 MACHINE_DRIVER_7751( quartet2_machine_driver, \
 	quartet2_readmem,quartet2_writemem,quartet2_init_machine, gfx8 )
 
-struct GameDriver quartet2_driver =
+struct GameDriver driver_quartet2 =
 {
 	__FILE__,
-	&quartet_driver,
+	&driver_quartet,
 	"quartet2",
 	"Quartet II",
 	"1986",
@@ -6878,11 +6941,11 @@ struct GameDriver quartet2_driver =
 	0,
 	&quartet2_machine_driver,
 	sys16_onetime_init_machine,
-	quartet2_rom,
+	rom_quartet2,
 	quartet2_sprite_decode, 0,
 	0,
 	0,
-	quartet2_input_ports,
+	input_ports_quartet2,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	quartet_hiload, quartet_hisave
@@ -6894,7 +6957,7 @@ struct GameDriver quartet2_driver =
 
 ***************************************************************************/
 // sys16B
-ROM_START( riotcity_rom )
+ROM_START( riotcity )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr14610.bin", 0x000000, 0x20000, 0xcd4f2c50 )
 	ROM_LOAD_EVEN( "epr14612.bin", 0x000000, 0x20000, 0xa1b331ec )
@@ -7002,7 +7065,7 @@ static void riotcity_sprite_decode (void)
 
 /***************************************************************************/
 
-INPUT_PORTS_START( riotcity_input_ports )
+INPUT_PORTS_START( riotcity )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -7072,7 +7135,7 @@ static void riotcity_hisave(void)
 }
 
 
-struct GameDriver riotcity_driver =
+struct GameDriver driver_riotcity =
 {
 	__FILE__,
 	0,
@@ -7084,11 +7147,11 @@ struct GameDriver riotcity_driver =
 	0,
 	&riotcity_machine_driver,
 	sys16_onetime_init_machine,
-	riotcity_rom,
+	rom_riotcity,
 	riotcity_sprite_decode, 0,
 	0,
 	0,
-	riotcity_input_ports,
+	input_ports_riotcity,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	riotcity_hiload, riotcity_hisave
@@ -7097,7 +7160,7 @@ struct GameDriver riotcity_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( sdi_rom )
+ROM_START( sdi )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "a1.rom", 0x000000, 0x8000, 0xa9f816ef )
 	ROM_LOAD_EVEN( "a4.rom", 0x000000, 0x8000, 0xf2c41dd6 )
@@ -7213,7 +7276,7 @@ static void sdi_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( sdi_input_ports )
+INPUT_PORTS_START( sdi )
 PORT_START	/* DSW1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP    | IPF_8WAY )
@@ -7312,7 +7375,7 @@ static void sdi_hisave(void)
 }
 
 
-struct GameDriver sdi_driver =
+struct GameDriver driver_sdi =
 {
 	__FILE__,
 	0,
@@ -7324,11 +7387,11 @@ struct GameDriver sdi_driver =
 	0,
 	&sdi_machine_driver,
 	sdi_onetime_init_machine,
-	sdi_rom,
+	rom_sdi,
 	sdi_sprite_decode, 0,
 	0,
 	0,
-	sdi_input_ports,
+	input_ports_sdi,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	sdi_hiload, sdi_hisave
@@ -7337,7 +7400,7 @@ struct GameDriver sdi_driver =
 
 /***************************************************************************/
 // sys18
-ROM_START( shdancer_rom )
+ROM_START( shdancer )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "shdancer.a5", 0x000000, 0x40000, 0x2596004e )
 	ROM_LOAD_EVEN( "shdancer.a6", 0x000000, 0x40000, 0x3d5b3fa9 )
@@ -7462,7 +7525,7 @@ static void shdancer_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( shdancer_input_ports )
+INPUT_PORTS_START( shdancer )
 PORT_START /* player 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -7545,7 +7608,7 @@ static void shdancer_hisave(void)
 	}
 }
 
-struct GameDriver shdancer_driver =
+struct GameDriver driver_shdancer =
 {
 	__FILE__,
 	0,
@@ -7557,11 +7620,11 @@ struct GameDriver shdancer_driver =
 	0,
 	&shdancer_machine_driver,
 	shdancer_onetime_init_machine,
-	shdancer_rom,
+	rom_shdancer,
 	shdancer_sprite_decode, 0,
 	0,
 	0,
-	shdancer_input_ports,
+	input_ports_shdancer,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	shdancer_hiload, shdancer_hisave
@@ -7571,7 +7634,7 @@ struct GameDriver shdancer_driver =
 
 /***************************************************************************/
 
-ROM_START( shdancbl_rom )
+ROM_START( shdancbl )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "ic53", 0x000000, 0x10000, 0x1c1ac463 )
 	ROM_LOAD_EVEN( "ic39", 0x000000, 0x10000, 0xadc1781c )
@@ -7748,31 +7811,31 @@ static void shdancbl_sprite_decode( void ){
 MACHINE_DRIVER_18( shdancbl_machine_driver, \
 	shdancbl_readmem,shdancbl_writemem,shdancbl_init_machine, gfx4 )
 
-struct GameDriver shdancbl_driver =
+struct GameDriver driver_shdancbl =
 {
 	__FILE__,
-	&shdancer_driver,
+	&driver_shdancer,
 	"shdancbl",
 	"Shadow Dancer (bootleg)",
 	"1989",
 	"bootleg",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&shdancbl_machine_driver,
 	shdancer_onetime_init_machine,
-	shdancbl_rom,
+	rom_shdancbl,
 	shdancbl_sprite_decode, 0,
 	0,
 	0,
-	shdancer_input_ports,
+	input_ports_shdancer,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /***************************************************************************/
 // sys18
-ROM_START( shdancrj_rom )
+ROM_START( shdancrj )
 	ROM_REGION( 0x080000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "sd12721b.bin", 0x000000, 0x40000, 0x653d351a )
 	ROM_LOAD_EVEN( "sd12722b.bin", 0x000000, 0x40000, 0xc00552a2 )
@@ -7829,10 +7892,10 @@ static void shdancrj_onetime_init_machine( void ){
 MACHINE_DRIVER_18( shdancrj_machine_driver, \
 	shdancer_readmem,shdancer_writemem,shdancrj_init_machine, gfx4 )
 
-struct GameDriver shdancrj_driver =
+struct GameDriver driver_shdancrj =
 {
 	__FILE__,
-	&shdancer_driver,
+	&driver_shdancer,
 	"shdancrj",
 	"Shadow Dancer (Japan)",
 	"1989",
@@ -7841,11 +7904,11 @@ struct GameDriver shdancrj_driver =
 	0,
 	&shdancrj_machine_driver,
 	shdancrj_onetime_init_machine,
-	shdancrj_rom,
+	rom_shdancrj,
 	shdancer_sprite_decode, 0,
 	0,
 	0,
-	shdancer_input_ports,
+	input_ports_shdancer,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	shdancer_hiload, shdancer_hisave
@@ -7853,7 +7916,7 @@ struct GameDriver shdancrj_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( shinobi_rom )
+ROM_START( shinobi )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "shinobi.a1", 0x000000, 0x10000, 0x343f4c46 )
 	ROM_LOAD_EVEN( "shinobi.a4", 0x000000, 0x10000, 0xb930399d )
@@ -7951,7 +8014,7 @@ static void shinobi_sprite_decode( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( shinobi_input_ports )
+INPUT_PORTS_START( shinobi )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -8019,7 +8082,7 @@ static void shinobi_hisave(void)
 	}
 }
 
-struct GameDriver shinobi_driver =
+struct GameDriver driver_shinobi =
 {
 	__FILE__,
 	0,
@@ -8031,11 +8094,11 @@ struct GameDriver shinobi_driver =
 	0,
 	&shinobi_machine_driver,
 	sys16_onetime_init_machine,
-	shinobi_rom,
+	rom_shinobi,
 	shinobi_sprite_decode, 0,
 	0,
 	0,
-	shinobi_input_ports,
+	input_ports_shinobi,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	shinobi_hiload, shinobi_hisave
@@ -8043,7 +8106,7 @@ struct GameDriver shinobi_driver =
 
 /***************************************************************************/
 // sys16A
-ROM_START( shinobia_rom )
+ROM_START( shinobia )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 // custom cpu 317-0050
 	ROM_LOAD_ODD ( "epr11260.27", 0x000000, 0x10000, 0x2835c95d )
@@ -8077,7 +8140,7 @@ ROM_START( shinobia_rom )
 ROM_END
 
 
-ROM_START( shinobl_rom )
+ROM_START( shinobl )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 // Star Bootleg
 	ROM_LOAD_ODD ( "b1",          0x000000, 0x10000, 0x8529d192 )
@@ -8184,32 +8247,32 @@ static void shinobl_init_machine( void ){
 MACHINE_DRIVER_7751( shinobl_machine_driver, \
 	shinobl_readmem,shinobl_writemem,shinobl_init_machine, gfx1)
 
-struct GameDriver shinobia_driver =
+struct GameDriver driver_shinobia =
 {
 	__FILE__,
-	&shinobi_driver,
+	&driver_shinobi,
 	"shinobia",
 	"Shinobi (set 2)",
 	"1987",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&shinobl_machine_driver,
 	sys16_onetime_init_machine,
-	shinobia_rom,
+	rom_shinobia,
 	shinobi_sprite_decode, 0,
 	0,
 	0,
-	shinobi_input_ports,
+	input_ports_shinobi,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver shinobl_driver =
+struct GameDriver driver_shinobl =
 {
 	__FILE__,
-	&shinobi_driver,
+	&driver_shinobi,
 	"shinobl",
 	"Shinobi (bootleg)",
 	"1987",
@@ -8218,11 +8281,11 @@ struct GameDriver shinobl_driver =
 	0,
 	&shinobl_machine_driver,
 	sys16_onetime_init_machine,
-	shinobl_rom,
+	rom_shinobl,
 	shinobi_sprite_decode, 0,
 	0,
 	0,
-	shinobi_input_ports,
+	input_ports_shinobi,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	shinobi_hiload, shinobi_hisave
@@ -8231,7 +8294,7 @@ struct GameDriver shinobl_driver =
 
 /***************************************************************************/
 // sys16A custom
-ROM_START( tetris_rom )
+ROM_START( tetris )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr12200.rom", 0x000000, 0x8000, 0xfb058779 )
 	ROM_LOAD_EVEN( "epr12201.rom", 0x000000, 0x8000, 0x338e9b51 )
@@ -8250,7 +8313,7 @@ ROM_START( tetris_rom )
 ROM_END
 
 // sys16B
-ROM_START( tetrisbl_rom )
+ROM_START( tetrisbl )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "rom1.bin", 0x000000, 0x10000, 0x1e912131 )
 	ROM_LOAD_EVEN( "rom2.bin", 0x000000, 0x10000, 0x4d165c38 )
@@ -8339,7 +8402,7 @@ static void tetrisbl_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( tetrisbl_input_ports )
+INPUT_PORTS_START( tetrisbl )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -8407,7 +8470,7 @@ static void tetris_hisave(void)
 	}
 }
 
-struct GameDriver tetris_driver =
+struct GameDriver driver_tetris =
 {
 	__FILE__,
 	0,
@@ -8416,23 +8479,23 @@ struct GameDriver tetris_driver =
 	"1988",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&tetrisbl_machine_driver,
 	sys16_onetime_init_machine,
-	tetris_rom,
+	rom_tetris,
 	tetris_sprite_decode, 0,
 	0,
 	0,
-	tetrisbl_input_ports,
+	input_ports_tetrisbl,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver tetrisbl_driver =
+struct GameDriver driver_tetrisbl =
 {
 	__FILE__,
-	&tetris_driver,
+	&driver_tetris,
 	"tetrisbl",
 	"Tetris (Sega bootleg)",
 	"1987",
@@ -8441,11 +8504,11 @@ struct GameDriver tetrisbl_driver =
 	0,
 	&tetrisbl_machine_driver,
 	sys16_onetime_init_machine,
-	tetrisbl_rom,
+	rom_tetrisbl,
 	tetrisbl_sprite_decode, 0,
 	0,
 	0,
-	tetrisbl_input_ports,
+	input_ports_tetrisbl,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	tetris_hiload, tetris_hisave
@@ -8453,7 +8516,7 @@ struct GameDriver tetrisbl_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( timscanr_rom )
+ROM_START( timscanr )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "ts10850.bin", 0x00000, 0x8000, 0xf1575732 )
 	ROM_LOAD_EVEN( "ts10853.bin", 0x00000, 0x8000, 0x24d7c5fb )
@@ -8548,7 +8611,7 @@ static void timscanr_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( timscanr_input_ports )
+INPUT_PORTS_START( timscanr )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -8650,7 +8713,7 @@ static void timscanr_hisave(void)
 	}
 }
 
-struct GameDriver timscanr_driver =
+struct GameDriver driver_timscanr =
 {
 	__FILE__,
 	0,
@@ -8662,11 +8725,11 @@ struct GameDriver timscanr_driver =
 	0,
 	&timscanr_machine_driver,
 	sys16_onetime_init_machine,
-	timscanr_rom,
+	rom_timscanr,
 	timscanr_sprite_decode, 0,
 	0,
 	0,
-	timscanr_input_ports,
+	input_ports_timscanr,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	timscanr_hiload, timscanr_hisave
@@ -8675,7 +8738,7 @@ struct GameDriver timscanr_driver =
 /***************************************************************************/
 
 // sys16B
-ROM_START( tturf_rom )
+ROM_START( tturf )
 	ROM_REGION( 0x40000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "12326.5a",  0x00000, 0x20000, 0xf998862b )
 	ROM_LOAD_EVEN( "12327.7a",  0x00000, 0x20000, 0x0376c593 )
@@ -8703,7 +8766,7 @@ ROM_START( tturf_rom )
 ROM_END
 
 // sys16B
-ROM_START( tturfu_rom )
+ROM_START( tturfu )
 	ROM_REGION( 0x40000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr12264.bin",  0x00000, 0x10000, 0xf7cdb289 )
 	ROM_LOAD_EVEN( "epr12266.bin",  0x00000, 0x10000, 0xf549def8 )
@@ -8803,7 +8866,7 @@ static void tturf_sprite_decode (void)
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( tturf_input_ports )
+INPUT_PORTS_START( tturf )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -8871,7 +8934,7 @@ static void tturf_hisave(void)
 	}
 }
 
-struct GameDriver tturf_driver =
+struct GameDriver driver_tturf =
 {
 	__FILE__,
 	0,
@@ -8883,20 +8946,20 @@ struct GameDriver tturf_driver =
 	0,
 	&tturf_machine_driver,
 	sys16_onetime_init_machine,
-	tturf_rom,
+	rom_tturf,
 	tturf_sprite_decode, 0,
 	0,
 	0,
-	tturf_input_ports,
+	input_ports_tturf,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	tturf_hiload, tturf_hisave
 };
 
-struct GameDriver tturfu_driver =
+struct GameDriver driver_tturfu =
 {
 	__FILE__,
-	&tturf_driver,
+	&driver_tturf,
 	"tturfu",
 	"Tough Turf (US)",
 	"1989",
@@ -8905,11 +8968,11 @@ struct GameDriver tturfu_driver =
 	0,
 	&tturfu_machine_driver,
 	sys16_onetime_init_machine,
-	tturfu_rom,
+	rom_tturfu,
 	tturf_sprite_decode, 0,
 	0,
 	0,
-	tturf_input_ports,
+	input_ports_tturf,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	tturf_hiload, tturf_hisave
@@ -8917,7 +8980,7 @@ struct GameDriver tturfu_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( tturfbl_rom )
+ROM_START( tturfbl )
 	ROM_REGION( 0x40000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "tt06c794.rom", 0x00000, 0x10000, 0x90e6a95a )
 	ROM_LOAD_EVEN( "tt042197.rom", 0x00000, 0x10000, 0xdeee5af1 )
@@ -9038,10 +9101,10 @@ static void tturfbl_sprite_decode (void)
 MACHINE_DRIVER_7759( tturfbl_machine_driver, \
 	tturfbl_readmem,tturfbl_writemem,tturfbl_init_machine, gfx1,upd7759_interface )
 
-struct GameDriver tturfbl_driver =
+struct GameDriver driver_tturfbl =
 {
 	__FILE__,
-	&tturf_driver,
+	&driver_tturf,
 	"tturfbl",
 	"Tough Turf (bootleg)",
 	"1989",
@@ -9050,11 +9113,11 @@ struct GameDriver tturfbl_driver =
 	0,
 	&tturfbl_machine_driver,
 	sys16_onetime_init_machine,
-	tturfbl_rom,
+	rom_tturfbl,
 	tturfbl_sprite_decode, 0,
 	0,
 	0,
-	tturf_input_ports,
+	input_ports_tturf,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	tturf_hiload, tturf_hisave
@@ -9062,7 +9125,7 @@ struct GameDriver tturfbl_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( wb3_rom )
+ROM_START( wb3 )
 	ROM_REGION( 0x40000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr12258.a5", 0x000000, 0x20000, 0x01f5898c )
 	ROM_LOAD_EVEN( "epr12259.a7", 0x000000, 0x20000, 0x54927c7e )
@@ -9086,7 +9149,7 @@ ROM_START( wb3_rom )
 	ROM_LOAD( "epr12127.a10", 0x0000, 0x8000, 0x0bb901bb )
 ROM_END
 
-ROM_START( wb3a_rom )
+ROM_START( wb3a )
 	ROM_REGION( 0x40000 ) /* 68000 code */
 // Custom CPU 317-0089
 	ROM_LOAD_ODD ( "epr12136.a5", 0x000000, 0x20000, 0x4cf05003 )
@@ -9177,7 +9240,7 @@ static void wb3_sprite_decode (void)
 
 /***************************************************************************/
 
-INPUT_PORTS_START( wb3_input_ports )
+INPUT_PORTS_START( wb3 )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -9246,7 +9309,7 @@ static void wb3_hisave(void)
 	}
 }
 
-struct GameDriver wb3_driver =
+struct GameDriver driver_wb3 =
 {
 	__FILE__,
 	0,
@@ -9258,41 +9321,41 @@ struct GameDriver wb3_driver =
 	0,
 	&wb3_machine_driver,
 	sys16_onetime_init_machine,
-	wb3_rom,
+	rom_wb3,
 	wb3_sprite_decode, 0,
 	0,
 	0,
-	wb3_input_ports,
+	input_ports_wb3,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	wb3_hiload, wb3_hisave
 };
 
-struct GameDriver wb3a_driver =
+struct GameDriver driver_wb3a =
 {
 	__FILE__,
-	&wb3_driver,
+	&driver_wb3,
 	"wb3a",
 	"Wonder Boy III - Monster Lair (set 2)",
 	"1988",
 	"Sega / Westone",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&wb3_machine_driver,
 	sys16_onetime_init_machine,
-	wb3a_rom,
+	rom_wb3a,
 	wb3_sprite_decode, 0,
 	0,
 	0,
-	wb3_input_ports,
+	input_ports_wb3,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /***************************************************************************/
 // sys16B
-ROM_START( wb3bl_rom )
+ROM_START( wb3bl )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "wb3_05", 0x000000, 0x10000, 0x196e17ee )
 	ROM_LOAD_EVEN( "wb3_03", 0x000000, 0x10000, 0x0019ab3b )
@@ -9412,10 +9475,10 @@ static void wb3bl_sprite_decode (void)
 MACHINE_DRIVER( wb3bl_machine_driver, \
 	wb3bl_readmem,wb3bl_writemem,wb3bl_init_machine, gfx1 )
 
-struct GameDriver wb3bl_driver =
+struct GameDriver driver_wb3bl =
 {
 	__FILE__,
-	&wb3_driver,
+	&driver_wb3,
 	"wb3bl",
 	"Wonder Boy III - Monster Lair (bootleg)",
 	"1988",
@@ -9424,11 +9487,11 @@ struct GameDriver wb3bl_driver =
 	0,
 	&wb3bl_machine_driver,
 	sys16_onetime_init_machine,
-	wb3bl_rom,
+	rom_wb3bl,
 	wb3bl_sprite_decode, 0,
 	0,
 	0,
-	wb3_input_ports,
+	input_ports_wb3,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	wb3_hiload, wb3_hisave
@@ -9437,7 +9500,7 @@ struct GameDriver wb3bl_driver =
 
 /***************************************************************************/
 // sys16B
-ROM_START( wrestwar_rom )
+ROM_START( wrestwar )
 	ROM_REGION( 0xc0000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "ww.a5", 0x00000, 0x20000, 0x6714600a )
 	ROM_LOAD_EVEN( "ww.a7", 0x00000, 0x20000, 0xeeaba126 )
@@ -9548,7 +9611,7 @@ static void wrestwar_onetime_init_machine( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( wrestwar_input_ports )
+INPUT_PORTS_START( wrestwar )
 	SYS16_JOY1
 	SYS16_JOY2
 	SYS16_SERVICE
@@ -9617,7 +9680,7 @@ static void wrestwar_hisave(void)
 }
 
 
-struct GameDriver wrestwar_driver =
+struct GameDriver driver_wrestwar =
 {
 	__FILE__,
 	0,
@@ -9629,11 +9692,11 @@ struct GameDriver wrestwar_driver =
 	0,
 	&wrestwar_machine_driver,
 	wrestwar_onetime_init_machine,
-	wrestwar_rom,
+	rom_wrestwar,
 	wrestwar_sprite_decode, 0,
 	0,
 	0,
-	wrestwar_input_ports,
+	input_ports_wrestwar,
 	0, 0, 0,
 	ORIENTATION_ROTATE_270,
 	wrestwar_hiload, wrestwar_hisave
@@ -9648,7 +9711,7 @@ as digital as well to see what works better */
 #define HANGON_DIGITAL_CONTROLS
 
 // hangon hardware
-ROM_START( hangon_rom )
+ROM_START( hangon )
 	ROM_REGION( 0x020000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "6916.rom", 0x000000, 0x8000, 0x7d9db1bf )
 	ROM_LOAD_EVEN( "6918.rom", 0x000000, 0x8000, 0x20b1c2b0 )
@@ -9732,7 +9795,8 @@ static int hangon1_skip_r(int offset)
 {
 	if (cpu_get_pc()==0x17e6) {cpu_spinuntil_int(); return 0xffff;}
 
-	return READ_WORD(&sys16_extraram[0xc400]);
+//	return READ_WORD(&sys16_extraram[0xc400]);
+	return READ_WORD(&sys16_extraram[0x0400]);
 }
 
 
@@ -9776,7 +9840,8 @@ static int hangon2_skip_r(int offset)
 {
 	if (cpu_get_pc()==0xf66) {cpu_spinuntil_int(); return 0xffff;}
 
-	return READ_WORD(&sys16_extraram2[0x3f000]);
+//	return READ_WORD(&sys16_extraram2[0x3f000]);
+	return READ_WORD(&sys16_extraram3[0x01000]);
 }
 
 static struct MemoryReadAddress hangon_readmem2[] =
@@ -9901,7 +9966,7 @@ static void hangon_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( hangon_input_ports )
+INPUT_PORTS_START( hangon )
 PORT_START	/* Steering */
 	PORT_ANALOG ( 0xff, 0x7f, IPT_AD_STICK_X | IPF_REVERSE | IPF_CENTER , 100, 3, 0, 0x48, 0xb7 )
 
@@ -10033,7 +10098,7 @@ static void hangon_hisave(void)
 }
 
 
-struct GameDriver hangon_driver =
+struct GameDriver driver_hangon =
 {
 	__FILE__,
 	0,
@@ -10045,11 +10110,11 @@ struct GameDriver hangon_driver =
 	0,
 	&hangon_machine_driver,
 	sys16_onetime_init_machine,
-	hangon_rom,
+	rom_hangon,
 	hangon_sprite_decode, 0,
 	0,
 	0,
-	hangon_input_ports,
+	input_ports_hangon,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	hangon_hiload, hangon_hisave
@@ -10058,7 +10123,7 @@ struct GameDriver hangon_driver =
 
 /***************************************************************************/
 // space harrier / enduro racer hardware
-ROM_START( harrier_rom )
+ROM_START( harrier )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "ic84.bin", 0x000000, 0x8000, 0x16deaeb1 )
 	ROM_LOAD_EVEN( "ic97.bin", 0x000000, 0x8000, 0x7c30a036 )
@@ -10146,7 +10211,7 @@ static struct MemoryReadAddress harrier_readmem[] =
 	{ 0x100000, 0x107fff, MRA_TILERAM },
 	{ 0x108000, 0x108fff, MRA_TEXTRAM },
 	{ 0x110000, 0x110fff, MRA_PALETTERAM },
-	{ 0x124000, 0x127fff, shared_ram_r, &shared_ram },
+	{ 0x124000, 0x127fff, shared_ram_r },
 	{ 0x130000, 0x130fff, MRA_SPRITERAM },
 	{ 0x140010, 0x140011, io_service_r },
 	{ 0x140014, 0x140015, io_dip1_r },
@@ -10178,7 +10243,7 @@ static struct MemoryReadAddress harrier_readmem2[] =
 {
 	{ 0x000000, 0x03ffff, MRA_ROM },
 	{ 0xc68000, 0xc68fff, MRA_EXTRAM2 },
-	{ 0xc7c000, 0xc7ffff, shared_ram_r, &shared_ram },
+	{ 0xc7c000, 0xc7ffff, shared_ram_r },
 	{-1}
 };
 
@@ -10340,7 +10405,7 @@ static void harrier_onetime_init_machine( void )
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( harrier_input_ports )
+INPUT_PORTS_START( harrier )
 	SYS16_JOY1
 	SYS16_JOY2
 
@@ -10474,7 +10539,7 @@ static void sharrier_hisave(void)
 	}
 }
 
-struct GameDriver sharrier_driver =
+struct GameDriver driver_sharrier =
 {
 	__FILE__,
 	0,
@@ -10486,11 +10551,11 @@ struct GameDriver sharrier_driver =
 	0,
 	&harrier_machine_driver,
 	harrier_onetime_init_machine,
-	harrier_rom,
+	rom_harrier,
 	harrier_sprite_decode, 0,
 	0,
 	0,
-	harrier_input_ports,
+	input_ports_harrier,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	sharrier_hiload, sharrier_hisave
@@ -10504,7 +10569,7 @@ struct GameDriver sharrier_driver =
 as digital as well to see what works better */
 
 // hangon hardware
-ROM_START( shangon_rom )
+ROM_START( shangon )
 	ROM_REGION( 0x040000 ) /* 68000 code - protected */
 	ROM_LOAD_ODD ( "ic118", 0x000000, 0x10000, 0x5fee09f6 )
 	ROM_LOAD_EVEN( "ic133", 0x000000, 0x10000, 0xe52721fe )
@@ -10554,7 +10619,7 @@ ROM_START( shangon_rom )
 	ROM_LOAD( "ic47", 0x0000, 0x8000, 0x7836bcc3 )
 ROM_END
 
-ROM_START( shangonb_rom )
+ROM_START( shangonb )
 	ROM_REGION( 0x030000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "s-hangon.32", 0x000000, 0x10000, 0x2ee4b4fb )
 	ROM_LOAD_EVEN( "s-hangon.30", 0x000000, 0x10000, 0xd95e82fc )
@@ -10618,8 +10683,8 @@ static struct MemoryReadAddress shangon_readmem[] =
 	{ 0x410000, 0x410fff, MRA_TEXTRAM },
 	{ 0x600000, 0x600fff, MRA_SPRITERAM },
 	{ 0xa00000, 0xa00fff, MRA_PALETTERAM },
-	{ 0xc68000, 0xc68fff, shared_ram_r, &shared_ram },
-	{ 0xc7c000, 0xc7ffff, shared_ram2_r, &shared_ram2 },
+	{ 0xc68000, 0xc68fff, shared_ram_r },
+	{ 0xc7c000, 0xc7ffff, shared_ram2_r },
 	{ 0xe01000, 0xe01001, io_service_r },
 	{ 0xe0100c, 0xe0100d, io_dip2_r },
 	{ 0xe0100a, 0xe0100b, io_dip1_r },
@@ -10668,7 +10733,7 @@ static struct MemoryReadAddress shangon_sound_readmem[] =
 {
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xf000, 0xf7ff, SEGAPCMReadReg },
-	{ 0xf800, 0xf807, sound2_shared_ram_r,&sound_shared_ram },
+	{ 0xf800, 0xf807, sound2_shared_ram_r },
 	{ 0xf808, 0xffff, MRA_RAM },
 	{ -1 }  /* end of table */
 };
@@ -10677,7 +10742,7 @@ static struct MemoryWriteAddress shangon_sound_writemem[] =
 {
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xf000, 0xf7ff, SEGAPCMWriteReg },
-	{ 0xf800, 0xf807, sound2_shared_ram_w },
+	{ 0xf800, 0xf807, sound2_shared_ram_w,&sound_shared_ram },
 	{ 0xf808, 0xffff, MWA_RAM },
 	{ -1 }  /* end of table */
 };
@@ -10764,7 +10829,7 @@ static void shangonb_sprite_decode( void ){
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( shangon_input_ports )
+INPUT_PORTS_START( shangon )
 PORT_START	/* Steering */
 	PORT_ANALOG ( 0xff, 0x7f, IPT_AD_STICK_X | IPF_REVERSE | IPF_CENTER , 100, 3, 0, 0x42, 0xbd )
 
@@ -10909,7 +10974,7 @@ static void shangon_hisave(void)
 }
 
 
-struct GameDriver shangon_driver =
+struct GameDriver driver_shangon =
 {
 	__FILE__,
 	0,
@@ -10918,23 +10983,23 @@ struct GameDriver shangon_driver =
 	"1992",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&shangon_machine_driver,
 	sys16_onetime_init_machine,
-	shangon_rom,
+	rom_shangon,
 	shangon_sprite_decode, 0,
 	0,
 	0,
-	shangon_input_ports,
+	input_ports_shangon,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver shangonb_driver =
+struct GameDriver driver_shangonb =
 {
 	__FILE__,
-	&shangon_driver,
+	&driver_shangon,
 	"shangonb",
 	"Super Hang-On (bootleg)",
 	"1992",
@@ -10943,11 +11008,11 @@ struct GameDriver shangonb_driver =
 	0,
 	&shangon_machine_driver,
 	sys16_onetime_init_machine,
-	shangonb_rom,
+	rom_shangonb,
 	shangonb_sprite_decode, 0,
 	0,
 	0,
-	shangon_input_ports,
+	input_ports_shangon,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	shangon_hiload, shangon_hisave
@@ -10956,7 +11021,7 @@ struct GameDriver shangonb_driver =
 
 /***************************************************************************/
 // Outrun hardware
-ROM_START( outrun_rom )
+ROM_START( outrun )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "10382a", 0x000000, 0x10000, 0x1ddcc04e )
 	ROM_LOAD_EVEN( "10380a", 0x000000, 0x10000, 0x434fadbc )
@@ -11011,7 +11076,7 @@ ROM_START( outrun_rom )
 	ROM_LOAD( "10185", 0x0000, 0x8000, 0x22794426 )
 ROM_END
 
-ROM_START( outruna_rom )
+ROM_START( outruna )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "10382b", 0x000000, 0x10000, 0xc4c3fa1a )
 	ROM_LOAD_EVEN( "10380b", 0x000000, 0x10000, 0x1f6cadad )
@@ -11066,7 +11131,7 @@ ROM_START( outruna_rom )
 ROM_END
 
 
-ROM_START( outrunb_rom )
+ROM_START( outrunb )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "orun_ml.rom", 0x000000, 0x10000, 0x9cfc07d5 )
 	ROM_LOAD_EVEN( "orun_mn.rom", 0x000000, 0x10000, 0xcddceea2 )
@@ -11202,7 +11267,7 @@ static struct MemoryReadAddress outrun_readmem[] =
 
 	{ 0x140000, 0x140071, MRA_EXTRAM3 },		//io
 	{ 0x200000, 0x23ffff, MRA_BANK8 },
-	{ 0x260000, 0x267fff, shared_ram_r, &shared_ram },
+	{ 0x260000, 0x267fff, shared_ram_r },
 	{ 0xe00000, 0xe00001, or_reset2_r },
 
 	{-1}
@@ -11258,7 +11323,7 @@ static struct MemoryReadAddress outrun_sound_readmem[] =
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xf000, 0xf0ff, SEGAPCMReadReg },
 	{ 0xf100, 0xf7ff, MRA_NOP },
-	{ 0xf800, 0xf807, sound2_shared_ram_r,&sound_shared_ram },
+	{ 0xf800, 0xf807, sound2_shared_ram_r },
 	{ 0xf808, 0xffff, MRA_RAM },
 	{ -1 }  /* end of table */
 };
@@ -11268,7 +11333,7 @@ static struct MemoryWriteAddress outrun_sound_writemem[] =
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xf000, 0xf0ff, SEGAPCMWriteReg },
 	{ 0xf100, 0xf7ff, MWA_NOP },
-	{ 0xf800, 0xf807, sound2_shared_ram_w },
+	{ 0xf800, 0xf807, sound2_shared_ram_w,&sound_shared_ram },
 	{ 0xf808, 0xffff, MWA_RAM },
 	{ -1 }  /* end of table */
 };
@@ -11504,7 +11569,7 @@ static void outrunb_onetime_init_machine( void ){
 
 /***************************************************************************/
 
-INPUT_PORTS_START( outrun_input_ports )
+INPUT_PORTS_START( outrun )
 PORT_START	/* Steering */
 	PORT_ANALOG ( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER, 100, 3, 0, 0x48, 0xb8 )
 //	PORT_ANALOG ( 0xff, 0x7f, IPT_PADDLE , 70, 3, 0, 0x48, 0xb8 )
@@ -11663,7 +11728,7 @@ static void outrun_hisave(void)
 }
 
 
-struct GameDriver outrun_driver =
+struct GameDriver driver_outrun =
 {
 	__FILE__,
 	0,
@@ -11675,21 +11740,21 @@ struct GameDriver outrun_driver =
 	0,
 	&outrun_machine_driver,
 	outrun_onetime_init_machine,
-	outrun_rom,
+	rom_outrun,
 	outrun_sprite_decode, 0,
 	0,
 	0,
-	outrun_input_ports,
+	input_ports_outrun,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	outrun_hiload, outrun_hisave
 };
 
 
-struct GameDriver outruna_driver =
+struct GameDriver driver_outruna =
 {
 	__FILE__,
-	&outrun_driver,
+	&driver_outrun,
 	"outruna",
 	"Out Run (set 2)",
 	"1986",
@@ -11698,20 +11763,20 @@ struct GameDriver outruna_driver =
 	0,
 	&outruna_machine_driver,
 	outrun_onetime_init_machine,
-	outruna_rom,
+	rom_outruna,
 	outrun_sprite_decode, 0,
 	0,
 	0,
-	outrun_input_ports,
+	input_ports_outrun,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	outrun_hiload, outrun_hisave
 };
 
-struct GameDriver outrunb_driver =
+struct GameDriver driver_outrunb =
 {
 	__FILE__,
-	&outrun_driver,
+	&driver_outrun,
 	"outrunb",
 	"Out Run (set 3)",
 	"1986",
@@ -11720,11 +11785,11 @@ struct GameDriver outrunb_driver =
 	0,
 	&outruna_machine_driver,
 	outrunb_onetime_init_machine,
-	outrunb_rom,
+	rom_outrunb,
 	outrunb_sprite_decode, 0,
 	0,
 	0,
-	outrun_input_ports,
+	input_ports_outrun,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	outrun_hiload, outrun_hisave
@@ -11734,7 +11799,7 @@ struct GameDriver outrunb_driver =
 /*****************************************************************************/
 // Enduro Racer
 
-ROM_START( enduror_rom )
+ROM_START( enduror )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "7636a.rom",0x00000, 0x8000, 0x84131639 )
 	ROM_LOAD_EVEN( "7640a.rom",0x00000, 0x8000, 0x1d1dc5d4 )
@@ -11809,7 +11874,7 @@ ROM_END
 
 
 
-ROM_START( endurobl_rom )
+ROM_START( endurobl )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "4.13h", 0x030000, 0x08000, 0x43bff873 )						// rom de-coded
 	ROM_CONTINUE (          0x000001, 0x08000 | ROMFLAG_ALTERNATE )		// data de-coded
@@ -11883,7 +11948,7 @@ ROM_START( endurobl_rom )
 	ROM_LOAD( "7633.rom", 0x0000, 0x8000, 0x6f146210 )
 ROM_END
 
-ROM_START( endurob2_rom )
+ROM_START( endurob2 )
 	ROM_REGION( 0x040000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "enduro.a04", 0x000000, 0x08000, 0xf584fbd9 )
 	ROM_LOAD_EVEN( "enduro.a07", 0x000000, 0x08000, 0x259069bc )
@@ -11994,7 +12059,7 @@ static struct MemoryReadAddress enduror_readmem[] =
 	{ 0x108000, 0x108fff, MRA_TEXTRAM },
 	{ 0x110000, 0x110fff, MRA_PALETTERAM },
 
-	{ 0x124000, 0x127fff, shared_ram_r, &shared_ram },
+	{ 0x124000, 0x127fff, shared_ram_r },
 
 	{ 0x130000, 0x130fff, MRA_SPRITERAM },
 
@@ -12036,7 +12101,7 @@ static struct MemoryReadAddress enduror_readmem2[] =
 	{ 0x000000, 0x03ffff, MRA_ROM },
 	{ 0xc68000, 0xc68fff, MRA_EXTRAM2 },
 	{ 0xc7e000, 0xc7e001, enduro_p2_skip_r },
-	{ 0xc7c000, 0xc7ffff, shared_ram_r, &shared_ram },
+	{ 0xc7c000, 0xc7ffff, shared_ram_r },
 	{-1}
 };
 
@@ -12244,7 +12309,7 @@ static void enduror_onetime_init_machine( void )
 }
 /***************************************************************************/
 
-INPUT_PORTS_START( enduror_input_ports )
+INPUT_PORTS_START( enduror )
 PORT_START	/* handle right left */
 	PORT_ANALOG ( 0xff, 0x7f, IPT_AD_STICK_X | IPF_REVERSE | IPF_CENTER, 100, 4, 0, 0x0, 0xff )
 
@@ -12428,7 +12493,7 @@ static void enduror_hisave(void)
 }
 
 
-struct GameDriver enduror_driver =
+struct GameDriver driver_enduror =
 {
 	__FILE__,
 	0,
@@ -12437,23 +12502,23 @@ struct GameDriver enduror_driver =
 	"1985",
 	"Sega",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&enduror_machine_driver,
 	enduror_onetime_init_machine,
-	enduror_rom,
+	rom_enduror,
 	enduror_sprite_decode, 0,
 	0,
 	0,
-	enduror_input_ports,
+	input_ports_enduror,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver endurobl_driver =
+struct GameDriver driver_endurobl =
 {
 	__FILE__,
-	&enduror_driver,
+	&driver_enduror,
 	"endurobl",
 	"Enduro Racer (bootleg)",
 	"1985",
@@ -12462,20 +12527,20 @@ struct GameDriver endurobl_driver =
 	0,
 	&enduror_machine_driver,
 	enduror_onetime_init_machine,
-	endurobl_rom,
+	rom_endurobl,
 	endurob_sprite_decode, endurora_opcode_decode,
 	0,
 	0,
-	enduror_input_ports,
+	input_ports_enduror,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	enduror_hiload, enduror_hisave
 };
 
-struct GameDriver endurob2_driver =
+struct GameDriver driver_endurob2 =
 {
 	__FILE__,
-	&enduror_driver,
+	&driver_enduror,
 	"endurob2",
 	"Enduro Racer (bootleg set 2)",
 	"1985",
@@ -12484,11 +12549,11 @@ struct GameDriver endurob2_driver =
 	0,
 	&enduror_b2_machine_driver,
 	enduror_onetime_init_machine,
-	endurob2_rom,
+	rom_endurob2,
 	endurob_sprite_decode, endurob2_opcode_decode,
 	0,
 	0,
-	enduror_input_ports,
+	input_ports_enduror,
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
 	enduror_hiload, enduror_hisave
@@ -12531,7 +12596,7 @@ static void sys16_dummy_sprite_decode( void ){
 //	sys16_sprite_decode( 4,0x040000 );
 }
 
-INPUT_PORTS_START( sys16_dummy_input_ports )
+INPUT_PORTS_START( sys16_dummy )
 INPUT_PORTS_END
 
 
@@ -12544,7 +12609,7 @@ MACHINE_DRIVER( sys16_dummy_machine_driver, \
 // Ace Attacker
 
 // sys18
-ROM_START( aceattac_rom )
+ROM_START( aceattac )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "11489.1a", 0x000000, 0x10000, 0xbbe623c5 )
 	ROM_LOAD_EVEN( "11491.4a", 0x000000, 0x10000, 0x77b820f1 )
@@ -12575,7 +12640,7 @@ ROM_START( aceattac_rom )
 ROM_END
 
 
-struct GameDriver aceattac_driver =
+struct GameDriver driver_aceattac =
 {
 	__FILE__,
 	0,
@@ -12584,16 +12649,16 @@ struct GameDriver aceattac_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	aceattac_rom,
+	rom_aceattac,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
@@ -12602,7 +12667,7 @@ struct GameDriver aceattac_driver =
 /*****************************************************************************/
 // After Burner
 
-ROM_START( aburner_rom )
+ROM_START( aburner )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD ( "epr10949.bin",0x000000,0x20000, 0xd8437d92 )
 	ROM_LOAD ( "epr10948.bin",0x000000,0x20000, 0x64284761 )
@@ -12633,7 +12698,7 @@ ROM_START( aburner_rom )
 ROM_END
 
 
-struct GameDriver aburner_driver =
+struct GameDriver driver_aburner =
 {
 	__FILE__,
 	0,
@@ -12642,23 +12707,23 @@ struct GameDriver aburner_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	aburner_rom,
+	rom_aburner,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // After Burner II
 
-ROM_START( aburner2_rom )
+ROM_START( aburner2 )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "11108.104", 0x000000, 0x20000, 0x202a3e1d )
 	ROM_LOAD_EVEN( "11107.58",  0x000000, 0x20000, 0x6d87bab7 )
@@ -12703,7 +12768,7 @@ ROM_START( aburner2_rom )
 	ROM_LOAD_ODD ( "10922.40", 0x000000, 0x10000, 0xb49183d4 )
 ROM_END
 
-struct GameDriver aburner2_driver =
+struct GameDriver driver_aburner2 =
 {
 	__FILE__,
 	0,
@@ -12712,16 +12777,16 @@ struct GameDriver aburner2_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	aburner2_rom,
+	rom_aburner2,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
@@ -12729,7 +12794,7 @@ struct GameDriver aburner2_driver =
 // Bloxeed
 
 // sys18
-ROM_START( bloxeed_rom )
+ROM_START( bloxeed )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "rom-o.rom", 0x000000, 0x20000, 0xdd1bc3bf )
 	ROM_LOAD_EVEN( "rom-e.rom", 0x000000, 0x20000, 0xa481581a )
@@ -12747,7 +12812,7 @@ ROM_START( bloxeed_rom )
 	ROM_LOAD( "sound0.rom",	 0x00000, 0x20000, 0x6f2fc63c )
 ROM_END
 
-struct GameDriver bloxeed_driver =
+struct GameDriver driver_bloxeed =
 {
 	__FILE__,
 	0,
@@ -12756,23 +12821,23 @@ struct GameDriver bloxeed_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	bloxeed_rom,
+	rom_bloxeed,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // Clutch Hitter
 // sys18
-ROM_START( cltchitr_rom )
+ROM_START( cltchitr )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr13751.4a", 0x000000, 0x40000, 0xc8d80233 )
 	ROM_LOAD_EVEN( "epr13795.6a", 0x000000, 0x40000, 0xb0b60b67 )
@@ -12798,7 +12863,7 @@ ROM_START( cltchitr_rom )
 	ROM_LOAD( "epr13792.6c",    0x100000, 0x80000, 0x808f9695 )
 ROM_END
 
-struct GameDriver cltchitr_driver =
+struct GameDriver driver_cltchitr =
 {
 	__FILE__,
 	0,
@@ -12807,23 +12872,23 @@ struct GameDriver cltchitr_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	cltchitr_rom,
+	rom_cltchitr,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // Cotton
 
-ROM_START( cotton_rom )
+ROM_START( cotton )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 // custom cpu 317-?????
 	ROM_LOAD_ODD ( "epr13856.a5", 0x000000, 0x20000, 0x14e6b5e7 )
@@ -12862,7 +12927,7 @@ ROM_START( cotton_rom )
 	ROM_LOAD( "speech0.rom", 0x10000, 0x20000, 0x4d21153f )
 ROM_END
 
-struct GameDriver cotton_driver =
+struct GameDriver driver_cotton =
 {
 	__FILE__,
 	0,
@@ -12871,21 +12936,21 @@ struct GameDriver cotton_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	cotton_rom,
+	rom_cotton,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 
-ROM_START( cottona_rom )
+ROM_START( cottona )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 // custom cpu 317-0181a
 	ROM_LOAD_ODD ( "ep13919a.a5", 0x000000, 0x20000, 0x651108b1 )
@@ -12924,32 +12989,32 @@ ROM_START( cottona_rom )
 	ROM_LOAD( "speech0.rom", 0x10000, 0x20000, 0x4d21153f )
 ROM_END
 
-struct GameDriver cottona_driver =
+struct GameDriver driver_cottona =
 {
 	__FILE__,
-	&cotton_driver,
+	&driver_cotton,
 	"cottona",
 	"Cotton",
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	cottona_rom,
+	rom_cottona,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // DD Crew
 
-ROM_START( ddcrew_rom )
+ROM_START( ddcrew )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "14152.4a", 0x000000, 0x40000, 0x69c7b571 )
 	ROM_LOAD_EVEN( "14153.6a", 0x000000, 0x40000, 0xe01fae0c )
@@ -12978,7 +13043,7 @@ ROM_START( ddcrew_rom )
 	ROM_LOAD( "14132.6c",    0x120000, 0x80000, 0x1fae0220 )
 ROM_END
 
-struct GameDriver ddcrew_driver =
+struct GameDriver driver_ddcrew =
 {
 	__FILE__,
 	0,
@@ -12987,23 +13052,23 @@ struct GameDriver ddcrew_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	ddcrew_rom,
+	rom_ddcrew,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // Dunk Shot
 
-ROM_START( dunkshot_rom )
+ROM_START( dunkshot )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "10467.bin", 0x000000, 0x8000, 0x29774114 )
 	ROM_LOAD_EVEN( "10468.bin", 0x000000, 0x8000, 0xe2d5f97a )
@@ -13034,7 +13099,7 @@ ROM_START( dunkshot_rom )
 	ROM_LOAD( "10476.bin",   0x20000, 0x08000, 0xa6be0956 )
 ROM_END
 
-struct GameDriver dunkshot_driver =
+struct GameDriver driver_dunkshot =
 {
 	__FILE__,
 	0,
@@ -13043,16 +13108,16 @@ struct GameDriver dunkshot_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	dunkshot_rom,
+	rom_dunkshot,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
@@ -13061,7 +13126,7 @@ struct GameDriver dunkshot_driver =
 // Laser Ghost
 
 // sys18
-ROM_START( lghost_rom )
+ROM_START( lghost )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "13437", 0x000000, 0x20000, 0x38b4dc2f )
 	ROM_LOAD_EVEN( "13429", 0x000000, 0x20000, 0x0e0ccf26 )
@@ -13090,7 +13155,7 @@ ROM_START( lghost_rom )
 	ROM_LOAD( "13418",   0x60000, 0x20000, 0x4006c9f1 )
 ROM_END
 
-struct GameDriver lghost_driver =
+struct GameDriver driver_lghost =
 {
 	__FILE__,
 	0,
@@ -13099,23 +13164,23 @@ struct GameDriver lghost_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	lghost_rom,
+	rom_lghost,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // Line of Fire
 
-ROM_START( loffire_rom )
+ROM_START( loffire )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr12849.rom", 0x000000, 0x20000, 0x61cfd2fe )
 	ROM_LOAD_EVEN( "epr12850.rom", 0x000000, 0x20000, 0x14598f2a )
@@ -13159,7 +13224,7 @@ ROM_START( loffire_rom )
 	ROM_LOAD_EVEN( "epr12805.rom", 0x040000, 0x20000, 0x4a7200c3 )
 ROM_END
 
-struct GameDriver loffire_driver =
+struct GameDriver driver_loffire =
 {
 	__FILE__,
 	0,
@@ -13168,23 +13233,23 @@ struct GameDriver loffire_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	loffire_rom,
+	rom_loffire,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // MVP
 
-ROM_START( mvp_rom )
+ROM_START( mvp )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "12999.rom", 0x000000, 0x40000, 0xfd213d28 )
 	ROM_LOAD_EVEN( "13000.rom", 0x000000, 0x40000, 0x2e0e21ec )
@@ -13209,7 +13274,7 @@ ROM_START( mvp_rom )
 	ROM_LOAD( "13001.rom",   0x10000, 0x40000, 0xe8cace8c )
 ROM_END
 
-struct GameDriver mvp_driver =
+struct GameDriver driver_mvp =
 {
 	__FILE__,
 	0,
@@ -13218,16 +13283,16 @@ struct GameDriver mvp_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	mvp_rom,
+	rom_mvp,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
@@ -13235,7 +13300,7 @@ struct GameDriver mvp_driver =
 // Thunder Blade
 
 // after burner hardware
-ROM_START( thndrbld_rom )
+ROM_START( thndrbld )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "thnbld.63", 0x000000, 0x20000, 0xc6b994b8 )
 	ROM_LOAD_EVEN( "thnbld.58", 0x000000, 0x20000, 0xe057dd5a )
@@ -13284,7 +13349,7 @@ ROM_START( thndrbld_rom )
 	ROM_LOAD( "thnbld.40",	 0x00000, 0x10000, 0x6a56c4c3 )
 ROM_END
 
-struct GameDriver thndrbld_driver =
+struct GameDriver driver_thndrbld =
 {
 	__FILE__,
 	0,
@@ -13293,23 +13358,23 @@ struct GameDriver thndrbld_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	thndrbld_rom,
+	rom_thndrbld,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 // Thunder Blade Japan
 
 // after burner hardware
-ROM_START( thndrbdj_rom )
+ROM_START( thndrbdj )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 
 	ROM_LOAD ( "11304.epr",0x000000,0x20000, 0xa90630ef )
@@ -13357,31 +13422,31 @@ ROM_START( thndrbdj_rom )
 	ROM_REGION( 0x10000 ) /* ???? */
 ROM_END
 
-struct GameDriver thndrbdj_driver =
+struct GameDriver driver_thndrbdj =
 {
 	__FILE__,
-	&thndrbld_driver,
+	&driver_thndrbld,
 	"thndrbdj",
 	"Thunder Blade (Japan)",
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	thndrbdj_rom,
+	rom_thndrbdj,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 /*****************************************************************************/
 // Turbo Outrun
 
-ROM_START( toutrun_rom )
+ROM_START( toutrun )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 // custom cpu 317-0106
 	ROM_LOAD_ODD ( "epr12396.118", 0x000000, 0x10000, 0x5e7115cb )
@@ -13436,7 +13501,7 @@ ROM_START( toutrun_rom )
 	ROM_LOAD_ODD ( "epr12298.11", 0x000000, 0x08000, 0xfc9bc41b )
 ROM_END
 
-struct GameDriver toutrun_driver =
+struct GameDriver driver_toutrun =
 {
 	__FILE__,
 	0,
@@ -13445,20 +13510,20 @@ struct GameDriver toutrun_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	toutrun_rom,
+	rom_toutrun,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-ROM_START( toutruna_rom )
+ROM_START( toutruna )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 // custom cpu 317-0106
 	ROM_LOAD_ODD ( "epr12409.118", 0x000000, 0x10000, 0xc11c8ef7 )
@@ -13513,25 +13578,25 @@ ROM_START( toutruna_rom )
 	ROM_LOAD_ODD ( "epr12298.11", 0x000000, 0x08000, 0xfc9bc41b )
 ROM_END
 
-struct GameDriver toutruna_driver =
+struct GameDriver driver_toutruna =
 {
 	__FILE__,
-	&toutrun_driver,
+	&driver_toutrun,
 	"toutruna",
 	"Turbo Outrun (set 2)",
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	toutruna_rom,
+	rom_toutruna,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
@@ -13539,7 +13604,7 @@ struct GameDriver toutruna_driver =
 /*****************************************************************************/
 // Excite League
 
-ROM_START( exctleag_rom )
+ROM_START( exctleag )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr11936.a01",0x00000,0x10000, 0x0863de60 )
 	ROM_LOAD_EVEN( "epr11937.a02",0x00000,0x10000, 0x4ebda367 )
@@ -13572,7 +13637,7 @@ ROM_START( exctleag_rom )
 
 ROM_END
 
-struct GameDriver exctleag_driver =
+struct GameDriver driver_exctleag =
 {
 	__FILE__,
 	0,
@@ -13581,23 +13646,23 @@ struct GameDriver exctleag_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	exctleag_rom,
+	rom_exctleag,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
 /*****************************************************************************/
 // Super League
 
-ROM_START( suprleag_rom )
+ROM_START( suprleag )
 	ROM_REGION( 0x100000 ) /* 68000 code */
 	ROM_LOAD_ODD ( "epr11130.a01",0x00000,0x10000, 0xe2451676 )
 	ROM_LOAD_EVEN( "epr11131.a02",0x00000,0x10000, 0x9b78c2cc )
@@ -13630,7 +13695,7 @@ ROM_START( suprleag_rom )
 
 ROM_END
 
-struct GameDriver suprleag_driver =
+struct GameDriver driver_suprleag =
 {
 	__FILE__,
 	0,
@@ -13639,15 +13704,15 @@ struct GameDriver suprleag_driver =
 	"????",
 	"????",
 	SYS16_CREDITS,
-	GAME_NOT_WORKING,
+	0,
 	&sys16_dummy_machine_driver,
 	sys16_onetime_init_machine,
-	suprleag_rom,
+	rom_suprleag,
 	sys16_dummy_sprite_decode, 0,
 	0,
 	0,
-	sys16_dummy_input_ports,
+	input_ports_sys16_dummy,
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };

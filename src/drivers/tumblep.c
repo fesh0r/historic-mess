@@ -178,7 +178,7 @@ static struct MemoryWriteAddress sound_writemem[] =
 
 /******************************************************************************/
 
-INPUT_PORTS_START( tumblep_input_ports )
+INPUT_PORTS_START( tumblep )
 	PORT_START	/* Player 1 controls */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
@@ -432,7 +432,7 @@ static struct MachineDriver tumblepb_machine_driver =
 
 /******************************************************************************/
 
-ROM_START( tumblepop_rom )
+ROM_START( tumblepop )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_ODD ("hl01-1.f13", 0x00000, 0x40000, 0xd5a62a3f )
 	ROM_LOAD_EVEN("hl00-1.f12", 0x00000, 0x40000, 0xfd697c1b )
@@ -449,11 +449,11 @@ ROM_START( tumblepop_rom )
 	ROM_REGION(0x10000) /* Sound cpu */
 	ROM_LOAD( "hl02-.f16",  0x00000,  0x10000, 0xa5cab888 )
 
-	ROM_REGION(0x80000) /* Oki samples */
-	ROM_LOAD( "thumbpop.snd",  0x00000,  0x80000, BADCRC(0xfabbf15d) )
+	ROM_REGION(0x20000) /* Oki samples */
+	ROM_LOAD( "hl03-.j15",  0x00000,  0x20000, 0x01b81da0 )
 ROM_END
 
-ROM_START( tumblepb_rom )
+ROM_START( tumblepb )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN ("thumbpop.12", 0x00000, 0x40000, 0x0c984703 )
 	ROM_LOAD_ODD ( "thumbpop.13", 0x00000, 0x40000, 0x864c4053 )
@@ -471,7 +471,7 @@ ROM_START( tumblepb_rom )
 	ROM_LOAD( "thumbpop.snd",  0x00000,  0x80000, 0xfabbf15d )
 ROM_END
 
-ROM_START( tumblepop2_rom )
+ROM_START( tumblepop2 )
 	ROM_REGION(0x80000) /* 68000 code */
 	ROM_LOAD_EVEN ("thumbpop.2", 0x00000, 0x40000, 0x34b016e1 )
 	ROM_LOAD_ODD ( "thumbpop.3", 0x00000, 0x40000, 0x89501c71 )
@@ -515,7 +515,7 @@ static void t_patch(void)
 
 /******************************************************************************/
 
-struct GameDriver tumblep_driver =
+struct GameDriver driver_tumblep =
 {
 	__FILE__,
 	0,
@@ -528,64 +528,64 @@ struct GameDriver tumblep_driver =
 	&tumblepop_machine_driver,
 	0,
 
-	tumblepop_rom,
+	rom_tumblepop,
 	t_patch, 0,
 	0,
 	0,	/* sound_prom */
 
-	tumblep_input_ports,
+	input_ports_tumblep,
 
 	0, 0, 0,   /* colors, palette, colortable */
 	ORIENTATION_DEFAULT,
 	0, 0
 };
 
-struct GameDriver tumblepb_driver =
+struct GameDriver driver_tumblepb =
 {
 	__FILE__,
-	&tumblep_driver,
+	&driver_tumblep,
 	"tumblepb",
 	"Tumble Pop (bootleg set 1)",
 	"1991",
 	"bootleg",
 	"Bryan McPhail",
-	GAME_IMPERFECT_SOUND,
+	0,
 	&tumblepb_machine_driver,
 	0,
 
-	tumblepb_rom,
+	rom_tumblepb,
 	t_patch, 0,
 	0,
 	0,	/* sound_prom */
 
-	tumblep_input_ports,
+	input_ports_tumblep,
 
 	0, 0, 0,   /* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_SOUND,
 	0, 0
 };
 
-struct GameDriver tumblep2_driver =
+struct GameDriver driver_tumblep2 =
 {
 	__FILE__,
-	&tumblep_driver,
+	&driver_tumblep,
 	"tumblep2",
 	"Tumble Pop (bootleg set 2)",
 	"1991",
 	"bootleg",
 	"Bryan McPhail",
-	GAME_IMPERFECT_SOUND,
+	0,
 	&tumblepb_machine_driver,
 	0,
 
-	tumblepop2_rom,
+	rom_tumblepop2,
 	t_patch, 0,
 	0,
 	0,	/* sound_prom */
 
-	tumblep_input_ports,
+	input_ports_tumblep,
 
 	0, 0, 0,   /* colors, palette, colortable */
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_IMPERFECT_SOUND,
 	0, 0
 };

@@ -146,7 +146,7 @@ static struct IOWritePort sound_writeport[] =
 
 
 
-INPUT_PORTS_START( amidar_input_ports )
+INPUT_PORTS_START( amidar )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably space for button 2 */
@@ -227,7 +227,7 @@ INPUT_PORTS_START( amidar_input_ports )
 	PORT_DIPSETTING(    0x00, "Disable All Coins" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( amidaro_input_ports )
+INPUT_PORTS_START( amidaro )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably space for button 2 */
@@ -309,7 +309,7 @@ INPUT_PORTS_START( amidaro_input_ports )
 INPUT_PORTS_END
 
 /* absolutely identical to amidar, the only difference is the BONUS dip switch */
-INPUT_PORTS_START( amidarjp_input_ports )
+INPUT_PORTS_START( amidarjp )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably space for button 2 */
@@ -392,7 +392,7 @@ INPUT_PORTS_END
 
 /* similar to Amidar, dip switches are different and port 3, which in Amidar */
 /* selects coins per credit, is not used. */
-INPUT_PORTS_START( turtles_input_ports )
+INPUT_PORTS_START( turtles )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably space for button 2 */
@@ -437,7 +437,7 @@ INPUT_PORTS_START( turtles_input_ports )
 INPUT_PORTS_END
 
 /* same as Turtles, but dip switches are different. */
-INPUT_PORTS_START( turpin_input_ports )
+INPUT_PORTS_START( turpin )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably space for button 2 */
@@ -482,7 +482,7 @@ INPUT_PORTS_START( turpin_input_ports )
 INPUT_PORTS_END
 
 /* similar to Turtles, lives are different */
-INPUT_PORTS_START( k600_input_ports )
+INPUT_PORTS_START( 600 )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably space for button 2 */
@@ -627,7 +627,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( amidar_rom )
+ROM_START( amidar )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "amidarus.2c",  0x0000, 0x1000, 0x951e0792 )
 	ROM_LOAD( "amidarus.2e",  0x1000, 0x1000, 0xa1a3a136 )
@@ -639,7 +639,7 @@ ROM_START( amidar_rom )
 	ROM_LOAD( "amidarus.5f",  0x0000, 0x0800, 0x2cfe5ede )
 	ROM_LOAD( "amidarus.5h",  0x0800, 0x0800, 0x57c4fd0d )
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "amidar.clr",   0x0000, 0x0020, 0xf940dcc3 )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -647,7 +647,7 @@ ROM_START( amidar_rom )
 	ROM_LOAD( "amidarus.5d",  0x1000, 0x1000, 0x9b5bdc0a )
 ROM_END
 
-ROM_START( amidaro_rom )
+ROM_START( amidaro )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "107.2cd",      0x0000, 0x1000, 0xc52536be )
 	ROM_LOAD( "108.2fg",      0x1000, 0x1000, 0x38538b98 )
@@ -659,7 +659,7 @@ ROM_START( amidaro_rom )
 	ROM_LOAD( "amidarus.5f",  0x0000, 0x0800, 0x2cfe5ede )
 	ROM_LOAD( "113.5h",       0x0800, 0x0800, 0xbcdce168 )  /* The letter 'S' is slightly different */
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "amidar.clr",   0x0000, 0x0020, 0xf940dcc3 )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -667,7 +667,7 @@ ROM_START( amidaro_rom )
 	ROM_LOAD( "amidarus.5d",  0x1000, 0x1000, 0x9b5bdc0a )
 ROM_END
 
-ROM_START( amidarjp_rom )
+ROM_START( amidarjp )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "amidar.2c",    0x0000, 0x1000, 0xc294bf27 )
 	ROM_LOAD( "amidar.2e",    0x1000, 0x1000, 0xe6e96826 )
@@ -678,7 +678,7 @@ ROM_START( amidarjp_rom )
 	ROM_LOAD( "amidar.5f",    0x0000, 0x0800, 0x5e51e84d )
 	ROM_LOAD( "amidar.5h",    0x0800, 0x0800, 0x2f7f1c30 )
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "amidar.clr",   0x0000, 0x0020, 0xf940dcc3 )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -686,7 +686,7 @@ ROM_START( amidarjp_rom )
 	ROM_LOAD( "amidar.5d",    0x1000, 0x1000, 0x806785af )
 ROM_END
 
-ROM_START( amigo_rom )
+ROM_START( amigo )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "2732.a1",      0x0000, 0x1000, 0x930dc856 )
 	ROM_LOAD( "2732.a2",      0x1000, 0x1000, 0x66282ff5 )
@@ -697,7 +697,7 @@ ROM_START( amigo_rom )
 	ROM_LOAD( "2716.a6",      0x0000, 0x0800, 0x2082ad0a )
 	ROM_LOAD( "2716.a5",      0x0800, 0x0800, 0x3029f94f )
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "amidar.clr",   0x0000, 0x0020, 0xf940dcc3 )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -705,7 +705,7 @@ ROM_START( amigo_rom )
 	ROM_LOAD( "amidarus.5d",  0x1000, 0x1000, 0x9b5bdc0a )
 ROM_END
 
-ROM_START( turtles_rom )
+ROM_START( turtles )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "turt_vid.2c",  0x0000, 0x1000, 0xec5e61fb )
 	ROM_LOAD( "turt_vid.2e",  0x1000, 0x1000, 0xfd10821e )
@@ -717,7 +717,7 @@ ROM_START( turtles_rom )
 	ROM_LOAD( "turt_vid.5h",  0x0000, 0x0800, 0xe5999d52 )
 	ROM_LOAD( "turt_vid.5f",  0x0800, 0x0800, 0xc3ffd655 )
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "turtles.clr",  0x0000, 0x0020, 0xf3ef02dd )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -725,7 +725,7 @@ ROM_START( turtles_rom )
 	ROM_LOAD( "turt_snd.5d",  0x1000, 0x1000, 0xaf5fc43c )
 ROM_END
 
-ROM_START( turpin_rom )
+ROM_START( turpin )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "m1",           0x0000, 0x1000, 0x89177473 )
 	ROM_LOAD( "m2",           0x1000, 0x1000, 0x4c6ca5c6 )
@@ -737,7 +737,7 @@ ROM_START( turpin_rom )
 	ROM_LOAD( "turt_vid.5h",  0x0000, 0x0800, 0xe5999d52 )
 	ROM_LOAD( "turt_vid.5f",  0x0800, 0x0800, 0xc3ffd655 )
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "turtles.clr",  0x0000, 0x0020, 0xf3ef02dd )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -745,7 +745,7 @@ ROM_START( turpin_rom )
 	ROM_LOAD( "turt_snd.5d",  0x1000, 0x1000, 0xaf5fc43c )
 ROM_END
 
-ROM_START( k600_rom )
+ROM_START( 600 )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "600_vid.2c",   0x0000, 0x1000, 0x8ee090ae )
 	ROM_LOAD( "600_vid.2e",   0x1000, 0x1000, 0x45bfaff2 )
@@ -757,7 +757,7 @@ ROM_START( k600_rom )
 	ROM_LOAD( "600_vid.5h",   0x0000, 0x0800, 0x006c3d56 )
 	ROM_LOAD( "600_vid.5f",   0x0800, 0x0800, 0x7dbc0426 )
 
-	ROM_REGION(0x20)	/* color prom */
+	ROM_REGIONX( 0x0020, REGION_PROMS )
 	ROM_LOAD( "turtles.clr",  0x0000, 0x0020, 0xf3ef02dd )
 
 	ROM_REGION(0x10000)	/* 64k for the audio CPU */
@@ -861,7 +861,7 @@ static void amidar_hisave(void)
 
 
 
-struct GameDriver amidar_driver =
+struct GameDriver driver_amidar =
 {
 	__FILE__,
 	0,
@@ -874,23 +874,23 @@ struct GameDriver amidar_driver =
 	&machine_driver,
 	0,
 
-	amidarjp_rom,
+	rom_amidarjp,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	amidarjp_input_ports,
+	input_ports_amidarjp,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	amidar_hiload, amidar_hisave
 };
 
-struct GameDriver amidaru_driver =
+struct GameDriver driver_amidaru =
 {
 	__FILE__,
-	&amidar_driver,
+	&driver_amidar,
 	"amidaru",
 	"Amidar (Stern)",
 	"1982",
@@ -900,23 +900,23 @@ struct GameDriver amidaru_driver =
 	&machine_driver,
 	0,
 
-	amidar_rom,
+	rom_amidar,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	amidar_input_ports,
+	input_ports_amidar,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	amidar_hiload, amidar_hisave
 };
 
-struct GameDriver amidaro_driver =
+struct GameDriver driver_amidaro =
 {
 	__FILE__,
-	&amidar_driver,
+	&driver_amidar,
 	"amidaro",
 	"Amidar (Olympia)",
 	"1982",
@@ -926,23 +926,23 @@ struct GameDriver amidaro_driver =
 	&machine_driver,
 	0,
 
-	amidaro_rom,
+	rom_amidaro,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	amidaro_input_ports,
+	input_ports_amidaro,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	amidar_hiload, amidar_hisave
 };
 
-struct GameDriver amigo_driver =
+struct GameDriver driver_amigo =
 {
 	__FILE__,
-	&amidar_driver,
+	&driver_amidar,
 	"amigo",
 	"Amigo",
 	"1982",
@@ -952,20 +952,20 @@ struct GameDriver amigo_driver =
 	&machine_driver,
 	0,
 
-	amigo_rom,
+	rom_amigo,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	amidar_input_ports,
+	input_ports_amidar,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	amidar_hiload, amidar_hisave
 };
 
-struct GameDriver turtles_driver =
+struct GameDriver driver_turtles =
 {
 	__FILE__,
 	0,
@@ -978,23 +978,23 @@ struct GameDriver turtles_driver =
 	&machine_driver,
 	0,
 
-	turtles_rom,
+	rom_turtles,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	turtles_input_ports,
+	input_ports_turtles,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	turtles_hiload, amidar_hisave
 };
 
-struct GameDriver turpin_driver =
+struct GameDriver driver_turpin =
 {
 	__FILE__,
-	&turtles_driver,
+	&driver_turtles,
 	"turpin",
 	"Turpin",
 	"1981",
@@ -1004,23 +1004,23 @@ struct GameDriver turpin_driver =
 	&machine_driver,
 	0,
 
-	turpin_rom,
+	rom_turpin,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	turpin_input_ports,
+	input_ports_turpin,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	turtles_hiload, amidar_hisave
 };
 
-struct GameDriver k600_driver =
+struct GameDriver driver_600 =
 {
 	__FILE__,
-	&turtles_driver,
+	&driver_turtles,
 	"600",
 	"600",
 	"1981",
@@ -1030,14 +1030,14 @@ struct GameDriver k600_driver =
 	&machine_driver,
 	0,
 
-	k600_rom,
+	rom_600,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	k600_input_ports,
+	input_ports_600,
 
-	PROM_MEMORY_REGION(2), 0, 0,
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	turtles_hiload, amidar_hisave

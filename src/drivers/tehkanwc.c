@@ -174,7 +174,7 @@ static struct MemoryReadAddress readmem[] =
 {
 	{ 0x0000, 0xbfff, MRA_ROM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
-	{ 0xc800, 0xcfff, shared_r, &shared_ram },
+	{ 0xc800, 0xcfff, shared_r },
 	{ 0xd000, 0xd3ff, videoram_r },
 	{ 0xd400, 0xd7ff, colorram_r },
 	{ 0xd800, 0xddff, paletteram_r },
@@ -200,7 +200,7 @@ static struct MemoryWriteAddress writemem[] =
 {
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
-	{ 0xc800, 0xcfff, shared_w },
+	{ 0xc800, 0xcfff, shared_w, &shared_ram },
 	{ 0xd000, 0xd3ff, videoram_w, &videoram, &videoram_size },
 	{ 0xd400, 0xd7ff, colorram_w, &colorram },
 	{ 0xd800, 0xddff, paletteram_xxxxBBBBGGGGRRRR_swap_w, &paletteram },
@@ -288,7 +288,7 @@ static struct IOWritePort sound_writeport[] =
 
 
 
-INPUT_PORTS_START( tehkanwc_input_ports )
+INPUT_PORTS_START( tehkanwc )
 	PORT_START /* DSW1 - Active LOW */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING (   0x01, DEF_STR( 2C_1C ) )
@@ -407,7 +407,7 @@ INPUT_PORTS_START( tehkanwc_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( gridiron_input_ports )
+INPUT_PORTS_START( gridiron )
 	PORT_START /* DSW1 - Active LOW */
 	PORT_DIPNAME( 0x01, 0x01, "1 Player Start" )
 	PORT_DIPSETTING (   0x00, "2 Credits" )
@@ -519,7 +519,7 @@ INPUT_PORTS_START( gridiron_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( teedoff_input_ports )
+INPUT_PORTS_START( teedoff )
 	PORT_START /* DSW1 - Active LOW */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING (   0x02, DEF_STR( 2C_1C ) )
@@ -634,7 +634,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct AY8910interface ay8910_interface =
 {
 	2,	/* 2 chips */
-	3579545 / 2,	/* 3.579545 / 2 MHz */
+	1536000, 	/* ??? */
 	{ 25, 25 },
 	AY8910_DEFAULT_GAIN,
 	{ 0, tehkanwc_portA_r },
@@ -716,7 +716,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( tehkanwc_rom )
+ROM_START( tehkanwc )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "twc-1.bin",    0x0000, 0x4000, 0x34d6d5ff )
 	ROM_LOAD( "twc-2.bin",    0x4000, 0x4000, 0x7017a221 )
@@ -739,7 +739,7 @@ ROM_START( tehkanwc_rom )
 	ROM_LOAD( "twc-5.bin",    0x0000, 0x4000, 0x444b5544 )
 ROM_END
 
-ROM_START( gridiron_rom )
+ROM_START( gridiron )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "gfight1.bin",  0x0000, 0x4000, 0x51612741 )
 	ROM_LOAD( "gfight2.bin",  0x4000, 0x4000, 0xa678db48 )
@@ -765,7 +765,7 @@ ROM_START( gridiron_rom )
 	ROM_LOAD( "gfight6.bin",  0x0000, 0x4000, 0xd05d463d )
 ROM_END
 
-ROM_START( teedoff_rom )
+ROM_START( teedoff )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "to-1.bin",     0x0000, 0x4000, 0xcc2aebc5 )
 	ROM_LOAD( "to-2.bin",     0x4000, 0x4000, 0xf7c9f138 )
@@ -826,7 +826,7 @@ static void tehkanwc_hisave(void)
 }
 
 
-struct GameDriver tehkanwc_driver =
+struct GameDriver driver_tehkanwc =
 {
 	__FILE__,
 	0,
@@ -839,12 +839,12 @@ struct GameDriver tehkanwc_driver =
 	&machine_driver,
 	0,
 
-	tehkanwc_rom,
+	rom_tehkanwc,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	tehkanwc_input_ports,
+	input_ports_tehkanwc,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -852,7 +852,7 @@ struct GameDriver tehkanwc_driver =
 	tehkanwc_hiload, tehkanwc_hisave
 };
 
-struct GameDriver gridiron_driver =
+struct GameDriver driver_gridiron =
 {
 	__FILE__,
 	0,
@@ -865,12 +865,12 @@ struct GameDriver gridiron_driver =
 	&machine_driver,
 	0,
 
-	gridiron_rom,
+	rom_gridiron,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	gridiron_input_ports,
+	input_ports_gridiron,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -878,7 +878,7 @@ struct GameDriver gridiron_driver =
 	0, 0
 };
 
-struct GameDriver teedoff_driver =
+struct GameDriver driver_teedoff =
 {
 	__FILE__,
 	0,
@@ -887,19 +887,19 @@ struct GameDriver teedoff_driver =
 	"1986",
 	"Tecmo",
 	"Ernesto Corvi\nRoberto Fresca",
-	GAME_NOT_WORKING,
+	0,
 	&machine_driver,
 	0,
 
-	teedoff_rom,
+	rom_teedoff,
 	0, 0,
 	0,
 	0,	/* sound_prom */
 
-	teedoff_input_ports,
+	input_ports_teedoff,
 
 	0, 0, 0,
-	ORIENTATION_ROTATE_90,
+	ORIENTATION_ROTATE_90 | GAME_NOT_WORKING,
 
 	0, 0
 };

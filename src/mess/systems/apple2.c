@@ -114,8 +114,8 @@ static struct MemoryReadAddress readmem[] =
 	{ 0xc0d0, 0xc0df, apple2_c0xx_slot5_r },
 	{ 0xc0e0, 0xc0ef, apple2_c0xx_slot6_r },
 	{ 0xc0f0, 0xc0ff, apple2_c0xx_slot7_r },
-	{ 0xc400, 0xc4ff, apple2_slot4_r, &apple2_slot4 },
-	{ 0xc100, 0xc7ff, MRA_BANK3, &apple2_slot_rom },
+	{ 0xc400, 0xc4ff, apple2_slot4_r },
+//  { 0xc100, 0xc7ff, MRA_BANK3, &apple2_slot_rom },
 //	{ 0xc100, 0xc1ff, apple2_slot1_r, &apple2_slot1 },
 //	{ 0xc200, 0xc2ff, apple2_slot2_r, &apple2_slot2 },
 //	{ 0xc300, 0xc3ff, apple2_slot3_r, &apple2_slot3 },
@@ -159,7 +159,7 @@ static struct MemoryWriteAddress writemem[] =
 	{ 0xc100, 0xc1ff, apple2_slot1_w },
 	{ 0xc200, 0xc2ff, apple2_slot2_w },
 	{ 0xc300, 0xc3ff, apple2_slot3_w },
-	{ 0xc400, 0xc4ff, apple2_slot4_w },
+	{ 0xc400, 0xc4ff, apple2_slot4_w, &apple2_slot4 },
 	{ 0xc500, 0xc5ff, apple2_slot5_w },
 	{ 0xc600, 0xc6ff, apple2_slot6_w },
 	{ 0xc700, 0xc7ff, apple2_slot7_w },
@@ -171,7 +171,7 @@ static struct MemoryWriteAddress writemem[] =
 /**************************************************************************
 ***************************************************************************/
 
-INPUT_PORTS_START( apple2_input_ports )
+INPUT_PORTS_START( apple2 )
 
 	PORT_START /* VBLANK */
 	PORT_BIT ( 0xBF, IP_ACTIVE_HIGH, IPT_UNUSED )
@@ -320,6 +320,15 @@ static unsigned short colortable[] =
 	15,0,
 };
 
+
+/* Initialise the palette */
+static void apple_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+	memcpy(sys_colortable,colortable,sizeof(colortable));
+}
+
+
 static struct DACinterface apple2_DAC_interface =
 {
 	1,			/* number of DACs */
@@ -362,7 +371,7 @@ static struct MachineDriver machine_driver =
 	apple2_gfxdecodeinfo,			/* graphics decode info */
 	sizeof(palette)/3,							/* 2 colors used for the characters */
 	sizeof(colortable)/sizeof(unsigned short),	/* 2 colors used for the characters */
-	0,								/* convert color prom */
+	apple_init_palette,							/* init palette */
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -409,7 +418,7 @@ static struct MachineDriver enhanced_machine_driver =
 	apple2_gfxdecodeinfo,			/* graphics decode info */
 	sizeof(palette)/3,							/* 2 colors used for the characters */
 	sizeof(colortable)/sizeof(unsigned short),	/* 2 colors used for the characters */
-	0,								/* convert color prom */
+	apple_init_palette,							/* init palette */
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -437,7 +446,7 @@ static struct MachineDriver enhanced_machine_driver =
 
 ***************************************************************************/
 
-ROM_START(apple2e_rom)
+ROM_START(apple2e)
 	ROM_REGION (0x24700)
 	/* 64k main RAM, 64k aux RAM */
 	ROM_LOAD ( "a2e.cd", 0x20000, 0x2000, 0xe248835e )
@@ -458,13 +467,14 @@ struct GameDriver apple2e_driver =
 	"1982",
 	"Apple Computer",
 	"Mike Balfour",
-	GAME_NOT_WORKING | GAME_COMPUTER,
+	0,
 	&machine_driver,
 	0,
 
-	apple2e_rom,
+	rom_apple2e,
 	apple2e_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
+	0,						/* default extensions */
 	1,						/* number of ROM slots - in this case, a CMD binary */
 	2,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -474,19 +484,19 @@ struct GameDriver apple2e_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	apple2_input_ports,
+	input_ports_apple2,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	colortable,				/* color lookup table */
+	0,				/* color palette */
+	0,				/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_NOT_WORKING | GAME_COMPUTER | ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(apple2ee_rom)
+ROM_START(apple2ee)
 	ROM_REGION (0x24700)
 	ROM_LOAD ( "a2ee.cd", 0x20000, 0x2000, 0x443aa7c4 )
 	ROM_LOAD ( "a2ee.ef", 0x22000, 0x2000, 0x95e10034 )
@@ -507,13 +517,14 @@ struct GameDriver apple2ee_driver =
 	"19??",
 	"Apple Computer",
 	"Mike Balfour",
-	GAME_NOT_WORKING | GAME_COMPUTER,
+	0,
 	&enhanced_machine_driver,
 	0,
 
-	apple2ee_rom,
+	rom_apple2ee,
 	apple2ee_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
+	0,						/* default extensions */
 	1,						/* number of ROM slots - in this case, a CMD binary */
 	2,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -523,19 +534,19 @@ struct GameDriver apple2ee_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	apple2_input_ports,
+	input_ports_apple2,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	colortable,				/* color lookup table */
+	0,				/* color palette */
+	0,				/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_NOT_WORKING | GAME_COMPUTER | ORIENTATION_DEFAULT,	/* flags */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(apple2ep_rom)
+ROM_START(apple2ep)
 	ROM_REGION(0x24700)
 	ROM_LOAD ("a2ept.cf", 0x20000, 0x4000, 0x02b648c8)
 	/* 0x4000 for bankswitched RAM */
@@ -555,13 +566,14 @@ struct GameDriver apple2ep_driver =
 	"19??",
 	"Apple Computer",
 	"Mike Balfour",
-	GAME_NOT_WORKING | GAME_COMPUTER,
+	0,
 	&enhanced_machine_driver,
 	0,
 
-	apple2ep_rom,
+	rom_apple2ep,
 	apple2ee_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
+	0,						/* default extensions */
 	1,						/* number of ROM slots - in this case, a CMD binary */
 	2,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -571,19 +583,19 @@ struct GameDriver apple2ep_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	apple2_input_ports,
+	input_ports_apple2,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	colortable,				/* color lookup table */
+	0,				/* color palette */
+	0,				/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_NOT_WORKING | GAME_COMPUTER | ORIENTATION_DEFAULT,	/* flags */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(apple2c_rom)
+ROM_START(apple2c)
 	ROM_REGION (0x24700)
 	ROM_LOAD ( "a2c.128", 0x20000, 0x4000, 0xf0edaa1b )
 
@@ -600,13 +612,14 @@ struct GameDriver apple2c_driver =
 	"1984",
 	"Apple Computer",
 	"Mike Balfour",
-	GAME_COMPUTER,
+	0,
 	&enhanced_machine_driver,
 	0,
 
-	apple2c_rom,
+	rom_apple2c,
 	apple2ee_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
+	0,						/* default extensions */
 	1,						/* number of ROM slots - in this case, a CMD binary */
 	2,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -616,19 +629,19 @@ struct GameDriver apple2c_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	apple2_input_ports,
+	input_ports_apple2,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	colortable,				/* color lookup table */
+	0,				/* color palette */
+	0,				/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(apple2c0_rom)
+ROM_START(apple2c0)
 	ROM_REGION(0x28000)
 	ROM_LOAD("a2c.256", 0x20000, 0x8000, 0xc8b979b3)
 
@@ -645,13 +658,14 @@ struct GameDriver apple2c0_driver =
 	"19??",
 	"Apple Computer",
 	"Mike Balfour",
-	GAME_COMPUTER,
+	0,
 	&enhanced_machine_driver,
 	0,
 
-	apple2c0_rom,
+	rom_apple2c0,
 	apple2ee_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
+	0,						/* default extensions */
 	1,						/* number of ROM slots - in this case, a CMD binary */
 	2,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -661,19 +675,19 @@ struct GameDriver apple2c0_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	apple2_input_ports,
+	input_ports_apple2,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	colortable,				/* color lookup table */
+	0,				/* color palette */
+	0,				/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */
 };
 
-ROM_START(apple2cp_rom)
+ROM_START(apple2cp)
 	ROM_REGION(0x28000)
 	ROM_LOAD("a2cplus.mon", 0x20000, 0x8000, 0x0b996420)
 
@@ -690,13 +704,14 @@ struct GameDriver apple2cp_driver =
 	"19??",
 	"Apple Computer",
 	"Mike Balfour",
-	GAME_NOT_WORKING | GAME_COMPUTER,
+	0,
 	&enhanced_machine_driver,
 	0,
 
-	apple2cp_rom,
+	rom_apple2cp,
 	apple2ee_load_rom, 		/* load rom_file images */
 	apple2_id_rom,			/* identify rom images */
+	0,						/* default extensions */
 	1,						/* number of ROM slots - in this case, a CMD binary */
 	2,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */
@@ -706,13 +721,13 @@ struct GameDriver apple2cp_driver =
 	0,						/* pointer to sample names */
 	0,						/* sound_prom */
 
-	apple2_input_ports,
+	input_ports_apple2,
 
 	0,						/* color_prom */
-	palette,				/* color palette */
-	colortable,				/* color lookup table */
+    0,				/* color palette */
+	0,				/* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	GAME_NOT_WORKING | GAME_COMPUTER | ORIENTATION_DEFAULT,	/* orientation */
 
 	0,						/* hiscore load */
 	0,						/* hiscore save */

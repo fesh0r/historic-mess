@@ -108,7 +108,7 @@ static struct GfxDecodeInfo spectrum_gfxdecodeinfo[] = {
 	{ -1 } /* end of array */
 };
 
-INPUT_PORTS_START( spectrum_input_ports )
+INPUT_PORTS_START( spectrum )
 	PORT_START /* 0xFEFE */
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN, "SHIFT", KEYCODE_RSHIFT,      IP_JOY_NONE )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_UNKNOWN, "Z",     KEYCODE_Z,           IP_JOY_NONE )
@@ -166,6 +166,7 @@ INPUT_PORTS_START( spectrum_input_ports )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_UNKNOWN, "B",         KEYCODE_B,        IP_JOY_NONE )
 INPUT_PORTS_END
 
+
 static unsigned char spectrum_palette[16*3] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0xcf,
 	0xcf, 0x00, 0x00, 0xcf, 0x00, 0xcf,
@@ -197,6 +198,13 @@ static unsigned short spectrum_colortable[128*2] = {
 	14,8 , 14,9, 14,10, 14,11, 14,12, 14,13, 14,14, 14,15,
 	15,8 , 15,9, 15,10, 15,11, 15,12, 15,13, 15,14, 15,15
 };
+/* Initialise the palette */
+static void spectrum_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,spectrum_palette,sizeof(spectrum_palette));
+	memcpy(sys_colortable,spectrum_colortable,sizeof(spectrum_colortable));
+}
+
 
 static struct MachineDriver spectrum_machine_driver =
 {
@@ -222,7 +230,7 @@ static struct MachineDriver spectrum_machine_driver =
 	{ 0, 32*8-1, 0, 24*8-1},             /* visible_area */
 	spectrum_gfxdecodeinfo,	             /* graphics decode info */
 	16, 128,                             /* colors used for the characters */
-	0,                                   /* convert color prom */
+	spectrum_init_palette,               /* initialise palette */
 
 	VIDEO_TYPE_RASTER,
 	0,
@@ -240,7 +248,7 @@ static struct MachineDriver spectrum_machine_driver =
 
 ***************************************************************************/
 
-ROM_START(spectrum_rom)
+ROM_START(spectrum)
 	ROM_REGION(0x10000)
 	//ROM_LOAD("spectrum.rom", 0x0000, 0x4000, 0x6561e6a7)
 	ROM_LOAD("spectrum.rom", 0x0000, 0x4000, 0xddee531f)
@@ -255,14 +263,15 @@ struct GameDriver spectrum_driver =
 	"1982",
 	"Sinclair Research",
 	"Allard van der Bas [MESS driver]",
-	GAME_COMPUTER,
+	0,
 	&spectrum_machine_driver,
 	0,
 
-	spectrum_rom,
-	0,	/* spectrum_rom_load, */
-	0,	/* spectrum_rom_id, */
-	0,	/* 1, */		/* number of ROM slots */
+	rom_spectrum,
+    spectrum_rom_load,
+    spectrum_rom_id,
+	0,					    /* default file extensions */
+    1,                      /* number of ROM slots */
 	0,                      /* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
 	0,                      /* number of cassette drives supported */
@@ -270,13 +279,13 @@ struct GameDriver spectrum_driver =
 	0,                      /* pointer to sample names */
 	0,                      /* sound_prom */
 
-	spectrum_input_ports,
+	input_ports_spectrum,
 
 	0,                         /* color_prom */
-	spectrum_palette,          /* color palette */
-	spectrum_colortable,       /* color lookup table */
+	/*spectrum_palette*/0,          /* color palette */
+	/*spectrum_colortable*/0,       /* color lookup table */
 
-	ORIENTATION_DEFAULT,    /* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,    /* orientation */
 
 	0, 0,
 };

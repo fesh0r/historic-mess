@@ -200,7 +200,7 @@ static struct MemoryWriteAddress parodius_writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( parodius )
 	PORT_START	/* PLAYER 1 INPUTS */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
@@ -379,7 +379,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( parodius_rom )
+ROM_START( parodius )
 	ROM_REGION( 0x51000 ) /* code + banked roms + palette RAM */
 	ROM_LOAD( "955e01.bin", 0x10000, 0x20000, 0x49baa334 )
 	ROM_LOAD( "955e02.bin", 0x30000, 0x18000, 0x14010d6f )
@@ -440,7 +440,7 @@ static void gfx_untangle(void)
 
 
 
-struct GameDriver parodius_driver =
+struct GameDriver driver_parodius =
 {
 	__FILE__,
 	0,
@@ -453,12 +453,12 @@ struct GameDriver parodius_driver =
 	&machine_driver,
 	0,
 
-	parodius_rom,
+	rom_parodius,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	input_ports,
+	input_ports_parodius,
 
 	0, 0, 0,
     ORIENTATION_DEFAULT,

@@ -1,0 +1,99 @@
+# Atari 5200 Cartridge CRC's.  
+# Note: This list is provided as a record of known dumps for this system.  
+#       These checksums have not been validated and cannot be assumed correct.  
+#       They are provided here as a database to help the emulation of this system.  
+
+
+# Additonal notes for this file:
+# The images listed as being "double-sized?" may be incorrectly dumped or,
+# may simply be alternate versions. Both appear to work under other emulators.
+# Anyone with more information about this, please contact me at battlepriest@hotmail.com
+# Note also, that no images are currently listed as being not working. This is
+# simply because the driver (as of MESS 36b8) will already provide a not-working
+# message for the system as a whole.
+
+[a5200]
+4019ecec = Astrochase
+94d97d14 = Ballblazer
+b3b8e314 = Battlezone
+71fa5a79 = Beamrider
+cc740e26 = Berzerk
+613b9379 = Blueprint
+20df4927 = Buck Rogers: Planet of Zoom
+536a70fe = Centipede
+ 851d277 = Choplifter
+f1f42bbd = Congo Bongo
+fd541c80 = Counter Measure
+1f9ed238 = Decathalon
+ebad58ba = Defender
+6a687f9c = Dig Dug
+ b7e77fc = Frogger
+ fe438b3 = Frogger 2: Three-Deep
+d4977e3b = Galaxian
+97b15243 = Gorf
+ 63ec2c4 = Gremlins
+cfd4a7f9 = Gyruss
+f145a21c = HERO
+d9ae4518 = James Bond: 007
+bfd30c01 = Joust
+2c676662 = Jungle Hunt
+8591be3d = Kaboom!
+ecfa624f = Kangaroo
+e905ed94 = Keystone Kapers
+ 2cdfc70 = Krazy Shootout
+3761527f = The Last Starfighter
+6b3f1179 = Mario Bros.
+fcb208a3 = Millipede
+d3f15631 = Missile Command
+d0b2f285 = Moon Patrol
+ d367519 = Mr. Do's Castle
+752f5efd = Ms. Pac-Man
+8873ef51 = Pac-Man
+ce07d9ad = Pam Diagnostics Cartridge
+e4f8ba8c = Pengo
+abc2d1e4 = Pole Position
+a18a9a40 = Popeye
+3c33f26e = Q*Bert
+85f750d4 = Qix
+de0fa87c = Real Sports Baseball
+4336c2cc = Real Sports Football
+ecbd1853 = Real Sports Soccer
+762c591b = Rescue on Fractalus
+6615d5db = River Raid
+1b38dac0 = Road Runner
+301a76b7 = Robotron: 2084
+b68d61e8 = Space Dungeon
+53c6c68a = Space Invaders
+387365dc = Space Shuttle
+7d819a9f = Star Raiders
+519a9574 = Star Trek: Strategic Operations Simulator
+75f566df = Star Wars: The Arcade Game
+1d02a598 = Super Breakout
+82e14ae9 = Super Cobra
+caaea0a4 = Vanguard
+a4bf0093 = Wizard of Wor
+382634dc = Xevious
+741746d1 = Zaxxon
+
+#[not_working]
+
+#[known_bad_dumps]
+c8035788 = Buck Rogers: Planet of Zoom (double-sized?)
+28ec8516 = Congo Bongo (double-sized?)
+a993c86e = Counter Measure (double-sized?)
+d29bb9a9 = Dig Dug (double-sized?)
+7936aa92 = Frogger (double-sized?)
+110d6fbc = Frogger 2: Three-Deep (double-sized?)
+a6dfa355 = Galaxian (double-sized?)
+6e70b70b = James Bond: 007 (double-sized?)
+6b9b16dc = Joust (double-sized?)
+fdccde25 = Jungle Hunt (double-sized?)
+db292060 = Kangaroo (double-sized?)
+39e2c34b = Ms. Pac-Man (double-sized?)
+e7952627 = Pac-Man (double-sized?)
+1cee2326 = Popeye (double-sized?)
+2ffe9622 = Q*Bert (double-sized?)
+218e1be4 = Space Invaders (double-sized?)
+bf574b31 = Star Raiders (double-sized?)
+6f4a78f6 = Super Breakout (double-sized?)
+f0a99787 = Super Cobra (double-sized?)

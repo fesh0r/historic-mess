@@ -337,7 +337,7 @@ static struct MemoryWriteAddress thunderx_writemem_sound[] =
 
 ***************************************************************************/
 
-INPUT_PORTS_START( scontra_input_ports )
+INPUT_PORTS_START( scontra )
 	PORT_START	/* COINSW */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -441,7 +441,7 @@ INPUT_PORTS_START( scontra_input_ports )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( thunderx_input_ports )
+INPUT_PORTS_START( thunderx )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -676,7 +676,7 @@ static struct MachineDriver thunderx_machine_driver =
 
 ***************************************************************************/
 
-ROM_START( scontra_rom )
+ROM_START( scontra )
 	ROM_REGION(0x30800)	/* ROMs + banked RAM */
 	ROM_LOAD( "e02.k11",     0x10000, 0x08000, 0xa61c0ead )	/* banked ROM */
 	ROM_CONTINUE(            0x08000, 0x08000 )				/* fixed ROM */
@@ -731,7 +731,7 @@ ROM_START( scontra_rom )
 	ROM_LOAD( "775a09.b19",   0x0000, 0x0100, 0x46d1e0df )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( scontraj_rom )
+ROM_START( scontraj )
 	ROM_REGION(0x30800)	/* ROMs + banked RAM */
 	ROM_LOAD( "775-f02.bin", 0x10000, 0x08000, 0x8d5933a7 )	/* banked ROM */
 	ROM_CONTINUE(            0x08000, 0x08000 )				/* fixed ROM */
@@ -786,7 +786,7 @@ ROM_START( scontraj_rom )
 	ROM_LOAD( "775a09.b19",   0x0000, 0x0100, 0x46d1e0df )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( thunderx_rom )
+ROM_START( thunderx )
 	ROM_REGION(0x29000)	/* ROMs + banked RAM */
 	ROM_LOAD( "873k03.k15", 0x10000, 0x10000, 0x276817ad )
 	ROM_LOAD( "873k02.k13", 0x20000, 0x08000, 0x80cc1c45 )
@@ -819,7 +819,7 @@ ROM_START( thunderx_rom )
 	ROM_LOAD( "873a08.f20",   0x0000, 0x0100, 0xe2d09a1b )	/* priority encoder (not used) */
 ROM_END
 
-ROM_START( thnderxj_rom )
+ROM_START( thnderxj )
 	ROM_REGION(0x29000)	/* ROMs + banked RAM */
 	ROM_LOAD( "873-n03.k15", 0x10000, 0x10000, 0xa01e2e3e )
 	ROM_LOAD( "873-n02.k13", 0x20000, 0x08000, 0x55afa2cc )
@@ -892,7 +892,7 @@ static void gfx_untangle(void)
 }
 
 
-struct GameDriver scontra_driver =
+struct GameDriver driver_scontra =
 {
 	__FILE__,
 	0,
@@ -905,22 +905,22 @@ struct GameDriver scontra_driver =
 	&scontra_machine_driver,
 	0,
 
-	scontra_rom,
+	rom_scontra,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	scontra_input_ports,
+	input_ports_scontra,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0	/* hiload,hisave */
 };
 
-struct GameDriver scontraj_driver =
+struct GameDriver driver_scontraj =
 {
 	__FILE__,
-	&scontra_driver,
+	&driver_scontra,
 	"scontraj",
 	"Super Contra (Japan)",
 	"1988",
@@ -930,19 +930,19 @@ struct GameDriver scontraj_driver =
 	&scontra_machine_driver,
 	0,
 
-	scontraj_rom,
+	rom_scontraj,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	scontra_input_ports,
+	input_ports_scontra,
 
 	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 	0, 0	/* hiload,hisave */
 };
 
-struct GameDriver thunderx_driver =
+struct GameDriver driver_thunderx =
 {
 	__FILE__,
 	0,
@@ -951,43 +951,43 @@ struct GameDriver thunderx_driver =
 	"1988",
 	"Konami",
 	"mish",
-	GAME_NOT_WORKING,
+	0,
 	&thunderx_machine_driver,
 	0,
 
-	thunderx_rom,
+	rom_thunderx,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	thunderx_input_ports,
+	input_ports_thunderx,
 
 	0, 0, 0,
-    ORIENTATION_DEFAULT,
+    ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };
 
-struct GameDriver thnderxj_driver =
+struct GameDriver driver_thnderxj =
 {
 	__FILE__,
-	&thunderx_driver,
+	&driver_thunderx,
 	"thnderxj",
 	"Thunder Cross (Japan)",
 	"1988",
 	"Konami",
 	"mish",
-	GAME_NOT_WORKING,
+	0,
 	&thunderx_machine_driver,
 	0,
 
-	thnderxj_rom,
+	rom_thnderxj,
 	gfx_untangle, 0,
 	0,
 	0,	/* sound_prom */
 
-	thunderx_input_ports,
+	input_ports_thunderx,
 
 	0, 0, 0,
-    ORIENTATION_DEFAULT,
+    ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 	0, 0
 };

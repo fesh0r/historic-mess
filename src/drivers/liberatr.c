@@ -232,7 +232,7 @@ static struct MemoryWriteAddress liberat2_writemem[] =
 
 
 
-INPUT_PORTS_START( input_ports )
+INPUT_PORTS_START( liberatr )
 	PORT_START			/* IN0 - $5000 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -382,7 +382,7 @@ MACHINE_DRIVER(liberat2)
 
 ***************************************************************************/
 
-ROM_START( liberatr_rom )
+ROM_START( liberatr )
 	ROM_REGION(0x10000)	/* 64k for code and data  */
 	ROM_LOAD( "136012.206",   0x8000, 0x1000, 0x1a0cb4a0 )
 	ROM_LOAD( "136012.205",   0x9000, 0x1000, 0x2f071920 )
@@ -400,7 +400,7 @@ ROM_START( liberatr_rom )
 	ROM_LOAD( "136012.109",   0x3000, 0x1000, 0xdda0c0ef )
 ROM_END
 
-ROM_START( liberat2_rom )
+ROM_START( liberat2 )
 	ROM_REGION(0x10000)	/* 64k for code and data  */
 	ROM_LOAD( "l6.bin",       0x6000, 0x1000, 0x78093d06 )
 	ROM_LOAD( "l5.bin",       0x7000, 0x1000, 0x988db636 )
@@ -419,7 +419,7 @@ ROM_END
 
 
 
-struct GameDriver liberatr_driver =
+struct GameDriver driver_liberatr =
 {
 	__FILE__,
 	0,
@@ -432,12 +432,12 @@ struct GameDriver liberatr_driver =
 	&liberatr_machine_driver,
 	0,
 
-	liberatr_rom,
+	rom_liberatr,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_liberatr,
 
 	0, 0, 0,
 	ORIENTATION_DEFAULT,
@@ -445,28 +445,28 @@ struct GameDriver liberatr_driver =
 	atari_vg_earom_load,atari_vg_earom_save
 };
 
-struct GameDriver liberat2_driver =
+struct GameDriver driver_liberat2 =
 {
 	__FILE__,
-	&liberatr_driver,
+	&driver_liberatr,
 	"liberat2",
 	"Liberator (set 2)",
 	"1982",
 	"Atari",
 	"Paul Winkler",
-	GAME_NOT_WORKING,
+	0,
 	&liberat2_machine_driver,
 	0,
 
-	liberat2_rom,
+	rom_liberat2,
 	0, 0,
 	0,
 	0,
 
-	input_ports,
+	input_ports_liberatr,
 
 	0, 0, 0,
-	ORIENTATION_DEFAULT,
+	ORIENTATION_DEFAULT | GAME_NOT_WORKING,
 
 	atari_vg_earom_load,atari_vg_earom_save
 };

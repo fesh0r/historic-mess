@@ -91,8 +91,8 @@ static struct MemoryReadAddress readmem[] =
 	{ 0x4000, 0xbfff, MRA_RAM },
 	{ 0xc000, 0xdfff, MRA_ROM },
 	{ 0xe000, 0xefff, MRA_ROM },
-	{ 0xf000, 0xf3ff, cgenie_colorram_r, &colorram },
-	{ 0xf400, 0xf7ff, cgenie_fontram_r, &fontram },
+	{ 0xf000, 0xf3ff, cgenie_colorram_r },
+	{ 0xf400, 0xf7ff, cgenie_fontram_r  },
 	{ 0xf800, 0xf8ff, cgenie_keyboard_r },
 	{ 0xf900, 0xffdf, MRA_NOP },
 	{ 0xffe0, 0xffe3, cgenie_irq_status_r },
@@ -147,7 +147,7 @@ static struct IOWritePort writeport[] =
 	{ -1 }
 };
 
-INPUT_PORTS_START( cgenie_input_ports )
+INPUT_PORTS_START( cgenie )
 	PORT_START /* IN0 */
 	PORT_BITX(	  0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy Disc Drives", 0, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "On" )
@@ -435,6 +435,14 @@ static unsigned short colortable[] =
 	0,	  41,	39,   38,	/* TV set graphics colors: a bit brighter */
 };
 
+/* Initialise the palette */
+static void cgenie_init_palette(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
+{
+	memcpy(sys_palette,palette,sizeof(palette));
+	memcpy(sys_colortable,colortable,sizeof(colortable));
+}
+
+
 static struct AY8910interface ay8910_interface =
 {
 	1,						/* 1 chip */
@@ -479,7 +487,7 @@ static struct MachineDriver machine_driver =
 	cgenie_gfxdecodeinfo,						/* graphics decode info */
 	sizeof(palette) / sizeof(palette[0]) / 3,	/* palette */
 	sizeof(colortable) / sizeof(colortable[0]), /* colortable */
-	0,											/* convert color prom */
+	cgenie_init_palette,						/* init palette */
 
 	VIDEO_TYPE_RASTER | VIDEO_SUPPORTS_DIRTY | VIDEO_MODIFIES_PALETTE,
 	0,
@@ -507,7 +515,7 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START (cgenie_rom)
+ROM_START (cgenie)
 	ROM_REGION (0x13000)
 	ROM_LOAD ("cgenie.rom",  0x00000, 0x4000, 0xd359ead7)
 	ROM_LOAD ("cgdos.rom",   0x10000, 0x2000, 0x2a96cf74)
@@ -527,15 +535,16 @@ struct GameDriver cgenie_driver =
 	"cgenie",
 	"EACA Colour Genie EG 2000",
 	"1982",
-	"??????",
+	"EACA Computers Ltd. Hong-Kong",
 	"Juergen Buchmueller",
-	GAME_COMPUTER,
+	0,
 	&machine_driver,
 	0,
 
-	cgenie_rom,
+	rom_cgenie,
 	cgenie_rom_load,        /* load rom_file images */
 	cgenie_rom_id,          /* identify rom images */
+	0,						/* default file extensions */
 	1,                      /* number of ROM slots - in this case, a CMD binary */
 	4,                      /* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
@@ -545,13 +554,13 @@ struct GameDriver cgenie_driver =
 	0,                      /* pointer to sample names */
 	0,                      /* sound_prom */
 
-	cgenie_input_ports,
+	input_ports_cgenie,
 
-	0,                      /* color_prom */
-	palette,				/* color palette */
-	colortable, 			/* color lookup table */
+	0,
+	0,
+	0,
 
-	ORIENTATION_DEFAULT,    /* orientation */
+	GAME_COMPUTER | ORIENTATION_DEFAULT,    /* orientation */
 
 	0,                      /* hiscore load */
 	0,                      /* hiscore save */

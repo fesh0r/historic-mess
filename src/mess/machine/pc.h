@@ -271,7 +271,10 @@ extern int	pc_t1t_bank_r(void);
 
 /* from sndhrdw/pc.c */
 extern int  pc_sh_init(const char *name);
-extern int  pc_sh_start(void);
+#if 1 // adjustmends for mame36b
+extern int  pc_sh_custom_start(const struct MachineSound *driver);
+extern void pc_sh_custom_update(void);
+#endif
 extern void pc_sh_stop(void);
 extern void pc_sh_update(int param, void *buff, int length);
 extern void pc_sh_speaker(int mode);
@@ -287,6 +290,7 @@ extern int	pc_fdc_DIR_r(void);
 
 extern void *pc_fdc_file[MAX_FLOPPY];
 extern UINT8 pc_fdc_spt[MAX_FLOPPY];
+extern UINT8 pc_fdc_heads[MAX_FLOPPY];
 extern UINT8 pc_fdc_scl[MAX_FLOPPY];
 
 #if 0

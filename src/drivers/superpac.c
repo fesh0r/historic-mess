@@ -70,9 +70,9 @@ void superpac_vh_convert_color_prom(unsigned char *palette, unsigned short *colo
 static struct MemoryReadAddress readmem_cpu1[] =
 {
 	{ 0x0000, 0x1fff, MRA_RAM },                                       /* general RAM */
-	{ 0x4040, 0x43ff, superpac_sharedram_r, &superpac_sharedram },     /* shared RAM */
-	{ 0x4800, 0x480f, superpac_customio_r_1, &superpac_customio_1 },   /* custom I/O chip #1 interface */
-	{ 0x4810, 0x481f, superpac_customio_r_2, &superpac_customio_2 },   /* custom I/O chip #2 interface */
+	{ 0x4040, 0x43ff, superpac_sharedram_r },     /* shared RAM */
+	{ 0x4800, 0x480f, superpac_customio_r_1 },   /* custom I/O chip #1 interface */
+	{ 0x4810, 0x481f, superpac_customio_r_2 },   /* custom I/O chip #2 interface */
 	{ 0xa000, 0xffff, MRA_ROM },						/* SPC-2.1C at 0xc000, SPC-1.1B at 0xe000 */
 	{ -1 }                                              /* end of table */
 };
@@ -90,9 +90,9 @@ static struct MemoryWriteAddress writemem_cpu1[] =
 	{ 0x1800, 0x1f7f, MWA_RAM },                        /* RAM */
 	{ 0x1f80, 0x1fff, MWA_RAM, &spriteram_3 },          /* sprite RAM, area 3 */
 	{ 0x2000, 0x2000, MWA_NOP },                        /* watchdog timer */
-	{ 0x4040, 0x43ff, MWA_RAM },                        /* shared RAM */
-	{ 0x4800, 0x480f, superpac_customio_w_1 },          /* custom I/O chip #1 interface */
-	{ 0x4810, 0x481f, superpac_customio_w_2 },          /* custom I/O chip #2 interface */
+	{ 0x4040, 0x43ff, superpac_sharedram_w, &superpac_sharedram },	/* shared RAM */
+	{ 0x4800, 0x480f, superpac_customio_w_1, &superpac_customio_1 },	/* custom I/O chip #1 interface */
+	{ 0x4810, 0x481f, superpac_customio_w_2, &superpac_customio_2 },	/* custom I/O chip #2 interface */
 	{ 0x5000, 0x5000, superpac_reset_2_w },				/* reset CPU #2 */
 	{ 0x5002, 0x5003, superpac_interrupt_enable_1_w },  /* interrupt enable */
 	{ 0x5008, 0x5009, mappy_sound_enable_w },           /* sound enable */
@@ -144,7 +144,7 @@ static struct MemoryWriteAddress pacnpal_writemem_cpu2[] =
 
 
 /* input from the outside world */
-INPUT_PORTS_START( superpac_input_ports )
+INPUT_PORTS_START( superpac )
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x0f, 0x00, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Rank 0-Normal" )
@@ -234,7 +234,7 @@ INPUT_PORTS_START( superpac_input_ports )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( pacnpal_input_ports )
+INPUT_PORTS_START( pacnpal )
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
@@ -468,7 +468,7 @@ static struct MachineDriver pacnpal_machine_driver =
 
 
 
-ROM_START( superpac_rom )
+ROM_START( superpac )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "sp1.2",        0xc000, 0x2000, 0x4bb33d9c )
 	ROM_LOAD( "sp1.1",        0xe000, 0x2000, 0x846fbb4a )
@@ -477,7 +477,7 @@ ROM_START( superpac_rom )
 	ROM_LOAD( "sp1.6",        0x0000, 0x1000, 0x91c5935c )
 	ROM_LOAD( "spv-2.3f",     0x1000, 0x2000, 0x670a42f2 )
 
-	ROM_REGION(0x0220)	/* color proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "superpac.4c",  0x0000, 0x0020, 0x9ce22c46 ) /* palette */
 	ROM_LOAD( "superpac.4e",  0x0020, 0x0100, 0x1253c5c1 ) /* chars */
 	ROM_LOAD( "superpac.3l",  0x0120, 0x0100, 0xd4d7026f ) /* sprites */
@@ -489,7 +489,7 @@ ROM_START( superpac_rom )
 	ROM_LOAD( "superpac.3m",  0x0000, 0x0100, 0xad43688f )
 ROM_END
 
-ROM_START( superpcm_rom )
+ROM_START( superpcm )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "spc-2.1c",     0xc000, 0x2000, 0x1a38c30e )
 	ROM_LOAD( "spc-1.1b",     0xe000, 0x2000, 0x730e95a9 )
@@ -498,7 +498,7 @@ ROM_START( superpcm_rom )
 	ROM_LOAD( "spv-1.3c",     0x0000, 0x1000, 0x78337e74 )
 	ROM_LOAD( "spv-2.3f",     0x1000, 0x2000, 0x670a42f2 )
 
-	ROM_REGION(0x0220)	/* color proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "superpac.4c",  0x0000, 0x0020, 0x9ce22c46 ) /* palette */
 	ROM_LOAD( "superpac.4e",  0x0020, 0x0100, 0x1253c5c1 ) /* chars */
 	ROM_LOAD( "superpac.3l",  0x0120, 0x0100, 0xd4d7026f ) /* sprites */
@@ -510,7 +510,7 @@ ROM_START( superpcm_rom )
 	ROM_LOAD( "superpac.3m",  0x0000, 0x0100, 0xad43688f )
 ROM_END
 
-ROM_START( pacnpal_rom )
+ROM_START( pacnpal )
 	ROM_REGION(0x10000)	/* 64k for code */
 	ROM_LOAD( "pap13b.cpu",   0xa000, 0x2000, 0xed64a565 )
 	ROM_LOAD( "pap12b.cpu",   0xc000, 0x2000, 0x15308bcf )
@@ -520,7 +520,7 @@ ROM_START( pacnpal_rom )
 	ROM_LOAD( "pap16.cpu",    0x0000, 0x1000, 0xa36b96cb )
 	ROM_LOAD( "pap15.vid",    0x1000, 0x2000, 0xfb6f56e3 )
 
-	ROM_REGION(0x0220)	/* color proms */
+	ROM_REGIONX( 0x0220, REGION_PROMS )
 	ROM_LOAD( "papi6.vid",    0x0000, 0x0020, 0x52634b41 ) /* palette */
 	ROM_LOAD( "papi5.vid",    0x0020, 0x0100, 0xac46203c ) /* chars */
 	ROM_LOAD( "papi4.vid",    0x0120, 0x0100, 0x686bde84 ) /* sprites */
@@ -653,7 +653,7 @@ static void pacnpal_hisave(void)
 }
 
 
-struct GameDriver superpac_driver =
+struct GameDriver driver_superpac =
 {
 	__FILE__,
 	0,
@@ -666,25 +666,23 @@ struct GameDriver superpac_driver =
 	&superpac_machine_driver, /* MachineDriver */
 	0,
 
-	superpac_rom,             /* RomModule */
+	rom_superpac,             /* RomModule */
 	0, 0,                     /* ROM decrypt routines */
 	0,                        /* samplenames */
 	0,                        /* sound_prom */
 
-	superpac_input_ports,
+	input_ports_superpac,
 
-	PROM_MEMORY_REGION(2),	  /* color prom */
-	0,                        /* palette */
-	0,                        /* color table */
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	superpac_hiload, superpac_hisave /* hi score save/load */
 };
 
-struct GameDriver superpcm_driver =
+struct GameDriver driver_superpcm =
 {
 	__FILE__,
-	&superpac_driver,
+	&driver_superpac,
 	"superpcm",
 	"Super Pac-Man (Midway)",
 	"1982",
@@ -694,22 +692,20 @@ struct GameDriver superpcm_driver =
 	&superpac_machine_driver, /* MachineDriver */
 	0,
 
-	superpcm_rom,             /* RomModule */
+	rom_superpcm,             /* RomModule */
 	0, 0,                     /* ROM decrypt routines */
 	0,                        /* samplenames */
 	0,                        /* sound_prom */
 
-	superpac_input_ports,
+	input_ports_superpac,
 
-	PROM_MEMORY_REGION(2),    /* color prom */
-	0,                        /* palette */
-	0,                        /* color table */
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	superpac_hiload, superpac_hisave /* hi score save/load */
 };
 
-struct GameDriver pacnpal_driver =
+struct GameDriver driver_pacnpal =
 {
 	__FILE__,
 	0,
@@ -722,16 +718,14 @@ struct GameDriver pacnpal_driver =
 	&pacnpal_machine_driver,  /* MachineDriver */
 	0,
 
-	pacnpal_rom,              /* RomModule */
+	rom_pacnpal,              /* RomModule */
 	0, 0,                     /* ROM decrypt routines */
 	0,                        /* samplenames */
 	0,                        /* sound_prom */
 
-	pacnpal_input_ports,
+	input_ports_pacnpal,
 
-	PROM_MEMORY_REGION(2),    /* color prom */
-	0,                        /* palette */
-	0,                        /* color table */
+	0, 0, 0,
 	ORIENTATION_ROTATE_90,
 
 	pacnpal_hiload, pacnpal_hisave /* hi score save/load */
