@@ -22,12 +22,69 @@
 #define LOG(x)	/* x */
 #endif
 
+extern char frame_message[32];
+extern int frame_time;
+
 int vz_latch = 0;
 
-void *vz_floppy_file[2] = {NULL, NULL};
-UINT8 vz_floppy_data[256];
-UINT8 vz_floppy_count = 0;
-UINT8 vz_floppy_latch = 0;
+#define TRKSIZE_VZ	0x9a0	/* arbitrary (actually from analyzing format) */
+#define TRKSIZE_FM	3172	/* size of a standard FM mode track */
+
+static void *vz_fdc_file[2] = {NULL, NULL};
+static UINT8 vz_track_x2[2] = {80, 80};
+static UINT8 vz_fdc_wrprot[2] = {0x80, 0x80};
+static UINT8 vz_fdc_status = 0;
+static UINT8 vz_fdc_data[TRKSIZE_FM];
+static int vz_data;
+static int vz_fdc_edge = 0;
+static int vz_fdc_bits = 8;
+static int vz_drive = -1;
+static int vz_fdc_start = 0;
+static int vz_fdc_write = 0;
+static int vz_fdc_offs = 0;
+static int vz_fdc_latch = 0;
+
+static void common_init_machine(void)
+{
+	/* Install DOS ROM ? */
+    if( readinputport(0) & 0x40 )
+    {
+		void *dos;
+
+		memset(vz_fdc_data, 0, TRKSIZE_FM);
+
+        dos = osd_fopen(Machine->gamedrv->name, "vzdos.rom", OSD_FILETYPE_IMAGE_R, OSD_FOPEN_READ);
+		if( dos )
+        {
+            int i;
+			osd_fread(dos, &ROM[0x4000], 0x2000);
+			osd_fclose(dos);
+            for( i = 0; i < Machine->gamedrv->num_of_floppy_drives; i++ )
+            {
+                if( floppy_name[i][0] )
+                {
+					/* first try to open existing image RW */
+					vz_fdc_wrprot[i] = 0x00;
+					vz_fdc_file[i] = osd_fopen(Machine->gamedrv->name, floppy_name[i], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_RW_CREATE);
+					/* failed? */
+                    if( !vz_fdc_file[i] )
+					{
+						/* try to open existing image RO */
+                        vz_fdc_wrprot[i] = 0x80;
+						vz_fdc_file[i] = osd_fopen(Machine->gamedrv->name, floppy_name[i], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
+					}
+					/* failed? */
+                    if( !vz_fdc_file[i] )
+					{
+						/* create new image RW */
+                        vz_fdc_wrprot[i] = 0x00;
+                        vz_fdc_file[i] = osd_fopen(Machine->gamedrv->name, floppy_name[i], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_RW_CREATE);
+                    }
+                }
+            }
+        }
+    }
+}
 
 void vz200_init_machine(void)
 {
@@ -41,16 +98,7 @@ void vz200_init_machine(void)
         install_mem_read_handler(0, 0x9000, 0xcfff, MRA_NOP);
         install_mem_write_handler(0, 0x9000, 0xcfff, MWA_NOP);
     }
-	/* Install DOS ROM ? */
-	if( readinputport(0) & 0x40 )
-	{
-		void *rom = osd_fopen(Machine->gamedrv->name, "vzdos.rom", OSD_FILETYPE_IMAGE_R, 0);
-		if( rom )
-		{
-			osd_fread(rom, &ROM[0x4000], 0x2000);
-			osd_fclose(rom);
-        }
-	}
+	common_init_machine();
 }
 
 void vz300_init_machine(void)
@@ -65,26 +113,17 @@ void vz300_init_machine(void)
         install_mem_read_handler(0, 0xb800, 0xf7ff, MRA_NOP);
         install_mem_write_handler(0, 0xb800, 0xf7ff, MWA_NOP);
     }
-	/* Install DOS ROM ? */
-	if( readinputport(0) & 0x40 )
-	{
-		void *rom = osd_fopen(Machine->gamedrv->name, "vzdos.rom", OSD_FILETYPE_IMAGE_R, 0);
-		if( rom )
-		{
-			osd_fread(rom, &ROM[0x4000], 0x2000);
-			osd_fclose(rom);
-        }
-    }
+	common_init_machine();
 }
 
 void vz_shutdown_machine(void)
 {
 	int i;
-	for( i = 0; i < 2; i++ )
+	for( i = 0; i < Machine->gamedrv->num_of_floppy_drives; i++ )
 	{
-		if( vz_floppy_file[i] )
-			osd_fclose(vz_floppy_file[i]);
-		vz_floppy_file[i] = NULL;
+		if( vz_fdc_file[i] )
+			osd_fclose(vz_fdc_file[i]);
+		vz_fdc_file[i] = NULL;
 	}
 }
 
@@ -94,7 +133,8 @@ int vz_rom_id(const char *name, const char *gamename)
     const char magic_mcode[] = "  \000\000";
     char buff[4];
     void *file;
-    file = osd_fopen(gamename, name, OSD_FILETYPE_IMAGE_RW, 0);
+
+    file = osd_fopen(gamename, name, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
     if( file )
     {
         osd_fread(file, buff, sizeof(buff));
@@ -112,51 +152,175 @@ int vz_rom_id(const char *name, const char *gamename)
     return 1;
 }
 
-int vz_floppy_r(int offset)
+static void vz_get_track(void)
+{
+	sprintf(frame_message, "#%d get track %02d", vz_drive, vz_track_x2[vz_drive]/2);
+	frame_time = 30;
+    /* drive selected or and image file ok? */
+	if( vz_drive >= 0 && vz_fdc_file[vz_drive] != NULL )
+	{
+		int size, offs;
+		size = TRKSIZE_VZ;
+		offs = TRKSIZE_VZ * vz_track_x2[vz_drive]/2;
+		osd_fseek(vz_fdc_file[vz_drive], offs, SEEK_SET);
+		size = osd_fread(vz_fdc_file[vz_drive], vz_fdc_data, size);
+		LOG((errorlog,"get track @$%05x $%04x bytes\n", offs, size));
+    }
+	vz_fdc_offs = 0;
+	vz_fdc_write = 0;
+}
+
+static void vz_put_track(void)
+{
+    /* drive selected and image file ok? */
+	if( vz_drive >= 0 && vz_fdc_file[vz_drive] != NULL )
+	{
+		int size, offs;
+		offs = TRKSIZE_VZ * vz_track_x2[vz_drive]/2;
+		osd_fseek(vz_fdc_file[vz_drive], offs + vz_fdc_start, SEEK_SET);
+		size = osd_fwrite(vz_fdc_file[vz_drive], &vz_fdc_data[vz_fdc_start], vz_fdc_write);
+		LOG((errorlog,"put track @$%05X+$%X $%04X/$%04X bytes\n", offs, vz_fdc_start, size, vz_fdc_write));
+    }
+}
+
+#define PHI0(n) (((n)>>0)&1)
+#define PHI1(n) (((n)>>1)&1)
+#define PHI2(n) (((n)>>2)&1)
+#define PHI3(n) (((n)>>3)&1)
+
+int vz_fdc_r(int offset)
 {
     int data = 0xff;
-	switch( offset )
-	{
-	case 0: /* latch (write-only) */
-		break;
-	case 1: /* data (read-only? I don't believe the docs here.. :) */
-		data = vz_floppy_data[vz_floppy_count++];
+    switch( offset )
+    {
+    case 1: /* data (read-only) */
+        if( vz_fdc_bits > 0 )
+        {
+            if( vz_fdc_status & 0x80 )
+                vz_fdc_bits--;
+            data = (vz_data >> vz_fdc_bits) & 0xff;
+#if 0
+            LOG((errorlog,"vz_fdc_r bits %d%d%d%d%d%d%d%d\n",
+                (data>>7)&1,(data>>6)&1,(data>>5)&1,(data>>4)&1,
+                (data>>3)&1,(data>>2)&1,(data>>1)&1,(data>>0)&1 ));
+#endif
+        }
+        if( vz_fdc_bits == 0 )
+        {
+            vz_data = vz_fdc_data[vz_fdc_offs];
+            LOG((errorlog,"vz_fdc_r %d : data ($%04X) $%02X\n", offset, vz_fdc_offs, vz_data));
+            if( vz_fdc_status & 0x80 )
+            {
+                vz_fdc_bits = 8;
+                vz_fdc_offs = ++vz_fdc_offs % TRKSIZE_FM;
+            }
+            vz_fdc_status &= ~0x80;
+        }
         break;
-	case 2: /* polling (read-only) */
-		/* fake */
-		data &= (cpu_getscanline() & 1) ? ~0x00 : ~0x80;
-		break;
-	case 3: /* write protect status (read-only) */
-		data &= ~0x80;
+    case 2: /* polling (read-only) */
+        /* fake */
+        if( vz_drive >= 0 )
+			vz_fdc_status |= 0x80;
+        data = vz_fdc_status;
         break;
-	}
-	LOG((errorlog,"vz_floppy_r %d $%02X '%c'\n", offset, data, (data >= 32 && data < 128) ? data : '.'));
+    case 3: /* write protect status (read-only) */
+        if( vz_drive >= 0 )
+            data = vz_fdc_wrprot[vz_drive];
+        LOG((errorlog,"vz_fdc_r %d : write_protect $%02X\n", offset, data));
+        break;
+    }
     return data;
 }
 
-void vz_floppy_w(int offset, int data)
+void vz_fdc_w(int offset, int data)
 {
-	LOG((errorlog,"vz_floppy_w %d $%02X '%c'\n", offset, data, (data >= 32 && data < 128) ? data : '.'));
+	int drive;
+
     switch( offset )
 	{
 	case 0: /* latch (write-only) */
-		vz_floppy_latch = data;
-		break;
-	case 1: /* data (read-write, I'm pretty sure :) */
-		if( vz_floppy_latch & 0x20 )	/* write data high ? */
+		drive = (data & 0x10) ? 0 : (data & 0x80) ? 1 : -1;
+		if( drive != vz_drive )
 		{
-			vz_floppy_data[vz_floppy_count++] = data;
-			if( !vz_floppy_count )
+			vz_drive = drive;
+			if( vz_drive >= 0 )
+				vz_get_track();
+        }
+        if( vz_drive >= 0 )
+        {
+			if( (PHI0(data) && !(PHI1(data) || PHI2(data) || PHI3(data)) && PHI1(vz_fdc_latch)) ||
+				(PHI1(data) && !(PHI0(data) || PHI2(data) || PHI3(data)) && PHI2(vz_fdc_latch)) ||
+				(PHI2(data) && !(PHI0(data) || PHI1(data) || PHI3(data)) && PHI3(vz_fdc_latch)) ||
+				(PHI3(data) && !(PHI0(data) || PHI1(data) || PHI2(data)) && PHI0(vz_fdc_latch)) )
+            {
+				if( vz_track_x2[vz_drive] > 0 )
+					vz_track_x2[vz_drive]--;
+				LOG((errorlog,"vz_fdc_w(%d) $%02X drive %d: stepout track #%2d.%d\n", offset, data, vz_drive, vz_track_x2[vz_drive]/2,5*(vz_track_x2[vz_drive]&1)));
+				if( (vz_track_x2[vz_drive] & 1) == 0 )
+					vz_get_track();
+            }
+            else
+			if( (PHI0(data) && !(PHI1(data) || PHI2(data) || PHI3(data)) && PHI3(vz_fdc_latch)) ||
+				(PHI1(data) && !(PHI0(data) || PHI2(data) || PHI3(data)) && PHI0(vz_fdc_latch)) ||
+				(PHI2(data) && !(PHI0(data) || PHI1(data) || PHI3(data)) && PHI1(vz_fdc_latch)) ||
+				(PHI3(data) && !(PHI0(data) || PHI1(data) || PHI2(data)) && PHI2(vz_fdc_latch)) )
+            {
+				if( vz_track_x2[vz_drive] < 2*40 )
+					vz_track_x2[vz_drive]++;
+				LOG((errorlog,"vz_fdc_w(%d) $%02X drive %d: stepin track #%2d.%d\n", offset, data, vz_drive, vz_track_x2[vz_drive]/2,5*(vz_track_x2[vz_drive]&1)));
+				if( (vz_track_x2[vz_drive] & 1) == 0 )
+					vz_get_track();
+            }
+            if( (data & 0x40) == 0 )
 			{
-				/* write the sector */
-			}
-		}
-		else
-		if( !(vz_floppy_latch & 0x40) ) /* write request low? */
-		{
-			/* check commands and read sector, prepare write sector etc. */
-		}
-        break;
+				vz_data <<= 1;
+				if( (vz_fdc_latch ^ data) & 0x20 )
+					vz_data |= 1;
+                if( (vz_fdc_edge ^= 1) == 0 )
+                {
+					if( --vz_fdc_bits == 0 )
+					{
+						UINT8 value = 0;
+						vz_data &= 0xffff;
+						if( vz_data & 0x4000 ) value |= 0x80;
+						if( vz_data & 0x1000 ) value |= 0x40;
+						if( vz_data & 0x0400 ) value |= 0x20;
+						if( vz_data & 0x0100 ) value |= 0x10;
+						if( vz_data & 0x0040 ) value |= 0x08;
+						if( vz_data & 0x0010 ) value |= 0x04;
+						if( vz_data & 0x0004 ) value |= 0x02;
+						if( vz_data & 0x0001 ) value |= 0x01;
+						LOG((errorlog,"vz_fdc_w(%d) data($%04X) $%02X <- $%02X ($%04X)\n", offset, vz_fdc_offs, vz_fdc_data[vz_fdc_offs], value, vz_data));
+						vz_fdc_data[vz_fdc_offs] = value;
+						vz_fdc_offs = ++vz_fdc_offs % TRKSIZE_FM;
+						vz_fdc_write++;
+						vz_fdc_bits = 8;
+					}
+                }
+            }
+			/* change of write signal? */
+            if( (vz_fdc_latch ^ data) & 0x40 )
+            {
+                /* falling edge? */
+                if ( vz_fdc_latch & 0x40 )
+                {
+                    sprintf(frame_message, "#%d put track %02d", vz_drive, vz_track_x2[vz_drive]/2);
+					frame_time = 30;
+                    vz_fdc_start = vz_fdc_offs;
+                    vz_fdc_edge = 0;
+                }
+                else
+                {
+                    /* data written to track before? */
+                    if( vz_fdc_write )
+                        vz_put_track();
+                }
+                vz_fdc_bits = 8;
+                vz_fdc_write = 0;
+            }
+        }
+        vz_fdc_latch = data;
+		break;
     }
 }
 
@@ -276,16 +440,15 @@ void vz_latch_w(int offset, int data)
 
     LOG((errorlog, "vz_latch_w $%02X\n", data));
     /* dirty all if the mode or the background color are toggled */
-	if( (vz_latch ^ data) & 0x10 )
+	if( (vz_latch ^ data) & 0x18 )
 	{
-		LOG((errorlog, "vz_latch_w: change background %d", (data>>4)&1));
-		memset(dirtybuffer, 1, videoram_size);
+		extern int bitmap_dirty;
+        bitmap_dirty = 1;
+        if( (vz_latch ^ data) & 0x10 )
+            LOG((errorlog, "vz_latch_w: change background %d", (data>>4)&1));
+        if( (vz_latch ^ data) & 0x08 )
+			LOG((errorlog, "vz_latch_w: change mode to %s", (data&0x08)?"gfx":"text"));
 	}
-	if( (vz_latch ^ data) & 0x08 )
-	{
-		LOG((errorlog, "vz_latch_w: change mode to %s", (data&0x08)?"gfx":"text"));
-		memset(dirtybuffer, 1, videoram_size);
-    }
     vz_latch = data;
 
 	/* cassette output bits */

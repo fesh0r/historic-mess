@@ -158,10 +158,13 @@ INPUT_PORTS_START( cgenie )
 	PORT_BITX(	  0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Extension  E000-EFFF", 0, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x20, "ROM Enabled" )
 	PORT_DIPSETTING(    0x00, "RAM" )
-	PORT_BITX(	  0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Video Display accuracy", KEYCODE_F6, IP_JOY_NONE )
+	PORT_BITX(	  0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Video Display accuracy", KEYCODE_F5, IP_JOY_NONE )
 	PORT_DIPSETTING(	0x10, "TV set" )
 	PORT_DIPSETTING(	0x00, "RGB monitor" )
-	PORT_BIT(0x0f, 0x0f, IPT_UNUSED)
+	PORT_BITX(	  0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Virtual tape support", KEYCODE_F6, IP_JOY_NONE )
+	PORT_DIPSETTING(	0x08, "On" )
+	PORT_DIPSETTING(	0x00, "Off" )
+	PORT_BIT(0x07, 0x07, IPT_UNUSED)
 
 /**************************************************************************
    +-------------------------------+     +-------------------------------+
@@ -468,7 +471,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_Z80,
 			2216800*4/5,	/* 2.2168 Mhz, but 1/5 cycles is a wait state */
-			0,
 			readmem,writemem,
 			readport,writeport,
 			cgenie_frame_interrupt,1,
@@ -516,15 +518,15 @@ static struct MachineDriver machine_driver =
 ***************************************************************************/
 
 ROM_START (cgenie)
-	ROM_REGION (0x13000)
+	ROM_REGIONX(0x13000,REGION_CPU1)
 	ROM_LOAD ("cgenie.rom",  0x00000, 0x4000, 0xd359ead7)
 	ROM_LOAD ("cgdos.rom",   0x10000, 0x2000, 0x2a96cf74)
 
-	ROM_REGION (0x0c00)
+	ROM_REGIONX(0x0c00,REGION_GFX1)
 	ROM_LOAD ("cgenie1.fnt", 0x0000, 0x0800, 0x4fed774a)
 
 	/* Empty memory region for the character generator */
-	ROM_REGION (0x0800)
+	ROM_REGIONX(0x0800,REGION_GFX2)
 
 ROM_END
 

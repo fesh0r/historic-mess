@@ -353,7 +353,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_M6502,
 			1022727,			/* 1.023 Mhz */
-			0,					/* Memory region #0 */
 			readmem,writemem,
 			0,0,				/* no readport, writeport for 6502 */
 			apple2_interrupt,1,
@@ -400,7 +399,6 @@ static struct MachineDriver enhanced_machine_driver =
 		{
 			CPU_M65C02,
 			1022727,			/* 1.023 Mhz */
-			0,					/* Memory region #0 */
 			readmem,writemem,
 			0,0,				/* no readport, writeport for 6502 */
 			apple2_interrupt,1,
@@ -447,14 +445,14 @@ static struct MachineDriver enhanced_machine_driver =
 ***************************************************************************/
 
 ROM_START(apple2e)
-	ROM_REGION (0x24700)
+	ROM_REGIONX(0x24700,REGION_CPU1)
 	/* 64k main RAM, 64k aux RAM */
 	ROM_LOAD ( "a2e.cd", 0x20000, 0x2000, 0xe248835e )
 	ROM_LOAD ( "a2e.ef", 0x22000, 0x2000, 0xfc3d59d8 )
 	/* 0x700 for individual slot ROMs */
 	//ROM_LOAD ( "disk2_33.rom", 0x24500, 0x0100, 0xce7144f6 ) /* Disk II ROM - DOS 3.3 version */
 
-	ROM_REGION (0x2000)
+	ROM_REGIONX(0x2000,REGION_GFX1)
 	ROM_LOAD ( "a2e.vid", 0x0000, 0x1000, 0x816a86f1 )
 ROM_END
 
@@ -497,14 +495,14 @@ struct GameDriver apple2e_driver =
 };
 
 ROM_START(apple2ee)
-	ROM_REGION (0x24700)
+	ROM_REGIONX(0x24700,REGION_CPU1)
 	ROM_LOAD ( "a2ee.cd", 0x20000, 0x2000, 0x443aa7c4 )
 	ROM_LOAD ( "a2ee.ef", 0x22000, 0x2000, 0x95e10034 )
 	/* 0x4000 for bankswitched RAM */
 	/* 0x700 for individual slot ROMs */
 	//ROM_LOAD ( "disk2_33.rom", 0x24500, 0x0100, 0xce7144f6 ) /* Disk II ROM - DOS 3.3 version */
 
-	ROM_REGION (0x2000)
+	ROM_REGIONX(0x2000,REGION_GFX1)
 	ROM_LOAD ( "a2ee.vid", 0x0000, 0x1000, 0x2651014d)
 ROM_END
 
@@ -547,13 +545,13 @@ struct GameDriver apple2ee_driver =
 };
 
 ROM_START(apple2ep)
-	ROM_REGION(0x24700)
+	ROM_REGIONX(0x24700,REGION_CPU1)
 	ROM_LOAD ("a2ept.cf", 0x20000, 0x4000, 0x02b648c8)
 	/* 0x4000 for bankswitched RAM */
 	/* 0x700 for individual slot ROMs */
 	//ROM_LOAD ("disk2_33.rom", 0x24500, 0x0100, 0xce7144f6) /* Disk II ROM - DOS 3.3 version */
 
-	ROM_REGION(0x2000)
+	ROM_REGIONX(0x2000,REGION_GFX1)
 	ROM_LOAD("a2ept.vid", 0x0000, 0x1000, 0x2651014d)
 ROM_END
 
@@ -596,10 +594,10 @@ struct GameDriver apple2ep_driver =
 };
 
 ROM_START(apple2c)
-	ROM_REGION (0x24700)
+	ROM_REGIONX(0x24700,REGION_CPU1)
 	ROM_LOAD ( "a2c.128", 0x20000, 0x4000, 0xf0edaa1b )
 
-	ROM_REGION(0x2000)
+	ROM_REGIONX(0x2000,REGION_GFX1)
 	ROM_LOAD ( "a2c.vid", 0x0000, 0x1000, 0x2651014d )
 ROM_END
 
@@ -642,10 +640,10 @@ struct GameDriver apple2c_driver =
 };
 
 ROM_START(apple2c0)
-	ROM_REGION(0x28000)
+	ROM_REGIONX(0x28000,REGION_CPU1)
 	ROM_LOAD("a2c.256", 0x20000, 0x8000, 0xc8b979b3)
 
-	ROM_REGION(0x2000)
+	ROM_REGIONX(0x2000,REGION_GFX1)
 	ROM_LOAD("a2c.vid", 0x0000, 0x1000, 0x2651014d)
 ROM_END
 
@@ -688,10 +686,10 @@ struct GameDriver apple2c0_driver =
 };
 
 ROM_START(apple2cp)
-	ROM_REGION(0x28000)
+	ROM_REGIONX(0x28000,REGION_CPU1)
 	ROM_LOAD("a2cplus.mon", 0x20000, 0x8000, 0x0b996420)
 
-	ROM_REGION(0x2000)
+	ROM_REGIONX(0x2000,REGION_GFX1)
 	ROM_LOAD("a2cplus.vid", 0x0000, 0x1000, 0x2651014d)
 ROM_END
 

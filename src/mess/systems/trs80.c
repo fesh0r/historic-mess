@@ -401,7 +401,6 @@ static struct MachineDriver machine_driver_model1 =
 		{
 			CPU_Z80,
 			1796000,	/* 1.796 Mhz */
-			0,
 			readmem_model1,writemem_model1,
 			readport_model1,writeport_model1,
 			trs80_frame_interrupt,1,
@@ -444,7 +443,6 @@ static struct MachineDriver machine_driver_model3 =
 		{
 			CPU_Z80,
 			1796000,        /* 1.796 Mhz */
-			0,
 			readmem_model3,writemem_model3,
 			readport_model3,writeport_model3,
 			trs80_frame_interrupt,2,
@@ -487,19 +485,19 @@ static struct MachineDriver machine_driver_model3 =
 ***************************************************************************/
 
 ROM_START(trs80)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000, REGION_CPU1)
 	ROM_LOAD("trs80.rom",   0x0000, 0x3000, 0xd6fd9041)
 
-	ROM_REGION(0x0c00)
+	ROM_REGIONX(0x0c00, REGION_GFX1)
 	ROM_LOAD("trs80m1.chr", 0x0800, 0x0400, 0x0033f2b9)
 ROM_END
 
 
 ROM_START(trs80_m3)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000, REGION_CPU1)
 	ROM_LOAD("trs80.rom",   0x0000, 0x3000, 0xd6fd9041)
 
-	ROM_REGION(0x0c00)
+	ROM_REGIONX(0x0c00, REGION_GFX1)
 	ROM_LOAD("trs80m1.chr", 0x0800, 0x0400, 0x0033f2b9)
 ROM_END
 
@@ -507,8 +505,8 @@ ROM_END
 
 static void trs80_rom_decode(void)
 {
-UINT8 *FNT = Machine->memory_region[1];
-int i, y;
+	UINT8 *FNT = memory_region(REGION_GFX1);
+	int i, y;
 	for (i = 0x000; i < 0x080; i++)
 	{
 		for (y = 0; y < 8; y++)
@@ -518,7 +516,7 @@ int i, y;
 	}
 	for (i = 0x080; i < 0x100; i++)
 	{
-	UINT8 b0, b1, b2, b3, b4, b5;
+		UINT8 b0, b1, b2, b3, b4, b5;
 		b0 = (i & 0x01) ? 0xe0 : 0x00;
 		b1 = (i & 0x02) ? 0x1c : 0x00;
 		b2 = (i & 0x04) ? 0xe0 : 0x00;

@@ -65,17 +65,17 @@ void a800_setbank(int n)
         case 1:
 			cpu_setbankhandler_r(2, MRA_BANK1);
 			cpu_setbankhandler_w(2, MWA_ROM);
-			cpu_setbank(1, &Machine->memory_region[0][0x10000]);
+			cpu_setbank(1, memory_region(REGION_CPU1)+0x10000);
 			break;
 		case 2:
 			cpu_setbankhandler_r(2, MRA_BANK1);
 			cpu_setbankhandler_w(2, MWA_ROM);
-			cpu_setbank(1, &Machine->memory_region[0][0x12000]);
+			cpu_setbank(1, memory_region(REGION_CPU1)+0x12000);
             break;
-        default:
+		default:
 			cpu_setbankhandler_r(2, MRA_RAM);
 			cpu_setbankhandler_w(2, MWA_RAM);
-			cpu_setbank(1, &Machine->memory_region[0][0x0a000]);
+			cpu_setbank(1, memory_region(REGION_CPU1)+0x0a000);
             break;
     }
 }
@@ -439,12 +439,12 @@ static  void open_floppy(int drive)
             return;
         /* try to open the image read/write */
 		drv[drive].mode = 1;
-        file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE_RW, 1);
+        file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_WRITE);
         if (!file)
         {
             /* if this fails, try to open it read only */
 			drv[drive].mode = 0;
-            file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE_RW, 0);
+            file = osd_fopen(Machine->gamedrv->name, floppy_name[drive], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
         }
         /* still failed: no chance to access image */
         if (!file)
@@ -1100,20 +1100,20 @@ void a800xl_mmu(UINT8 old_mmu, UINT8 new_mmu)
 			LOG((errorlog,"%s MMU BIOS ROM\n", Machine->gamedrv->name));
 			cpu_setbankhandler_r(3, MRA_BANK3);
 			cpu_setbankhandler_w(3, MWA_ROM);
-            cpu_setbank(3, &Machine->memory_region[0][0x10000]);  /* 0x1000 bytes */
+            cpu_setbank(3, memory_region(REGION_CPU1)+0x10000);  /* 0x1000 bytes */
 			cpu_setbankhandler_r(4, MRA_BANK4);
 			cpu_setbankhandler_w(4, MWA_ROM);
-            cpu_setbank(4, &Machine->memory_region[0][0x11800]);  /* 0x2800 bytes */
+            cpu_setbank(4, memory_region(REGION_CPU1)+0x11800);  /* 0x2800 bytes */
         }
 		else
 		{
 			LOG((errorlog,"%s MMU BIOS RAM\n", Machine->gamedrv->name));
             cpu_setbankhandler_r(3, MRA_RAM);
 			cpu_setbankhandler_w(3, MWA_RAM);
-            cpu_setbank(3, &Machine->memory_region[0][0x0c000]);  /* 0x1000 bytes */
+            cpu_setbank(3, memory_region(REGION_CPU1)+0x0c000);  /* 0x1000 bytes */
 			cpu_setbankhandler_r(4, MRA_RAM);
 			cpu_setbankhandler_w(4, MWA_RAM);
-            cpu_setbank(4, &Machine->memory_region[0][0x0d800]);  /* 0x2800 bytes */
+            cpu_setbank(4, memory_region(REGION_CPU1)+0x0d800);  /* 0x2800 bytes */
         }
 	}
 	/* check if BASIC changed */
@@ -1124,14 +1124,14 @@ void a800xl_mmu(UINT8 old_mmu, UINT8 new_mmu)
 			LOG((errorlog,"%s MMU BASIC RAM\n", Machine->gamedrv->name));
             cpu_setbankhandler_r(2, MRA_RAM);
             cpu_setbankhandler_w(2, MWA_RAM);
-            cpu_setbank(2, &Machine->memory_region[0][0x0a000]);  /* 0x2000 bytes */
+            cpu_setbank(2, memory_region(REGION_CPU1)+0x0a000);  /* 0x2000 bytes */
         }
 		else
 		{
 			LOG((errorlog,"%s MMU BASIC ROM\n", Machine->gamedrv->name));
             cpu_setbankhandler_r(2, MRA_BANK2);
             cpu_setbankhandler_w(2, MWA_ROM);
-            cpu_setbank(2, &Machine->memory_region[0][0x14000]);  /* 0x2000 bytes */
+            cpu_setbank(2, memory_region(REGION_CPU1)+0x14000);  /* 0x2000 bytes */
 		}
     }
 	/* check if self-test ROM changed */
@@ -1142,14 +1142,14 @@ void a800xl_mmu(UINT8 old_mmu, UINT8 new_mmu)
 			LOG((errorlog,"%s MMU SELFTEST RAM\n", Machine->gamedrv->name));
             cpu_setbankhandler_r(1, MRA_RAM);
             cpu_setbankhandler_w(1, MWA_RAM);
-            cpu_setbank(1, &Machine->memory_region[0][0x05000]);  /* 0x0800 bytes */
+            cpu_setbank(1, memory_region(REGION_CPU1)+0x05000);  /* 0x0800 bytes */
         }
 		else
 		{
 			LOG((errorlog,"%s MMU SELFTEST ROM\n", Machine->gamedrv->name));
             cpu_setbankhandler_r(1, MRA_BANK1);
             cpu_setbankhandler_w(1, MWA_ROM);
-            cpu_setbank(1, &Machine->memory_region[0][0x11000]);  /* 0x0800 bytes */
+            cpu_setbank(1, memory_region(REGION_CPU1)+0x11000);  /* 0x0800 bytes */
         }
     }
 }

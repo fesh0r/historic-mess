@@ -26,7 +26,8 @@ typedef int bool;
 // call to init videodriver
 // pal version
 // dma_read: videochip fetched 1 byte data from system bus
-extern void ted7360_init(int(*dma_read)(int), int pal);
+extern void ted7360_init(int pal);
+extern void ted7360_set_dma(int(*dma_read)(int), int(*dma_read_rom)(int));
 
 #define TED7360NTSC_VRETRACERATE 60
 #define TED7360PAL_VRETRACERATE 50

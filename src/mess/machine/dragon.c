@@ -171,7 +171,7 @@ void coco_enable_64k_w(int offset, int data)
 
 /* Coco 3 */
 
-static int coco3_enable_64k;
+int coco3_enable_64k;
 int coco3_mmu[8];
 
 static void coco3_mmu_update(int offset)
@@ -187,6 +187,23 @@ static void coco3_mmu_update(int offset)
 
 	cpu_setbank(offset + 1, &RAM[coco3_mmu[offset] * 0x2000]);
 	cpu_setbankhandler_w(offset + 1, handlers[offset]);
+}
+
+void coco3_exposerom(void)
+{
+	extern int coco3_gimereg[];
+	int mode;
+
+	mode = coco3_gimereg[0] & 3;
+
+	cpu_setbank(5, &dragon_rom[(mode != 3) ? 0x0000 : 0x8000]);
+	cpu_setbankhandler_w(5, MWA_ROM);
+	cpu_setbank(6, &dragon_rom[(mode != 3) ? 0x2000 : 0xa000]);
+	cpu_setbankhandler_w(6, MWA_ROM);
+	cpu_setbank(7, &dragon_rom[(mode == 2) ? 0x4000 : 0xc000]);
+	cpu_setbankhandler_w(7, MWA_ROM);
+	cpu_setbank(8, &dragon_rom[(mode == 2) ? 0x6000 : 0xe000]);
+	cpu_setbankhandler_w(8, MWA_ROM);
 }
 
 int coco3_mmu_r(int offset)
@@ -215,14 +232,7 @@ void coco3_enable_64k_w(int offset, int data)
 		coco3_mmu_update(7);
 	}
 	else {
-		cpu_setbank(5, &dragon_rom[0x0000]);
-		cpu_setbankhandler_w(5, MWA_ROM);
-		cpu_setbank(6, &dragon_rom[0x2000]);
-		cpu_setbankhandler_w(6, MWA_ROM);
-		cpu_setbank(7, &dragon_rom[0x4000]);
-		cpu_setbankhandler_w(7, MWA_ROM);
-		cpu_setbank(8, &dragon_rom[0x6000]);
-		cpu_setbankhandler_w(8, MWA_ROM);
+		coco3_exposerom();
 	}
 }
 

@@ -88,12 +88,13 @@ cgenie    "EACA Colour Genie EG 2000"
 coco      "Color Computer"
 coco3     "Color Computer 3"
 coleco    "Colecovision"
-c16       "Commodore C16/116"
+c16       "Commodore C16/116 (PAL)"
 cpc6128   "Amstrad/Schneider CPC6128"
 dragon32  "Dragon 32"
 ep128     "Enterprise 128K"
 gamegear  "Sega Game Gear"
 genesis   "Sega Megadrive/Genesis"
+jupiter   "Jupiter Ace 49k"
 kaypro    "Kaypro 2x"
 kim1      "KIM-1"
 kccomp    "KC Compact"
@@ -104,12 +105,12 @@ pcmda     "IBM PC/XT - MDA"
 pccga     "IBM PC/XT - CGA"
 pce       "PC-Engine"
 pdp1      "pdp1 SPACEWAR!"
-plus4     "Commodore +4"
+plus4     "Commodore +4 (NTSC)"
 raaspec   "RA+A Spectrum I+"
 sms       "Sega Master System"
 spectrum  "ZX-Spectrum 48k"
 tandy1t   "Tandy 1000TX"
-ti994a    "TI99/4A Home Computer"
+ti99_4a   "TI99/4A Home Computer"
 trs80     "TRS-80 Model I (Level II Basic)"
 vectrex   "GCE Vectrex"
 vic20     "Commodore VIC20 (ntsc)"
@@ -163,6 +164,23 @@ A NOTE ABOUT FILES:
                       C:\MESS\ROMS\COLECO 
      - You can also specify the exact path to a file in the ROMPATH.
 
+     - You can now specify switches on the commandlinem in which case 
+       every image name following them goes to that respective slot, 
+       regardless of it's extension.
+
+       Some examples:
+          ; recognized by extension
+          mess a800 mule.xfd
+          mess oric1 game.tap
+          ; 'slot' overrides
+          mess vic20 -cassette a.dsk b.img c.d64 -floppy d.cas
+          mess amiga -floppy itdesert.adf
+       The switches are -rom, -floppy, -harddisk and -cassette.
+       Recognized extensions without overrides are now:
+        cassette:	cas, cmd, tap, t64, vz
+        harddisk:	img
+        floppy:		d64, dsk, adf, atr, xfd, vzd
+        roms:		everything else
 
 
 
@@ -298,30 +316,27 @@ Compatibility:
 
 
 ------------------------------------
-c16     commodore c16 (pal version)
-plus4   commodore plus4 (ntsc version)
+c16	commodore c16 (pal version)
+plus4	commodore plus4 (ntsc version)
 ------------------------------------
-(beta 1 version)
+(beta version)
 
-(only 8 bit color depth at the moment)
-(hardware softscrolling not implemented)
+if the game runs to fast with the ntsc version, try the pal version!
+
+status
+------
+(hardware softscrolling vertical?)
 (imperfect colors)
 imperfect sound (noise channel complete wrong)
- no tape support
- no serial bus support (disks/printer)
- simple iec support (c1551 disks)
-  only program load from drive 8 implemented
-        loads file from rom directory (*.prg)
-        or file from d64 image (here also directory supported)
-  use dload"filename"
-  or load"filename",8
-  or load"filename",8,1 (for loading machine language programs at their
-address)
-  for loading
-  type run or the appropriate sys call to start them
- no rs232 (plus4)
+simple tape support
+no serial bus support (disk drives/printer)
+no rs232 (plus4)
+
 no special expansion modules
+ simple iec support (c1551 floppy disk drive)
+
 some unsolved problems
+
  memory check by c16 kernel will not recognize more memory without
 restart of mess
  cpu clock switching/changing
@@ -334,6 +349,33 @@ pressed at the same time
 
 shift-cbm switches between upper-only and normal character set
 (when wrong characters on screen this can help)
+
+Tape
+----
+loading of wav, prg and prg files in zip archiv
+commandline cassette=image
+wav:
+ 8 or 16(not tested), 5000 Hz minimum
+ has the same problems like an original tape drive (tone head must
+ be adjusted to get working(no load error,...) wav-files)
+zip:
+ must be placed in current directory
+ prg's are played in the order of the files in zip file
+must be 1st romname in commandline
+use load or load"" or load"",1 for loading of normal programs
+use load"",1,1 for loading programs to their special address
+
+Discs
+-----
+only file load from drive 8 and 9 implemented
+ loads file from rom directory (*.prg)
+ or file from d64 image (here also directory supported)
+use dload"filename"
+or load"filename",8
+or load"filename",8,1 (for loading machine language programs at their
+address)
+for loading
+type run or the appropriate sys call to start them
 
 Roms
 ----
@@ -941,52 +983,102 @@ Thanks:
 vic20 commodore vic20 (ntsc version)
 vc20  commodore vc20  (pal version)
 ------------------------------------
-Known Issues:
-	vic20 ntsc-version
-	 when screen is two wide right or low, or screen doesn't fitt in visible
-	 area try the pal version
 
-	vc20  pal-version
+vic20 ntsc-version
+ when screen is two wide right or low, or screen doesn't fitt in visible
+ area try the pal version
 
-	a normal or good written program does not depend on the video system
+vc20  pal-version
 
-Status:
-	no rastereffects
-	 (vidhrdw should be checked to be correct in all situations)
-	 (only 8 bit color depth at the moment)
-	imperfect sound (noise channel complete wrong)
-	lightpen not implemented (some programs could help)
-	via's only so far configured and tested as neccessary
-	 no tape support
-	 no ieee support (disks/printer)
-	 no rs232
-	no special expansion modules (iec)
+a normal or good written program does not depend on the video system
 
-	for a more complete vic20 emulation take a look at the very good
-	vice emulator
+Status
+------
 
-Keys:
-	Some PC-Keyboards does not behave well when special two or more keys are
-	pressed at the same time
-	(with my keyboard printscreen clears the pressed pause key!)
+imperfect sound (noise channel complete wrong)
+ simple tape support
+ no serial bus support (disks/printer)
+ no rs232
 
-	stop-restore in much cases prompt will appear
-	shift-cbm switches between upper-only and normal character set
-	(when wrong characters on screen this can help)
+for a more complete vic20 emulation take a look at the very good
+vice emulator
 
-Roms:
-	.bin .rom .a0 .20 .40 .60 .prg
-	files with boot-sign in it
-	  recogniced as roms
+Video
+-----
+NTSC:
+Screen Size (normal TV (horicontal),4/3 ratio)
+pixel ratio: about 7/5 !
+so no standard Vesa Resolution is good
+tweaked mode 256x256 acceptable
+best define own display mode (when graphic driver supports this)
+PAL:
+pixel ratio about 13/10 !
+good (but only part of screen filled) 1024x768
+acceptable 800x600
+better define own display mode (when graphic driver supports this)
 
-	.20 files loaded at 0x2000
-	.40 files loaded at 0x4000
-	.60 files loaded at 0x6000
-	.a0 files loaded at 0xa000
-	.prg files loaded at address in its first two bytes
-	.bin .rom files loaded at 0x4000 when 0x4000 bytes long
-	else loaded at 0xa000
+XMESS:
+use -scalewidth 3 -scaleheight 2 for acceptable display
+better define own display mode
 
-	when problems start with -log and look into error.log file
+Keys
+----
+Some PC-Keyboards does not behave well when special two or more keys are
+pressed at the same time
+(with my keyboard printscreen clears the pressed pause key!)
+
+stop-restore in much cases prompt will appear
+shift-cbm switches between upper-only and normal character set
+(when wrong characters on screen this can help)
+
+Lightpen
+--------
+Paddle 3 x-axe
+Paddle 4 y-axe
+
+Tape
+----
+loading of wav, prg and prg files in zip archiv
+commandline cassette=image
+wav:
+ 8 or 16(not tested), 12500 Hz minimum
+ has the same problems like an original tape drive (tone head must
+ be adjusted to get working(no load error,...) wav-files)
+zip:
+ must be placed in current directory
+ prg's are played in the order of the files in zip file
+
+must be 1st romname in commandline
+use load or load"" or load"",1 for loading of normal programs
+use load"",1,1 for loading programs to their special address
+
+Roms
+----
+.bin .rom .a0 .20 .40 .60 .prg
+files with boot-sign in it
+  recogniced as roms
+
+.20 files loaded at 0x2000
+.40 files loaded at 0x4000
+.60 files loaded at 0x6000
+.a0 files loaded at 0xa000
+.prg files loaded at address in its first two bytes
+.bin .rom files loaded at 0x4000 when 0x4000 bytes long
+else loaded at 0xa000
+
+when problems start with -log and look into error.log file
+
+
+
+
+------
+vz200
+vz300
+------
+
+If a game doesn't start after a second, it's most probably a BASIC
+game and you have to type "RUN<ENTER>" ;)
+If it still doesn't run, there's a bug (in the image or the driver).
+
 
 

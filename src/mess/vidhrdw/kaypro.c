@@ -383,10 +383,10 @@ void kaypro_const_w(int offset, int data)
     if (data & 1)
     {
         kbd_head = kbd_tail = 0;
-        if (timer_iscpususpended(0))
+		if (timer_iscpususpended(0,SUSPEND_REASON_HALT))
         {
 			cpu_set_reg( Z80_AF, cpu_get_reg( Z80_AF ) & 0x00ff );
-            timer_suspendcpu(0, 0);
+			timer_suspendcpu(0, 0,SUSPEND_REASON_HALT);
             return;
         }
     }
@@ -408,7 +408,7 @@ int  kaypro_conin_r(int offset)
     }
     else
     {
-        timer_suspendcpu(0, 1);
+		timer_suspendcpu(0, 1,SUSPEND_REASON_HALT);
     }
     return data;
 }
@@ -423,10 +423,10 @@ void kaypro_conin_w(int offset, int data)
 {
 int kbd_head_old;
     kaypro_click();
-	if( timer_iscpususpended(0) )
+	if( timer_iscpususpended(0,SUSPEND_REASON_HALT) )
     {
 		cpu_set_reg( Z80_AF, data << 8 );
-        timer_suspendcpu(0, 0);
+		timer_suspendcpu(0, 0,SUSPEND_REASON_HALT);
         return;
     }
     kbd_head_old = kbd_head;

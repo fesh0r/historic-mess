@@ -56,8 +56,8 @@ extern void vz_shutdown_machine(void);
 
 extern int  vz_rom_id(const char *name, const char * gamename);
 
-extern int vz_floppy_r(int offset);
-extern void vz_floppy_w(int offset, int data);
+extern int vz_fdc_r(int offset);
+extern void vz_fdc_w(int offset, int data);
 
 extern int vz_joystick_r(int offset);
 extern int vz_keyboard_r(int offset);
@@ -122,23 +122,23 @@ static struct MemoryWriteAddress writemem_vz300[] =
 
 static struct IOReadPort readport[] =
 {
-	{ 0x10, 0x1f, vz_floppy_r },
+	{ 0x10, 0x1f, vz_fdc_r },
     { 0x20, 0x2f, vz_joystick_r },
 	{ -1 }
 };
 
 static struct IOWritePort writeport[] =
 {
-	{ 0x10, 0x1f, vz_floppy_w },
+	{ 0x10, 0x1f, vz_fdc_w },
     { -1 }
 };
 
 INPUT_PORTS_START( vz )
 	PORT_START /* IN0 */
-	PORT_DIPNAME( 0x80, 0x00, "16K RAM module", IP_KEY_NONE )
+	PORT_DIPNAME( 0x80, 0x00, "16K RAM module")
 	PORT_DIPSETTING(	0x00, "no")
 	PORT_DIPSETTING(	0x80, "yes")
-	PORT_DIPNAME( 0x40, 0x00, "DOS extension",  IP_KEY_NONE )
+	PORT_DIPNAME( 0x40, 0x00, "DOS extension")
 	PORT_DIPSETTING(	0x00, "no")
 	PORT_DIPSETTING(	0x40, "yes")
 	PORT_BITX(	  0x20, 0x00, IPT_KEYBOARD | IPF_TOGGLE, "Joystick",  KEYCODE_F2, IP_JOY_NONE )
@@ -336,7 +336,7 @@ static void vz_init_palette(unsigned char *sys_palette, unsigned short *sys_colo
 static int vz_image_load(void)
 {
     static int framecount = 0;
-    UINT8 *RAM = Machine->memory_region[0];
+    UINT8 *RAM = memory_region(REGION_CPU1);
 	const char magic_basic[] = "VZF0";
     const char magic_mcode[] = "  \000\000";
 	char name[17+1] = "";
@@ -348,13 +348,11 @@ static int vz_image_load(void)
 
 	if( ++framecount == 50 )
 	{
-		for( i = 0; i < MAX_ROM; i++ )
+		for( i = 0; i < MAX_CASSETTE; i++ )
 		{
-			if( !rom_name[i] )
+			if( !cassette_name[i][0] )
 				continue;
-			if( !rom_name[i][0] )
-				continue;
-			file = osd_fopen(Machine->gamedrv->name, rom_name[i], OSD_FILETYPE_IMAGE_RW, 0);
+			file = osd_fopen(Machine->gamedrv->name, cassette_name[i], OSD_FILETYPE_IMAGE_RW, 0);
 			if( file )
 			{
 
@@ -417,7 +415,6 @@ static struct MachineDriver machine_driver_vz200 =
 		{
 			CPU_Z80,
 			3579500,	/* 3.57950 Mhz */
-			0,
 			readmem,writemem,
 			readport,writeport,
 			interrupt,1
@@ -429,10 +426,10 @@ static struct MachineDriver machine_driver_vz200 =
 	vz_shutdown_machine,
 
 	/* video hardware */
-	32*8,									/* screen width */
-	312,									/* screen height */
-    { 0*8, 32*8-1, 0*12, 16*12-1},          /* visible_area */
-	vz_gfxdecodeinfo,						/* graphics decode info */
+	36*8,									/* screen width (inc. blank/sync) */
+	38+192+25+1+6+13,						/* screen height (inc. blank/sync) */
+	{ 0*8, 36*8-1, 0, 20+192+12-1}, 		/* visible_area */
+    vz_gfxdecodeinfo,                       /* graphics decode info */
 	9, 8*2 + 2*4,							/* colors used for the characters */
 	vz_init_palette,						/* init palette */
 
@@ -458,23 +455,22 @@ static struct MachineDriver machine_driver_vz300 =
 	{
 		{
 			CPU_Z80,
-			17734000/5, /* 17.734MHz / 5 = 3.54690 Mhz */
-			0,
+			17734000/5, 					/* 17.734MHz / 5 = 3.54690 Mhz */
 			readmem_vz300,writemem_vz300,
 			readport,writeport,
 			interrupt,1
 		},
 	},
-	50, 0,	/* frames per second, vblank duration */
+	50, 0,									/* frames per second, vblank duration */
 	1,
 	vz300_init_machine,
 	vz_shutdown_machine,
 
 	/* video hardware */
-	32*8,									/* screen width */
-	312,									/* screen height */
-	{ 0*8, 32*8-1, 0*12, 16*12-1},			/* visible_area */
-	vz_gfxdecodeinfo,						/* graphics decode info */
+	36*8,									/* screen width (inc. blank/sync) */
+	38+192+25+1+6+13,						/* screen height (inc. blank/sync) */
+    { 0*8, 36*8-1, 0, 20+192+12-1},         /* visible_area */
+    vz_gfxdecodeinfo,                       /* graphics decode info */
 	9, 8*2 + 2*4,							/* colors used for the characters */
     vz_init_palette,                        /* init palette */
 
@@ -495,20 +491,20 @@ static struct MachineDriver machine_driver_vz300 =
 };
 
 ROM_START(vz200)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD("vzrom.lo",  0x0000, 0x2000, 0xcc854fe9)
     ROM_LOAD("vzrom.hi",  0x2000, 0x2000, 0x7060f91a)
 
-	ROM_REGION(0x0d00)
+	ROM_REGIONX(0x0d00,REGION_GFX1)
 	ROM_LOAD("vz200.fnt", 0x0000, 0x0c00, 0xead006a1)
 ROM_END
 
 
 ROM_START(vz300)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD("vzrom.v20", 0x0000, 0x4000, 0x613de12c)
 
-	ROM_REGION(0x0d00)
+	ROM_REGIONX(0x0d00,REGION_GFX1)
 	ROM_LOAD("vz200.fnt", 0x0000, 0x0c00, 0xead006a1)
 ROM_END
 
@@ -519,14 +515,16 @@ ROM_END
 
 ***************************************************************************/
 static const char *vz_file_extensions[] = {
-	"vz", NULL
+	"vz", "dvz", NULL
 };
 
 static void vz_rom_decode(void)
 {
 	int i;
-	for( i = 0; i < 256; i++ )
-		Machine->memory_region[1][0x0c00+i] = i;
+	for( i = 192 * 12; i < 256 * 12; i++ )
+		memory_region(REGION_GFX1)[i] = ~memory_region(1)[i] ;
+    for( i = 0; i < 256; i++ )
+		memory_region(REGION_GFX1)[0x0c00+i] = i;
 }
 
 struct GameDriver vz200_driver =
@@ -546,8 +544,8 @@ struct GameDriver vz200_driver =
 	NULL,					/* load rom_file images */
 	vz_rom_id,				/* identify rom images */
 	vz_file_extensions, 	/* file extensions */
-    1,                      /* number of ROM slots - in this case, a CMD binary */
-	4,                      /* number of floppy drives supported */
+	1,						/* number of ROM slots */
+	2,						/* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
 	1,                      /* number of cassette drives supported */
 	vz_rom_decode,			/* rom decoder */
@@ -584,8 +582,8 @@ struct GameDriver vz300_driver =
 	NULL,					/* load rom_file images */
 	vz_rom_id,				/* identify rom images */
 	vz_file_extensions, 	/* file extensions */
-	1,                      /* number of ROM slots - in this case, a CMD binary */
-	4,                      /* number of floppy drives supported */
+	1,						/* number of ROM slots */
+	2,						/* number of floppy drives supported */
 	0,                      /* number of hard drives supported */
 	1,                      /* number of cassette drives supported */
 	vz_rom_decode,			/* rom decoder */

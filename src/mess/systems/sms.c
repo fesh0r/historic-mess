@@ -127,7 +127,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_Z80,
             3579545,
-			0,
 			readmem,writemem,readport,writeport,
             sms_vdp_interrupt, 262,
 			0, 0
@@ -168,7 +167,6 @@ static struct MachineDriver gamegear_machine_driver =
 		{
 			CPU_Z80,
             3597545,
-			0,
 			readmem,writemem,readport,writeport,
             sms_vdp_interrupt, 262,
 			0, 0

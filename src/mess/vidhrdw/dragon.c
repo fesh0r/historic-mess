@@ -767,14 +767,26 @@ void coco3_ram_b8_w (int offset, int data)
 	coco3_ram_w(offset, data, 7);
 }
 
+int coco3_gimereg[16];
+
 int coco3_gime_r(int offset)
 {
-	/* Dummy for now */
-	return 0;
+	return coco3_gimereg[offset];
 }
+
+extern int coco3_enable_64k;
+extern void coco3_exposerom(void);
 
 void coco3_gime_w(int offset, int data)
 {
-	/* Dummy for now */
+	coco3_gimereg[offset] = data;
+
+	/* Not fully implemented */
+	switch(offset) {
+	case 0:
+		if (!coco3_enable_64k)
+			coco3_exposerom();
+		break;
+	}
 }
 

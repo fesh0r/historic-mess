@@ -287,7 +287,7 @@ static int fdd_access_sector(int * record_offset)
  *****************************************************************************/
 static int fdd_read_sector(void)
 {
-	UINT8 *DMA = &Machine->memory_region[0][dma];
+	UINT8 *DMA = memory_region(REGION_CPU1) + dma;
 	int recofs, n = fdd_access_sector(&recofs);
 
     /* copy a record from the sector buffer to the DMA area */
@@ -302,7 +302,7 @@ static int fdd_read_sector(void)
  *****************************************************************************/
 static int fdd_write_sector(void)
 {
-	UINT8 *DMA = &Machine->memory_region[0][dma];
+	UINT8 *DMA = memory_region(REGION_CPU1) + dma;
 	int recofs, n = fdd_access_sector(&recofs);
 
     /* did the record really change ? */
@@ -324,7 +324,7 @@ static int fdd_write_sector(void)
  *****************************************************************************/
 void cpm_jumptable(void)
 {
-	UINT8 * RAM = Machine->memory_region[0];
+	UINT8 * RAM = memory_region(REGION_CPU1);
 	int i;
 	int jmp_addr, fun_addr;
 
@@ -362,7 +362,7 @@ void cpm_jumptable(void)
  *****************************************************************************/
 int cpm_init(int n, const char *ids[])
 {
-	UINT8 * RAM = Machine->memory_region[0];
+	UINT8 * RAM = memory_region(REGION_CPU1);
 	dsk_fmt *f;
 	int i, d;
 
@@ -802,7 +802,7 @@ void cpm_disk_set_dma(int d)
 
 static void dump_sector(void)
 {
-	UINT8 *DMA = &Machine->memory_region[0][dma];
+	UINT8 *DMA = memory_region(REGION_CPU1) + dma;
     if (errorlog)
     {
 		int i;
@@ -827,7 +827,7 @@ int cpm_disk_read_sector(void)
 	int result = -1;
 
     /* TODO: remove this */
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
     if (curdisk >= 0 &&
 		curdisk < num_disks &&
@@ -864,7 +864,7 @@ int cpm_disk_write_sector(void)
 	int result = -1;
 
     /* TODO: remove this */
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
     if (curdisk >= 0 &&
 		curdisk < num_disks &&
@@ -901,7 +901,7 @@ void cpm_bios_command_w(int offset, int data)
 {
 	dsk_fmt *f;
 	char buff[256];
-	UINT8 * RAM = Machine->memory_region[0];
+	UINT8 * RAM = memory_region(REGION_CPU1);
 	UINT16 tmp, af, bc, de, hl;
 	int i;
 
@@ -955,7 +955,7 @@ void cpm_bios_command_w(int offset, int data)
 
 		/* copy the CP/M 2.2 image to Z80 memory space */
 		for (i = 0; i < 0x1600; i++)
-			RAM[CCP + i] = Machine->memory_region[2][i];
+			RAM[CCP + i] = memory_region(2)[i];
 
 		/* build the bios jump table */
 		cpm_jumptable();
@@ -978,7 +978,7 @@ void cpm_bios_command_w(int offset, int data)
 		tmp = cpu_readport(BIOS_CONIN) & 0xff;
 		af = (af & 0xff) | (tmp << 8);
 #if VERBOSE_CONIO
-		if( timer_iscpususpended(0) )
+		if( timer_iscpususpended(0,SUSPEND_REASON_HALT) )
 		{
 			if (errorlog)
 				fprintf(errorlog, "BIOS 03 console input       CPU suspended\n");

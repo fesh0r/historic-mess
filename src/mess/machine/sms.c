@@ -13,17 +13,17 @@ static unsigned char sms_battery;
 int sms_load_rom(void)
 {
     FILE *fp;
-    int size, i;
+	int size;
 
     if(strlen(rom_name[0]) == 0) return 1;
     fp = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0);
     if(!fp) return 1;
-    for(i=0;i<MAX_MEMORY_REGIONS;i++) Machine->memory_region[i] = 0;
-    ROM = malloc(0x10000);
-    if(!ROM) return 1;
-	Machine->memory_region[0] = ROM;
-    sms_banked_rom = malloc(SMS_ROM_MAXSIZE);
-    if(!sms_banked_rom) return 1;
+	if( new_memory_region(REGION_CPU1,0x10000) )
+		return 1;
+	ROM = memory_region(REGION_CPU1);
+	if( new_memory_region(REGION_CPU2,SMS_ROM_MAXSIZE) )
+		return 1;
+	sms_banked_rom = memory_region(REGION_CPU2);
     size = osd_fread(fp, sms_banked_rom, SMS_ROM_MAXSIZE);
 
     if(!size)

@@ -111,7 +111,7 @@ void oric_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
         unsigned char *tachar_ram;
         unsigned char c,b;
         unsigned char d, hires_c;
-        unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+        unsigned char *RAM = memory_region(REGION_CPU1);
         text_ram    = &RAM[0xBB80] ;
         hires_ram   = &RAM[0xA000] ;
         char_ram    = &RAM[0xB400] ;
@@ -121,7 +121,7 @@ void oric_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
         tchar_ram   = &RAM[0xB400] ;
         tachar_ram  = &RAM[0xB800] ;
 
-        
+
         /*  Render the Charcters  /  Hires cells .. */
 
         /*
@@ -213,7 +213,7 @@ void oric_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
                 }
 
                 if (oric_powerup_screen == 1) {
-                   /* all black spaces appart from 
+                   /* all black spaces appart from
                    17,7 -- 40,7
                    32,12 -- 40,12
                    8,20 -- 40,20
@@ -288,7 +288,7 @@ void oric_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
                         else        o3 += ( Machine->pens[paper_colour] * 0x100 );
                         cdst[i][x+0] = o1;
                         cdst[i][x+1] = o2;
-                        cdst[i][x+2] = o3;                               
+                        cdst[i][x+2] = o3;
                 }
         }
 }

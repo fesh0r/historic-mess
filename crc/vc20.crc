@@ -15,7 +15,5 @@ a92bfff2 =  JAW2_PAL.A0 (same version as above)
 2fe93f44 =  K-STAR.A0
 
 # 16k programs
-# needs to be started with sys until program could be
-# loaded normally
-0b342cce = krazy kong (sys23808)
-b4f12c80 = xeno2 (sys11616)
+b342cce = krazy kong
+b4f12c80 = xeno2

@@ -176,7 +176,7 @@ INPUT_PORTS_END
 
 void kim1_init_machine(void)
 {
-	UINT8 *RAM = Machine->memory_region[0];
+	UINT8 *RAM = memory_region(REGION_CPU1);
 
 	/* setup RAM IRQ vector */
     if( RAM[0x17fa] == 0x00 && RAM[0x17fb] == 0x00 )
@@ -220,7 +220,7 @@ int kim1_rom_load(void)
         if( file )
         {
 			UINT16 addr, size;
-			UINT8 id, *RAM = Machine->memory_region[0];
+			UINT8 id, *RAM = memory_region(REGION_CPU1);
 			osd_fread(file, buff, sizeof(buff));
 			if( memcmp(buff, magic, sizeof(buff)) )
 			{
@@ -684,7 +684,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_M6502,
 			1000000,	/* 1 MHz */
-			0,
 			readmem,writemem,0,0,
 			kim1_interrupt, 1
         }
@@ -709,7 +708,7 @@ static struct MachineDriver machine_driver =
 	kim1_vh_screenrefresh,
 
 	/* sound hardware */
-	0,NULL,NULL,NULL,
+	0,0,0,0,
 	{
         {
 			SOUND_DAC,
@@ -719,12 +718,12 @@ static struct MachineDriver machine_driver =
 };
 
 ROM_START(kim1)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 		ROM_LOAD("6530-003.bin",    0x1800, 0x0400, 0xa2a56502)
 		ROM_LOAD("6530-002.bin",    0x1c00, 0x0400, 0x2b08e923)
-	ROM_REGION(128 * 24 * 3)
+	ROM_REGIONX(128 * 24 * 3,REGION_GFX1)
 		/* space filled with 7segement graphics by kim1_rom_decode */
-	ROM_REGION( 24 * 18 * 3 * 2)
+	ROM_REGIONX( 24 * 18 * 3 * 2,REGION_GFX2)
 		/* space filled with key icons by kim1_rom_decode */
 ROM_END
 
@@ -1217,7 +1216,7 @@ void kim1_rom_decode(void)
 		".bbbbbbbbbbbbbbbbbbbbbb." \
 		"........................" };
 
-    dst = Machine->memory_region[1];
+    dst = memory_region(REGION_GFX1);
 	memset(dst, 0, 128 * 24 * 24 / 8);
     for( i = 0; i < 128; i++ )
     {
@@ -1241,7 +1240,7 @@ void kim1_rom_decode(void)
 		}
 	}
 
-	dst = Machine->memory_region[2];
+	dst = memory_region(2);
 	memset(dst, 0, 24 * 18 * 24 / 8);
 	for( i = 0; i < 24; i++ )
     {
@@ -1291,7 +1290,7 @@ struct GameDriver kim1_driver =
 
 	input_ports_kim1,
 
-	0, NULL, NULL,
+	0, 0, 0,
 	ORIENTATION_DEFAULT,
 
 	0, 0,

@@ -68,19 +68,23 @@ INPUT_PORTS_START( vectrex )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH,  IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
 
 	PORT_START
-	PORT_DIPNAME( 0x01, 0x00, "3D Imager", IP_KEY_NONE )
+	//PORT_DIPNAME( 0x01, 0x00, "3D Imager", IP_KEY_NONE )
+	PORT_DIPNAME( 0x01, 0x00, "3D Imager")
 	PORT_DIPSETTING(0x01, DEF_STR ( On ))
 	PORT_DIPSETTING(0x00, DEF_STR ( Off ))
-	PORT_DIPNAME( 0x02, 0x00, "Separate images", IP_KEY_NONE )
+	//PORT_DIPNAME( 0x02, 0x00, "Separate images", IP_KEY_NONE )
+	PORT_DIPNAME( 0x02, 0x00, "Separate images")
 	PORT_DIPSETTING(0x02, DEF_STR ( Yes ))
 	PORT_DIPSETTING(0x00, DEF_STR ( No ))
-	PORT_DIPNAME( 0x1c, 0x10, "Left eye", IP_KEY_NONE )
+	//PORT_DIPNAME( 0x1c, 0x10, "Left eye", IP_KEY_NONE )
+	PORT_DIPNAME( 0x1c, 0x10, "Left eye")
 	PORT_DIPSETTING(0x00, "Black")
 	PORT_DIPSETTING(0x04, "Red")
 	PORT_DIPSETTING(0x08, "Green")
 	PORT_DIPSETTING(0x0c, "Blue")
 	PORT_DIPSETTING(0x10, "Color")
-	PORT_DIPNAME( 0xe0, 0x80, "Right eye", IP_KEY_NONE )
+	//PORT_DIPNAME( 0xe0, 0x80, "Right eye", IP_KEY_NONE )
+	PORT_DIPNAME( 0xe0, 0x80, "Right eye")
 	PORT_DIPSETTING(0x00, "Black")
 	PORT_DIPSETTING(0x20, "Red")
 	PORT_DIPSETTING(0x40, "Green")
@@ -88,7 +92,8 @@ INPUT_PORTS_START( vectrex )
 	PORT_DIPSETTING(0x80, "Color")
 
 	PORT_START
-	PORT_DIPNAME( 0x01, 0x01, "Timer 2 refresh", IP_KEY_NONE )
+	//PORT_DIPNAME( 0x01, 0x01, "Timer 2 refresh", IP_KEY_NONE )
+	PORT_DIPNAME( 0x01, 0x01, "Timer 2 refresh")
 	PORT_DIPSETTING(0x01, DEF_STR ( Yes ))
 	PORT_DIPSETTING(0x00, DEF_STR ( No ))
 INPUT_PORTS_END
@@ -144,7 +149,6 @@ static struct MachineDriver vectrex_machine_driver =
 		{
 			CPU_M6809,
 			1500000,	/* 1.5 Mhz */
-			0,
 			vectrex_readmem, vectrex_writemem,0,0,
 			0, 0, /* no vblank interrupt */
 			0, 0 /* no interrupts */
@@ -183,7 +187,7 @@ static struct MachineDriver vectrex_machine_driver =
 };
 
 ROM_START(vectrex)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD("system.img", 0xe000, 0x2000, 0xba13fb57)
 ROM_END
 
@@ -285,7 +289,6 @@ static struct MachineDriver raaspec_machine_driver =
 		{
 			CPU_M6809,
 			1500000,	/* 1.5 Mhz */
-			0,
 			spectrum1_readmem, spectrum1_writemem,0,0,
 			0, 0, /* no vblank interrupt */
 			0, 0 /* no interrupts */
@@ -324,7 +327,7 @@ static struct MachineDriver raaspec_machine_driver =
 };
 
 ROM_START(spectrum1)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD("spectrum.bin", 0x0000, 0x8000, 0x20af7f3f)
 	ROM_LOAD("system.img", 0xe000, 0x2000, 0xba13fb57)
 ROM_END

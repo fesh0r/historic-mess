@@ -70,7 +70,6 @@ static struct MachineDriver machine_driver_ntsc =
 		{
 			CPU_M68000,
 			7159090,			/* 7.15909 Mhz (NTSC) */
-			0,					/* Memory region #0 */
 			readmem,writemem,0,0,
 			amiga_vblank_irq,1,
 		}
@@ -105,7 +104,7 @@ static struct MachineDriver machine_driver_ntsc =
 ***************************************************************************/
 
 ROM_START( amiga )
-	ROM_REGION(0x1000000) /* for ram, etc */
+	ROM_REGIONX(0x1000000,REGION_CPU1) /* for ram, etc */
 	//ROM_LOAD( "kick13.rom",  0xf80000, 0x80000, 0xfa180000 )
 	ROM_LOAD( "kick13.rom",  0xf80000, 0x80000, 0xf6290043)
 
@@ -114,7 +113,7 @@ ROM_END
 static void amiga_rom_decode(void)
 {
 #ifdef LSB_FIRST
-	UINT16 *rom = (UINT16 *)&Machine->memory_region[0][0xf80000];
+	UINT16 *rom = (UINT16 *)&memory_region(REGION_CPU1)[0xf80000];
 	unsigned i;
 	for( i = 0; i < 0x80000; i += 2, rom++ )
 		*rom = (*rom << 8) | (*rom >> 8);

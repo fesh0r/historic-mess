@@ -197,10 +197,10 @@ void	Enterprise_Initialise()
 
 	/* set read pointers */
         /* exos */
-        Enterprise_Pages_Read[MEM_EXOS_0] = &Machine->memory_region[0][0x010000];
-        Enterprise_Pages_Read[MEM_EXOS_1] = &Machine->memory_region[0][0x014000];
+        Enterprise_Pages_Read[MEM_EXOS_0] = &memory_region(REGION_CPU1)[0x010000];
+        Enterprise_Pages_Read[MEM_EXOS_1] = &memory_region(REGION_CPU1)[0x014000];
         /* basic */
-        Enterprise_Pages_Read[MEM_CART_0] = &Machine->memory_region[0][0x018000];
+        Enterprise_Pages_Read[MEM_CART_0] = &memory_region(REGION_CPU1)[0x018000];
         /* ram */
         Enterprise_Pages_Read[MEM_RAM_0] = Enterprise_RAM;
 	Enterprise_Pages_Read[MEM_RAM_1] = Enterprise_RAM + 0x04000;
@@ -211,8 +211,8 @@ void	Enterprise_Initialise()
 	Enterprise_Pages_Read[MEM_RAM_6] = Enterprise_RAM + 0x018000;
 	Enterprise_Pages_Read[MEM_RAM_7] = Enterprise_RAM + 0x01c000;
         /* exdos */
-//        Enterprise_Pages_Read[MEM_EXDOS_0] = &Machine->memory_region[0][0x01c000];
-  //      Enterprise_Pages_Read[MEM_EXDOS_1] = &Machine->memory_region[0][0x020000];
+//        Enterprise_Pages_Read[MEM_EXDOS_0] = &memory_region(REGION_CPU1)[0x01c000];
+  //      Enterprise_Pages_Read[MEM_EXDOS_1] = &memory_region(REGION_CPU1)[0x020000];
 
 	/* set write pointers */
 	Enterprise_Pages_Write[MEM_RAM_0] = Enterprise_RAM;
@@ -608,60 +608,52 @@ static struct CustomSound_interface enterprise_custom_sound=
 
 static struct MachineDriver enterprise_machine_driver =
 {
-        /* basic machine hardware */
-        {
-			/* MachineCPU */
-                {
-                        CPU_Z80,	/* type */
-                        4000000,    /* clock: See Note Above */
-                        0,		/* memory region */
-                        readmem_enterprise,	/* MemoryReadAddress */
-			writemem_enterprise, /* MemoryWriteAddress */
-                        readport_enterprise, /* IOReadPort */
-			writeport_enterprise, /* IOWritePort */
-                        enterprise_frame_interrupt, /* VBlank
-Interrupt */
-				1,				/* vblanks per frame */
-                        enterprise_timer_interrupt, /* timer interrupt
-*/
-				1000				/* timers
-per second */
-                },
-        },
-        50,						/* frames per second */
-	  DEFAULT_60HZ_VBLANK_DURATION,       /* vblank duration */
-        1,						/* cpu slices per frame */
-        enterprise_init_machine,			/* init machine */
+	/* basic machine hardware */
+	{
+		/* MachineCPU */
+		{
+			CPU_Z80,							/* type */
+			4000000,							/* clock: See Note Above */
+			readmem_enterprise, 				/* MemoryReadAddress */
+			writemem_enterprise,				/* MemoryWriteAddress */
+			readport_enterprise,				/* IOReadPort */
+			writeport_enterprise,				/* IOWritePort */
+			enterprise_frame_interrupt, 		/* VBlank Interrupt */
+			1,									/* vblanks per frame */
+			enterprise_timer_interrupt, 		/* timer interrupt */
+			1000								/* timers per second */
+		},
+	},
+	50, 										/* frames per second */
+	DEFAULT_60HZ_VBLANK_DURATION,				/* vblank duration */
+	1,											/* cpu slices per frame */
+	enterprise_init_machine,					/* init machine */
 	NULL,
 	/* video hardware */
-        ENTERPRISE_SCREEN_WIDTH,             /* screen width */
-        ENTERPRISE_SCREEN_HEIGHT,            /* screen height */
-        { 0,(ENTERPRISE_SCREEN_WIDTH-1),0,(ENTERPRISE_SCREEN_HEIGHT-1)},
-/* rectangle: visible_area */
-        0, /*enterprise_gfxdecodeinfo,*/                    /* graphics
-decode
-info */
-        NICK_PALETTE_SIZE, 						/* total colours*/
-	  NICK_COLOURTABLE_SIZE,                                  	/* color table len
-*/
-        nick_init_palette,                                      /* convert color prom */
+	ENTERPRISE_SCREEN_WIDTH,					/* screen width */
+	ENTERPRISE_SCREEN_HEIGHT,					/* screen height */
+	{ 0,(ENTERPRISE_SCREEN_WIDTH-1),0,(ENTERPRISE_SCREEN_HEIGHT-1)}, /* rectangle: visible_area */
+	0, /*enterprise_gfxdecodeinfo,*/			/* graphics decode info */
+	NICK_PALETTE_SIZE,							/* total colours */
+	NICK_COLOURTABLE_SIZE,						/* color table len */
+	nick_init_palette,							/* convert color prom */
 
-        VIDEO_TYPE_RASTER,				/* video attributes */
-        0,							/* MachineLayer */
-        enterprise_vh_start,
-        enterprise_vh_stop,
-        enterprise_vh_screenrefresh,
+	VIDEO_TYPE_RASTER,							/* video attributes */
+	0,											/* MachineLayer */
+	enterprise_vh_start,
+	enterprise_vh_stop,
+	enterprise_vh_screenrefresh,
 
-        /* sound hardware */
-        0,0,0,0,
-        {
-			/* MachineSound */
-                {
+	/* sound hardware */
+	0,0,0,0,
+	{
+		/* MachineSound */
+		{
 			/* change to dave eventually */
-                        0,/*SOUND_CUSTOM,*/
-                        0,/*&enterprise_custom_sound*/
-                }
-        }
+			0,/* SOUND_CUSTOM, */
+			0,/* &enterprise_custom_sound */
+		}
+	}
 };
 
 
@@ -674,7 +666,7 @@ info */
 
 ROM_START(enterprise)
         /* 128k ram + 32k rom (OS) + 16k rom (BASIC) + 32k rom (EXDOS) */
-        ROM_REGION(0x24000)
+        ROM_REGIONX(0x24000,REGION_CPU1)
         ROM_LOAD("exos.rom",0x10000,0x8000,  0xd421795f)
         ROM_LOAD("exbas.rom",0x18000,0x4000, 0x683cf455)
         ROM_LOAD("exdos.rom",0x1c000,0x8000, 0xd1d7e157)

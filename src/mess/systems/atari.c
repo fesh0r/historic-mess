@@ -649,7 +649,6 @@ static struct MachineDriver a800_machine_driver =
 		{
 			CPU_M6510,
 			CPU_APPROX,
-			0,
 			readmem_a800,writemem_a800,0,0,
 			a800_interrupt, TOTAL_LINES    /* every scanline */
         }
@@ -698,7 +697,6 @@ static struct MachineDriver a800xl_machine_driver =
 		{
 			CPU_M6510,
 			CPU_APPROX,
-			0,
 			readmem_a800xl,writemem_a800xl,0,0,
 			a800xl_interrupt, TOTAL_LINES	/* every scanline */
         }
@@ -747,7 +745,6 @@ static struct MachineDriver a5200_machine_driver =
 		{
 			CPU_M6510,
 			CPU_APPROX,
-            0,
 			readmem_5200,writemem_5200,0,0,
 			a5200_interrupt, TOTAL_LINES	  /* every scanline */
         }
@@ -786,7 +783,7 @@ static struct MachineDriver a5200_machine_driver =
 };
 
 ROM_START(a800)
-	ROM_REGION(0x14000) /* 64K for the CPU + 2 * 8K for cartridges */
+	ROM_REGIONX(0x14000,REGION_CPU1) /* 64K for the CPU + 2 * 8K for cartridges */
 	ROM_LOAD("atariosb.rom", 0xd800, 0x2800, 0x3e28a1fe)
 ROM_END
 
@@ -841,7 +838,7 @@ struct GameDriver a800_driver =
 };
 
 ROM_START(a800xl)
-	ROM_REGION(0x18000) /* 64K for the CPU + 16K + 2 * 8K for cartridges */
+	ROM_REGIONX(0x18000,REGION_CPU1) /* 64K for the CPU + 16K + 2 * 8K for cartridges */
 	ROM_LOAD("atarixl.rom", 0xc000, 0x4000, 0x1f9cd270)
 ROM_END
 
@@ -879,7 +876,7 @@ struct GameDriver a800xl_driver =
 };
 
 ROM_START(a5200)
-	ROM_REGION(0x14000) /* 64K for the CPU + 16K for cartridges */
+	ROM_REGIONX(0x14000,REGION_CPU1) /* 64K for the CPU + 16K for cartridges */
 	ROM_LOAD("5200.rom", 0xf800, 0x0800, 0x4248d3e3)
 ROM_END
 

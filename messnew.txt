@@ -1,3 +1,100 @@
+0.36b12
+
+Note: .inp record/playback does still not work currently.
+
+
+New drivers supported (in no particular order):
+-----------------------------------------------
+- Jupiter Ace [Paul Daniels]
+
+
+These drivers have improved GRAPHICS:
+-------------------------------------
+- Overscan area added to VZ 200/300 display, because in the graphics 
+  mode there has to be a green (unwriteable) border around the screen, 
+  while in text mode it is black.  Thanks goto Guy Thomason
+  [Juergen Buchmueller]
+
+- Tandy1000T palette fix [Juergen Buchmueller]
+
+- PC driver uses generic drawgfx() instead of specialized blitting 
+  functions.  [Juergen Buchmueller]
+
+- Rasterline driven video system with 16 bpp support in CBM driver
+  [Peter Trauner]
+
+
+These drivers have new or improved SOUND:
+-----------------------------------------
+- Reworked speaker sound generation in the PC driver 
+  [Juergen Buchmueller]
+
+
+Other drivers changes:
+----------------------
+- Floppy emulation (still not 100%) for the VZ200/300.
+  [Juergen Buchmueller]
+
+- Tape support in the CGENIE driver [Juergen Buchmueller]
+
+- Memory allocation fix in the NES driver [Juergen Buchmueller]
+
+- PC drivers have hard disk controllers disabled if there's no image 
+  specified for them [Juergen Buchmueller]
+
+- PC driver - created a keyboard map in the input ports - slightly 
+  better but still not perfect handling of the keyboard.
+  [Juergen Buchmueller]
+
+- Enabled the Disk Basic ROM (disk.rom) for the CoCo and CoCo 3
+  [Nathan]
+
+- Memory manager modifications in the dragon32 drivers that allow the 
+  use of a true CoCo 3 ROM and modifications to the ROM table that 
+  use a true CoCo 3 ROM. [Nathan]
+
+- Simple tape support in the CBM driver (press play on tape with f5 
+  key) [Peter Trauner]
+
+- ti99/4a accessors for the RAM extension fixed, and fixed endianness 
+  issues. [Raphael Nabet]
+
+
+Changes to the main program:
+----------------------------
+- You can now specify switches on the commandlinem in which case every 
+  image name following them goes to that respective slot, regardless 
+  of it's extension.  See mess.txt for some examples
+  [Peter Trauner, Juergen Buchmueller]
+
+
+Source:
+-------
+- The core is based on MAME 0.36b12. This incorporates all features 
+  of the update to this core.  [MAME team]
+
+- [DOS] slight change to usrintrf.c to show brief message for systems 
+  that use the GAME_COMPUTER flag. [Juergen Buchmueller]
+
+- [DOS] New options for IMAGES to be opened, namely OSD_FOPEN_READ, 
+  OSD_FOPEN_WRITE, OSD_FOPEN_RW, and OSD_FOPEN_RW_CREATE.  Check 
+  mess.h for a description of what they are used for.  Be sure to use 
+  these semantics when handling read/write files.
+  [Juergen Buchmueller]
+
+
+Other:
+------
+- Gamegear, Genesis and NES CRC updates [Chris Henry & Gerardo].  
+  Please send all CRC/history file contributions to Chris. 
+  (battlepriest@hotmail.com)
+
+- c16, plus4, vc20 and vic20 CRC updates [Peter Trauner]
+
+
+--------------------------------------------------------------------
+
+
 0.36b11
 
 Note: .inp record/playback does still not work currently.

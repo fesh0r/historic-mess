@@ -135,6 +135,7 @@ static struct MemoryReadAddress readmem[] =
 	{ 0xE000, 0xFFFF, MRA_ROM },		/* change based on bank switch? */
 	{ 0x0280, 0x0284, exidy_shriot_r },	/* mirrored? */
 	{ 0x0380, 0x0384, exidy_shriot_r },	/* mirrored? */
+    { 0xFFFC, 0xFFFF, MRA_ROM },	    /* mirrored ROM? */
     { -1 }  /* end of table */
 };
 
@@ -201,7 +202,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_M6502,
             1190000,        /* 1.19Mhz */
-			0,
 			readmem,writemem
 
 		}
@@ -253,7 +253,7 @@ static const char *a2600_file_extensions[] =
 
 
 ROM_START( a2600 )
-	ROM_REGION( 0x10000 ) /* 6502 memory */
+	ROM_REGIONX( 0x10000, REGION_CPU1 ) /* 6502 memory */
 ROM_END
 
 

@@ -28,9 +28,9 @@ static struct MemoryReadAddress oric_readmem[] =
 {
     /* { 0x0000, 0x04ff, oric_io_r, &oric_ram }, */
     /* { 0x0000, 0xBFFF, oric_ram_r, &oric_ram }, */
-    { 0x0000, 0x02FF, MRA_RAM }, 
+    { 0x0000, 0x02FF, MRA_RAM },
     { 0x0300, 0x03ff, oric_IO_r },
-    { 0x0400, 0xBFFF, MRA_RAM }, 
+    { 0x0400, 0xBFFF, MRA_RAM },
     { 0xc000, 0xFFFF, MRA_ROM },
     { -1 }
 };
@@ -199,7 +199,6 @@ static struct MachineDriver oric_machine_driver =
 		{
 			CPU_M6502,
             1000000,
-			0,
 			oric_readmem,oric_writemem,0,0,
 			oric_interrupt, 10,
 			0, 0
@@ -238,12 +237,12 @@ static struct MachineDriver oric_machine_driver =
 
 
 ROM_START(oric1)
-	ROM_REGION (0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD ("oric1.rom", 0xc000, 0x4000, 0xf18710b4)
 ROM_END
 
 ROM_START(orica)
-	ROM_REGION (0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD ("orica.rom", 0xc000, 0x4000, 0xc3a92bef)
 ROM_END
 
@@ -314,7 +313,7 @@ struct GameDriver orica_driver =
 	0,	// changed for port to 36b10 source ...
 	0,	// oric_palette,
 	0,	// oric_colortable,
-        
+
 	GAME_COMPUTER | ORIENTATION_DEFAULT,
 
 	0, 0,

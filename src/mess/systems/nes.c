@@ -51,7 +51,7 @@ void battery_ram_w (int offset, int data)
 {
 	extern int Mapper;
 	int i;
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	battery_ram[offset] = data;
 
@@ -165,12 +165,14 @@ INPUT_PORTS_START( nes )
 	PORT_BIT ( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 
 	PORT_START	/* IN2 - fake */
-	PORT_DIPNAME( 0x01, 0x00, "Renderer", IP_KEY_NONE )
+	//PORT_DIPNAME( 0x01, 0x00, "Renderer", IP_KEY_NONE )
+	PORT_DIPNAME( 0x01, 0x00, "Renderer")
 	PORT_DIPSETTING(    0x00, "Scanline" )
 	PORT_DIPSETTING(    0x01, "Experimental" )
 
 	PORT_START	/* IN3 - fake */
-	PORT_DIPNAME( 0x01, 0x00, "Split-Screen Fix", IP_KEY_NONE )
+	//PORT_DIPNAME( 0x01, 0x00, "Split-Screen Fix", IP_KEY_NONE )
+	PORT_DIPNAME( 0x01, 0x00, "Split-Screen Fix")
 	PORT_DIPSETTING(    0x00, "Off" )
 	PORT_DIPSETTING(    0x01, "On" )
 INPUT_PORTS_END
@@ -338,7 +340,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_M6502,
 			1789000,	/* 1.79 Mhz */
-			0,
 			readmem,writemem,0,0,
 			nes_interrupt,SCANLINES_PER_FRAME /* one for each scanline - ugh */
 		}
@@ -382,14 +383,6 @@ static struct MachineDriver machine_driver =
 
 ***************************************************************************/
 
-ROM_START( nes )
-	ROM_REGION( 0x10000 ) /* 6502 memory */
-	ROM_REGION( 0x20000 ) /* PPU memory 131072k for Super Mario Brother 2 :(*/
-	ROM_REGION( 0x4000 ) /* ??? memory */
-ROM_END
-
-
-
 struct GameDriver nes_driver =
 {
 	__FILE__,
@@ -402,7 +395,7 @@ struct GameDriver nes_driver =
 	0,
 	&machine_driver,
 	0,
-    rom_nes,
+	NULL,
 	nes_load_rom,
 	nes_id_rom,
 	nes_file_extensions,

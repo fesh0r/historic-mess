@@ -21,6 +21,8 @@ New (991202) :
   * fixed the CRU base for disk
 New (991206) :
   * "Juergenified" the timer code
+New (991210) :
+  * "Juergenified" code to use region accessor
 */
 
 #include "driver.h"
@@ -89,7 +91,7 @@ int ti99_load_rom (void)
       return 1;
     }
 
-    osd_fread (cartfile, Machine->memory_region[1] + 0x6000, 0xA000);
+    osd_fread (cartfile, memory_region(REGION_GFX1) + 0x6000, 0xA000);
     osd_fclose (cartfile);
   }
 
@@ -103,7 +105,7 @@ int ti99_load_rom (void)
       return 1;
     }
 
-    osd_fread (cartfile, ROM + 0x6000, 0x2000);
+    osd_fread_msbfirst (cartfile, ROM + 0x6000, 0x2000);
     osd_fclose (cartfile);
   }
 
@@ -124,7 +126,7 @@ int ti99_load_rom (void)
       return 1;
     }
 
-    osd_fread (cartfile, cartidge_pages[1], 0x2000);
+    osd_fread_msbfirst (cartfile, cartidge_pages[1], 0x2000);
     osd_fclose (cartfile);
   }
 
@@ -243,10 +245,7 @@ void ti99_ww_xramlow(int offset, int data)
 {
   tms9900_ICount -= 4;
 
-  if (! (data & 0xff000000))
-    ROM[0x2000 + offset] = (data >> 8) & 0xff;
-  if (! (data & 0x00ff0000))
-    ROM[0x2000 + offset] = data & 0xff;
+  WRITE_WORD(& ROM[0x2000 + offset], data | (READ_WORD(& ROM[0x2000 + offset]) & (data >> 16)));
 }
 
 /* high 24 kb : 0xa000-0xffff */
@@ -261,10 +260,7 @@ void ti99_ww_xramhigh(int offset, int data)
 {
   tms9900_ICount -= 4;
 
-  if (! (data & 0xff000000))
-    ROM[0xA000 + offset] = (data >> 8) & 0xff;
-  if (! (data & 0x00ff0000))
-    ROM[0xA000 + offset] = data & 0xff;
+  WRITE_WORD(& ROM[0xA000 + offset], data | (READ_WORD(& ROM[0xA000 + offset]) & (data >> 16)));
 }
 
 /*
@@ -438,7 +434,7 @@ int ti99_rw_rgpl(int offset)
   }
   else
   { /* read GPL data */
-    int value = (Machine->memory_region[1])[gpl_addr /*+ ((long) page << 16)*/];  /* retreive byte */
+    int value = memory_region(REGION_GFX1)[gpl_addr /*+ ((long) page << 16)*/];  /* retreive byte */
     /* increment gpl_addr (GPL wraps in 8k segments!) : */
     gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
     return(value << 8);
@@ -797,23 +793,23 @@ void ti99_W9901_0(int offset, int data)
 */
 void ti99_W9901_S(int offset, int data)
 {
-  /* offset is the index of the modified bit of register (-> interruption number -1) */
-  unsigned short masque = 1 << offset; /* corresponding mask */
+  /* offset is the index of the modified bit of register (-> interrupt number -1) */
+  int mask = 1 << offset; /* corresponding mask */
 
   if (mode9901)
   { /* modify clock interval */
     if (data & 1)
-      clockinvl |= masque;      /* set bit */
+      clockinvl |= mask;      /* set bit */
     else
-      clockinvl &= ~ masque;    /* unset bit */
+      clockinvl &= ~ mask;    /* unset bit */
     clockinvlchanged = TRUE;
   }
   else
   { /* modify interrupt mask */
     if (data & 1)
-      enabled_ints |= masque;     /* set bit */
+      enabled_ints |= mask;     /* set bit */
     else
-      enabled_ints &= ~ masque;   /* unset bit */
+      enabled_ints &= ~ mask;   /* unset bit */
 
     if (offset == 2)
       timer_int_pending = FALSE;  /* SBO 3 clears pending timer interrupt (??) */
@@ -1155,10 +1151,9 @@ static int DRQ_IRQ_status;
 static void handle_hold(void)
 {
   if (DSKhold && (! DRQ_IRQ_status))
-    cpu_halt(1, HALT);
+	cpu_set_halt_line(1, ASSERT_LINE);
   else
-    //cpu_set_halt_line(1, RESUME);
-	cpu_halt(1, RESUME);
+	cpu_set_halt_line(1, CLEAR_LINE);
 }
 
 static void ti99_fdc_callback(int event)

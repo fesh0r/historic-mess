@@ -54,7 +54,7 @@ void apple2_auxram_w(int offset, int data);
 ***************************************************************************/
 void apple2e_init_machine(void)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	/* Init our language card banks to initially point to ROM */
 	cpu_setbankhandler_w (1, MWA_ROM);
@@ -111,7 +111,7 @@ int apple2_id_rom (const char *name, const char *gamename)
 int apple2e_load_rom (void)
 {
 	/* Initialize second half of graphics memory to 0xFF for sneaky decoding purposes */
-	memset(Machine->memory_region[1] + 0x1000,0xFF,0x1000);
+	memset(memory_region(REGION_GFX1) + 0x1000, 0xFF, 0x1000);
 
 	return 0;
 }
@@ -122,7 +122,7 @@ int apple2e_load_rom (void)
 int apple2ee_load_rom (void)
 {
 	/* Initialize second half of graphics memory to 0xFF for sneaky decoding purposes */
-	memset(Machine->memory_region[1] + 0x1000,0xFF,0x1000);
+	memset(memory_region(REGION_GFX1) + 0x1000, 0xFF, 0x1000);
 
 	return 0;
 }
@@ -161,7 +161,7 @@ int apple2_interrupt(void)
 ***************************************************************************/
 void apple2_LC_ram1_w(int offset, int data)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 	/* If the aux switch is set, use the aux language card bank as well */
 	int aux_offset = a2.ALTZP ? 0x10000 : 0x0000;
 
@@ -173,7 +173,7 @@ void apple2_LC_ram1_w(int offset, int data)
 ***************************************************************************/
 void apple2_LC_ram2_w(int offset, int data)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 	/* If the aux switch is set, use the aux language card bank as well */
 	int aux_offset = a2.ALTZP ? 0x10000 : 0x0000;
 
@@ -185,7 +185,7 @@ void apple2_LC_ram2_w(int offset, int data)
 ***************************************************************************/
 void apple2_LC_ram_w(int offset, int data)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 	/* If the aux switch is set, use the aux language card bank as well */
 	int aux_offset = a2.ALTZP ? 0x10000 : 0x0000;
 
@@ -197,7 +197,7 @@ void apple2_LC_ram_w(int offset, int data)
 ***************************************************************************/
 void apple2_mainram_w(int offset, int data)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	RAM[0x0200 + offset] = data;
 }
@@ -207,7 +207,7 @@ void apple2_mainram_w(int offset, int data)
 ***************************************************************************/
 void apple2_auxram_w(int offset, int data)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	RAM[0x10200 + offset] = data;
 }
@@ -231,7 +231,7 @@ int apple2_c00x_r(int offset)
 ***************************************************************************/
 void apple2_c00x_w(int offset, int data)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	switch (offset)
 	{
@@ -904,7 +904,7 @@ void apple2_c07x_w(int offset, int data)
 ***************************************************************************/
 int apple2_c08x_r(int offset)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 	/* If the aux switch is set, use the aux language card bank as well */
 	int aux_offset = a2.ALTZP ? 0x10000 : 0x0000;
 
@@ -1111,7 +1111,7 @@ void apple2_slot7_w(int offset, int data)
 
 int apple2_slot4_r (int offset)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	if (a2.INTCXROM)
 		/* Read the built-in ROM */
@@ -1123,7 +1123,7 @@ int apple2_slot4_r (int offset)
 
 static void mockingboard_init (int slot)
 {
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	/* TODO: fix this */
 	/* What follows is pure filth. It abuses the core like an angry pimp on a bad hair day. */

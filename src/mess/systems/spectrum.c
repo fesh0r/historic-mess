@@ -228,8 +228,7 @@ static struct MachineDriver spectrum_machine_driver =
 		{
 			CPU_Z80|CPU_16BIT_PORT,
 			3500000,        /* 3.5 Mhz */
-			0,
-			spectrum_readmem,spectrum_writemem,
+            spectrum_readmem,spectrum_writemem,
 			spectrum_readport,spectrum_writeport,
 			interrupt,1,
 		},
@@ -264,7 +263,7 @@ static struct MachineDriver spectrum_machine_driver =
 ***************************************************************************/
 
 ROM_START(spectrum)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	//ROM_LOAD("spectrum.rom", 0x0000, 0x4000, 0x6561e6a7)
 	ROM_LOAD("spectrum.rom", 0x0000, 0x4000, 0xddee531f)
 ROM_END

@@ -72,32 +72,54 @@ typedef int bool;
 // call to init videodriver
 // pal version
 // dma_read: videochip fetched 12 bit data from system bus
-extern void vic6560_init(int(*dma_read)(int));
-extern void vic6561_init(int(*dma_read)(int));
+extern void vic6560_init(int(*dma_read)(int),int(*dma_read_color)(int));
+extern void vic6561_init(int(*dma_read)(int),int(*dma_read_color)(int));
 
 // internal
 extern bool vic6560_pal;
 
+// to be inserted in MachineDriver-Structure
+
+
 #define VIC6560_VRETRACERATE 60
 #define VIC6561_VRETRACERATE 50
+#define VIC656X_VRETRACERATE (vic6560_pal?VIC6561_VRETRACERATE:VIC6560_VRETRACERATE)
 
-#define VREFRESHINLINES 28
+#define VIC6560_MAME_XPOS  4 // xleft not displayed
+#define VIC6560_MAME_YPOS  10 // y up not displayed
+#define VIC6561_MAME_XPOS  20
+#define VIC6561_MAME_YPOS  10
+#define VIC656X_MAME_XPOS   (vic6560_pal?VIC6561_MAME_XPOS:VIC6560_MAME_XPOS)
+#define VIC656X_MAME_YPOS   (vic6560_pal?VIC6561_MAME_YPOS:VIC6560_MAME_YPOS)
+#define VIC6560_MAME_XSIZE	200
+#define VIC6560_MAME_YSIZE	248
+#define VIC6561_MAME_XSIZE	224
+#define VIC6561_MAME_YSIZE	296
+#define VIC656X_MAME_XSIZE   (vic6560_pal?VIC6561_MAME_XSIZE:VIC6560_MAME_XSIZE)
+#define VIC656X_MAME_YSIZE   (vic6560_pal?VIC6561_MAME_YSIZE:VIC6560_MAME_YSIZE)
+// real values
+#define VIC6560_LINES 261
+#define VIC6561_LINES 312
+#define VIC656X_LINES (vic6560_pal?VIC6561_LINES:VIC6560_LINES)
+//#define VREFRESHINLINES 9
+#define VIC6560_XSIZE	(4+201) // 4 left not visible
+#define VIC6560_YSIZE	(10+251) // 10 not visible
+// cycles 65
+#define VIC6561_XSIZE	(20+229) // 20 left not visible
+#define VIC6561_YSIZE	(10+302) // 10 not visible
+// cycles 71
+#define VIC656X_XSIZE (vic6560_pal?VIC6561_XSIZE:VIC6560_XSIZE)
+#define VIC656X_YSIZE (vic6560_pal?VIC6561_YSIZE:VIC6560_YSIZE)
 
-// to be inserted in MachineDriver-Structure
 /* the following values depend on the VIC clock,
-	but to achieve TV-frequency the clock must have a fix frequency
-	only estimations */
-#define VIC6560_HSIZE	210 // 206
-#define VIC6560_VSIZE	(261-VREFRESHINLINES)
-#define VIC6561_HSIZE	253
-#define VIC6561_VSIZE	(312-VREFRESHINLINES)
+	but to achieve TV-frequency the clock must have a fix frequency */
 #define VIC6560_CLOCK	(14318181/14)
 #define VIC6561_CLOCK	(4433618/4)
-
 #define VIC656X_CLOCK	(vic6560_pal?VIC6561_CLOCK:VIC6560_CLOCK)
 
+
 extern int	vic6560_vh_start(void);
-extern void vic6560_vh_stop(void);
+extern void	vic6560_vh_stop(void);
 extern void vic6560_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh);
 extern unsigned char vic6560_palette[16*3];
 // to be inserted in GameDriver-Structure
@@ -108,12 +130,13 @@ extern void vic6560_port_w(int offset, int data);
 // to be called when reading from port
 extern int vic6560_port_r(int offset);
 
+#ifndef RASTERLINEBASED
 // to call when memory, which is readable by the vic is changed
 extern void vic6560_addr_w(int offset, int data);
 // inform about writes to the databits 8 till 11 on the 6560 vic
 // to call when special 4 bit memory for the vic is changed
 extern void vic6560_addr8_w(int offset, int data);
-
+#endif
 // private area
 
 /* from sndhrdw/pc.c */

@@ -37,7 +37,6 @@ Historical notes : TI made several last minute design changes.
 #include "driver.h"
 #include "mess/vidhrdw/tms9928a.h"
 
-/*#define XXX 1*/
 
 /* protos for support code in machine/ti99.c */
 
@@ -51,6 +50,11 @@ int ti99_vblank_interrupt(void);
 
 int ti99_rw_null8bits(int offset);
 void ti99_ww_null8bits(int offset, int data);
+
+int ti99_rw_xramlow(int offset);
+void ti99_ww_xramlow(int offset, int data);
+int ti99_rw_xramhigh(int offset);
+void ti99_ww_xramhigh(int offset, int data);
 
 int ti99_rw_cartmem(int offset);
 void ti99_ww_cartmem(int offset, int data);
@@ -94,13 +98,13 @@ void ti99_DSKside(int offset, int data);
 
 
 /*
-  memory mapping.
+  memory map
 */
 
 static struct MemoryReadAddress readmem[] =
 {
   { 0x0000, 0x1fff, MRA_ROM },          /*system ROM*/
-  { 0x2000, 0x3fff, MRA_RAM },          /*lower 8kb of RAM extension*/
+  { 0x2000, 0x3fff, ti99_rw_xramlow },  /*lower 8kb of RAM extension*/
   { 0x4000, 0x5fff, ti99_rw_disk },     /*DSR ROM... only disk is emulated */
   { 0x6000, 0x7fff, ti99_rw_cartmem },  /*cartidge memory... some RAM is actually possible*/
   { 0x8000, 0x82ff, ti99_rw_scratchpad },   /*RAM PAD, mapped to 0x8300-0x83ff*/
@@ -112,14 +116,14 @@ static struct MemoryReadAddress readmem[] =
   { 0x9400, 0x97ff, ti99_rw_null8bits },/*speech write*/
   { 0x9800, 0x9bff, ti99_rw_rgpl },     /*GPL read*/
   { 0x9c00, 0x9fff, ti99_rw_null8bits },/*GPL write*/
-  { 0xa000, 0xffff, MRA_RAM },          /*upper 24kb of RAM extension*/
+  { 0xa000, 0xffff, ti99_rw_xramhigh }, /*upper 24kb of RAM extension*/
   { -1 }    /* end of table */
 };
 
 static struct MemoryWriteAddress writemem[] =
 {
   { 0x0000, 0x1fff, MWA_ROM },          /*system ROM*/
-  { 0x2000, 0x3fff, MWA_RAM },          /*lower 8kb of memory expansion card*/
+  { 0x2000, 0x3fff, ti99_ww_xramlow },  /*lower 8kb of memory expansion card*/
   { 0x4000, 0x5fff, ti99_ww_disk },     /*DSR ROM... only disk is emulated ! */
   { 0x6000, 0x7fff, ti99_ww_cartmem },  /*cartidge memory... some RAM or paging system is possible*/
   { 0x8000, 0x82ff, ti99_ww_scratchpad },   /*RAM PAD, mapped to 0x8300-0x83ff*/
@@ -131,13 +135,13 @@ static struct MemoryWriteAddress writemem[] =
   { 0x9400, 0x97ff, ti99_ww_wspeech },  /*speech write*/
   { 0x9800, 0x9bff, ti99_ww_null8bits },/*GPL read*/
   { 0x9c00, 0x9fff, ti99_ww_wgpl },     /*GPL write*/
-  { 0xa000, 0xffff, MWA_RAM },          /*upper 24kb of RAM extension*/
+  { 0xa000, 0xffff, ti99_ww_xramhigh }, /*upper 24kb of RAM extension*/
   { -1 }    /* end of table */
 };
 
 
 /*
-  CRU mapping.
+  CRU map
 */
 
 static struct IOWritePort writeport[] =
@@ -385,7 +389,25 @@ static unsigned char TMS9928A_palette[] =
   224, 224, 224,
   255, 255, 255
 };
-
+/*
+Color           Y	R-Y	B-Y	R	G	B
+0 Transparent
+1 Black         0.00	0.47	0.47	0.00	0.00	0.00
+2 Medium green  0.53	0.07	0.20	0.13	0.53	0.26
+3 Light green   0.67	0.17	0.27	0.37	0.67	0.47
+4 Dark blue     0.40	0.40	1.00	0.33	0.40	0.93
+5 Light blue    0.53	0.43	0.93	0.49	0.53	0.99
+6 Dark red      0.47	0.83	0.30	0.89	0.47	0.30
+7 Cyan          0.73	0.00	0.70	0.26	0.73	0.96
+8 Medium red    0.53	0.93	0.27
+9 Light red     0.67	0.93	0.27
+A Dark yellow   0.73	0.57	0.07
+B Light yellow  0.80	0.57	0.17
+C Dark green    0.47	0.13	0.23
+D Magenta       0.53	0.73	0.67
+E Gray          0.80	0.47	0.47
+F White         1.00	0.47	0.47
+*/
 static unsigned short TMS9928A_colortable[] =
 {
   0, 1,
@@ -405,16 +427,14 @@ static unsigned short TMS9928A_colortable[] =
   0,15
 };
 
-#endif
-
-
-#ifdef PALETTE_HERE
-void tms9928A_init_palette(unsigned char *palette, unsigned short *colortable, const unsigned char *)
+static void tms9928A_init_palette(unsigned char *palette, unsigned short *colortable, const unsigned char *)
 {
 	memcpy(palette, & TMS9928A_palette, sizeof(TMS9928A_palette));
 	memcpy(colortable, & TMS9928A_colortable, sizeof(TMS9928A_colortable));
 }
+
 #endif
+
 
 /*
   TMS9919 sound chip parameters.
@@ -428,11 +448,11 @@ static struct SN76496interface tms9919interface =
 
 static struct TMS5220interface tms5220interface =
 {
-	640000L,  /* 640kHz -> 8kHz output */
-	10000,    /* Volume.  I don't know the best value. */
-	NULL,     /* no IRQ callback */
-	//2,        /* memory region where the speech ROM is.  -1 means no speech ROM */
-	//0,        /* memory size of speech rom (0 -> take memory region length) */
+	640000L,      /* 640kHz -> 8kHz output */
+	10000,        /* Volume.  I don't know the best value. */
+	NULL,         /* no IRQ callback */
+	//REGION_GFX2,  /* memory region where the speech ROM is.  -1 means no speech ROM */
+	//0             /* memory size of speech rom (0 -> take memory region length) */
 };
 
 /*
@@ -463,7 +483,6 @@ static struct MachineDriver machine_driver_ti99_4 =
 		{
 			CPU_TMS9900,
 			3000000,    /* 3.0 Mhz*/
-			0,          /* Memory region #0 */
 			readmem, writemem, readport, writeport,
 			ti99_vblank_interrupt, 1,
 			0, 0,
@@ -515,16 +534,16 @@ static struct MachineDriver machine_driver_ti99_4 =
 */
 ROM_START(ti99_4)
 	/*CPU memory space*/
-	ROM_REGION(0x10000)
-	ROM_LOAD("994rom.bin", 0x0000, 0x2000, 0x00000000)      /* system ROMs */
-	ROM_LOAD("disk.bin", 0x4000, 0x2000, 0x00000000)        /* disk DSR ROM */
+	ROM_REGIONX(0x10000,REGION_CPU1)
+	ROM_LOAD_WIDE("994rom.bin", 0x0000, 0x2000, 0x00000000)      /* system ROMs */
+	ROM_LOAD_WIDE("disk.bin", 0x4000, 0x2000, 0x00000000)        /* disk DSR ROM */
 
 	/*GPL memory space*/
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_GFX1)
 	ROM_LOAD("994grom.bin", 0x0000, 0x8000, 0x00000000)     /* system GROMs */
 
 	/*TMS5220 ROM space*/
-	ROM_REGION(0x8000)
+	ROM_REGIONX(0x8000,REGION_GFX2)
 	ROM_LOAD("spchrom.bin", 0x0000, 0x8000, 0x00000000)     /* system speech ROM */
 ROM_END
 
@@ -532,12 +551,12 @@ struct GameDriver ti99_4_driver =
 {
 	__FILE__,
 	0,
-	"ti99",
+	"ti99_4",
 	"TI99/4 Home Computer",
 	"1978 (prototypes), oct. 1979-1981",
 	"Texas Instrument",
 	"R Nabet, based on Ed Swartz's V9T9.",
-    0,  /*we don't need it on macintosh, but some PC users report problems with Caps Lock*/
+	0,
 	&machine_driver_ti99_4,
 	0,  /* optional function to be called during initialization */
 
@@ -583,7 +602,6 @@ static struct MachineDriver machine_driver_ti99_4a =
 		{
 			CPU_TMS9900,
 			3000000,    /* 3.0 Mhz*/
-			0,          /* Memory region #0 */
 			readmem, writemem, readport, writeport,
 			ti99_vblank_interrupt, 1,
 			0, 0,
@@ -635,29 +653,29 @@ static struct MachineDriver machine_driver_ti99_4a =
 */
 ROM_START(ti99_4a)
 	/*CPU memory space*/
-	ROM_REGION(0x10000)
-	ROM_LOAD("994arom.bin", 0x0000, 0x2000, 0xdb8f33e5)     /* system ROMs */
-	ROM_LOAD("disk.bin", 0x4000, 0x2000, 0x8f7df93f)        /* disk DSR ROM */
+	ROM_REGIONX(0x10000,REGION_CPU1)
+	ROM_LOAD_WIDE("994arom.bin", 0x0000, 0x2000, 0xdb8f33e5)     /* system ROMs */
+	ROM_LOAD_WIDE("disk.bin", 0x4000, 0x2000, 0x8f7df93f)        /* disk DSR ROM */
 
 	/*GPL memory space*/
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_GFX1)
 	ROM_LOAD("994agrom.bin", 0x0000, 0x6000, 0xaf5c2449)    /* system GROMs */
 
 	/*TMS5220 ROM space*/
-	ROM_REGION(0x8000)
+	ROM_REGIONX(0x8000,REGION_GFX2)
 	ROM_LOAD("spchrom.bin", 0x0000, 0x8000, 0x58b155f7)     /* system speech ROM */
 ROM_END
 
 struct GameDriver ti99_4a_driver =
 {
 	__FILE__,
-	&ti99_4_driver,
-	"ti994a",
+	0,
+	"ti99_4a",
 	"TI99/4A Home Computer",
 	"1981-1983",
 	"Texas Instrument",
 	"R Nabet, based on Ed Swartz's V9T9.",
-	0,  /*we don't need it on macintosh, but some PC users report problems with Caps Lock*/
+	0,
 	&machine_driver_ti99_4a,
 	0,  /* optional function to be called during initialization */
 

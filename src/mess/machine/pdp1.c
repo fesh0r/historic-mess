@@ -28,7 +28,6 @@ int *pdp1_memory;
 int pdp1_load_rom (void)
 {
 	FILE *romfile;
-	int region;
 	int i;
 
 	/* The spacewar! is mandatory for now. */
@@ -51,20 +50,17 @@ int pdp1_load_rom (void)
 	}
 
 	/* Allocate memory and set up memory regions */
-	for (region = 0;region < MAX_MEMORY_REGIONS;region++)
-		Machine->memory_region[region] = 0;
-
-	ROM = (unsigned char *) malloc(0x10000*sizeof(int));
- /* only 4096 are used for now, but pdp1 can address 65336 18 bit words when
-  * extended.
-  */
-	if (ROM == NULL)
+	if( new_memory_region(REGION_CPU1, 0x10000 * sizeof(int)) )
 	{
-		if (errorlog)
 		fprintf(errorlog,"PDP1: Memory allocation failed!\n");
 		return 1;
-	}
-	Machine->memory_region[0] = ROM;
+    }
+
+ /*
+  * only 4096 are used for now, but pdp1 can address 65336 18 bit words when
+  * extended.
+  */
+    ROM = memory_region(REGION_CPU1);
 
 	/* endianness!!! */
 	osd_fread (romfile, ROM, 16384);

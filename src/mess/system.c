@@ -92,6 +92,8 @@ const struct GameDriver *drivers[] =
       DRIVER( gamegear )    /* Sega Game Gear Handheld                        */
       DRIVER( genesis )     /* Sega Genesis/MegaDrive                         */
 
+      DRIVER( jupiter )     /*                                                */
+
       DRIVER( kaypro )      /* APPLE KAYPRO                                   */
 
       DRIVER( kim1 )        /* Commodore (MOS) KIM-1 1975                     */

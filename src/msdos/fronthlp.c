@@ -307,6 +307,7 @@ enum { LIST_LIST = 1, LIST_LISTINFO, LIST_LISTFULL, LIST_LISTSAMDIR, LIST_LISTRO
 		LIST_SOURCEFILE, LIST_EXTENSIONS };
 #endif
 
+
 #define VERIFY_ROMS		0x00000001
 #define VERIFY_SAMPLES	0x00000002
 #define VERIFY_VERBOSE	0x00000004
@@ -320,8 +321,12 @@ void CLIB_DECL terse_printf(char *fmt,...)
 
 int frontend_help (int argc, char **argv)
 {
-	int i, j, k;
-	int list = 0;
+	#ifdef HAS_SAMPLES
+		int i, j, k;
+	#else
+		int i, j;
+	#endif
+    int list = 0;
 	int listclones = 1;
 	int verify = 0;
 	int ident = 0;
@@ -378,6 +383,7 @@ int frontend_help (int argc, char **argv)
 				if (!stricmp(argv[i],"-listextensions")) list = LIST_EXTENSIONS;
 		#endif
 
+
 		/* these options REQUIRES gamename field to work */
 		if (strlen(gamename) > 0)
 		{
@@ -421,6 +427,7 @@ int frontend_help (int argc, char **argv)
 
 	switch (list)  /* front-end utilities ;) */
 	{
+
 		#ifdef MESS
 		case LIST_EXTENSIONS: /* simple games list */
 					i = 0; j = 0;
@@ -537,6 +544,7 @@ int frontend_help (int argc, char **argv)
 #endif
 						) && !strwildcmp(gamename, drivers[i]->name))
 				{
+#if (HAS_SAMPLES)
 					for( j = 0; drivers[i]->drv->sound[j].sound_type && j < MAX_SOUND; j++ )
 					{
 						const char **samplenames;
@@ -552,6 +560,7 @@ int frontend_help (int argc, char **argv)
 								printf("%s\n",drivers[i]->name);
 						}
 					}
+#endif
 					i++;
 				}
 			}
@@ -573,7 +582,8 @@ int frontend_help (int argc, char **argv)
 				printromlist(gamedrv->rom,gamename);
 			else
 			{
-				for( k = 0; gamedrv->drv->sound[k].sound_type && j < MAX_SOUND; k++ )
+#if (HAS_SAMPLES)
+				for( k = 0; gamedrv->drv->sound[k].sound_type && k < MAX_SOUND; k++ )
 				{
 					const char **samplenames;
 					if( gamedrv->drv->sound[k].sound_type != SOUND_SAMPLES )
@@ -589,6 +599,7 @@ int frontend_help (int argc, char **argv)
 						}
 					}
                 }
+#endif
 			}
 			return 0;
 			break;
@@ -1043,9 +1054,11 @@ int frontend_help (int argc, char **argv)
 			if (verify & VERIFY_SAMPLES)
 			{
 				const char **samplenames = NULL;
+#if (HAS_SAMPLES)
 				for( j = 0; drivers[i]->drv->sound[j].sound_type && j < MAX_SOUND; j++ )
 					if( drivers[i]->drv->sound[j].sound_type == SOUND_SAMPLES )
 						samplenames = ((struct Samplesinterface *)drivers[i]->drv->sound[j].sound_interface)->samplenames;
+#endif
 				/* ignore games that need no samples */
 				if (samplenames == 0 || samplenames[0] == 0)
 					goto nextloop;

@@ -6,6 +6,7 @@
 #include <math.h>
 #include "mess/machine/vc20.h"
 #include "mess/vidhrdw/vic6560.h"
+#include "mess/machine/c1551.h"
 
 unsigned char vic6560_palette[] = {
 // ripped from vice, a very excellent emulator
@@ -27,86 +28,112 @@ struct CustomSound_interface vic6560_sound_interface = {
 
 UINT8 vic6560[16];
 
-#define INTERLACE (vic6560&0x80) //is this real interlace?
+/* lightpen delivers values from internal counters
+   they do not start with the visual area or frame area */
+#define VIC6560_X_BEGIN 38
+#define VIC6560_Y_BEGIN -6 // first 6 lines after retrace not for lightpen!
+#define VIC6561_X_BEGIN 38
+#define VIC6561_Y_BEGIN -6
+#define VIC656X_X_BEGIN (vic6560_pal?VIC6561_X_BEGIN:VIC6560_X_BEGIN)
+#define VIC656X_Y_BEGIN (vic6560_pal?VIC6561_Y_BEGIN:VIC6560_Y_BEGIN)
+/* lightpen behaviour in pal or mono multicolor not tested */
+#define VIC6560_X_VALUE ((LIGHTPEN_X_VALUE+VIC656X_X_BEGIN+VIC656X_MAME_XPOS)/2)
+#define VIC6560_Y_VALUE ((LIGHTPEN_Y_VALUE+VIC656X_Y_BEGIN+VIC656X_MAME_YPOS)/2)
+
+#define INTERLACE (vic6560&0x80) //only ntsc version
 // ntsc 1 - 8
 // pal 5 - 19
 #define XPOS (((int)vic6560[0]&0x7f)*4)
-#define YPOS ((int)vic6560[1]*2-VREFRESHINLINES)
+#define YPOS ((int)vic6560[1]*2)
 
 // ntsc values >= 31 behave like 31
 // pal value >= 32 behave like 32
-#define XSIZE ((int)vic6560[2]&0x7f)
-#define YSIZE (((int)vic6560[3]&0x7e)>>1)
+#define CHARS_X ((int)vic6560[2]&0x7f)
+#define CHARS_Y (((int)vic6560[3]&0x7e)>>1)
 
 #define MATRIX8X16 (vic6560[3]&1) // else 8x8
-#define HEIGHTPIXEL (MATRIX8X16?16:8)
-#define XSIZEPIXEL (xsize*8)
-#define YSIZEPIXEL (YSIZE*HEIGHTPIXEL)
+#define CHARHEIGHT (MATRIX8X16?16:8)
+#define XSIZE (CHARS_X*8)
+#define YSIZE (CHARS_Y*CHARHEIGHT)
+
 // colorram and backgroundcolor are changed
 #define INVERTED (!(vic6560[0x0f]&8))
 
 #define CHARGENADDR (((int)vic6560[5]&0xf)<<10)
 #define VIDEOADDR ( ( ((int)vic6560[5]&0xf0)<<(10-4))\
 						| ( ((int)vic6560[2]&0x80)<<(9-7)) )
+#define VIDEORAMSIZE (YSIZE*XSIZE)
+#define CHARGENSIZE (256*HEIGHTPIXEL)
 
 #define HELPERCOLOR (vic6560[0xe]>>4)
 #define BACKGROUNDCOLOR (vic6560[0xf]>>4)
 #define FRAMECOLOR (vic6560[0xf]&7)
 
-#define FREQUENCY (vic6560[0xa]&0x7f)
-#define TONEON (vic6560[0xa]&0x80)
-#define VOLUME ((vic6560[0xe]&0xf)
-
-#define VIDEORAMSIZE (YSIZE*xsize)
-#define CHARGENSIZE (256*HEIGHTPIXEL)
+//#define FREQUENCY (vic6560[0xa]&0x7f)
+//#define TONEON (vic6560[0xa]&0x80)
+//#define VOLUME ((vic6560[0xe]&0xf)
 
 bool vic6560_pal;
 
-static bool framecolorchanged;
+static double vretracetime;
+static int lastline=0;
+static void vic6560_drawlines(int start, int last);
+
 static int(*vic_dma_read)(int);
+static int(*vic_dma_read_color)(int);
 
-#define MAX_HSIZE (vic6560_pal?VIC6561_HSIZE:VIC6560_HSIZE)
-#define MAX_VSIZE (vic6560_pal?VIC6561_VSIZE:VIC6560_VSIZE)
-
-static UINT8 backgroundcolor, framecolor, helpercolor, xsize=0;
-static UINT8 chargendirty[256]={0};
-
-#define VIC6560_LINES 261
-#define VIC6561_LINES 312
-
-#define VIC656X_LINES (vic6560_pal?VIC6561_LINES:VIC6560_LINES)
-#define VIC656X_VRETRACERATE (vic6560_pal?VIC6561_VRETRACERATE:VIC6560_VRETRACERATE)
+static int vic656x_xsize,vic656x_ysize,vic656x_lines,vic656x_vretracerate;
+static int charheight, matrix8x16, inverted;
+static int chars_x, chars_y;
+static int xsize, ysize, xpos, ypos;
+static int chargenaddr, videoaddr;
+// values in videoformat
+static UINT16 backgroundcolor, framecolor, helpercolor, white, black;
+// arrays for bit to color conversion without condition checking
+static UINT16 mono[2], monoinverted[2], multi[4], multiinverted[4];
 
 static int rasterline(void)
 {
-	double a=timer_get_time();
-
-	return (int)((a-floor(a))*VIC656X_VRETRACERATE*VIC656X_LINES)
-			 %VIC656X_LINES;
+	double a=timer_get_time()-vretracetime;
+	int b=(int)(a*vic656x_vretracerate*vic656x_lines)
+			 %vic656x_lines;
+	return b;
 }
 
-void vic6560_init(int(*dma_read)(int))
+static void vic656x_init(void)
+{
+	vic656x_xsize=VIC656X_XSIZE;
+	vic656x_ysize=VIC656X_YSIZE;
+	vic656x_lines=VIC656X_LINES;
+	vic656x_vretracerate=VIC656X_VRETRACERATE;
+	vretracetime=timer_get_time();
+}
+
+void vic6560_init(int(*dma_read)(int), int(*dma_read_color)(int))
 {
 	vic6560_pal=false;
 	vic_dma_read=dma_read;
+	vic_dma_read_color=dma_read_color;
+	vic656x_init();
 }
 
-void vic6561_init(int(*dma_read)(int))
+void vic6561_init(int(*dma_read)(int), int(*dma_read_color)(int))
 {
 	vic6560_pal=true;
 	vic_dma_read=dma_read;
+	vic_dma_read_color=dma_read_color;
+	vic656x_init();
 }
-
-int vic6560_vh_start(void)
+int	vic6560_vh_start(void)
 {
-	videoram_size=127*63; // max xsize, max ysize
-	framecolorchanged=true;
-	return generic_vh_start();
+	black=Machine->pens[0];
+	white=Machine->pens[1];
+	return generic_bitmapped_vh_start();
 }
 
 void vic6560_vh_stop(void)
 {
-	 generic_vh_stop();
+	generic_bitmapped_vh_stop();
 }
 
 void vic6560_port_w(int offset, int data)
@@ -118,25 +145,41 @@ void vic6560_port_w(int offset, int data)
 		break;
 	}
 	if (vic6560[offset]!=data) {
+		switch(offset) {
+		case 0:case 1:case 2:case 3:case 5:
+		case 0xe:case 0xf:
+			vic6560_drawlines(lastline, rasterline());
+			break;
+		}
 		vic6560[offset]=data;
 		switch (offset) {
+			case 0: xpos=XPOS;break;
+			case 1: ypos=YPOS;break;
 			case 2:
-				if (vic6560_pal)	xsize=(XSIZE>32)?32:XSIZE;
-				else xsize=(XSIZE>31)?31:XSIZE;
-				if (VIDEORAMSIZE>0) memset(dirtybuffer,1,VIDEORAMSIZE);
+// ntsc values >= 31 behave like 31
+// pal value >= 32 behave like 32
+				chars_x=CHARS_X;
+				videoaddr=VIDEOADDR;
+				xsize=XSIZE;
 				break;
-			case 0:case 1:
-			case 3:case 4:
-			case 5:case 6:case 7:case 8:case 9:
-			case 0xf:
-				if (VIDEORAMSIZE>0) memset(dirtybuffer,1,VIDEORAMSIZE);
-				framecolorchanged|=true;
-				framecolor=Machine->pens[FRAMECOLOR];
-				backgroundcolor=Machine->pens[BACKGROUNDCOLOR];
+			case 3:
+				matrix8x16=MATRIX8X16;
+				charheight=CHARHEIGHT;
+				chars_y=CHARS_Y;
+				ysize=YSIZE;
+				break;
+			case 5:
+				chargenaddr=CHARGENADDR;
+				videoaddr=VIDEOADDR;
 				break;
 			case 0xe:
-				helpercolor=Machine->pens[HELPERCOLOR];
-				if (VIDEORAMSIZE>0) memset(dirtybuffer,1,VIDEORAMSIZE);
+				multi[3]=multiinverted[3]=helpercolor=Machine->pens[HELPERCOLOR];
+				break;
+			case 0xf:
+				inverted=INVERTED;
+				multi[1]=multiinverted[1]=framecolor=Machine->pens[FRAMECOLOR];
+				mono[0]=monoinverted[1]=
+				multi[0]=multiinverted[2]=backgroundcolor=Machine->pens[BACKGROUNDCOLOR];
 				break;
 		}
 	}
@@ -144,22 +187,31 @@ void vic6560_port_w(int offset, int data)
 
 int vic6560_port_r(int offset)
 {
+	static double lightpenreadtime=0.0;
 	int val;
+
 	switch(offset) {
-	case 3: //rasterline
+	case 3:
 		val=((rasterline()&1)<<7)|(vic6560[offset]&0x7f);
 		break;
 	case 4: //rasterline
-		VIC_LOG(1,"vic6560_port_r",(errorlog,"rastline read\n"));
+//		VIC_LOG(1,"vic6560_port_r",(errorlog,"rastline read\n"));
+		vic6560_drawlines(lastline,rasterline());
 		val=(rasterline()/2)&0xff;
 		break;
 	case 6: //lightpen horicontal
-		VIC_LOG(1,"vic6560_port_r",(errorlog,"lightpen horicontal read\n"));
-		val=0;
-		break;
 	case 7: //lightpen vertical
-		VIC_LOG(1,"vic6560_port_r",(errorlog,"lightpen vertical read\n"));
-		val=0;
+		if (LIGHTPEN_BUTTON
+			&&((timer_get_time()-lightpenreadtime)*VIC6560_VRETRACERATE>=1)){
+			// only 1 update each frame
+			// and diode must recognize light
+			if (1) {
+				vic6560[6]=VIC6560_X_VALUE;
+				vic6560[7]=VIC6560_Y_VALUE;
+			}
+			lightpenreadtime=timer_get_time();
+		}
+		val=vic6560[offset];
 		break;
 	case 8: // poti 1
 		val=PADDLE1_VALUE;break;
@@ -170,31 +222,6 @@ int vic6560_port_r(int offset)
 	}
 	VIC_LOG(3,"vic6560_port_r",(errorlog,"%.4x:%.2x\n",offset,val));
 	return val;
-}
-
-// min could be lower den max
-#define BETWEEN(v,min,max) (((max)>=(min)) ? (((v)>=(min))&&((v)<(max))) \
-														: (((v)<(max))||((v)>=(min))) )
-
-void vic6560_addr_w(int offset, int data)
-{
-	int chargen=CHARGENADDR,chargenend=(chargen+CHARGENSIZE)&0x3fff,
-		 video=VIDEOADDR, videoend=(video+VIDEORAMSIZE)&0x3fff;
-
-	if ( BETWEEN(offset,chargen,chargenend)) {
-		chargendirty[((0x4000+offset-chargen)&0x3fff)/HEIGHTPIXEL]=1;
-	}
-	if (BETWEEN(offset,video,videoend))
-		dirtybuffer[(0x4000+offset-video)&0x3fff]=true;
-}
-
-// inform about writes to the databits 8 till 11 on the 6560 vic
-void vic6560_addr8_w(int offset, int data)
-{
-	// vc20 behaviour (only 10 address lines used)
-	int begin=VIDEOADDR&0x3ff,end=(VIDEOADDR+VIDEORAMSIZE)&0x3ff;
-	if (BETWEEN(offset,begin,end))
-		dirtybuffer[(0x4000+offset-begin)&0x3fff]=true;
 }
 
 static int DOCLIP(struct rectangle *r1, const struct rectangle *r2)
@@ -210,139 +237,257 @@ static int DOCLIP(struct rectangle *r1, const struct rectangle *r2)
 	return 1;
 }
 
-static void draw_character(struct osd_bitmap *bitmap,
-									struct rectangle *visible,
-									int ch, int xoff, int yoff,
-									int bgcolor, int color)
+static void draw_character(int ybegin, int yend,
+									int ch, int yoff, int xoff,
+									UINT16 *color)
 {
-	int i,j,y,x,code;
+	int y,code;
 
-	for (y=visible->min_y,j=yoff; y<=visible->max_y; y++,j++) {
-
-		if (vic_dma_read) {
-			code=vic_dma_read((CHARGENADDR+(ch&0xff)*HEIGHTPIXEL+j)&0x3fff)&0xff;
-		} else {
-			code=0xff;
+	if (Machine->color_depth==8) {
+		for (y=ybegin; y<=yend; y++) {
+			code=vic_dma_read((chargenaddr+ch*charheight+y)&0x3fff);
+			tmpbitmap->line[y+yoff][xoff]=color[code>>7];
+			tmpbitmap->line[y+yoff][xoff+1]=color[(code>>6)&1];
+			tmpbitmap->line[y+yoff][xoff+2]=color[(code>>5)&1];
+			tmpbitmap->line[y+yoff][xoff+3]=color[(code>>4)&1];
+			tmpbitmap->line[y+yoff][xoff+4]=color[(code>>3)&1];
+			tmpbitmap->line[y+yoff][xoff+5]=color[(code>>2)&1];
+			tmpbitmap->line[y+yoff][xoff+6]=color[(code>>1)&1];
+			tmpbitmap->line[y+yoff][xoff+7]=color[code&1];
 		}
-		for (x=visible->min_x,i=xoff; x<=visible->max_x; x++,i++) {
-			if ((code<<i)&0x80) {
-				bitmap->line[y][x]=color;
+	} else {
+		for (y=ybegin; y<=yend; y++) {
+			code=vic_dma_read((chargenaddr+ch*charheight+y)&0x3fff);
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff)=color[code>>7];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+1)=color[(code>>6)&1];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+2)=color[(code>>5)&1];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+3)=color[(code>>4)&1];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+4)=color[(code>>3)&1];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+5)=color[(code>>2)&1];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+6)=color[(code>>1)&1];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+7)=color[code&1];
+		}
+	}
+}
+
+static void draw_character_multi(int ybegin, int yend,
+									int ch, int yoff, int xoff, UINT16 *color)
+{
+	int y,code;
+
+	if (Machine->color_depth==8) {
+		for (y=ybegin; y<=yend; y++) {
+			code=vic_dma_read((chargenaddr+ch*charheight+y)&0x3fff);
+			tmpbitmap->line[y+yoff][xoff+1]=
+			tmpbitmap->line[y+yoff][xoff]=color[code>>6];
+			tmpbitmap->line[y+yoff][xoff+3]=
+			tmpbitmap->line[y+yoff][xoff+2]=color[(code>>4)&3];
+			tmpbitmap->line[y+yoff][xoff+5]=
+			tmpbitmap->line[y+yoff][xoff+4]=color[(code>>2)&3];
+			tmpbitmap->line[y+yoff][xoff+7]=
+			tmpbitmap->line[y+yoff][xoff+6]=color[code&3];
+		}
+	} else {
+		for (y=ybegin; y<=yend; y++) {
+			code=vic_dma_read((chargenaddr+ch*charheight+y)&0x3fff);
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+1)=
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff)=color[code>>6];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+3)=
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+2)=color[(code>>4)&3];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+5)=
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+4)=color[(code>>2)&3];
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+7)=
+			*((UINT16*)tmpbitmap->line[y+yoff]+xoff+6)=color[code&3];
+		}
+	}
+}
+
+
+INLINE void draw_pointer(struct osd_bitmap *bitmap,
+						struct rectangle *visible, int xoff, int yoff)
+{
+	// this is a a static graphical object
+	// should be easy to convert to gfx_element!?
+	static UINT8 blackmask[]={0x00,0x70,0x60,0x50,0x08,0x04,0x00,0x00 };
+	static UINT8 whitemask[]={0xf0,0x80,0x80,0x80,0x00,0x00,0x00,0x00 };
+	int i,j,y,x;
+
+	if (Machine->color_depth==8) {
+		for (y=visible->min_y,j=yoff; y<=visible->max_y; y++,j++) {
+			for (x=visible->min_x,i=xoff; x<=visible->max_x; x++,i++) {
+				if ((blackmask[j]<<i)&0x80)
+					bitmap->line[y][x]=black;
+				else if ((whitemask[j]<<(i&~1))&0x80)
+					bitmap->line[y][x]=white;
+			}
+		}
+	} else {
+		for (y=visible->min_y,j=yoff; y<=visible->max_y; y++,j++) {
+			for (x=visible->min_x,i=xoff; x<=visible->max_x; x++,i++) {
+				if ((blackmask[j]<<i)&0x80)
+					*((UINT16*)bitmap->line[y]+x)=black;
+				else if ((whitemask[j]<<(i&~1))&0x80)
+					*((UINT16*)bitmap->line[y]+x)=white;
+			}
+		}
+	}
+}
+
+static void memset16(void *dest,UINT16 value, int size)
+{
+	register int i;
+	for (i=0;i<size;i++) ((UINT16*)dest)[i]=value;
+}
+
+static void vic6560_drawlines(int first, int last)
+{
+	int line,vline;
+	int offs, yoff, xoff, ybegin, yend, i;
+	int attr, ch;
+
+	lastline=last;
+	if (first>=last) return;
+
+	if (Machine->color_depth==8) {
+		for (line=first;(line<ypos)&&(line<last);line++) {
+			memset(tmpbitmap->line[line],framecolor,vic656x_xsize);
+		}
+	} else {
+		for (line=first;(line<ypos)&&(line<last);line++) {
+			memset16(tmpbitmap->line[line],framecolor,vic656x_xsize);
+		}
+	}
+	for (vline=line-ypos; (line<last)&&(line<ypos+ysize);) {
+		if (matrix8x16) {
+			offs=(vline>>4)*chars_x;
+			yoff=(vline&~0xf)+ypos;
+			ybegin=vline&0xf;
+			yend=(vline+0xf<last-ypos)?0xf:((last-line)&0xf)+ybegin;
+		} else {
+			offs=(vline>>3)*chars_x;
+			yoff=(vline&~7)+ypos;
+			ybegin=vline&7;
+			yend=(vline+7<last-ypos)?7:((last-line)&7)+ybegin;
+		}
+
+		if (xpos>0) {
+			if (Machine->color_depth==8) {
+				for (i=ybegin;i<=yend;i++)
+					memset(tmpbitmap->line[yoff+i],framecolor,xpos);
 			} else {
-				bitmap->line[y][x]=bgcolor;
+				for (i=ybegin;i<=yend;i++)
+					memset16(tmpbitmap->line[yoff+i],framecolor,xpos);
 			}
 		}
-	}
-}
-
-static void draw_character_multi(struct osd_bitmap *bitmap,
-									struct rectangle *visible,
-									int ch, int xoff, int yoff,
-									int bgcolor, int color)
-{
-	int i,j,y,x,code;
-
-	for (y=visible->min_y,j=yoff; y<=visible->max_y; y++,j++) {
-		if (vic_dma_read) {
-			code=vic_dma_read((CHARGENADDR+(ch&0xff)*HEIGHTPIXEL+j)&0x3fff)&0xff;
+		for (xoff=xpos; (xoff<xpos+xsize)&&(xoff<vic656x_xsize); xoff+=8,offs++) {
+			ch=vic_dma_read((videoaddr+offs)&0x3fff);
+			attr=(vic_dma_read_color((videoaddr+offs)&0x3fff))&0xf;
+			if (inverted) {
+				if (attr&8) {
+					multiinverted[0]=Machine->pens[attr&7];
+					draw_character_multi(ybegin, yend, ch, yoff,xoff,multiinverted);
+				} else {
+					monoinverted[0]=Machine->pens[attr];
+					draw_character(ybegin, yend, ch, yoff,xoff,monoinverted);
+				}
+			} else {
+				if (attr&8) {
+					multi[2]=Machine->pens[attr&7];
+					draw_character_multi(ybegin, yend, ch, yoff,xoff,multi);
+				} else {
+					mono[1]=Machine->pens[attr];
+					draw_character(ybegin, yend, ch, yoff,xoff,mono);
+				}
+			}
+		}
+		if (xoff<vic656x_xsize) {
+			if (Machine->color_depth==8) {
+				for (i=ybegin;i<=yend;i++)
+					memset(tmpbitmap->line[yoff+i]+xoff, framecolor, vic656x_xsize-xoff);
+			} else {
+				for (i=ybegin;i<=yend;i++)
+					memset16((UINT16*)tmpbitmap->line[yoff+i]+xoff, framecolor, vic656x_xsize-xoff);
+			}
+		}
+		if (matrix8x16) {
+			vline=(vline+16)&~0xf;
+			line=vline+ypos;
 		} else {
-			code=0xff;
+			vline=(vline+8)&~7;
+			line=vline+ypos;
 		}
-		for (x=visible->min_x,i=xoff; x<=visible->max_x; x++,i++) {
-			switch((code<<(i&~1))&0xc0) {
-			case 0x80: bitmap->line[y][x]=color;break;
-			case 0x40: bitmap->line[y][x]=framecolor;break;
-			case 0xc0: bitmap->line[y][x]=helpercolor;break;
-			case 0: bitmap->line[y][x]=bgcolor;break;
-			}
+	}
+	if (Machine->color_depth==8) {
+		for (;line<last;line++) {
+			memset(tmpbitmap->line[line],framecolor,vic656x_xsize);
+		}
+	} else {
+		for (;line<last;line++) {
+			memset16(tmpbitmap->line[line],framecolor,vic656x_xsize);
 		}
 	}
 }
 
-
-/***************************************************************************
-  Draw the game screen in the given osd_bitmap.
-  Do NOT call osd_update_display() from this function,
-  it will be called by the main emulation engine.
-***************************************************************************/
 void vic6560_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
 {
-	int sx, sy, offs, x, y;
+	struct rectangle r;
+	int y,x;
 
-	/* for every character in the Video RAM, check if it or its
-		attribute has been modified since last time and update it
-		 accordingly. */
-	 for (offs=0,sx = 0,sy=0; offs<VIDEORAMSIZE; offs++) {
-			int ch;
-		  if (vic_dma_read) {
-				ch=vic_dma_read((VIDEOADDR+offs)&0x3fff);
-		  } else {
-				ch=0xfff;
-		  }
-		  if (full_refresh||dirtybuffer[offs]||chargendirty[ch&0xff]) {
-				struct rectangle r;
-#if 0
-				if ( (offs==0)&&errorlog) {
-					fprintf(errorlog,"chargen:%.4x videoram:%.4x xsize:%d ysize:%d\n",
-								CHARGENADDR,VIDEOADDR, xsize, YSIZE);
-				}
-#endif
-				dirtybuffer[offs] = 0;
+	vic6560_drawlines(lastline, vic656x_lines);
+	lastline=0;
+	vretracetime=timer_get_time();
+	if (LIGHTPEN_POINTER) {
 
-				r.min_x = sx+XPOS;
-				r.max_x = sx+XPOS+8-1;
-				r.min_y = sy+YPOS;
-				r.max_y = sy+YPOS+HEIGHTPIXEL-1;
-				if (DOCLIP(&r,&Machine->drv->visible_area)) {
-					osd_mark_dirty (r.min_x,r.min_y,r.max_x,r.max_y,0);
-					/* draw the character */
-					if (INVERTED) {
-						if (ch&0x800) {
-							draw_character_multi(bitmap,&r,ch, r.min_x-sx-XPOS,r.min_y-sy-YPOS,
-												Machine->pens[(ch>>8)&7],backgroundcolor);
-						} else {
-							draw_character(bitmap,&r,ch, r.min_x-sx-XPOS,r.min_y-sy-YPOS,
-												Machine->pens[(ch>>8)&7],backgroundcolor);
-						}
-					} else {
-						if (ch&0x800) {
-							draw_character_multi(bitmap,&r,ch, r.min_x-sx-XPOS,r.min_y-sy-YPOS,
-												backgroundcolor,Machine->pens[(ch>>8)&7]);
-						} else {
-							draw_character(bitmap,&r,ch, r.min_x-sx-XPOS,r.min_y-sy-YPOS,
-												backgroundcolor,Machine->pens[(ch>>8)&7]);
-						}
-					}
+		r.min_x = LIGHTPEN_X_VALUE-1+VIC656X_MAME_XPOS;
+		r.max_x = r.min_x+8-1;
+		r.min_y = LIGHTPEN_Y_VALUE-1+VIC656X_MAME_YPOS;
+		r.max_y = r.min_y+8-1;
 
-				}
-		  }
-		  sx+=8; if (sx>=XSIZEPIXEL) sx=0, sy+=HEIGHTPIXEL;
-	}
-	memset(chargendirty,0,sizeof(chargendirty));
-	if (full_refresh||framecolorchanged) {
-		struct rectangle r;
-		r.min_x=0;r.max_x=MAX_HSIZE;//-1;
-		r.min_y=0;r.max_y=MAX_VSIZE;//-1;
 		if (DOCLIP(&r,&Machine->drv->visible_area)) {
-			if (r.min_y<YPOS)
-				osd_mark_dirty (r.min_x,r.min_y,r.max_x,YPOS-1,0);
-			if (r.max_y>=YPOS+YSIZEPIXEL)
-				osd_mark_dirty (r.min_x,YPOS+YSIZEPIXEL,r.max_x,r.max_y,0);
-			if (r.min_x<XPOS)
-				osd_mark_dirty (r.min_x,r.min_y,XPOS-1,r.max_y,0);
-			if (r.max_x>=XPOS+XSIZEPIXEL)
-				osd_mark_dirty(XPOS+XSIZEPIXEL,r.min_y,r.max_x,r.max_y,0);
-			for (y=r.min_y; y<=r.max_y; y++) {
-				if ( (y<YPOS)||(y>=YPOS+YSIZEPIXEL) ) {
-					for (x=r.min_x;x<=r.max_x;x++) {
-						bitmap->line[y][x]=framecolor;
-					}
-				} else {
-					for (x=r.min_x;x<XPOS;x++) bitmap->line[y][x]=framecolor;
-					for (x=XPOS+XSIZEPIXEL;x<=r.max_x;x++) bitmap->line[y][x]=framecolor;
-				}
+			osd_mark_dirty (r.min_x,r.min_y,r.max_x,r.max_y,0);
+			draw_pointer(tmpbitmap,&r,
+				r.min_x-(LIGHTPEN_X_VALUE+VIC656X_MAME_XPOS-1),
+				r.min_y-(LIGHTPEN_Y_VALUE+VIC656X_MAME_YPOS-1));
+		}
+	}
+
+	generic_bitmapped_vh_screenrefresh(bitmap,1);
+
+	{
+		int x0;
+		char text[50];
+
+		vc20_tape_status(text, sizeof(text));
+		if (text[0]!=0) {
+			x0 = (Machine->uiwidth - (strlen(text)) * Machine->uifont->width) / 2;
+			y = Machine->uiymin + Machine->uiheight - Machine->uifont->height*2 - 4;
+
+			for( x = 0; text[x]; x++ )	{
+				drawgfx(bitmap,Machine->uifont,text[x],0,0,0,
+							x0+x*Machine->uifont->width,y,0,TRANSPARENCY_NONE,0);
 			}
 		}
-		framecolorchanged=false;
+		cbm_drive_status(&vc20_drive8,text,sizeof(text));
+		if (text[0]!=0) {
+			x0 = (Machine->uiwidth - (strlen(text)) * Machine->uifont->width) / 2;
+			y = Machine->uiymin + Machine->uiheight - Machine->uifont->height*3 - 6;
+
+			for( x = 0; text[x]; x++ )	{
+				drawgfx(bitmap,Machine->uifont,text[x],0,0,0,
+							x0+x*Machine->uifont->width,y,0,TRANSPARENCY_NONE,0);
+			}
+			y-=Machine->uifont->height+2;
+		}
+		cbm_drive_status(&vc20_drive9,text,sizeof(text));
+		if (text[0]!=0) {
+			x0 = (Machine->uiwidth - (strlen(text)) * Machine->uifont->width) / 2;
+			y = Machine->uiymin + Machine->uiheight - Machine->uifont->height*4 - 8;
+
+			for( x = 0; text[x]; x++ )	{
+				drawgfx(bitmap,Machine->uifont,text[x],0,0,0,
+							x0+x*Machine->uifont->width,y,0,TRANSPARENCY_NONE,0);
+			}
+			y-=Machine->uifont->height+2;
+		}
 	}
 }
-

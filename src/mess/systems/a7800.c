@@ -217,7 +217,6 @@ static struct MachineDriver machine_driver =
 			CPU_M6502,
             1790000,        /* 1.79Mhz (note: The clock switches to 1.19Mhz */
                             /* when the TIA or RIOT are accessed) */
-			0,
 			readmem,writemem,0,0,
 			a7800_interrupt,262
 		}
@@ -263,7 +262,7 @@ static struct MachineDriver machine_driver =
 ***************************************************************************/
 
 ROM_START (a7800)
-	ROM_REGION (0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD ("7800.rom", 0xf000, 0x1000, 0x649913e5)
 ROM_END
 

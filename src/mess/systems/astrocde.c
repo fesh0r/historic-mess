@@ -125,7 +125,7 @@ static struct IOWritePort astrocade_writeport[] =
 };
 
 ROM_START( astrocade )
-	ROM_REGION( 0x10000 )
+	ROM_REGIONX( 0x10000, REGION_CPU1 )
 	ROM_LOAD( "astro.bin",  0x0000, 0x2000, 0xebc77f3a )
 ROM_END
 
@@ -221,7 +221,6 @@ static struct MachineDriver astrocade_machine_driver =
 		{
 			CPU_Z80,
 			1789000,	/* 1.789 Mhz */
-			0,
 			astrocade_readmem,astrocade_writemem,astrocade_readport,astrocade_writeport,
 			astrocade_interrupt,256
 		}

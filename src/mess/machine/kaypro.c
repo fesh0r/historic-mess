@@ -148,7 +148,6 @@ int kaypro_rom_id(const char * name, const char * gamename)
  ******************************************************/
 int kaypro_interrupt(void)
 {
-//	UINT8 *RAM = Machine->memory_region[0];
 	int mod, row, col, chg, new;
 	static int lastrow = 0, mask = 0x00, key = 0x00, repeat = 0x00, repeater = 0x00;
 
@@ -168,7 +167,7 @@ int kaypro_interrupt(void)
 	row = 9;
 	new = input_port_10_r(0);
 	chg = keyrows[row] ^ new;
-  
+
 	if (!chg) { new = input_port_9_r(0); chg = keyrows[--row] ^ new; }
 	if (!chg) { new = input_port_8_r(0); chg = keyrows[--row] ^ new; }
 	if (!chg) { new = input_port_7_r(0); chg = keyrows[--row] ^ new; }
@@ -179,7 +178,7 @@ int kaypro_interrupt(void)
 	if (!chg) { new = input_port_2_r(0); chg = keyrows[--row] ^ new; }
 	if (!chg) { new = input_port_1_r(0); chg = keyrows[--row] ^ new; }
 	if (!chg) --row;
-  
+
 	if (row >= 0)
 	{
 		repeater = 0x00;
@@ -189,23 +188,23 @@ int kaypro_interrupt(void)
 		/* CapsLock LED */
 		if( row == 3 && chg == 0x80 )
 			osd_led_w(1, (keyrows[3] & 0x80) ? 0 : 1);
-    
+
 		if (new & chg)	/* key(s) pressed ? */
 		{
 			mod = 0;
-	
+
 			/* Shift modifier */
 			if ( (keyrows[5] & 0x10) || (keyrows[6] & 0x80) )
 				mod |= 1;
-	
+
 			/* Control modifier */
 			if (keyrows[3] & 0x40)
 				mod |= 2;
-	
+
 			/* CapsLock modifier */
 			if (keyrows[3] & 0x80)
 				mod |= 4;
-	
+
 			/* find new key */
 			mask = 0x01;
 			for (col = 0; col < 8; col ++)

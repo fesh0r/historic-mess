@@ -26,22 +26,20 @@ static  int scanlines = 0;
 ***************************************************************************/
 int trs80_vh_start(void)
 {
-        videoram_size = 16 * 64;
-
-        if (generic_vh_start() != 0)
+	if (generic_vh_start() != 0)
 		return 1;
 
-        memset(dirtybuffer, 0, videoram_size);
+	memset(dirtybuffer, 0, videoram_size);
 
-        return 0;
+	return 0;
 }
 
 void    trs80_vh_stop(void)
 {
-        generic_vh_stop();
+	generic_vh_stop();
 
-        /* kludge to have the trs80 shutdown called */
-        trs80_shutdown_machine();
+	/* kludge to have the trs80 shutdown called */
+	trs80_shutdown_machine();
 }
 
 /***************************************************************************

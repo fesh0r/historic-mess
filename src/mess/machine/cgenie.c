@@ -142,9 +142,9 @@ void cgenie_init_machine(void)
 	AYWriteReg(0, 10, 0);
 
 	/* wipe out color RAM */
-	memset(&Machine->memory_region[0][0x0f000], 0x00, 0x0400);
+	memset(memory_region(REGION_CPU1)+0x0f000, 0x00, 0x0400);
 	/* wipe out font RAM */
-	memset(&Machine->memory_region[0][0x0f400], 0xff, 0x0400);
+	memset(memory_region(REGION_CPU1)+0x0f400, 0xff, 0x0400);
 
 
 
@@ -170,14 +170,14 @@ void cgenie_init_machine(void)
 	{
 		if (errorlog)
 			fprintf(errorlog, "cgenie DOS enabled\n");
-		memcpy(&Machine->memory_region[0][0x0c000],
-			   &Machine->memory_region[0][0x10000], 0x2000);
+		memcpy(&memory_region(REGION_CPU1)[0x0c000],
+			   &memory_region(REGION_CPU1)[0x10000], 0x2000);
 	}
 	else
 	{
 		if (errorlog)
 			fprintf(errorlog, "cgenie DOS disabled\n");
-		memset(&Machine->memory_region[0][0x0c000], 0x00, 0x2000);
+		memset(&memory_region(REGION_CPU1)[0x0c000], 0x00, 0x2000);
 	}
 
 	/* copy EXT ROM, if enabled or wipe out that memory area */
@@ -185,14 +185,14 @@ void cgenie_init_machine(void)
 	{
 		if (errorlog)
 			fprintf(errorlog, "cgenie EXT enabled\n");
-		memcpy(&Machine->memory_region[0][0x0e000],
-			   &Machine->memory_region[0][0x12000], 0x1000);
+		memcpy(&memory_region(REGION_CPU1)[0x0e000],
+			   &memory_region(REGION_CPU1)[0x12000], 0x1000);
 	}
 	else
 	{
 		if (errorlog)
 			fprintf(errorlog, "cgenie EXT disabled\n");
-		memset(&Machine->memory_region[0][0x0e000], 0x00, 0x1000);
+		memset(&memory_region(REGION_CPU1)[0x0e000], 0x00, 0x1000);
 	}
 
 }
@@ -227,7 +227,7 @@ int cgenie_cmd_load(void *cmd)
 					block_len += 256;
 				block_ofs = *s++;
 				block_ofs += 256 * *s++;
-				d = &Machine->memory_region[0][block_ofs];
+				d = &memory_region(REGION_CPU1)[block_ofs];
 				if (data != 0x3c)
 					block_len -= 2;
 				size -= 4;
@@ -255,9 +255,9 @@ int cgenie_cmd_load(void *cmd)
 				block_len = *s++;
 				size -= 1;
 			case 0x78:
-				Machine->memory_region[0][0x115] = 0xc3;
-				Machine->memory_region[0][0x116] = *s++;
-				Machine->memory_region[0][0x117] = *s++;
+				memory_region(REGION_CPU1)[0x115] = 0xc3;
+				memory_region(REGION_CPU1)[0x116] = *s++;
+				memory_region(REGION_CPU1)[0x117] = *s++;
 				size -= 3;
 				break;
 			default:
@@ -279,7 +279,7 @@ int cgenie_rom_load(void)
 	memset(&ROM[0x4000], 0xff, 0xc000);
 
 	/* Initialize the character generator */
-	gfx = Machine->memory_region[2];
+	gfx = memory_region(2);
 
 	/* Initialize some patterns to be displayed in graphics mode */
 	for (i = 0; i < 256; i++)
@@ -303,7 +303,7 @@ int cgenie_rom_load(void)
 	/* if a CAS or CMD name is given */
 	if( rom_name[0] )
 	{
-		cmd = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, 0);
+		cmd = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
 		if (cmd)
 		{
 			result = cgenie_cmd_load(cmd);
@@ -344,7 +344,7 @@ static void tape_put_byte(UINT8 value)
 			{
 				char filename[12 + 1];
 				sprintf(filename, "basic%c.cas", tape_buffer[1]);
-				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 2);
+				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_RW);
 				osd_fwrite(tape_put_file, tape_buffer, 9);
 			}
 			else
@@ -353,7 +353,7 @@ static void tape_put_byte(UINT8 value)
 			{
 				char filename[12 + 1];
 				sprintf(filename, "%-6.6s.cas", tape_buffer + 2);
-				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 2);
+				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_RW);
 				osd_fwrite(tape_put_file, tape_buffer, 9);
 			}
 		}
@@ -416,7 +416,7 @@ static void tape_put_bit(void)
 {
 	int now_cycles = cpu_gettotalcycles();
 	int diff = now_cycles - put_cycles;
-	int limit = 12 * (Machine->memory_region[0][0x4310] + Machine->memory_region[0][0x4311]);
+	int limit = 12 * (memory_region(REGION_CPU1)[0x4310] + memory_region(REGION_CPU1)[0x4311]);
 	UINT8 value;
 
 	/* overrun since last write ? */
@@ -555,12 +555,12 @@ static void tape_get_open(void)
 		char filename[12 + 1];
 		char buffer[sizeof(TAPE_HEADER)];
 		/* TODO: remove this */
-		unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+		unsigned char *RAM = memory_region(REGION_CPU1);
 
 		sprintf(filename, "%-6.6s.cas", RAM + 0x41e8);
 		if( errorlog )
 			fprintf(errorlog, "tape_get_open filename %s\n", filename);
-		tape_get_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 0);
+		tape_get_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
 		if( tape_get_file )
 		{
 			osd_fread(tape_get_file, buffer, sizeof(TAPE_HEADER));
@@ -586,7 +586,7 @@ static void tape_get_open(void)
 static void tape_get_bit(void)
 {
 	int now_cycles = cpu_gettotalcycles();
-	int limit = 10 * Machine->memory_region[0][0x4312];
+	int limit = 10 * memory_region(REGION_CPU1)[0x4312];
 	int diff = now_cycles - get_cycles;
 
 	/* overrun since last read ? */
@@ -908,10 +908,8 @@ void cgenie_fdc_callback(int event)
 
 void cgenie_motor_w(int offset, int data)
 {
-UINT8 drive = 255;
-void *file;
-	/* TODO: remove this */
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	UINT8 drive = 255;
+	void *file;
 
 	if (errorlog)
 		fprintf(errorlog, "cgenie motor_w $%02X\n", data);
@@ -949,7 +947,7 @@ void *file;
 
 	if (file == REAL_FDD)
 	{
-		PDRIVE *pd = (PDRIVE *)&RAM[0x5a71 + drive * sizeof(PDRIVE)];
+		PDRIVE *pd = (PDRIVE *)memory_region(REGION_CPU1) + 0x5a71 + drive * sizeof(PDRIVE);
 		/* changed pdrive parameters for drive ? */
 		if (memcmp(&pdrive[drive], pd, sizeof(PDRIVE)))
 		{
@@ -1002,7 +1000,7 @@ void *file;
 					dir_sector[drive] = pd_list[i].DDSL * pd_list[i].GATM * pd_list[i].GPL + pd_list[i].SPT;
 					dir_length[drive] = pd_list[i].DDGA * pd_list[i].GPL;
 					wd179x_set_geometry(drive, tracks[drive], heads[drive], s_p_t[drive], 256, dir_sector[drive], dir_length[drive]);
-					memcpy(RAM + 0x5A71 + drive * sizeof(PDRIVE), &pd_list[i], sizeof(PDRIVE));
+					memcpy(memory_region(REGION_CPU1) + 0x5A71 + drive * sizeof(PDRIVE), &pd_list[i], sizeof(PDRIVE));
 					return;
 				}
 			}
@@ -1061,19 +1059,19 @@ void cgenie_videoram_w(int offset, int data)
 void cgenie_dos_rom_w(int offset, int data)
 {
 	/* write to dos ROM area */
-	if (input_port_0_r(0) & 0x40)
+	if( input_port_0_r(0) & 0x40 )
 		return;
 	/* write RAM at c000-dfff */
-	Machine->memory_region[0][0x0c000 + offset] = data;
+	memory_region(REGION_CPU1)[0x0c000 + offset] = data;
 }
 
 void cgenie_ext_rom_w(int offset, int data)
 {
 	/* write to extra ROM area */
-	if (input_port_0_r(0) & 0x20)
+	if( input_port_0_r(0) & 0x20 )
 		return;
 	/* write RAM at e000-efff */
-	Machine->memory_region[0][0x0e000 + offset] = data;
+	memory_region(REGION_CPU1)[0x0e000 + offset] = data;
 }
 
 int cgenie_colorram_r(int offset)

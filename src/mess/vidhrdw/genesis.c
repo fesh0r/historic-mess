@@ -706,7 +706,7 @@ void genesis_vdp_ctrl_w (int offset, int data)
 							case DMA_ROM_VRAM:
 //								if (errorlog) fprintf(errorlog,"DMA ROM->VRAM, src %x dest %x, length %x, real dest %x, id %x, inc %x\n",  vdp_dma_source, vdp_address, vdp_dma_length, get_dma_dest_address(vdp_id)+vdp_address, vdp_id, vdp_auto_increment);
 
-							  	genesis_initialise_dma(&Machine->memory_region[0][vdp_dma_source & 0x3fffff], vdp_address,	vdp_dma_length * 2, vdp_id, vdp_auto_increment);
+							  	genesis_initialise_dma(&memory_region(REGION_CPU1)[vdp_dma_source & 0x3fffff], vdp_address,	vdp_dma_length * 2, vdp_id, vdp_auto_increment);
 
 /*#endif*/
 								break;
@@ -2264,7 +2264,7 @@ void genesis_vdp_ctrl_w (int offset, int data)
 							case DMA_ROM_VRAM:
 //								if (errorlog) fprintf(errorlog,"DMA ROM->VRAM, src %x dest %x, length %x, real dest %x, id %x, inc %x\n",  vdp_dma_source, vdp_address, vdp_dma_length, get_dma_dest_address(vdp_id)+vdp_address, vdp_id, vdp_auto_increment);
 
-							  	genesis_initialise_dma(&Machine->memory_region[0][vdp_dma_source & 0x3fffff], vdp_address,	vdp_dma_length * 2, vdp_id, vdp_auto_increment);
+							  	genesis_initialise_dma(&memory_region(REGION_CPU1)[vdp_dma_source & 0x3fffff], vdp_address,	vdp_dma_length * 2, vdp_id, vdp_auto_increment);
 
 /*#endif*/
 								break;

@@ -585,7 +585,6 @@ static struct MachineDriver mda_machine_driver =
 		{
 			CPU_I86,
 			4772720,	/* 4,77 Mhz */
-			0,
 			mda_readmem,mda_writemem,
 			mda_readport,mda_writeport,
 			pc_frame_interrupt,1,
@@ -828,7 +827,6 @@ static struct MachineDriver cga_machine_driver =
             CPU_V30,
 			30000000,
 #endif
-			0,
 			cga_readmem,cga_writemem,
 			cga_readport,cga_writeport,
             pc_frame_interrupt,1,
@@ -873,7 +871,6 @@ static struct MachineDriver t1t_machine_driver =
         {
             CPU_I86,
 			4772720,	/* 4,77 Mhz */
-			0,
 			t1t_readmem,t1t_writemem,
 			t1t_readport,t1t_writeport,
             pc_frame_interrupt,1,
@@ -964,15 +961,15 @@ static void pc_mda_rom_decode(void)
 
     /* just a plain bit pattern for graphics data generation */
     for (i = 0; i < 256; i++)
-        Machine->memory_region[1][0x1000+i] = i;
+        memory_region(REGION_GFX1)[0x1000+i] = i;
 }
 
 ROM_START(pc_mda)
-	ROM_REGION(0x100000)
+	ROM_REGIONX(0x100000,REGION_CPU1)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
 	ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
 
-	ROM_REGION(0x1100)
+	ROM_REGIONX(0x1100,REGION_GFX1)
 	ROM_LOAD("mda.chr",     0x00000, 0x01000, 0xac1686f3)
 ROM_END
 
@@ -1020,15 +1017,15 @@ static void CGA_rom_decode(void)
 
 	/* just a plain bit pattern for graphics data generation */
     for (i = 0; i < 256; i++)
-		Machine->memory_region[1][0x1000+i] = i;
+		memory_region(REGION_GFX1)[0x1000+i] = i;
 }
 
 ROM_START(CGA)
-	ROM_REGION(0x100000)
+	ROM_REGIONX(0x100000,REGION_CPU1)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
 	ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
 
-	ROM_REGION(0x1100)
+	ROM_REGIONX(0x1100,REGION_GFX1)
 	ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
 ROM_END
 
@@ -1071,11 +1068,11 @@ struct GameDriver pccga_driver =
 };
 
 ROM_START(t1t)
-	ROM_REGION(0x100000)
+	ROM_REGIONX(0x100000,REGION_CPU1)
 	ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
     ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f)
 
-	ROM_REGION(0x1100)
+	ROM_REGIONX(0x1100,REGION_GFX1)
 	ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
 ROM_END
 

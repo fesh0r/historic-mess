@@ -192,7 +192,7 @@ void    Amstrad_RethinkMemory(void)
 		/* bank 0 - 0x0000..0x03fff */
 		if ((AmstradCPC_GA_RomConfiguration & 0x04)==0)
 		{
-                        BankBase = &Machine->memory_region[0][0x010000];
+                        BankBase = &memory_region(REGION_CPU1)[0x010000];
 		}
 		else
 		{
@@ -319,12 +319,12 @@ void	AmstradCPC_SetUpperRom(int Data)
 	if ((Data & 0x0ff)==7)
 	{
 		/* select dos rom */
-                Amstrad_UpperRom = &Machine->memory_region[0][0x018000];
+                Amstrad_UpperRom = &memory_region(REGION_CPU1)[0x018000];
 	}
 	else
 	{
 		/* select basic rom */
-                Amstrad_UpperRom = &Machine->memory_region[0][0x014000];
+                Amstrad_UpperRom = &memory_region(REGION_CPU1)[0x014000];
 	}
 
         Amstrad_RethinkMemory();
@@ -858,60 +858,54 @@ an effective speed of 3.8Mhz. */
 
 static struct MachineDriver amstrad_machine_driver =
 {
-        /* basic machine hardware */
-        {
-			/* MachineCPU */
-                {
-                        CPU_Z80 | CPU_16BIT_PORT,	/* type */
-                        3800000,    /* clock: See Note Above */
-                        0,		/* memory region */
-                        readmem_amstrad,	/* MemoryReadAddress */
-				writemem_amstrad, /* MemoryWriteAddress */
-                        readport_amstrad, /* IOReadPort */
-				writeport_amstrad, /* IOWritePort */
-                        amstrad_frame_interrupt, /* VBlank
-Interrupt */
-				1,				/* vblanks per frame */
-                        amstrad_timer_interrupt, /* timer interrupt
-*/
-				300				/* timers
-per second */
-                },
-        },
-        50,						/* frames per second */
-	  DEFAULT_60HZ_VBLANK_DURATION,       /* vblank duration */
-        1,						/* cpu slices per frame */
-        amstrad_init_machine,                   /* init machine */
-        amstrad_shutdown_machine,
+	/* basic machine hardware */
+	{
+		/* MachineCPU */
+		{
+			CPU_Z80 | CPU_16BIT_PORT,	/* type */
+			3800000,					/* clock See Note Above */
+			readmem_amstrad,			/* MemoryReadAddress */
+			writemem_amstrad,			/* MemoryWriteAddress */
+			readport_amstrad,			/* IOReadPort */
+			writeport_amstrad,			/* IOWritePort */
+			amstrad_frame_interrupt,	/* VBlank Interrupt */
+			1,							/* vblanks per frame */
+			amstrad_timer_interrupt,	/* timer interrupt */
+			300 						/* timers per second */
+		},
+	},
+	50, 								/* frames per second */
+	DEFAULT_60HZ_VBLANK_DURATION,		/* vblank duration */
+	1,									/* cpu slices per frame */
+	amstrad_init_machine,				/* init machine */
+	amstrad_shutdown_machine,
 	/* video hardware */
-        AMSTRAD_SCREEN_WIDTH,             /* screen width */
-        AMSTRAD_SCREEN_HEIGHT,            /* screen height */
-        { 0,(AMSTRAD_SCREEN_WIDTH-1),0,(AMSTRAD_SCREEN_HEIGHT-1)},   /* rectangle: visible_area */
-        0, /*amstrad_gfxdecodeinfo*/                    /* graphics
-decode info */
-        32, 						/* total colours
-*/
-	  32,                                  	/* color table len */
-        amstrad_init_palette,         /* init palette */
+	AMSTRAD_SCREEN_WIDTH,				/* screen width */
+	AMSTRAD_SCREEN_HEIGHT,				/* screen height */
+	{ 0,(AMSTRAD_SCREEN_WIDTH-1),0,(AMSTRAD_SCREEN_HEIGHT-1) },   /* rectangle: visible_area */
+	0, /* amstrad_gfxdecodeinfo */		/* graphics decode info */
+	32, 								/* total colours */
+	32, 								/* color table len */
+	amstrad_init_palette,				/* init palette */
 
-        VIDEO_TYPE_RASTER, /* video attributes */
-        0,							/* MachineLayer */
-        amstrad_vh_start,
-        amstrad_vh_stop,
-        amstrad_vh_screenrefresh,
+	VIDEO_TYPE_RASTER,					/* video attributes */
+	0,									/* MachineLayer */
+	amstrad_vh_start,
+	amstrad_vh_stop,
+	amstrad_vh_screenrefresh,
 
-        /* sound hardware */
-        0,							/* sh init */
-	  0,							/* sh start */
-        0,							/* sh stop */
-        0,							/* sh update */
-        {
-			/* MachineSound */
-                {
-                        SOUND_AY8910,
-                        &amstrad_ay_interface
-                }
-        }
+	/* sound hardware */
+	0,									/* sh init */
+	0,									/* sh start */
+	0,									/* sh stop */
+	0,									/* sh update */
+	{
+		/* MachineSound */
+		{
+			SOUND_AY8910,
+			&amstrad_ay_interface
+		}
+	}
 };
 
 
@@ -929,14 +923,14 @@ decode info */
 are banked. */
 ROM_START(amstrad)
         /* this defines the total memory size - 64k ram, 16k OS, 16k BASIC, 16k DOS */
-        ROM_REGION(0x01c000)
+        ROM_REGIONX(0x01c000,REGION_CPU1)
         /* load the os to offset 0x01000 from memory base */
         ROM_LOAD("cpc6128.rom",0x10000,0x8000, 0x9e827fe1)
         ROM_LOAD("cpcados.rom",0x18000,0x4000, 0x1fe22ecd)
 ROM_END
 
 ROM_START(kccompact)
-        ROM_REGION(0x01c000)
+        ROM_REGIONX(0x01c000,REGION_CPU1)
         ROM_LOAD("kccos.rom", 0x10000,0x04000, 0x7f9ab3f7)
         ROM_LOAD("kccbas.rom",0x14000,0x04000, 0xca6af63d)
 ROM_END

@@ -252,7 +252,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_Z80,
 			4000000,	/* 4 Mhz */
-			0,
 			readmem,writemem,
 			readport,writeport,
 			kaypro_interrupt,1, 	/* one interrupt per frame */
@@ -284,29 +283,29 @@ static struct MachineDriver machine_driver =
 };
 
 ROM_START (kaypro)
-	ROM_REGION (0x11600)	/* 64K for the Z80 */
+	ROM_REGIONX(0x11600,REGION_CPU1)	/* 64K for the Z80 + 5,5K for CP/M */
 	/* totally empty :) */
 
-	ROM_REGION (0x4000) 	/* 4 * 4K font ram */
+	ROM_REGIONX(0x4000,REGION_GFX1) 	/* 4 * 4K font ram */
 	ROM_LOAD ("kaypro2x.fnt", 0x0000, 0x1000, 0x5f72da5b)
 
-	ROM_REGION (0x1600) 	/* 5,5K for CCP and BDOS buffer */
+	ROM_REGIONX(0x1600,REGION_CPU2) 	/* 5,5K for CCP and BDOS buffer */
 	ROM_LOAD ("cpm62k.sys",   0x0000, 0x1600, 0xd10cd036)
 ROM_END
 
 static void kaypro_rom_decode(void)
 {
-  UINT8 * FONT = Machine->memory_region[1];
-  int i;
+	UINT8 * FONT = memory_region(REGION_GFX1);
+	int i;
 
-  /* copy font, but add underline in last line */
-  for (i = 0; i < 0x1000; i++)
-    FONT[0x1000 + i] = ((i % KAYPRO_FONT_H) == (KAYPRO_FONT_H - 1)) ?
-	FONT[i] ^ 0xff : FONT[i];
+	/* copy font, but add underline in last line */
+	for (i = 0; i < 0x1000; i++)
+		FONT[0x1000 + i] = ((i % KAYPRO_FONT_H) == (KAYPRO_FONT_H - 1)) ?
+			FONT[i] ^ 0xff : FONT[i];
 
-  /* copy font inverted */
-  for (i = 0; i < 0x2000; i++)
-    FONT[0x2000 + i] = FONT[i] ^ 0xff;
+	/* copy font inverted */
+	for (i = 0; i < 0x2000; i++)
+		FONT[0x2000 + i] = FONT[i] ^ 0xff;
 }
 
 struct GameDriver kaypro_driver =

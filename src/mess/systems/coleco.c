@@ -170,7 +170,6 @@ static struct MachineDriver machine_driver =
 		{
 			CPU_Z80,
 			3579545,	/* 3.579545 Mhz */
-			0,
 			readmem,writemem,readport,writeport,
 			coleco_interrupt,1
 		}
@@ -211,17 +210,17 @@ static struct MachineDriver machine_driver =
 ***************************************************************************/
 
 ROM_START (coleco)
-	ROM_REGION (0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD ("coleco.rom", 0x0000, 0x2000, 0x3aa93ef3)
 ROM_END
 
 //ROM_START (colecofb_rom)
-//	ROM_REGION (0x10000)
+//	ROM_REGIONX(0x10000,REGION_CPU1)
 //	ROM_LOAD ("colecofb.rom", 0x0000, 0x2000, 0x640cf85b) /* fast screen */
 //ROM_END
 
 //ROM_START (coleconb_rom)
-//	ROM_REGION (0x10000)
+//	ROM_REGIONX(0x10000,REGION_CPU1)
 //	ROM_LOAD ("coleconb.rom", 0x0000, 0x2000, 0x66cda476) /* no screen */
 //ROM_END
 

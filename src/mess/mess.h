@@ -39,6 +39,28 @@ typedef struct
 
 } image_details;
 
+/* possible values for osd_fopen() last argument
+ * OSD_FOPEN_READ
+ *	open existing file in read only mode.
+ *	ZIP images can be opened only in this mode, unless
+ *	we add support for writing into ZIP files.
+ * OSD_FOPEN_WRITE
+ *	open new file in write only mode (truncate existing file).
+ *	used for output images (eg. a cassette being written).
+ * OSD_FOPEN_RW
+ *	open existing(!) file in read/write mode.
+ *	used for floppy/harddisk images. if it fails, a driver
+ *	might try to open the image with OSD_FOPEN_READ and set
+ *	an internal 'write protect' flag for the FDC/HDC emulation.
+ * OSD_FOPEN_RW_CREATE
+ *	open existing file or create new file in read/write mode.
+ *	used for floppy/harddisk images. if a file doesn't exist,
+ *	it shall be created. Used to 'format' new floppy or harddisk
+ *	images from within the emulation. a driver might use this
+ *	if both, OSD_FOPEN_RW and OSD_FOPEN_READ, failed.
+ */
+enum { OSD_FOPEN_READ, OSD_FOPEN_WRITE, OSD_FOPEN_RW, OSD_FOPEN_RW_CREATE };
+
 char * get_alias(char *driver_name, char *argv);
 int check_crc(int crc, int length, char * driver);
 

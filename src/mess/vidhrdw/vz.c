@@ -12,12 +12,21 @@
 /* from machine/vz.c */
 extern int vz_latch;
 
+char frame_message[32];
+int frame_time = 0;
+
 void vz_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
 {
     int offs;
 
     if( full_refresh )
+	{
+		if( vz_latch & 0x08 )
+            fillbitmap(Machine->scrbitmap, Machine->pens[1], &Machine->drv->visible_area);
+        else
+            fillbitmap(Machine->scrbitmap, Machine->pens[0], &Machine->drv->visible_area);
         memset(dirtybuffer, 0xff, videoram_size);
+    }
 
     if( vz_latch & 0x08 )
     {
@@ -27,8 +36,8 @@ void vz_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
             if( dirtybuffer[offs] )
             {
                 int sx, sy, code;
-				sy = (offs / 32) * 3;
-				sx = (offs % 32) * 8;
+				sy = 20 + (offs / 32) * 3;
+				sx = 16 + (offs % 32) * 8;
                 code = videoram[offs];
                 drawgfx(
 					bitmap,Machine->gfx[1],code,color,0,0,sx,sy,
@@ -42,16 +51,16 @@ void vz_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
     {
         for( offs = 0; offs < 32*16; offs++ )
         {
-            if( dirtybuffer[offs] || dirtybuffer[offs+0x200] )
+			if( dirtybuffer[offs] )
             {
                 int sx, sy, code, color;
-				sy = (offs / 32) * 12;
-				sx = (offs % 32) * 8;
+				sy = 20 + (offs / 32) * 12;
+				sx = 16 + (offs % 32) * 8;
                 code = videoram[offs];
 				if( vz_latch & 0x10 )
-					color = (code & 0x80) ? ((code >> 4) & 3) + 5 : 9;
+					color = (code & 0x80) ? ((code >> 4) & 7) + 4 : 9;
                 else
-					color = (code & 0x80) ? ((code >> 4) & 3) + 1 : 0;
+					color = (code & 0x80) ? ((code >> 4) & 7) : 0;
                 drawgfx(
 					bitmap,Machine->gfx[0],code,color,0,0,sx,sy,
                     &Machine->drv->visible_area,TRANSPARENCY_NONE,0);
@@ -60,6 +69,13 @@ void vz_vh_screenrefresh(struct osd_bitmap *bitmap, int full_refresh)
             }
         }
     }
+	if( frame_time > 0 )
+	{
+		ui_text(frame_message, 2, Machine->drv->visible_area.max_y - 9);
+		/* if the message timed out, clear it on the next frame */
+		if( --frame_time == 0 )
+			memset(dirtybuffer, 1, videoram_size);
+	}
 }
 
 

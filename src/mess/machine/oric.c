@@ -87,7 +87,7 @@ void oric_init_machine (void)
 
 	oric_IO = malloc (0x10);
 	memset (oric_IO, 0, sizeof (oric_IO));
-	RAM = Machine->memory_region[0];
+	RAM = memory_region(REGION_CPU1);
 	/*
 	 * gives those delightfull pages of 'U's when programms go belly-up!
 	 * The Kernal ROM does this as one of its first boot procedures.
@@ -265,7 +265,7 @@ void oric_IO_w (int offset, int data)
 	int porta_write;
 	unsigned char *RAM;
 
-	RAM = Machine->memory_region[0];
+	RAM = memory_region(REGION_CPU1);
 	oric_IO[offset & 0x0f] = data;
 	porta_write = 0;
 	//RAM[offset] = data; UHh?? what *WAS* i thinking!?!?!?!
@@ -422,7 +422,7 @@ int oric_interrupt (void)
 
 	exec_irq = 1;
 
-	RAM = Machine->memory_region[0];
+	RAM = memory_region(REGION_CPU1);
 
 	if (exec_irq == 1)
 	{
@@ -534,7 +534,7 @@ int oric_extract_file_from_tape (int filenum)
 	unsigned char msblend, lsblend;
 	unsigned char *RAM;
 
-	RAM = Machine->memory_region[0];
+	RAM = memory_region(REGION_CPU1);
 
 	if (oric_tape_data == NULL)
 		return 0;					   // no tape image in memory yet ..

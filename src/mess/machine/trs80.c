@@ -80,33 +80,31 @@ int trs80_cmd_load(void * cmd)
     UINT8 *buff = malloc(65536), * s, * d;
 	UINT16 size, block_len, block_ofs;
 	UINT8 data;
+	UINT8 *RAM = memory_region(REGION_CPU1);
 
-	if (!buff)
+	if( !buff )
 		return 7;
 
 /* prepare RAM in the same way the TRS80 boot strap would do */
-	memcpy(&Machine->memory_region[0][0x4000],
-		   &Machine->memory_region[0][0x06d2], 0x36);
-	memset(&Machine->memory_region[0][0x4036],
-		   0,								   0x27);
-	memcpy(&Machine->memory_region[0][0x4080],
-		   &Machine->memory_region[0][0x18f7], 0x27);
-	Machine->memory_region[0][0x41e5] = 0x3a;
-	Machine->memory_region[0][0x41e6] = 0x00;
-	Machine->memory_region[0][0x41e7] = 0x2c;
-	Machine->memory_region[0][0x40a7] = 0xe8;
-	Machine->memory_region[0][0x40a8] = 0x41;
+	memcpy(&RAM[0x4000], &RAM[0x06d2], 0x36);
+	memset(&RAM[0x4036], 0, 0x27);
+	memcpy(&RAM[0x4080], &RAM[0x18f7], 0x27);
+	RAM[0x41e5] = 0x3a;
+	RAM[0x41e6] = 0x00;
+	RAM[0x41e7] = 0x2c;
+	RAM[0x40a7] = 0xe8;
+	RAM[0x40a8] = 0x41;
 	for (i = 0; i < 0x1c; i++)
 	{
-			Machine->memory_region[0][0x4152 + i * 3 + 0] = 0xc3;
-			Machine->memory_region[0][0x4152 + i * 3 + 1] = 0x2d;
-			Machine->memory_region[0][0x4152 + i * 3 + 2] = 0x01;
+		RAM[0x4152 + i * 3 + 0] = 0xc3;
+		RAM[0x4152 + i * 3 + 1] = 0x2d;
+		RAM[0x4152 + i * 3 + 2] = 0x01;
 	}
 	for (i = 0; i < 0x15; i++)
 	{
-			Machine->memory_region[0][0x41a6 + i * 3 + 0] = 0xc9;
-			Machine->memory_region[0][0x41a6 + i * 3 + 1] = 0x00;
-			Machine->memory_region[0][0x41a6 + i * 3 + 2] = 0x00;
+		RAM[0x41a6 + i * 3 + 0] = 0xc9;
+		RAM[0x41a6 + i * 3 + 1] = 0x00;
+		RAM[0x41a6 + i * 3 + 2] = 0x00;
 	}
 
 	size = osd_fread(cmd, buff, 65536);
@@ -121,13 +119,13 @@ int trs80_cmd_load(void * cmd)
 			case 0x3c:		/* CAS header */
 				block_len = *s++;
 				/* on CMD files size <= 2 means size + 256 */
-				if ((data != 0x3c) && (block_len <= 2))
-						block_len += 256;
+				if( data != 0x3c && block_len <= 2 )
+					block_len += 256;
 				block_ofs = *s++;
 				block_ofs += 256 * *s++;
-				d = &Machine->memory_region[0][block_ofs];
+				d = &RAM[block_ofs];
 				if (data != 0x3c)
-						block_len -= 2;
+					block_len -= 2;
 				size -= 4;
 				while (block_len && size)
 				{
@@ -155,8 +153,8 @@ int trs80_cmd_load(void * cmd)
 				/* fall through */
 			case 0x78:		/* CAS entry point */
 				/* patch ROM with start address */
-				Machine->memory_region[0][3] = *s++;
-				Machine->memory_region[0][4] = *s++;
+				RAM[3] = *s++;
+				RAM[4] = *s++;
 				size -= 3;
 				/* disable floppy controller */
 				wd179x_init(0);
@@ -215,7 +213,7 @@ static void tape_put_byte(UINT8 value)
 				UINT8 zeroes[256] = {0,};
 
                 sprintf(filename, "basic%c.cas", tape_buffer[4]);
-				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 2);
+				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_RW);
 				osd_fwrite(tape_put_file, zeroes, 256);
 				osd_fwrite(tape_put_file, tape_buffer, 8);
 			}
@@ -227,7 +225,7 @@ static void tape_put_byte(UINT8 value)
 				UINT8 zeroes[256] = {0,};
 
                 sprintf(filename, "%-6.6s.cas", tape_buffer+2);
-				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 2);
+				tape_put_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_RW);
 				osd_fwrite(tape_put_file, zeroes, 256);
 				osd_fwrite(tape_put_file, tape_buffer, 8);
 			}
@@ -300,7 +298,7 @@ static void tape_get_byte(void)
 static void tape_get_open(void)
 {
 	/* TODO: remove this */
-	unsigned char *RAM = Machine->memory_region[Machine->drv->cpu[0].memory_region];
+	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	if (!tape_get_file)
 	{
@@ -308,7 +306,7 @@ static void tape_get_open(void)
 
         sprintf(filename, "%-6.6s.cas", RAM + 0x41e8);
 		if (errorlog) fprintf (errorlog, "filename %s\n", filename);
-		tape_get_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, 0);
+		tape_get_file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
 		tape_count = 0;
 	}
 }

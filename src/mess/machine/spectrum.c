@@ -31,7 +31,7 @@ int     spectrum_rom_load(void)
 {
         void *file;
 
-        file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, 0);
+        file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_RW, OSD_FOPEN_READ);
 
         if (errorlog) fprintf(errorlog,"hmm!\r\n");
 
@@ -140,7 +140,7 @@ void    spectrum_setup_snapshot(unsigned char *pSnapshot, unsigned long Snapshot
         cpu_set_reg(Z80_IRQ_STATE, 0);
         cpu_set_reg(Z80_HALT, 0);
 
-        RAM = Machine->memory_region[0];
+        RAM = memory_region(REGION_CPU1);
 
         // memory dump
 //        memcpy(&RAM[16384], &pSnapshot[27],49152);

@@ -185,7 +185,6 @@ static struct MachineDriver pdp1_machine_driver =
 		{
 			CPU_PDP1,
 			2000000,
-			0,
 			pdp1_readmem, pdp1_writemem,0,0,
 			0, 0 /* no vblank interrupt */
 		}

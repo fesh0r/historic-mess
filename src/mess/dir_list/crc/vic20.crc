@@ -7,9 +7,8 @@
 [VIC20]
 # autostart moduls
 # work also in pal version
-# ae relied on 0x288 initialised (to 0xff)
 5b8f0411 =  AE.60
-05ae8278 =  AE.A0 (rastereffect?)
+05ae8278 =  AE.A0 (rastereffect)
 ad217e63 =  ARACH.60
 ec43f977 =  ARACH.A0 (how to play?)
 980ee881 =  BUCK.60
@@ -71,23 +70,21 @@ c1114c57 =  JUNGLE.A0
 5a0b7e5d =  MOON_PAT.60
 b47f9971 =  MOON_PAT.A0
 62efe05d =  MOUNTAIN.60
-ad3ff0a4 =  MOUNTAIN.A0 (graphics?)
+ad3ff0a4 =  MOUNTAIN.A0 flickers, I thinks this is right
 45af030c =  MS_PAC.60
 ffd1ab54 =  MS_PAC.A0
 5a6d36e0 =  PINBALL2.60
-46cc3836 =  PINBALL2.A0
+46cc3836 =  PINBALL2.A0 (paddles)
 e0c6b380 =  POLE_POS.60
 548c1ef9 =  POLE_POS.A0
 07cbdd86 =  SKY_BLAZ.60
 c9c0b743 =  SKY_BLAZ.A0
-#this 2 moduls work well
-#when started with their system call (you have to disable autostart in the
-# module code)
-#seems to be a initialization problem of the module! 
-b5ce2d3a =  FLIPPER1.PRG (not currently supported) (sys41035)
-43e45c34 =  SCRAM20.PRG (not currently supported) (sys40970)
+
+# program with ram at 0xa000
+# load absolute, then press restore
+# converted to modules (without init of video chip) 
+b5ce2d3a =  FLIPPER1.PRG
+43e45c34 =  SCRAM20.PRG
 
 # program 8k
-# needs to be started with sys until program could normally be loaded
-93aa9d10 = Psycho Shopper (sys8192)
-
+93aa9d10 = Psycho Shopper

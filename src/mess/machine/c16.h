@@ -6,9 +6,7 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "mess/vidhrdw/ted7360.h"
-
-// dirtybuffer when disabled, something faster but no rasterlineeffects
-#define RASTERLINEBASED
+#include "mess/machine/c1551.h"
 
 /* enable and set level for verbosity of the various parts of emulation */
 
@@ -50,7 +48,6 @@
  * connected to the keyboard latch
  * without! selection (also activ) */
 #define JOYSTICK1_PORT (input_port_7_r(0)&0x80)
-
 #define JOYSTICK2_PORT (input_port_7_r(0)&0x40)
 
 #define JOYSTICK_2_LEFT	(JOYSTICK2_PORT&&(input_port_1_r(0)&0x80))
@@ -64,15 +61,6 @@
 #define JOYSTICK_1_UP		(JOYSTICK1_PORT&&(input_port_0_r(0)&0x20))
 #define JOYSTICK_1_DOWN	(JOYSTICK1_PORT&&(input_port_0_r(0)&0x10))
 #define JOYSTICK_1_BUTTON (JOYSTICK1_PORT&&(input_port_0_r(0)&8))
-
-// macros to access keys
-#define JOYSTICK_LEFT	(JOYSTICK_1_LEFT||JOYSTICK_2_LEFT)
-#define JOYSTICK_RIGHT	(JOYSTICK_1_RIGHT||JOYSTICK_2_RIGHT)
-#define JOYSTICK_UP		(JOYSTICK_1_UP||JOYSTICK_2_UP)
-#define JOYSTICK_DOWN	(JOYSTICK_1_DOWN||JOYSTICK_2_DOWN)
-#define JOYSTICK_BUTTON1 (JOYSTICK_1_BUTTON)
-#define JOYSTICK_BUTTON2 (JOYSTICK_2_BUTTON)
-
 
 #define KEY_ESC (input_port_2_r(0)&0x8000)
 #define KEY_1 (input_port_2_r(0)&0x4000)
@@ -143,21 +131,29 @@
 #define KEY_F1 (input_port_5_r(0)&2)
 #define KEY_F2 (input_port_5_r(0)&1)
 
-#define KEY_F3 (input_port_6_r(0)&0x8000) 
-#define KEY_HELP (input_port_6_r(0)&0x4000) 
+#define KEY_F3 (input_port_6_r(0)&0x8000)
+#define KEY_HELP (input_port_6_r(0)&0x4000)
+
+#define DATASSETTE_PLAY		(input_port_6_r(6)&4)
+#define DATASSETTE_RECORD	(input_port_6_r(6)&2)
+#define DATASSETTE_STOP		(input_port_6_r(6)&1)
 
 #define KEY_SHIFT (KEY_LEFT_SHIFT||KEY_RIGHT_SHIFT||KEY_SHIFTLOCK)
 
-#define DIPMEMORY (input_port_7_r(0)&3)
+#define DATASSETTE (input_port_7_r(0)&0x20)
+#define DATASSETTE_TONE (input_port_7_r(0)&0x10)
+#define IEC8ON ((input_port_7_r(0)&0xc)==4)
+#define IEC9ON ((input_port_7_r(0)&3)==1)
+#define SERIAL8ON ((input_port_7_r(0)&0xc)==8)
+#define SERIAL9ON ((input_port_7_r(0)&3)==2)
+
+#define DIPMEMORY (input_port_8_r(0)&3)
 #define MEMORY16K (0)
 #define MEMORY32K (2)
 #define MEMORY64K (3)
 
-#define IEC8ON (input_port_7_r(0)&0x20)
-#define IEC9ON (input_port_7_r(0)&0x10)
-
-
 extern UINT8 *c16_memory;
+extern CBM_Drive c16_drive8, c16_drive9;
 
 extern void c16_m7501_port_w(int offset, int data);
 extern int c16_m7501_port_r(int offset);
@@ -165,8 +161,7 @@ extern int c16_m7501_port_r(int offset);
 extern void c16_6551_port_w(int offset, int data);
 extern int c16_6551_port_r(int offset);
 
-extern void c16_6529b_port_w(int offset, int data);
-extern int c16_6529b_port_r(int offset);
+extern int c16_fd1x_r(int offset);
 
 extern void c16_6529_port_w(int offset, int data);
 extern int c16_6529_port_r(int offset);
@@ -181,30 +176,17 @@ extern void c16_select_roms(int offset, int data);
 extern void c16_switch_to_rom(int offset, int data);
 extern void c16_switch_to_ram(int offset, int data);
 
-extern void c16_write_0002(int offset, int data);
-//extern void c16_write_4000(int offset, int data);
-//extern void c16_write_8000(int offset, int data);
-//extern void c16_write_c000(int offset, int data);
-//extern void c16_write_ff40(int offset, int data);
-
-extern int c16_read_0000(int offset);
-extern int c16_read_4000(int offset);
-extern int c16_read_8000(int offset);
-extern int c16_read_c000(int offset);
-extern int c16_read_fc00(int offset);
-extern int c16_read_ff40(int offset);
-
 // ted reads
-extern int ted7360_dma_read(int offset);
-extern int c16_read_keyboard(void);
+extern int c16_read_keyboard(int databus);
+extern void c16_interrupt(int);
 
 extern void c16_driver_init(void);
 extern void plus4_driver_init(void);
+extern void c16_driver_shutdown(void);
 extern int  c16_rom_load(void);
 extern int  c16_rom_id(const char *name, const char *gamename);
 extern void c16_init_machine(void);
 extern void c16_shutdown_machine(void);
-extern void c16_interrupt(int);
 extern int  c16_frame_interrupt(void);
 
 #endif

@@ -337,7 +337,6 @@ static struct MachineDriver d32_machine_driver =
 		{
 			CPU_M6809,
 			894886,	/* 0,894886 Mhz */
-			0,
 			d32_readmem,d32_writemem,
 			0, 0,
 			dragon_interrupt, 1,
@@ -381,7 +380,6 @@ static struct MachineDriver coco_machine_driver =
 		{
 			CPU_M6809,
 			894886,	/* 0,894886 Mhz */
-			0,
 			coco_readmem,coco_writemem,
 			0, 0,
 			dragon_interrupt, 1,
@@ -425,7 +423,6 @@ static struct MachineDriver coco3_machine_driver =
 		{
 			CPU_M6809,
 			894886,	/* 0,894886 Mhz */
-			0,
 			coco3_readmem,coco3_writemem,
 			0, 0,
 			dragon_interrupt, 1,
@@ -469,7 +466,7 @@ static struct MachineDriver coco3_machine_driver =
 ***************************************************************************/
 
 ROM_START(d32)
-	ROM_REGION(0x10000)
+	ROM_REGIONX(0x10000,REGION_CPU1)
 	ROM_LOAD("d32.rom",	 0x8000, 0x4000, 0xe3879310)
 ROM_END
 
@@ -513,29 +510,16 @@ struct GameDriver dragon32_driver =
 
 
 ROM_START(coco)
-     ROM_REGION(0x17f00)
+     ROM_REGIONX(0x18000,REGION_CPU1)
      ROM_LOAD("coco.rom",  0x10000, 0x4000, 0x2ea0fb7f)
-     //ROM_LOAD("disk.rom",  0x14000, 0x2000, 0 /* 0x7d48ba8e */)
+     ROM_LOAD("disk.rom",  0x14000, 0x2000, 0x7d48ba8e)
 ROM_END
 
 ROM_START(coco3)
-     ROM_REGION(0x88000)
-     ROM_LOAD("coco.rom",  0x80000, 0x4000, 0x2ea0fb7f)
-     //ROM_LOAD("disk.rom",  0x84000, 0x2000, 0 /* 0x7d48ba8e */)
+     ROM_REGIONX(0x90000,REGION_CPU1)
+     ROM_LOAD("coco3.rom", 0x80000, 0x7f00, BADCRC(0xdfce21e5))
+     ROM_LOAD("disk.rom",  0x8C000, 0x2000, 0x7d48ba8e)
 ROM_END
-
-/*
-ROM_START(coco)
-	ROM_REGION(0x17f00)
-	ROM_LOAD("coco.rom",  0x10000, 0x4000, 0x2ea0fb7f)
-ROM_END
-
-ROM_START(coco3)
-	ROM_REGION(0x87f00)
-	ROM_LOAD("coco.rom",  0x80000, 0x4000, 0x2ea0fb7f)
-ROM_END
-*/
-
 
 struct GameDriver coco_driver =
 {

@@ -215,7 +215,6 @@ static struct MachineDriver pce_machine_driver =
         {
             CPU_H6280,
             7195090,
-            0,
             pce_readmem, pce_writemem, pce_readport, pce_writeport,
             pce_interrupt, VDC_LPF
         },

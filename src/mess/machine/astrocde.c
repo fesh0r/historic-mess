@@ -36,7 +36,7 @@ int astrocade_load_rom(void)
 		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_IMAGE_R, 0);
 		if (file)
 		{
-			size = osd_fread(file, Machine->memory_region[0] + 0x2000, 0x8000);
+			size = osd_fread(file, memory_region(REGION_CPU1) + 0x2000, 0x8000);
 			osd_fclose(file);
         }
 	}	return 0;

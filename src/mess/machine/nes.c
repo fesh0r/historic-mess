@@ -813,24 +813,23 @@ int nes_load_rom (void)
 	char skank[8];
 	int local_options;
 	char m;
-	int region;
 	int Cart_Size;
 	int trainer;
 	int battery;
 	int i;
 
-   if(errorlog) fprintf (errorlog,"Beginning nes_load_rom\n");
+	if(errorlog) fprintf (errorlog,"Beginning nes_load_rom\n");
 	if (!(romfile = osd_fopen (Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_IMAGE_R, 0)))
 	{
 
 		if(errorlog) fprintf (errorlog,"osd_fopen failed in nes_load_rom.\n");
       return 1;
 	}
-   if(errorlog) fprintf (errorlog,"Finished osd_Fopen for ROM\n");
+	if(errorlog) fprintf (errorlog,"Finished osd_Fopen for ROM\n");
 
 	/* Verify the file is in iNES format */
 	osd_fread (romfile, magic, 4);
-   if(errorlog) fprintf (errorlog,"Cart is in NES format?\n");
+	if(errorlog) fprintf (errorlog,"Cart is in NES format?\n");
 
 	if ((magic[0] != 'N') ||
 		(magic[1] != 'E') ||
@@ -841,11 +840,11 @@ int nes_load_rom (void)
 	osd_fread (romfile, &CHR_Rom, 1);
 
 	Cart_Size = (PRG_Rom << 4) + CHR_Rom * 8;
-   if(errorlog) fprintf (errorlog,"Cart file length is %d \n",Cart_Size);
+	if(errorlog) fprintf (errorlog,"Cart file length is %d \n",Cart_Size);
 
 	/* Read the first ROM option byte (offset 6) */
 	osd_fread (romfile, &m, 1);
-   if(errorlog) fprintf (errorlog,"Read first ROM option BYTE.\n");
+	if(errorlog) fprintf (errorlog,"Read first ROM option BYTE.\n");
 
 	/* Interpret the iNES header flags */
 	Mapper = (m & 0xf0) >> 4;
@@ -853,11 +852,11 @@ int nes_load_rom (void)
 
 	/* Read the second ROM option byte (offset 7) */
 	osd_fread (romfile, &m, 1);
-   if(errorlog) fprintf (errorlog,"Read second ROM option BYTE.\n");
+	if(errorlog) fprintf (errorlog,"Read second ROM option BYTE.\n");
 
 	/* Check for skanky headers */
 	osd_fread (romfile, &skank, 8);
-   if(errorlog) fprintf (errorlog,"Checked for skanky headers.\n");
+	if(errorlog) fprintf (errorlog,"Checked for skanky headers.\n");
 
 	/* If the header has junk in the unused bytes, assume the extra mapper byte is also invalid */
 	/* We only check the first 4 unused bytes for now */
@@ -910,23 +909,17 @@ int nes_load_rom (void)
 	MMC1_extended = 0;
 	if (Mapper == 1) MMC1_extended = Cart_Size >> 9;
 
-	/* Allocate memory and set up memory regions */
-	for (region = 0;region < MAX_MEMORY_REGIONS;region++)
-		Machine->memory_region[region] = 0;
-
-	ROM = calloc (0x10000 + (PRG_Rom+1) * 0x4000, 1);
-	VROM = calloc ((CHR_Rom+1) * 0x2000, 1);
-	VRAM = calloc (0x2000, 1);
-
-	if ((ROM == NULL) || (VROM == NULL) || (VRAM == NULL))
-	{
-		printf ("Memory allocation failed reading roms!\n");
-		goto bad;
-	}
-
-	Machine->memory_region[0] = ROM;
-	Machine->memory_region[1] = VROM;
-	Machine->memory_region[2] = VRAM;
+    /* Allocate memory and set up memory regions */
+    if( new_memory_region(REGION_CPU1, 0x10000 + (PRG_Rom+1) * 0x4000) ||
+        new_memory_region(REGION_GFX1, (CHR_Rom+1) * 0x2000) ||
+        new_memory_region(REGION_GFX2, 0x2000) )
+    {
+        printf ("Memory allocation failed reading roms!\n");
+        goto bad;
+    }
+	ROM = memory_region(REGION_CPU1);
+	VROM = memory_region(REGION_GFX1);
+	VRAM = memory_region(REGION_GFX2);
 
 	/* Position past the header */
 	osd_fseek (romfile, 16, SEEK_SET);
