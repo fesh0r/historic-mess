@@ -120,8 +120,12 @@ struct via6522
 #define INT_T1 	0x40
 #define INT_ANY	0x80
 
-#define CLR_PA_INT(v)           via_clear_int (v, INT_CA1 | (!CA2_IND_IRQ(v->pcr)) ? INT_CA2: 0)
-#define CLR_PB_INT(v)           via_clear_int (v, INT_CB1 | (!CB2_IND_IRQ(v->pcr)) ? INT_CB2: 0)
+//#define CLR_PA_INT(v) via_clear_int (v, INT_CA1 | (!CA2_IND_IRQ(v->pcr)) ? INT_CA2: 0)
+//#define CLR_PB_INT(v) via_clear_int (v, INT_CB1 | (!CB2_IND_IRQ(v->pcr)) ? INT_CB2: 0)
+#define CLR_PA_INT(v)	via_clear_int (v, INT_CA1 | ((!CA2_IND_IRQ(v->pcr)) ? INT_CA2: 0))
+#define CLR_PB_INT(v)	via_clear_int (v, INT_CB1 | ((!CB2_IND_IRQ(v->pcr)) ? INT_CB2: 0))
+
+
 
 #define IFR_DELAY 3
 
@@ -151,7 +155,7 @@ void via_reset(void)
 	for (i = 0; i < MAX_VIA; i++)
 	{
 		const struct via6522_interface *intf = via[i].intf;
-		
+
 		memset(&via[i], 0, sizeof(via[i]));
 
 		via[i].intf = intf;
@@ -181,13 +185,13 @@ static void via_clear_int (struct via6522 *v, int data)
     else
         if (v->intf->irq_func) (*v->intf->irq_func)(CLEAR_LINE);
 }
-            
+
 /******************* Timer timeouts *************************/
 static void via_t1_timeout (int which)
 {
 	struct via6522 *v = via + which;
 
-	
+
 	if (T1_SET_PB7(v->acr))
 	{
 		if (T1_CONTINUOUS (v->acr))
@@ -216,7 +220,7 @@ static void via_t2_timeout (int which)
         v->intf->t2_callback(timer_timeelapsed(v->t2));
 
 	v->t2 = 0;
-	
+
 	if (!(v->ifr & INT_T2))
 		via_set_int (v, INT_T2);
 
@@ -230,7 +234,7 @@ int via_read(int which, int offset)
 	int val = 0;
 
 	offset &= 0xf;
-	
+
 	switch (offset)
 	{
 		case VIA_PB:
@@ -243,7 +247,7 @@ int via_read(int which, int offset)
             /* combine input and output values */
             val = (v->out_b & v->ddr_b) + (v->in_b & ~v->ddr_b);
             break;
-            
+
 		case VIA_PA:
 			/* If CA2 is configured as output and in pulse or handshake mode,
                CA2 is set now */
@@ -252,13 +256,13 @@ int via_read(int which, int offset)
                 /* call the CA2 output function */
                 if (v->out_ca2)
                     if (v->intf->out_ca2_func) v->intf->out_ca2_func(0, 0);
-                
+
                 /* set CA2 */
                 v->out_ca2 = 0;
 			}
 
             CLR_PA_INT(v);
-            
+
 		case VIA_PANH:
             /* update the input */
             if (PA_LATCH_ENABLE(v->acr) == 0)
@@ -283,7 +287,7 @@ int via_read(int which, int offset)
             else
                 val = v->t1cl;
             break;
-            
+
 		case VIA_T1CH:
             if (v->t1)
                 val = TIME_TO_CYCLES(0, timer_timeleft(v->t1)) >> 8;
@@ -306,7 +310,7 @@ int via_read(int which, int offset)
             else
                 val = v->t2cl;
             break;
-            
+
 		case VIA_T2CH:
             if (v->t2)
                 val = TIME_TO_CYCLES(0, timer_timeleft(v->t2)) >> 8;
@@ -354,7 +358,7 @@ void via_write(int which, int offset, int data)
 
             if (v->intf->out_b_func && v->ddr_b)
                 v->intf->out_b_func(0, v->out_b & v->ddr_b);
-            
+
             CLR_PB_INT(v);
 
 			/* If CB2 is configured as output and in pulse or handshake mode,
@@ -364,12 +368,12 @@ void via_write(int which, int offset, int data)
                 /* call the CB2 output function */
                 if (v->out_cb2)
                     if (v->intf->out_cb2_func) v->intf->out_cb2_func(0, 0);
-                
+
                 /* set CB2 */
                 v->out_cb2 = 0;
 			}
             break;
-            
+
 		case VIA_PA:
 			/* If CA2 is configured as output and in pulse or handshake mode,
                CA2 is set now */
@@ -378,7 +382,7 @@ void via_write(int which, int offset, int data)
                 /* call the CA2 output function */
                 if (v->out_ca2)
                     if (v->intf->out_ca2_func) v->intf->out_ca2_func(0, 0);
-                
+
                 /* set CA2 */
                 v->out_ca2 = 0;
 			}
@@ -403,11 +407,11 @@ void via_write(int which, int offset, int data)
 		case VIA_T1LL:
             v->t1ll = data;
             break;
-            
+
 		case VIA_T1LH:
             v->t1lh = data;
             break;
-            
+
 		case VIA_T1CH:
             v->t1ch = v->t1lh = data;
             v->t1cl = v->t1ll;
@@ -428,7 +432,7 @@ void via_write(int which, int offset, int data)
 		case VIA_T2CL:
             v->t2ll = data;
             break;
-            
+
 		case VIA_T2CH:
             v->t2ch = v->t2lh = data;
             v->t2cl = v->t2ll;
@@ -449,7 +453,7 @@ void via_write(int which, int offset, int data)
 
 		case VIA_SR:
             v->sr = data;
-            if (v->intf->out_shift_func && SO_O2_CONTROL(v->acr)) 
+            if (v->intf->out_shift_func && SO_O2_CONTROL(v->acr))
                 v->intf->out_shift_func(data);
             break;
 
@@ -459,14 +463,14 @@ void via_write(int which, int offset, int data)
             if (CA2_FIX_OUTPUT(data) && CA2_OUTPUT_LEVEL(data) ^ v->out_ca2)
             {
                 v->out_ca2 = CA2_OUTPUT_LEVEL(data);
-                if (v->intf->out_ca2_func) 
+                if (v->intf->out_ca2_func)
                     v->intf->out_ca2_func(0, v->out_ca2);
             }
-            
+
             if (CB2_FIX_OUTPUT(data) && CB2_OUTPUT_LEVEL(data) ^ v->out_cb2)
             {
                 v->out_cb2 = CB2_OUTPUT_LEVEL(data);
-                if (v->intf->out_cb2_func) 
+                if (v->intf->out_cb2_func)
                     v->intf->out_cb2_func(0, v->out_cb2);
             }
             break;
@@ -532,7 +536,7 @@ void via_set_input_ca1(int which, int data)
                 /* call the CA2 output function */
                 if (!v->out_ca2)
                     if (v->intf->out_ca2_func) v->intf->out_ca2_func(0, 1);
-                
+
                 /* clear CA2 */
                 v->out_ca2 = 1;
 			}
@@ -609,7 +613,7 @@ void via_set_input_cb1(int which, int data)
                 /* call the CB2 output function */
                 if (!v->out_cb2)
                     if (v->intf->out_cb2_func) v->intf->out_cb2_func(0, 1);
-                
+
                 /* clear CB2 */
                 v->out_cb2 = 1;
 			}

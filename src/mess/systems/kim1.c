@@ -13,10 +13,6 @@
 //#include "mess/machine/kim1.h"
 //#include "mess/vidhrdw/kim1.h"
 
-#define LUNAR_LANDER	1
-#define MUSICBOX		0
-#define HYPER_TAPE		0
-
 #define VERBOSE 1
 
 #if VERBOSE
@@ -207,123 +203,58 @@ void kim1_init_machine(void)
 	m6530[1].drib = 0xff;
 	m6530[1].clock = (double)1000000/1;
 	m6530[1].timer = timer_pulse(TIME_IN_HZ(256 * m6530[1].clock / 256 / 256), 1, m6530_timer_cb);
-
-#if LUNAR_LANDER
-/*
- * LUNAR LANDER
- *	 Jim Butterfield
- *
- * Description
- *		This program starts at 0200.  When started, you will find
- * yourself at 4500 feet and falling.  The thrust on your machine
- * is set to low; so you will pick up speed due to the force of
- * gravity.
- *	   You can look at your fuel at any time by pressing the
- * "F" button.  Your fuel (initially 800 pounds) will be shown
- * in the first four digits of the KIM display.
- *	   The last two digits of the KIM display always show
- * your rate of ascent of descent.	"A" restores altitude.
- *	   Set your thrust by pressing buttons 1 through 9.
- * Warning: button 0 turns you motor off, and it will not
- * reignite!  A thrust of 1, minimum, burns very little fuel;
- * but gravity will be pulling your craft down faster and
- * faster.	A thrust of 9, maximum, overcomes gravity
- * and reduces your rate of descent very sharply  A thrust of 5
- * exactly counterbalances gravity; you will continue to descend
- * (or ascend) at a constant rate.	If you run out of fuel,
- * your thrust controls will become inoperative.
- *
- * Suggestions for a safe flight:
- *	 [1] Conserve fuel at the beginning by pressing 1.	You
- *		 begin to pick up speed downwards.
- *	 [2] When your rate of descent gets up to the 90's, you're
- *		 falling fast enough.  Press 5 to steady the rate.
- *	 [3] When your altitude reaches about 1500 feet, you'll
- *		 need to slow down.  Press 9 and slow down fast.
- *	 [4] When your rate of descent has dropped to 15 or 20,
- *		 steady the craft by pressing 5 or 6.  Now you're on
- *		 your own.
- * MESS:
- *	 To execute enter 0 2 0 0 and GO (Enter) after startup.
- *
- */
-	memcpy(&RAM[0x200], "\xA2\x0D\xBD\xCC\x02\x95\xD5\xCA\x10\xF8\xA2\x05\xA0\x01\xF8\x18", 16);
-	memcpy(&RAM[0x210], "\xB5\xD5\x75\xD7\x95\xD5\xCA\x88\x10\xF6\xB5\xD8\x10\x02\xA9\x99", 16);
-	memcpy(&RAM[0x220], "\x75\xD5\x95\xD5\xCA\x10\xE5\xA5\xD5\x10\x0D\xA9\x00\x85\xE2\xA2", 16);
-	memcpy(&RAM[0x230], "\x02\x95\xD5\x95\xDB\xCA\x10\xF9\x38\xA5\xE0\xE5\xDD\x85\xE0\xA2", 16);
-	memcpy(&RAM[0x240], "\x01\xB5\xDE\xE9\x00\x95\xDE\xCA\x10\xF7\xB0\x0C\xA9\x00\xA2\x03", 16);
-	memcpy(&RAM[0x250], "\x95\xDD\xCA\x10\xFB\x20\xBD\x02\xA5\xDE\xA6\xDF\x09\xF0\xA4\xE1", 16);
-	memcpy(&RAM[0x260], "\xF0\x20\xF0\x9C\xF0\xA4\xA2\xFE\xA0\x5A\x18\xA5\xD9\x69\x05\xA5", 16);
-	memcpy(&RAM[0x270], "\xD8\x69\x00\xB0\x04\xA2\xAD\xA0\xDE\x98\xA4\xE2\xF0\x04\xA5\xD5", 16);
-	memcpy(&RAM[0x280], "\xA6\xD6\x85\xFB\x86\xFA\xA5\xD9\xA6\xD8\x10\x05\x38\xA9\x00\xE5", 16);
-	memcpy(&RAM[0x290], "\xD9\x85\xF9\xA9\x02\x85\xE3\xD8\x20\x1F\x1F\x20\x6A\x1F\xC9\x13", 16);
-	memcpy(&RAM[0x2A0], "\xF0\xC0\xB0\x03\x20\xAD\x02\xC6\xE3\xD0\xED\xF0\xB7\xC9\x0A\x90", 16);
-	memcpy(&RAM[0x2B0], "\x05\x49\x0F\x85\xE1\x60\xAA\xA5\xDD\xF0\xFA\x86\xDD\xA5\xDD\x38", 16);
-	memcpy(&RAM[0x2C0], "\xF8\xE9\x05\x85\xDC\xA9\x00\xE9\x00\x85\xDB\x60\x45\x01\x00\x99", 16);
-	memcpy(&RAM[0x2D0], "\x81\x00\x99\x97\x02\x08\x00\x00\x01\x01", 10);
-
-	RAM[0x00f1] = 0x00; /* ????? */
-
-    RAM[0x17f5] = 0x00; /* program start address: 0x0200 */
-	RAM[0x17f6] = 0x02;
-	RAM[0x17f7] = 0xda; /* program length: 0x00da */
-	RAM[0x17f8] = 0x00;
-	RAM[0x17f9] = 0x01; /* program ID: 1 */
-#endif
-
-#if MUSICBOX
-#if 0
-    memcpy(&RAM[0x000],"\xFB\x18\xFE\xFF\x44\x51\xE6\xE6\x66\x5A\x51\x4C\xC4\xC4\xC4\xD1", 16);
-	memcpy(&RAM[0x010],"\xBD\xBD\xBD\x00\x44\xBD\x00\x44\x3D\x36\x33\x2D\xA8\x80\x80\x33", 16);
-	memcpy(&RAM[0x020],"\x44\xB3\x80\x80\x44\x51\xC4\x80\x80\x5A\x51\xE6\x80\x80\xFA\xFE", 16);
-	memcpy(&RAM[0x030],"\x00\xFB\x28\x5A\x5A\x51\x48\x5A\x48\xD1\x5A\x5A\x51\x48\xDA\xE0", 16);
-	memcpy(&RAM[0x040],"\x5A\x5A\x51\x48\x44\x48\x51\x5A\x60\x79\x6C\x60\xDA\xDA\xFA\xFE", 16);
-	memcpy(&RAM[0x050],"\xFF\x5A\x5A\x5A\x5A\x5A\x5A\x66\x72\x79\xE6\xE6\x80\x00\x56\x56", 16);
-	memcpy(&RAM[0x060],"\x56\x56\x56\x56\x5A\x66\xF2\x80\x80\x4C\x4B\x4C\x4C\x4C\x4C\x56", 16);
-	memcpy(&RAM[0x070],"\x5A\x56\x4C\x00\xCh\x44\x4C\x56\x5A\x5A\x56\x5A\x66\x56\x6A\x66", 16);
-	memcpy(&RAM[0x080],"\xF2\x80\xFE\x00\x00\x72\x5A\xCC\x72\x5A\xCC\x72\x5A\xCC\x80\xB8", 16);
-	memcpy(&RAM[0x090],"\x80\x4C\x56\x5A\x56\x5A\xE6\xF2\x80\xFA\xFF\x00", 12);
-#else
-	memcpy(&RAM[0x000],"\xFE\x00\x56\x52\xAD\xAF\xAD\xAF\xAD\xFC\x06\xAF\xFC\x02\xFE\xFF", 16);
-	memcpy(&RAM[0x010],"\x2F\x29\x26\x24\x2F\x29\xAA\x32\xA9\xFC\x06\xAF\xFC\x02\xFE\x00", 16);
-	memcpy(&RAM[0x020],"\x56\x52\xAD\xAF\x5D\xAF\xAD\xFC\x06\xAF\xFC\x02\xFE\xFF\x39\x40", 16);
-	memcpy(&RAM[0x030],"\x44\x39\x2F\xAF\x29\x2F\x39\xA9\xB0\x80\xFE\x00\x56\x52\xAD\xAF", 16);
-	memcpy(&RAM[0x040],"\xAD\xAF\x0D\xFC\x06\xAF\xFC\x02\xFE\xFF\x2F\x29\x26\x24\x2F\x29", 16);
-	memcpy(&RAM[0x050],"\xAA\x32\xA9\xAF\xB0\x80\x2F\x29\x24\x2F\x29\xA4\x2F\x29\x2F\x24", 16);
-	memcpy(&RAM[0x060],"\x2F\x29\xAA\x2F\x29\x2F\x2A\x2F\x29\xAQ\x32\xA9\xAF\x80\x80\xFA", 16);
-	memcpy(&RAM[0x070],"\xFF\x00", 2);
-#endif
-    memcpy(&RAM[0x200],"\xA2\x05\xBD\x86\x02\x95\xE0\xCA\x10\xF8\xA9\xBF\x8D\x43\x17\xA0", 16);
-	memcpy(&RAM[0x210],"\x00\xB1\xE4\xE6\xE4\xC9\xFA\xD0\x04\x00\xEA\xF0\xED\x90\x0B\xE9", 16);
-	memcpy(&RAM[0x220],"\xFB\xAA\xB1\xE4\xE6\xE4\x95\xE0\xB0\xE0\xA6\xE0\x86\xE7\xA6\xE1", 16);
-	memcpy(&RAM[0x230],"\xA8\x30\x02\xA2\x01\x86\xE6\x29\x7F\x85\xE9\xF0\x02\x85\xEA\xA5", 16);
-	memcpy(&RAM[0x240],"\xE9\x25\xE3\xF0\x04\xE6\xEA\xC6\xE9\xA6\xE9\xA9\xA7\x20\x5D\x02", 16);
-	memcpy(&RAM[0x250],"\x30\xB8\xA6\xEA\xA9\x27\x20\x5D\x02\x30\xAF\x10\xE2\xA4\xE2\x84", 16);
-	memcpy(&RAM[0x260],"\xEB\x86\xEC\xE0\x00\xD0\x08\xA6\xEC\xC6\xEB\xD0\xF6\xF0\x16\x8D", 16);
-	memcpy(&RAM[0x270],"\x42\x17\xCA\xC6\xE8\xD0\xEC\xC6\xE7\xD0\xE8\xA4\xE0\x84\xE7\xC6", 16);
-	memcpy(&RAM[0x280],"\xE6\xD0\xE0\xA9\xFF\x60\x30\x02\x01\xFF\x00\x00", 12);
-#endif
-
-#if HYPER_TAPE
-    memcpy(&RAM[0x100],"\xA9\xAD\x8D\xEC\x17\x20\x32\x19\xA9\x27\x85\xF5\xA9\xBF\x8D\x43", 16);
-	memcpy(&RAM[0x110],"\x17\xA2\x64\xA9\x16\x20\x61\x01\xA9\x2A\x20\x88\x01\xAD\xF9\x17", 16);
-	memcpy(&RAM[0x120],"\x20\x70\x01\xAD\xF5\x17\x20\x6D\x01\xAD\xF6\x17\x20\x6D\x01\x20", 16);
-	memcpy(&RAM[0x130],"\xEC\x17\x20\x6D\x01\x20\xEA\x19\xAD\xED\x17\xCD\xF7\x17\xAD\xEE", 16);
-	memcpy(&RAM[0x140],"\x17\xED\xF8\x17\x90\xE9\xA9\x2F\x20\x88\x01\xAD\xE7\x17\x20\x70", 16);
-	memcpy(&RAM[0x150],"\x01\xAD\xE8\x17\x20\x70\x01\xA2\x02\xA9\x04\x20\x61\x01\x4C\x5C", 16);
-	memcpy(&RAM[0x160],"\x18\x86\xF1\x48\x20\x88\x01\x68\xC6\xF1\xD0\xF7\x60\x20\x4C\x19", 16);
-	memcpy(&RAM[0x170],"\x48\x4A\x4A\x4A\x4A\x20\x7D\x01\x68\x20\x7D\x01\x60\x29\x0F\xC9", 16);
-	memcpy(&RAM[0x180],"\x0A\x18\x30\x02\x69\x07\x69\x30\xA0\x07\x84\xF2\xA0\x02\x84\xF3", 16);
-	memcpy(&RAM[0x190],"\xBE\xBE\x01\x48\x2C\x47\x17\x10\xFB\xB9\xBF\x01\x8D\x44\x17\xA5", 16);
-	memcpy(&RAM[0x1A0],"\xF5\x49\x80\x8D\x42\x17\x85\xF5\xCA\xD0\xE9\x68\xC6\xF3\xF0\x05", 16);
-	memcpy(&RAM[0x1B0],"\x30\x07\x4A\x90\xDB\xA0\x00\xF0\xD7\xC6\xF2\x10\xCF\x60\x02\xC3", 16);
-	memcpy(&RAM[0x1C0],"\x03\x7E", 2);
-#endif
 }
 
-int id_rom(const char *name, const char * gamename)
+int kim1_rom_load(void)
 {
+    const char magic[] = "KIM1";
+    char buff[4];
+    void *file;
+    int i;
+
+    for( i = 0; i < MAX_CASSETTE; i++ )
+    {
+		if( rom_name[i] == NULL )
+			continue;
+		file = osd_fopen(Machine->gamedrv->name, rom_name[i], OSD_FILETYPE_IMAGE_RW, 0);
+        if( file )
+        {
+			UINT16 addr, size;
+			UINT8 id, *RAM = Machine->memory_region[0];
+			osd_fread(file, buff, sizeof(buff));
+			if( memcmp(buff, magic, sizeof(buff)) )
+			{
+				LOG((errorlog, "kim1_rom_load: magic '%s' not found\n", magic));
+				return 1;
+			}
+			osd_fread_lsbfirst(file, &addr, 2);
+			osd_fread_lsbfirst(file, &size, 2);
+			osd_fread(file, &id, 1);
+			LOG((errorlog, "kim1_rom_load: $%04X $%04X $%02X\n", addr, size, id));
+			while( size-- > 0 )
+				osd_fread(file, &RAM[addr++], 1);
+			osd_fclose(file);
+        }
+    }
 	return 0;
+}
+
+int kim1_rom_id(const char *name, const char *gamename)
+{
+    const char magic[] = "KIM1";
+    char buff[4];
+    void *file;
+	file = osd_fopen(gamename, name, OSD_FILETYPE_IMAGE_RW, 0);
+    if( file )
+    {
+		osd_fread(file, buff, sizeof(buff));
+		if( memcmp(buff, magic, sizeof(buff)) == 0 )
+		{
+			LOG((errorlog, "kim1_rom_id: magic '%s' found\n", magic));
+            return 0;
+		}
+    }
+    return 1;
 }
 
 void kim1_init_colors(unsigned char *palette, unsigned short *colortable,const unsigned char *color_prom)
@@ -1330,6 +1261,8 @@ void kim1_rom_decode(void)
     }
 }
 
+static const char *kim1_file_extensions[] = { "kim",0 };
+
 struct GameDriver kim1_driver =
 {
 	__FILE__,
@@ -1344,9 +1277,9 @@ struct GameDriver kim1_driver =
 	0,
 
 	rom_kim1,	/* ROM_LOAD structures */
-	0,
-	id_rom,
-	0,	/*  default file extensions */
+	kim1_rom_load,
+	kim1_rom_id,
+	kim1_file_extensions,	/*	default file extensions */
 	1,	/* number of ROM slots */
 	4,	/* number of floppy drives supported */
 	0,	/* number of hard drives supported */

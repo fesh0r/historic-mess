@@ -121,6 +121,15 @@ static void amiga_rom_decode(void)
 #endif
 }
 
+
+/* list of file extensions */
+static const char *amiga_file_extensions[] =
+{
+	"rom",
+	0       /* end of array */
+};
+
+
 struct GameDriver amiga_driver =
 {
 	__FILE__,
@@ -137,7 +146,7 @@ struct GameDriver amiga_driver =
 	rom_amiga,
 	0,						/* load rom_file images */
 	0,						/* identify rom images */
-	0,						/* default extensions */
+	amiga_file_extensions,	/* default extensions */
 	0,						/* number of ROM slots - in this case, a CMD binary */
 	4,						/* number of floppy drives supported */
 	0,						/* number of hard drives supported */

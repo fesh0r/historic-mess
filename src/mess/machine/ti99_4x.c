@@ -13,6 +13,14 @@ Emulated :
   * Disk emulation (incomplete, but seems to work OK).
 
   Compatibility looks quite good.
+
+New (9911) :
+  * updated for 16 bit handlers.
+  * added some timing (OK, it's a trick...).
+New (991202) :
+  * fixed the CRU base for disk
+New (991206) :
+  * "Juergenified" the timer code
 */
 
 #include "driver.h"
@@ -27,22 +35,23 @@ Emulated :
 #define FALSE 0
 #endif
 
+
 extern WD179X *wd[];
+extern int tms9900_ICount;
 
 static void tms9901_set_int2(int state);
 static void tms9901_init(void);
 static void tms9901_cleanup(void);
-
-
 
 /*================================================================
   General purpose code :
   initialization, cart loading, etc.
 ================================================================*/
 
-static char *cartidge_pages[2] = {NULL, NULL};
+static unsigned char *cartidge_pages[2] = {NULL, NULL};
 static int cartidge_paged;
-static int current_page;
+static int current_page_number;
+static unsigned char *current_page_ptr;
 
 /*
   Load ROM.  All files are in raw binary format.
@@ -68,7 +77,7 @@ int ti99_load_rom (void)
     cartidge_pages[1] = NULL;
   }
 
-  cpu_setbank(1, ROM + 0x6000);
+  current_page_ptr = ROM + 0x6000;
 
   if (strlen(rom_name[0]))
   {
@@ -103,9 +112,9 @@ int ti99_load_rom (void)
     cartidge_paged = TRUE;
     cartidge_pages[0] = malloc(0x2000);
     cartidge_pages[1] = malloc(0x2000);
-    current_page = 0;
+    current_page_number = 0;
     memcpy(cartidge_pages[0], ROM + 0x6000, 0x2000); /* save first page */
-    cpu_setbank(1, cartidge_pages[current_page]);
+    current_page_ptr = cartidge_pages[current_page_number];
 
     cartfile = osd_fopen (Machine->gamedrv->name, rom_name[2], OSD_FILETYPE_IMAGE_R, 0);
     if (cartfile == NULL)
@@ -199,48 +208,91 @@ int ti99_vblank_interrupt(void)
   TODO :
   * GRAM support
   * GPL paging support
-  * fix the even/odd address access goof-up (1)
-
-(1) explanation : TMS9900 can only use 16-bit words : 8-bit access are EMULATED by the TMS9900
-  with 16-bit access.  For instance, to perform a MOVB (byte move), we read 16-bit source,
-  extract 8-bit source, read 16-bit destination, insert 8-bit source in 16-bit destination,
-  then write the new 16-bit destination.  As a consequence, with memory-mapped registers,
-  a 8-bit access to an odd access will necesarily cause a dummy access to the corresponding
-  8-bit register (located at even address).
-
-  The problem is :
-  (a) for performance reason, tms9900.c calls MESS built-in 8-bit read routines rather than
-      translating them to 16-bit access.  Therefore if we make a true 8-bit access to an odd
-      address, we should cause a dummy access to the register at even address HERE (i.e.
-      in machine code).
-  (b) tms9900.c cuts a 16-bit access into two 8-bit access.  Therefore if we perform a 8-bit access,
-      part of a 16-bit access, to an odd address, we MUST NOT cause a dummy access to the register
-      at even address.
-
-  As a consequence, I could not implement the 4-wait-state delay properly, and access to odd
-  address in the memory mapped registers area are not emulated properly either.
-
-  Fix : create 16-bit wide handlers (like cpu_readmen_24 or cpu_readmen_16lew).  I asked Nicola
-  to add these in .36b9, but I have not checked if he did yet, and I'll have to update all drivers,
-  which will take some time.
+  * DSR support
+  * minimem support
 
 ================================================================*/
 
 /*
+  Same as MRA_NOP, but with an additionnal delay.
+*/
+int ti99_rw_null8bits(int offset)
+{
+  tms9900_ICount -= 4;
+
+  return(0);
+}
+
+void ti99_ww_null8bits(int offset, int data)
+{
+  tms9900_ICount -= 4;
+}
+
+/*
+  Memory extension : same as MRA_RAM, but with an additionnal delay.
+*/
+/* low 8 kb : 0x2000-0x3fff */
+int ti99_rw_xramlow(int offset)
+{
+  tms9900_ICount -= 4;
+
+  return READ_WORD(& ROM[0x2000 + offset]);
+}
+
+void ti99_ww_xramlow(int offset, int data)
+{
+  tms9900_ICount -= 4;
+
+  if (! (data & 0xff000000))
+    ROM[0x2000 + offset] = (data >> 8) & 0xff;
+  if (! (data & 0x00ff0000))
+    ROM[0x2000 + offset] = data & 0xff;
+}
+
+/* high 24 kb : 0xa000-0xffff */
+int ti99_rw_xramhigh(int offset)
+{
+  tms9900_ICount -= 4;
+
+  return READ_WORD(& ROM[0xA000 + offset]);
+}
+
+void ti99_ww_xramhigh(int offset, int data)
+{
+  tms9900_ICount -= 4;
+
+  if (! (data & 0xff000000))
+    ROM[0xA000 + offset] = (data >> 8) & 0xff;
+  if (! (data & 0x00ff0000))
+    ROM[0xA000 + offset] = data & 0xff;
+}
+
+/*
+  Cartidge read : same as MRA_ROM, but with an additionnal delay.
+*/
+int ti99_rw_cartmem(int offset)
+{
+  tms9900_ICount -= 4;
+
+  return READ_WORD(current_page_ptr + offset);
+}
+
+/*
   this handler handles ROM switching in cartidges
 */
-void ti99_wb_cartmem(int offset, int data)
+void ti99_ww_cartmem(int offset, int data)
 {
+  tms9900_ICount -= 4;
+
   if (cartidge_paged)
   { /* if cartidge is paged */
     int new_page = (offset >> 1) & 1; /* new page number */
 
-    if (current_page != new_page)
+    if (current_page_number != new_page)
     { /* if page number changed */
-      current_page = new_page;
+      current_page_number = new_page;
 
-      cpu_setbank(1, cartidge_pages[current_page]);
-      //memcpy(ROM + 0x6000, cartidge_pages[current_page], 0x2000);
+      current_page_ptr = cartidge_pages[current_page_number];
     }
   }
 }
@@ -253,17 +305,20 @@ void ti99_wb_cartmem(int offset, int data)
 /*
   PAD read
 */
-int ti99_rb_scratchpad(int offset)
+int ti99_rw_scratchpad(int offset)
 {
-  return(ROM[0x8300 | offset]);
+  return READ_WORD(& ROM[0x8300 | offset]);
 }
 
 /*
   PAD write
 */
-void ti99_wb_scratchpad(int offset, int data)
+void ti99_ww_scratchpad(int offset, int data)
 {
-  ROM[0x8300 | offset] = data;
+  if (! (data & 0xff000000))
+    ROM[0x8300 | offset] = (data >> 8) & 0xff;
+  if (! (data & 0x00ff0000))
+    ROM[0x8300 | offset] = data & 0xff;
 }
 
 /*----------------------------------------------------------------
@@ -299,90 +354,65 @@ void ti99_wb_scratchpad(int offset, int data)
 /*
   TMS9919 sound chip write
 */
-void ti99_wb_wsnd(int offset, int data)
+void ti99_ww_wsnd(int offset, int data)
 {
-  if (offset & 1)
-  {
-    /* Registers located at even adress */
-  }
-  else
-  {
-    SN76496_0_w(offset, data);
-  }
+  tms9900_ICount -= 4;
+
+  SN76496_0_w(offset, (data >> 8) & 0xff);
 }
 
 /*
   TMS9918A VDP read
 */
-int ti99_rb_rvdp(int offset)
+int ti99_rw_rvdp(int offset)
 {
-  if (offset & 1)
-  {
-    return(0);  /* Registers located at even adress */
+  tms9900_ICount -= 4;
+
+  if (offset & 2)
+  { /* read VDP status */
+    return(TMS9928A_register_r() << 8);
   }
   else
-  {
-    if (offset & 2)
-    { /* read VDP status */
-      return(TMS9928A_register_r());
-    }
-    else
-    { /* read VDP RAM */
-      return(TMS9928A_vram_r());
-    }
+  { /* read VDP RAM */
+    return(TMS9928A_vram_r() << 8);
   }
 }
 
 /*
   TMS9918A vdp write
 */
-void ti99_wb_wvdp(int offset, int data)
+void ti99_ww_wvdp(int offset, int data)
 {
-  if (offset & 1)
-  {
-    /* Registers located at even adress */
+  tms9900_ICount -= 4;
+
+  if (offset & 2)
+  { /* write VDP adress */
+    TMS9928A_register_w((data >> 8) & 0xff);
   }
   else
-  {
-    if (offset & 2)
-    { /* write VDP adress */
-      TMS9928A_register_w(data);
-    }
-    else
-    { /* write VDP data */
-      TMS9928A_vram_w(data);
-    }
+  { /* write VDP data */
+    TMS9928A_vram_w((data >> 8) & 0xff);
   }
 }
 
 /*
   TMS5200 speech chip read
 */
-int ti99_rb_rspeech(int offset)
+int ti99_rw_rspeech(int offset)
 {
-  if (offset & 1)
-  {
-    return(0);  /* Registers located at even adress */
-  }
-  else
-  {
-    return tms5220_status_r(offset);
-  }
+  tms9900_ICount -= 4;  /* much more, actually */
+
+  return tms5220_status_r(offset) << 8;
 }
 
 /*
   TMS5200 speech chip write
 */
-void ti99_wb_wspeech(int offset, int data)
+void ti99_ww_wspeech(int offset, int data)
 {
-  if (offset & 1)
-  {
-    /* Registers located at even adress */
-  }
-  else
-  {
-    tms5220_data_w(offset, data);
-  }
+  tms9900_ICount -= 4;  /* much more, actually */
+
+  tms5220_data_w(offset, (data >> 8) & 0xff);
 }
 
 /* current position in the gpl memory space */
@@ -391,60 +421,55 @@ static int gpl_addr = 0;
 /*
   GPL read
 */
-int ti99_rb_rgpl(int offset)
+int ti99_rw_rgpl(int offset)
 {
-  if (offset & 1)
-  {
-    return(0);  /* Registers located at even adress */
+  tms9900_ICount -= 4;
+
+  /*int page = (offset & 0x3C) >> 2;*/  /* GROM/GRAM can be paged */
+
+  if (offset & 2)
+  { /* read GPL adress */
+    int value;
+    /* increment gpl_addr (GPL wraps in 8k segments!) : */
+    value = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
+    gpl_addr = (value & 0xFF) << 8; /* gpl_addr is shifted left by 8 bits */
+    return value & 0xFF00;          /* and we retreive the MSB */
+    /* to get full GPL adress, we make two byte reads! */
   }
   else
-  {
-    /*int page = (offset & 0x3C) >> 2;*/  /* GROM/GRAM can be paged */
-
-    if (offset & 2)
-    { /* read GPL adress */
-      int value;
-      /* increment gpl_addr (GPL wraps in 8k segments!) : */
-      value = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
-      gpl_addr = (value & 0xFF) << 8;   /* gpl_addr is shifted left by 8 bits */
-      return (value >> 8) & 0xFF;       /* and we retreive the MSB */
-      /* to get full GPL adress, we make two byte reads! */
-    }
-    else
-    { /* read GPL data */
-      int value = (Machine->memory_region[1])[gpl_addr /*+ ((long) page << 16)*/];  /* retreive byte */
-      /* increment gpl_addr (GPL wraps in 8k segments!) : */
-      gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
-      return(value);
-    }
+  { /* read GPL data */
+    int value = (Machine->memory_region[1])[gpl_addr /*+ ((long) page << 16)*/];  /* retreive byte */
+    /* increment gpl_addr (GPL wraps in 8k segments!) : */
+    gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
+    return(value << 8);
   }
 }
 
 /*
   GPL write
-  Disabled because we don't know whether we have RAM or ROM.
 */
-void ti99_wb_wgpl(int offset, int data)
+void ti99_ww_wgpl(int offset, int data)
 {
-  if (offset & 1)
-  {
-    /* Registers located at even adress */
+  tms9900_ICount -= 4;
+
+  data = (data >> 8) & 0xff;
+
+  /*int page = (offset & 0x3C) >> 2;*/  /* GROM/GRAM can be paged */
+
+  if (offset & 2)
+  { /* write GPL adress */
+    gpl_addr = ((gpl_addr & 0xFF) << 8) | (data & 0xFF);
   }
   else
-  {
-    /*int page = (offset & 0x3C) >> 2;*/  /* GROM/GRAM can be paged */
-
-    if (offset & 2)
-    { /* write GPL adress */
-      gpl_addr = ((gpl_addr & 0xFF) << 8) | (data & 0xFF);
-    }
-    else
-    { /* write GPL byte */
-      /*if ((gpl_addr >= gram_start) && (gpl_addr <= gram_end))
-        gplseg[gpl_addr + ((long) page << 16)] = value;*/
-      /* increment gpl_addr (GPL wraps in 8k segments!) : */
-      gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
-    }
+  { /* write GPL byte */
+#if 0
+    /* Disabled because we don't know whether we have RAM or ROM. */
+    /* GRAM are quite uncommon, anyway. */
+    if ((gpl_addr >= gram_start) && (gpl_addr <= gram_end))
+      gplseg[gpl_addr /*+ ((long) page << 16)*/] = value;
+#endif
+    /* increment gpl_addr (GPL wraps in 8k segments!) : */
+    gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
   }
 }
 
@@ -452,7 +477,8 @@ void ti99_wb_wgpl(int offset, int data)
   TMS9901 emulation.
 
   TMS9901 handles interrupts, provides several I/O pins, and a timer (a.k.a. clock : it is
-  merely a register which decrements regularily and can generate an interrupt when it reaches 0).
+  merely a register which decrements regularily and can generate an interrupt when it reaches
+  0).
 
   It communicates with the TMS9900 with a CRU interface, and with the rest of the world with
   a number of parallel I/O pins.
@@ -473,11 +499,11 @@ void ti99_wb_wgpl(int offset, int data)
 ================================================================*/
 
 /*
-  TMS9901 interrupt handling on a TI99.
+  TMS9901 interrupt handling on a TI99/4x.
 
-  Three interrupts are used by the system, out of 15/16 possible interrupt.  Keyboard pins can be
-  used as interrupt pins, too, but this is not emulated (it's a trick, anyway, and I don't know
-  of any program which uses it).
+  Three interrupts are used by the system (INT1, INT2, and timer), out of 15/16 possible
+  interrupt.  Keyboard pins can be used as interrupt pins, too, but this is not emulated
+  (it's a trick, anyway, and I don't know of any program which uses it).
 
   When an interrupt line is set (and the corresponding bit in the interrupt mask is set),
   a level 1 interrupt is requested from the TMS9900.  This interrupt request lasts as long as
@@ -489,10 +515,10 @@ void ti99_wb_wgpl(int offset, int data)
 
 nota :
   All interrupt routines notify (by software) the TMS9901 of interrupt recognition ("SBO n").
-  However, AFAIK, this has strictly no consequence in the TMS9901, and interrupt routines would
-  work fine without this, (except maybe for TIMER interrupt).  All this is quite weird.  Maybe
-  the interrupt recognition notification is needed on TMS9985, or any other weird variant of
-  TMS9900 (does any TI990 or TI99/8 owner wants to test this :-) ?).
+  However, AFAIK, this has strictly no consequence in the TMS9901, and interrupt routines
+  would work fine without this, (except probably TIMER interrupt).  All this is quite weird.
+  Maybe the interrupt recognition notification is needed on TMS9985, or any other weird
+  variant of TMS9900 (does any TI990/10 owner wants to test this :-) ?).
 */
 
 /* Masks for the three interrupts used on the TI99. */
@@ -1024,27 +1050,29 @@ int diskromon = 0;
 /*
   read a byte in disk DSR.
 */
-int ti99_rb_disk(int offset)
+int ti99_rw_disk(int offset)
 {
+  tms9900_ICount -= 4;
+
   if (! diskromon)
     return 0;
 
   switch (offset)
   {
   case 0x1FF0:  /* Status register */
-    return wd179x_status_r(offset) ^ 0xFF;
+    return (wd179x_status_r(offset) ^ 0xFF) << 8;
     break;
   case 0x1FF2:  /* Track register */
-    return wd179x_track_r(offset) ^ 0xFF;
+    return (wd179x_track_r(offset) ^ 0xFF) << 8;
     break;
   case 0x1FF4:  /* Sector register */
-    return wd179x_sector_r(offset) ^ 0xFF;
+    return (wd179x_sector_r(offset) ^ 0xFF) << 8;
     break;
   case 0x1FF6:  /* Data register */
-    return wd179x_data_r(offset) ^ 0xFF;
+    return (wd179x_data_r(offset) ^ 0xFF) << 8;
     break;
   default:
-    return ROM[0x4000 + offset];
+    return READ_WORD(& ROM[0x4000 + offset]);
     break;
   }
 }
@@ -1052,12 +1080,14 @@ int ti99_rb_disk(int offset)
 /*
   write a byte in disk DSR.
 */
-void ti99_wb_disk(int offset, int data)
+void ti99_ww_disk(int offset, int data)
 {
+  tms9900_ICount -= 4;
+
   if (! diskromon)
     return;
 
-  data ^= 0xFF; /* inverted data bus */
+  data = ((data >> 8) & 0xFF) ^ 0xFF; /* inverted data bus */
 
   switch (offset)
   {
@@ -1119,15 +1149,16 @@ static int DRQ_IRQ_status;
 #define fdc_IRQ 1
 #define fdc_DRQ 2
 
-#define HALT   0
-#define RESUME 1
+#define HALT   ASSERT_LINE
+#define RESUME CLEAR_LINE
 
 static void handle_hold(void)
 {
   if (DSKhold && (! DRQ_IRQ_status))
     cpu_halt(1, HALT);
   else
-    cpu_halt(1, RESUME);
+    //cpu_set_halt_line(1, RESUME);
+	cpu_halt(1, RESUME);
 }
 
 static void ti99_fdc_callback(int event)
@@ -1212,8 +1243,4 @@ void ti99_DSKside(int offset, int data)
 
   wd179x_select_drive(DSKnum, DSKside, ti99_fdc_callback, floppy_name[DSKnum]);
 }
-
-
-
-
 

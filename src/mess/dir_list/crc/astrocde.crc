@@ -1,7 +1,8 @@
-# Astrocade CRC's
+# Bally Professional Arcade/Astrocade Casettrige CRC list
 # Note: This list is provided as a record of known dumps for this system.  
 #       These checksums have not been validated and cannot be assumed correct.  
 #       They are provided here as a database to help the emulation of this system.  
+# Send corrections and submissions to: battlepriest@hotmail.com
 
 [astrocde]
 e4d285e5 = 280ZZZap - Dodgem
@@ -11,15 +12,15 @@ cd57c485 = Amazing Maze - Tic Tac Toe
 70514687 = Astrocade Basic
 90e276aa = Bally Basic
 fb652bac = Bally Pin 1 - Bally Pin 2
-5be548cc = BaseBall - Handball - Hockey - Tennis 
 78d45a11 = BlackJack - Acey Deucy - Poker
 79fe386b = Blast Droids
 28f9e502 = Brickyard - Clowns
 2a77b3fb = Cosmic Raider
 77bed6ba = Dog Patch
 fc8998a9 = Football - 2 or 4 players
-d75e9672 = Galaxian
+d75e9672 = Galactic Invasion
 7b3b7b70 = Grand Prix 1, 2, 3 - Demolition Derby
+1395b130 = The Incredible Wizard
 2cf68f93 = Letter Match - Spell n Score - Crosswords
 5393f920 = Machine Language Manager
 e4726657 = Muncher
@@ -29,18 +30,6 @@ ee3489ea = SeaWolf - Missile
 519cc707 = Space Fortress
 7d30312a = Speed Math, Bingo Math
 ce15563b = Star Battle
-1395b130 = Wizard (The)
-
-
-
-
-
-
-
-
-
-
-
-
+5be548cc = Tornado Baseball - Handball - Hockey - Tennis 
 
 

@@ -322,8 +322,8 @@ void m6845_vh_screenrefresh(struct osd_bitmap * bitmap, int full_refresh)
 		if (crt.vertical_displayed == 0 ||
 			crt.horizontal_displayed == 0)
 		{
-			fillbitmap(tmpbitmap, Machine->colortable[0], &Machine->drv->visible_area);
-			fillbitmap(dlybitmap, Machine->colortable[0], &Machine->drv->visible_area);
+			fillbitmap(tmpbitmap, Machine->remapped_colortable[0], &Machine->drv->visible_area);
+			fillbitmap(dlybitmap, Machine->remapped_colortable[0], &Machine->drv->visible_area);
 		}
 		else
 		{
@@ -335,8 +335,8 @@ void m6845_vh_screenrefresh(struct osd_bitmap * bitmap, int full_refresh)
 			if (full_refresh)
 			{
 				full_refresh = 0;
-				fillbitmap(tmpbitmap, Machine->colortable[0], &Machine->drv->visible_area);
-				fillbitmap(dlybitmap, Machine->colortable[0], &Machine->drv->visible_area);
+				fillbitmap(tmpbitmap, Machine->remapped_colortable[0], &Machine->drv->visible_area);
+				fillbitmap(dlybitmap, Machine->remapped_colortable[0], &Machine->drv->visible_area);
 				for (i = offset; i < offset + size; i++)
 					dirtybuffer[i] = 1;
 			}
@@ -442,7 +442,7 @@ void m6845_vh_screenrefresh(struct osd_bitmap * bitmap, int full_refresh)
 		if (crt.vertical_displayed == 0 ||
 			crt.horizontal_displayed == 0)
 		{
-			fillbitmap(bitmap, Machine->colortable[0], &Machine->drv->visible_area);
+			fillbitmap(bitmap, Machine->remapped_colortable[0], &Machine->drv->visible_area);
 		}
 		else
 		{
@@ -454,7 +454,7 @@ void m6845_vh_screenrefresh(struct osd_bitmap * bitmap, int full_refresh)
 			if (full_refresh)
 			{
 				full_refresh = 0;
-				fillbitmap(bitmap, Machine->colortable[0], &Machine->drv->visible_area);
+				fillbitmap(bitmap, Machine->remapped_colortable[0], &Machine->drv->visible_area);
 				for (i = offset; i < offset + size; i++)
 					dirtybuffer[i] = 1;
 			}

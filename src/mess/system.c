@@ -72,12 +72,14 @@ const struct GameDriver *drivers[] =
 
       DRIVER( cgenie )      /* Color Genie                                    */
       DRIVER( coco )        /* Color Computer                                 */
+	  DRIVER( coco3 )       /* Color Computer 3                               */
       DRIVER( coleco )      /* ColecoVision (Original BIOS )                  */
 
 /* Please do not include these 2 in a distribution - Hacks */
 //    DRIVER( colecofb )    /* ColecoVision (Fast BIOS load)                  */
 //    DRIVER( coleconb )    /* ColecoVision (No BIOS load)                    */
 
+      DRIVER( c16 )         /* Commodore 16                                   */
   TESTDRIVER( cpc464 )      /* Amstrad (Schneider in Germany) 1984            */
   TESTDRIVER( cpc664 )      /* Amstrad (Schneider in Germany) 1985            */
       DRIVER( cpc6128 )     /* Amstrad (Schneider in Germany) 1985                                    */
@@ -98,6 +100,9 @@ const struct GameDriver *drivers[] =
 
       DRIVER( nes )         /* Nintendo Entertainment System                  */
 
+	  DRIVER( oric1 )       /* ORIC 1                                         */
+	  DRIVER( orica )       /* ORIC Atmos                                     */
+
   TESTDRIVER( pc )          /* IBM PC  - parent Driver, so no need            */
       DRIVER( pcmda )
       DRIVER( pccga )
@@ -105,6 +110,8 @@ const struct GameDriver *drivers[] =
       DRIVER( pce )         /* PC/Engine - Turbo Graphics-16  NEC 1989-1993   */
 
       DRIVER( pdp1 ) 	    /* DEC PDP1 for SPACEWAR! - 1962                  */
+
+      DRIVER( plus4 )       /* Commodore +4                                   */
 
       DRIVER( raaspec )     /* RA+A Spectrum - Modified Vectrex               */
 
@@ -114,13 +121,21 @@ const struct GameDriver *drivers[] =
 
       DRIVER( tandy1t )     /* Tandy                                          */
 
-      DRIVER( ti99 )        /* Texas Instruments TI/994a                      */
+  TESTDRIVER( ti99_2 )      /* Texas Instruments TI/99 2                      */
+  TESTDRIVER( ti99_4 )      /* Texas Instruments TI/99 4                      */
+      DRIVER( ti99_4a )     /* Texas Instruments TI/99 4a                     */
+
+
       DRIVER( trs80 )       /* TRS-80 Model I   - Radio Shack/Tandy           */
 
       DRIVER( vectrex )     /* General Consumer Electric Vectrex - 1982-1984  */
                             /* aka Milton-Bradley Vectrex)                    */
 
+      DRIVER( vic20 )       /* Commodore Vic-20 NTSC                          */
+	  DRIVER( vc20 )        /* Commodore Vic-20 PAL                           */
 
+	  DRIVER( vz200 )       /* Video Tech 200                                 */
+	  DRIVER( vz300 )       /* Video Tech 300                                 */
 
 
 
@@ -171,7 +186,6 @@ const struct GameDriver *drivers[] =
 
 
     //DRIVER( vboy )        /* Nintendo Virtual Boy                           */
-    //DRIVER( vic20 )       /* Commodore Vic-20                               */
 
     //DRIVER( x68000 )      /* X68000                                         */
 

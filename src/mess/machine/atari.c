@@ -271,11 +271,15 @@ int a5200_load_rom(void)
 		{
 			size = osd_fread(file, ROM + 0x4000, 0x8000);
             osd_fclose(file);
-            if (size < 0x8000)
+			/* move it into upper memory */
+			if (size < 0x8000)
 			{
-				/* move it into upper memory */
-				memmove(ROM + 0x8000, ROM + 0x4000, 0x2000);
-				memmove(ROM + 0xa000, ROM + 0x6000, 0x2000);
+				memcpy(ROM + 0x8000, ROM + 0x6000, 0x1000);
+				memcpy(ROM + 0xa000, ROM + 0x6000, 0x1000);
+				memcpy(ROM + 0x9000, ROM + 0x7000, 0x1000);
+				memcpy(ROM + 0xb000, ROM + 0x7000, 0x1000);
+				memcpy(ROM + 0x6000, ROM + 0x4000, 0x1000);
+				memcpy(ROM + 0x7000, ROM + 0x5000, 0x1000);
 			}
 			LOG((errorlog,"%s loaded cartridge '%s' size %dK\n",
 				Machine->gamedrv->name, filename, size/1024));
@@ -1620,74 +1624,63 @@ void a800_handle_keyboard(void)
 	atari_last = AKEY_NONE;
 }
 
-#define VKEY_NONE		0xff
-#define VKEY_0          0x00
-#define VKEY_1          0x01
-#define VKEY_2          0x02
-#define VKEY_3          0x03
-#define VKEY_4          0x04
-#define VKEY_5          0x05
-#define VKEY_6          0x06
-#define VKEY_7          0x07
-#define VKEY_8          0x08
-#define VKEY_9          0x09
-#define VKEY_ASTERISK   0x0a
-#define VKEY_HASH       0x0b
-#define VKEY_START      0x0c
-#define VKEY_PAUSE      0x0d
-#define VKEY_RESET      0x0e
-#define VKEY_BREAK		0x0f
-#define VSHF_0          0x40
-#define VSHF_1			0x41
-#define VSHF_2			0x42
-#define VSHF_3          0x43
-#define VSHF_4          0x44
-#define VSHF_5          0x45
-#define VSHF_6          0x46
-#define VSHF_7          0x47
-#define VSHF_8          0x48
-#define VSHF_9          0x49
-#define VSHF_ASTERISK   0x4a
-#define VSHF_HASH       0x4b
-#define VSHF_START      0x4c
-#define VSHF_PAUSE      0x4d
-#define VSHF_RESET      0x4e
-#define VSHF_BREAK		0x4f
-#define VCTL_0          0x80
-#define VCTL_1          0x81
-#define VCTL_2          0x82
-#define VCTL_3          0x83
-#define VCTL_4          0x84
-#define VCTL_5          0x85
-#define VCTL_6          0x86
-#define VCTL_7          0x87
-#define VCTL_8          0x88
-#define VCTL_9          0x89
-#define VCTL_ASTERISK   0x8a
-#define VCTL_HASH       0x8b
-#define VCTL_START      0x8c
-#define VCTL_PAUSE      0x8d
-#define VCTL_RESET      0x8e
-#define VCTL_BREAK		0x4f
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*										KBCODE							*/
+/*										Key 	bits	Keypad code 	*/
+/*										------------------- 			*/
+#define VKEY_NONE		0x00	/*		none	0000	$FF 			*/
+#define VKEY_HASH		0x01	/*		#		0001	$0B 			*/
+#define VKEY_0			0x02	/*		0		0010	$00 			*/
+#define VKEY_ASTERISK	0x03	/*		*		0011	$0A 			*/
+#define VKEY_RESET		0x04	/*		Reset	0100	$0E 			*/
+#define VKEY_9			0x05	/*		9		0101	$09 			*/
+#define VKEY_8			0x06	/*		8		0110	$08 			*/
+#define VKEY_7			0x07	/*		7		0111	$07 			*/
+#define VKEY_PAUSE		0x08	/*		Pause	1000	$0D 			*/
+#define VKEY_6			0x09	/*		6		1001	$06 			*/
+#define VKEY_5			0x0a	/*		5		1010	$05 			*/
+#define VKEY_4			0x0b	/*		4		1011	$04 			*/
+#define VKEY_START		0x0c	/*		Start	1100	$0C 			*/
+#define VKEY_3			0x0d	/*		3		1101	$03 			*/
+#define VKEY_2			0x0e	/*		2		1110	$02 			*/
+#define VKEY_1			0x0f	/*		1		1111	$01 			*/
+
+#define VKEY_BREAK		0x10
 
 static  key_trans pad_trans_us[] = {
-{0,                 0, {VKEY_NONE       ,VKEY_NONE       ,VKEY_NONE       ,VKEY_NONE       }},
-{KEYCODE_1_PAD, 	0, {VKEY_1			,VSHF_1 		 ,VCTL_1		  ,VCTL_1		   }},
-{KEYCODE_2_PAD, 	0, {VKEY_2			,VSHF_2 		 ,VCTL_2		  ,VCTL_2		   }},
-{KEYCODE_3_PAD, 	0, {VKEY_3			,VSHF_3 		 ,VCTL_3		  ,VCTL_3		   }},
-{KEYCODE_4_PAD, 	0, {VKEY_4			,VSHF_4 		 ,VCTL_4		  ,VCTL_4		   }},
-{KEYCODE_5_PAD, 	0, {VKEY_5			,VSHF_5 		 ,VCTL_5		  ,VCTL_5		   }},
-{KEYCODE_6_PAD, 	0, {VKEY_6			,VSHF_6 		 ,VCTL_6		  ,VCTL_6		   }},
-{KEYCODE_7_PAD, 	0, {VKEY_7			,VSHF_7 		 ,VCTL_7		  ,VCTL_7		   }},
-{KEYCODE_8_PAD, 	0, {VKEY_8			,VSHF_8 		 ,VCTL_8		  ,VCTL_8		   }},
-{KEYCODE_9_PAD, 	0, {VKEY_9			,VSHF_9 		 ,VCTL_9		  ,VCTL_9		   }},
-{KEYCODE_0_PAD, 	0, {VKEY_0			,VSHF_0 		 ,VCTL_0		  ,VCTL_0		   }},
-{KEYCODE_F1,		0, {VKEY_START		,VSHF_START 	 ,VCTL_START	  ,VCTL_START	   }},
-{KEYCODE_F2,		0, {VKEY_PAUSE		,VSHF_PAUSE 	 ,VCTL_PAUSE	  ,VCTL_PAUSE	   }},
-{KEYCODE_F3,		0, {VKEY_ASTERISK	,VSHF_ASTERISK	 ,VCTL_ASTERISK   ,VCTL_ASTERISK   }},
-{KEYCODE_F4,		0, {VKEY_HASH		,VSHF_HASH		 ,VCTL_HASH 	  ,VCTL_HASH	   }},
-{KEYCODE_F5,		0, {VKEY_BREAK		,VSHF_BREAK 	 ,VCTL_BREAK	  ,VCTL_BREAK	   }},
-{KEYCODE_F6,		0, {VKEY_RESET		,VSHF_RESET 	 ,VCTL_RESET	  ,VCTL_RESET	   }},
+{0, 				0, {VKEY_NONE,		VKEY_NONE,			VKEY_NONE,			VKEY_NONE		   }},
+{KEYCODE_1_PAD, 	0, {VKEY_1, 		VKEY_1|0x40,		VKEY_1|0x80,		VKEY_1|0x80 	   }},
+{KEYCODE_2_PAD, 	0, {VKEY_2, 		VKEY_2|0x40,		VKEY_2|0x80,		VKEY_2|0x80 	   }},
+{KEYCODE_3_PAD, 	0, {VKEY_3, 		VKEY_3|0x40,		VKEY_3|0x80,		VKEY_3|0x80 	   }},
+{KEYCODE_4_PAD, 	0, {VKEY_4, 		VKEY_4|0x40,		VKEY_4|0x80,		VKEY_4|0x80 	   }},
+{KEYCODE_5_PAD, 	0, {VKEY_5, 		VKEY_5|0x40,		VKEY_5|0x80,		VKEY_5|0x80 	   }},
+{KEYCODE_6_PAD, 	0, {VKEY_6, 		VKEY_6|0x40,		VKEY_6|0x80,		VKEY_6|0x80 	   }},
+{KEYCODE_7_PAD, 	0, {VKEY_7, 		VKEY_7|0x40,		VKEY_7|0x80,		VKEY_7|0x80 	   }},
+{KEYCODE_8_PAD, 	0, {VKEY_8, 		VKEY_8|0x40,		VKEY_8|0x80,		VKEY_8|0x80 	   }},
+{KEYCODE_9_PAD, 	0, {VKEY_9, 		VKEY_9|0x40,		VKEY_9|0x80,		VKEY_9|0x80 	   }},
+{KEYCODE_0_PAD, 	0, {VKEY_0, 		VKEY_0|0x40,		VKEY_0|0x80,		VKEY_0|0x80 	   }},
+{KEYCODE_F1,		0, {VKEY_START, 	VKEY_START|0x40,	VKEY_START|0x80,	VKEY_START|0x80    }},
+{KEYCODE_F2,		0, {VKEY_PAUSE, 	VKEY_PAUSE|0x40,	VKEY_PAUSE|0x80,	VKEY_PAUSE|0x80    }},
+{KEYCODE_F3,		0, {VKEY_RESET, 	VKEY_RESET|0x40,	VKEY_RESET|0x80,	VKEY_RESET|0x80    }},
+{KEYCODE_F5,		0, {VKEY_HASH,		VKEY_HASH|0x40, 	VKEY_HASH|0x80, 	VKEY_HASH|0x80	   }},
+{KEYCODE_F6,		0, {VKEY_ASTERISK,	VKEY_ASTERISK|0x40, VKEY_ASTERISK|0x80, VKEY_ASTERISK|0x80 }},
+{KEYCODE_F7,		0, {VKEY_BREAK, 	VKEY_BREAK|0x40,	VKEY_BREAK|0x80,	VKEY_BREAK|0x80    }},
 {0xff}
 };
 
@@ -1696,10 +1689,9 @@ static	key_trans *pad = pad_trans_us;
 /* absolutely no clue what to do here :((( */
 void a5200_handle_keypads(void)
 {
-	int i, modifiers, shift_control, atari_code;
+	int i, /*modifiers,*/ shift_control, atari_code;
 	static int atari_last = 0;
 
-    modifiers = 0;
 	shift_control = 0;
     /* with shift ? */
 	if (keyboard_pressed(KEYCODE_LSHIFT) || keyboard_pressed(KEYCODE_RSHIFT))
@@ -1710,10 +1702,10 @@ void a5200_handle_keypads(void)
 
 	for (i = 0; pad[i].osd != 0xff; i++)
 	{
-		if (keyboard_pressed(modifiers | pad[i].osd))
+		if( keyboard_pressed(pad[i].osd) )
 		{
 			/* joystick key and joystick mode enabled ? */
-			if (pad[i].joystick && (input_port_0_r(0) & 0x80))
+			if( pad[i].joystick && (input_port_0_r(0) & 0x80) )
 				continue;
 			atari_code = pad[i].atari[shift_control];
 			if (atari_code != VKEY_NONE)
@@ -1721,12 +1713,12 @@ void a5200_handle_keypads(void)
 				if (atari_code == atari_last)
 					return;
 				atari_last = atari_code;
-				if ((atari_code & 0x3f) == VKEY_BREAK)
-				{
-					pokey1_break_w(atari_code & 0x40);
+				if( (atari_code & 0x3f) == VKEY_BREAK )
+                {
+                    pokey1_break_w(atari_code & 0x40);
                     return;
                 }
-				pokey1_kbcode_w(atari_code, 1);
+				pokey1_kbcode_w(atari_code | 0x30, 1);
 				return;
             }
         }

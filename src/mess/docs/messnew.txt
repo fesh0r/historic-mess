@@ -1,3 +1,78 @@
+0.36b11
+
+Note: .inp record/playback does still not work currently.
+
+
+New drivers supported (in no particular order):
+-----------------------------------------------
+- Coco 3 (preliminary) [Nate Woods] 
+- ORIC 1               [Paul Cook]
+- ORIC Atmos           [Paul Cook]
+- Vic20 (NTSC)         [Peter Trauner]
+- Vc20 (Vic20 Pal)     [Peter Trauner]
+- Commodore 16         [Peter Trauner]
+- Commodore Plus4 NTSC [Peter Trauner]
+- VZ 200               [Juergen Buchmueller]
+- VZ 300               [Juergen Buchmueller]
+
+
+These drivers have improved GRAPHICS:
+-------------------------------------
+- spectrum palette fixes [Victor Trucco]
+
+- PC (CGA, MDA) palette fixes [Juergen Buchmueller]
+
+- KayPro palette fix [Juergen Buchmueller]
+
+
+These drivers have new or improved SOUND:
+-----------------------------------------
+- n/a
+
+
+Other drivers changes:
+----------------------
+- a5200 fixes include mirroring of 16K images into upper 16K of the 
+  cartridge memory, keypad codes fixed (still not 100%), and ANTIC 
+  memory range is d400-d5ff (was d400-d4ff before).  Alot more images
+  start now.   [Juergen Buchmueller]
+
+- Removed the fixed 6502 program code from the KIM1 driver and added
+  the functions to load an external file instead.
+  For the header, the following format is used:
+  magic start size id data...
+  KIM1  llhh  llhh xx xx xx xx
+  [Juergen Buchmueller]
+
+- ti99 renamed to ti994a.
+
+
+Changes to the main program:
+----------------------------
+- n/a
+
+
+Source:
+-------
+- The core is based on MAME 0.36b11. This incorporates all features 
+  of the update to this core.  [MAME team]
+
+- [DOS] slight changes to fileio.c. [Ben Bruscella]
+
+- [DOS] new command -listextensions.  use this to see the default image
+  extensions recognised by each system (not all fields filled as yet). 
+  [Ben Bruscella]
+
+
+Other:
+------
+- Substantial CRC and history file updates [Chris Henry].  
+  Please send all CRC/history file contributions to him. 
+  (battlepriest@hotmail.com)
+
+--------------------------------------------------------------------
+
+
 0.36b10
 
 Important: due to changes in the MAME palette system, there might be  
@@ -316,7 +391,7 @@ These drivers have new or improved SOUND:
 
 
 
-Other drivers changes:
+Other driver changes:
 ----------------------
 
 - Several drivers have had compatibility improved (eg. NES, Genesis and Coleco)

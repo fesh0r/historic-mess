@@ -73,9 +73,9 @@ Here are the currently supported systems (mess -listfull):
 
 System:   Description:
 ---------------------------------------------
+a800      "Atari 800"
 a5200     "Atari 5200"
 a7800     "Atari 7800"
-a800      "Atari 800"
 amiga     "Amiga (NTSC)"
 apple2c   "Apple IIc"
 apple2c0  "Apple IIc (3.5 ROM)"
@@ -86,27 +86,36 @@ apple2ep  "Apple IIe (Platinum)"
 astrocde  "Bally Arcade/Astrocade"
 cgenie    "EACA Colour Genie EG 2000"
 coco      "Color Computer"
+coco3     "Color Computer 3"
 coleco    "Colecovision"
+c16       "Commodore C16/116"
 cpc6128   "Amstrad/Schneider CPC6128"
 dragon32  "Dragon 32"
 ep128     "Enterprise 128K"
 gamegear  "Sega Game Gear"
 genesis   "Sega Megadrive/Genesis"
 kaypro    "Kaypro 2x"
-kccomp    "KC Compact"
 kim1      "KIM-1"
+kccomp    "KC Compact"
 nes       "Nintendo Entertainment System/Famicom"
+oric1     "Oric 1"
+orica     "Oric Atmos"
+pcmda     "IBM PC/XT - MDA"
 pccga     "IBM PC/XT - CGA"
 pce       "PC-Engine"
-pcmda     "IBM PC/XT - MDA"
 pdp1      "pdp1 SPACEWAR!"
+plus4     "Commodore +4"
 raaspec   "RA+A Spectrum I+"
 sms       "Sega Master System"
 spectrum  "ZX-Spectrum 48k"
 tandy1t   "Tandy 1000TX"
-ti99      "TI99/4A Home Computer"
+ti994a    "TI99/4A Home Computer"
 trs80     "TRS-80 Model I (Level II Basic)"
 vectrex   "GCE Vectrex"
+vic20     "Commodore VIC20 (ntsc)"
+vc20      "Commodore VC20 (pal)"
+vz200     "VZ200"
+vz300     "VZ300"
 
 
 MESS USAGE
@@ -285,6 +294,59 @@ astrocde - Astrocade:
 ---------------------
 Compatibility:
 	It should run just about anything you throw at it.
+
+
+
+------------------------------------
+c16     commodore c16 (pal version)
+plus4   commodore plus4 (ntsc version)
+------------------------------------
+(beta 1 version)
+
+(only 8 bit color depth at the moment)
+(hardware softscrolling not implemented)
+(imperfect colors)
+imperfect sound (noise channel complete wrong)
+ no tape support
+ no serial bus support (disks/printer)
+ simple iec support (c1551 disks)
+  only program load from drive 8 implemented
+        loads file from rom directory (*.prg)
+        or file from d64 image (here also directory supported)
+  use dload"filename"
+  or load"filename",8
+  or load"filename",8,1 (for loading machine language programs at their
+address)
+  for loading
+  type run or the appropriate sys call to start them
+ no rs232 (plus4)
+no special expansion modules
+some unsolved problems
+ memory check by c16 kernel will not recognize more memory without
+restart of mess
+ cpu clock switching/changing
+
+Keys
+----
+Some PC-Keyboards does not behave well when special two or more keys are
+pressed at the same time
+(with my keyboard printscreen clears the pressed pause key!)
+
+shift-cbm switches between upper-only and normal character set
+(when wrong characters on screen this can help)
+
+Roms
+----
+.bin .rom .lo .hi .prg
+files with boot-sign in it
+  recogniced as roms
+
+.prg files loaded at address in its first two bytes
+.bin, .rom, .lo , .hi roms loaded to cs1 low, cs1 high, cs2 low, cs2
+high
+ address accordingly to order in command line
+
+when problems start with -log and look into error.log file
 
 
 
@@ -697,6 +759,13 @@ Thanks:
 
 
 
+-------------------------------------
+oric1     "Oric 1"
+orica     "Oric Atmos"
+-------------------------------------
+
+
+
 
 
 -------------------------------------
@@ -864,4 +933,60 @@ Notes:
 Thanks:
 	Special thanks to Keith Wilkins and Chris Salomon for their work on DVE
 	and their help,	without which this driver would have taken much longer.
+
+
+
+
+------------------------------------
+vic20 commodore vic20 (ntsc version)
+vc20  commodore vc20  (pal version)
+------------------------------------
+Known Issues:
+	vic20 ntsc-version
+	 when screen is two wide right or low, or screen doesn't fitt in visible
+	 area try the pal version
+
+	vc20  pal-version
+
+	a normal or good written program does not depend on the video system
+
+Status:
+	no rastereffects
+	 (vidhrdw should be checked to be correct in all situations)
+	 (only 8 bit color depth at the moment)
+	imperfect sound (noise channel complete wrong)
+	lightpen not implemented (some programs could help)
+	via's only so far configured and tested as neccessary
+	 no tape support
+	 no ieee support (disks/printer)
+	 no rs232
+	no special expansion modules (iec)
+
+	for a more complete vic20 emulation take a look at the very good
+	vice emulator
+
+Keys:
+	Some PC-Keyboards does not behave well when special two or more keys are
+	pressed at the same time
+	(with my keyboard printscreen clears the pressed pause key!)
+
+	stop-restore in much cases prompt will appear
+	shift-cbm switches between upper-only and normal character set
+	(when wrong characters on screen this can help)
+
+Roms:
+	.bin .rom .a0 .20 .40 .60 .prg
+	files with boot-sign in it
+	  recogniced as roms
+
+	.20 files loaded at 0x2000
+	.40 files loaded at 0x4000
+	.60 files loaded at 0x6000
+	.a0 files loaded at 0xa000
+	.prg files loaded at address in its first two bytes
+	.bin .rom files loaded at 0x4000 when 0x4000 bytes long
+	else loaded at 0xa000
+
+	when problems start with -log and look into error.log file
+
 

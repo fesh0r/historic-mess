@@ -1,9 +1,56 @@
-# MESS History Data File, version 0.1 
-# Maintained by Chris "Battlepriest" Henry
-# Most data obtained from www.icwhen.com, www.classicgaming.com and the Vectrex FAQ.
+# MESS History Data File
+# Maintained by Chris Henry
+# Most data obtained from www.icwhen.com and www.classicgaming.com.
 # Send corrections/submissions to: battlepriest@hotmail.com
 
 
+# a5200
+
+$=info=a5200
+
+$bio
+
+The Atari 5200 was introduced in 
+1982, and was actually designed 
+to be a competitor to the 
+Intellivision, before ColecoVision
+entered the market. Developed under 
+the name of "Pam" (Atari, at the 
+time, typically named projects after 
+well-endowed female employees),
+Atari considered releasing it with 
+that moniker; PAM in this case an
+acronym for "Personal Arcade
+Machine".
+
+The 5200 shared much of the 
+architecture of the Atari 
+400/800 computers, but 
+featured a different cartridge 
+connector and completely 
+different controllers.  
+Non-centering analogue 
+joysticks which offered a full 
+360 degrees of mobility, were 
+both innovative and unreliable. 
+Other controller features 
+included a keypad, and a 
+ahead-of-it's-time pause 
+button.
+
+The Atari 5200 suffered from 
+it's initial incompatability 
+with the VCS/2600 (an adapter 
+was later released) and fierce 
+competition from Coleco. When 
+Warner Communications sold
+Atari Corp. to the Tramiels 
+in 1984, they quickly removed 
+it from the market.
+
+$end
+
+#-----------------------------
 
 # a7800
 
@@ -74,6 +121,39 @@ production line manager that
 Atari's lawyers would be in contact 
 with him. He never heard from Atari 
 again."
+
+$end
+
+#-----------------------------
+
+# astrocde
+
+$info=astrocde
+
+$bio
+
+The game console commonly known as 
+the "Bally Astrocade" was never 
+officially sold by that name, having
+originally been released by Bally 
+Manufacturing in 1978 as the Bally 
+Professional Arcade. It was 
+withdrawn rather quickly though, 
+due to the success of the competing
+Atari VCS. A group of Pro Arcade 
+enthusiasts under the name 
+Astrovision Inc., bought the rights 
+to the Pro Arcade and reintroduced 
+it as the Bally Computer System,
+including the Basic casettrige as a 
+pack-in. In 1982, the system and 
+company was renamed Astrocade, once
+again trying to market it as a video
+game system. The system didn't last 
+much longer, though; it was a product 
+with a limited interest base even 
+before the video game slump of the 
+next few years.
 
 $end
 

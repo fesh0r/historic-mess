@@ -268,7 +268,7 @@ static struct MemoryReadAddress readmem_5200[] =
 	{ 0x0000, 0x3fff, MRA_RAM },
 	{ 0x4000, 0xbfff, MRA_ROM },
 	{ 0xc000, 0xc0ff, MRA_GTIA },
-	{ 0xd400, 0xd4ff, MRA_ANTIC },
+	{ 0xd400, 0xd5ff, MRA_ANTIC },
 	{ 0xe800, 0xe8ff, pokey1_r },
     { 0xf800, 0xffff, MRA_ROM },
     {-1}
@@ -279,7 +279,7 @@ static struct MemoryWriteAddress writemem_5200[] =
 	{ 0x0000, 0x3fff, MWA_RAM },
 	{ 0x4000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xc0ff, MWA_GTIA },
-	{ 0xd400, 0xd4ff, MWA_ANTIC },
+	{ 0xd400, 0xd5ff, MWA_ANTIC },
 	{ 0xe800, 0xe8ff, pokey1_w },
     { 0xf800, 0xffff, MWA_ROM },
     {-1}

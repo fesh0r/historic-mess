@@ -1,117 +1,148 @@
-# Nintendo Entertainment System CRC's
+# Nintendo Entertainment System/Famicom Cartridge CRC List
 # Note: This list is provided as a record of known dumps for this system.  
 #       These checksums have not been validated and cannot be assumed correct.  
 #       They are provided here as a database to help the emulation of this system.  
+# Send corrections/submissions to: battlepriest@hotmail.com
+
+# Notes for this file: I've rescanned/repaired alot of images using goodnes and
+# nestoy. Chances are, if a .nes image previously showed up on the image
+# information screen, it is in need of header repair and/or resizing to match
+# the corrected checksum.
 
 [nes]
-eee75e94 = 100-in-1 Contra Function 16 (Multicart)
-e9cf747f = 1942 (Japan, USA)
- d8c1f0d = AD&D Dragons of Flame (Japan)
-e880d426 = AD&D Heroes of the Lance (USA)
-45a2fd26 = AD&D Pool of Radiance (USA)
- 2e67223 = Alpha Mission (USA)
-30f39b6b = Archon (USA)
-de7e6767 = Asterix (Europe)
-e38916bf = Baloon Fight (Japan, USA)
-73cefba7 = Bard's Tale (USA)
-1c6f3036 = California Games (USA)
-856114c8 = Castlevania (PRG1) (USA)
-a9c2c503 = Castlevania 2: Simon's Quest (USA)
-1826e6d2 = Caveman Games (USA)
-5438a0ac = Darkman (USA)
-e40b593b = Donkey Kong (Japan, USA)
-d1cac3c2 = Donkey Kong 3 (World)
-c3f85d1e = Donkey Kong Jr. (Japan, USA)
-67193fc8 = Donkey Kong Jr. Math (USA)
-b1f7e3e9 = Dr. Mario (Japan, USA)
-54386491 = Elite (Europe)
-59c77a39 = Excitebike
-ab12ece6 = Final Fantasy (USA)
-e36d5991 = Galaga (USA)
-4998dde9 = Galaxian
-9948b04a = Ghostbusters (Japan)
-87ed54aa = Ghosts n' Goblins (USA)
-3e8dec2f = Golf (Japan, USA)
-526ad690 = Gyruss (USA)
-56dbfd1f = Hatris (USA)
-3515fc5b = Hollywood Squares (USA)
-da23166a = Indiana Jones and the Last Crusade (USA)
-e476313e = Indiana Jones and the Temple of Doom (USA)
-25687c07 = Jeopardy! (USA)
-fb72e586 = Jeopardy! 25th Anniversary Edition (USA)
-9a273fc0 = Jeopardy! Junior Edition (USA)
-11c48002 = Joust (USA)
-c769d60f = Karateka
- 5b05500 = Kid Icarus (USA, Europe)
-72d3d225 = Kung Fu
-d7ae93df = The Legend of Zelda (PRG0) (US)
-68309d06 = Maniac Mansion (US)
-e2e7fbfd = Mappy
-890d226e = Mappy Land (USA)
-1a6f2c98 = Mario Bros.
-fd5d5c55 = Mario is Missing! (USA)
-88d3b565 = Mario's Time Machine (USA)
-5ded683e = Megaman (USA)
-5e268761 = Megaman 2 (USA)
-be6dbb5d = Megaman 3 (USA)
-a2c89cb9 = Metroid (USA)
-faf48d27 = Monopoly (USA)
-bdoe29b3 = Ms. Pac-Man (USA)
-9316bf4b = NES Open Tournament Golf (USA)
- 5fd3f48 = Pac-Land (Japan)
-22276a55 = Pac-Man (USA)
-88c15cf3 = Pinball (Japan, USA)
-64fc3667 = Pirates! (USA)
-de1d762f = Popeye (Japan, USA)
-d5f95da7 = Pro Wrestling (USA)
-f2df30b2 = MTV's Remote Control (USA)
-3482720c = The Ren and Stimpy Show (USA)
-713309ba = Skate or Die! (USA)
-bdd176af = Sky Kid (USA)
-c3f486ba = Space Invaders
-c4c896d8 = Spy Vs. Spy (Japan)
-7d111919 = Spy Vs. Spy 2 (Japan)
-9423614b = Super Mario Bros. 
-9e5ead67 = Super Mario Bros. (No Title Screen)
-6959c882 = Super Mario Bros. (Version 3)
-2e1b6b3c = Super Mario Bros. (Version 4; PRG1, CHR0)(Japan, USA)
-8aa4ace0 = Super Mario Brothers 2 (PRG0, CHR0)(USA)
-6c538829 = Tetris
-3c8f2d80 = Times of Lore (USA)
-b34ed396 = Tiny Toons Adventures (USA)
-c1a9e6c0 = Ultima: Exodus (USA)
-c7f5b3d8 = Ultima: Quest of the Avatar (USA)
-2d8c2829 = Ultima: Warriors of Destiny (USA)
-9d1deab8 = Wacky Races (USA)
-7434dc82 = WCW World Championship Wrestling (USA)
- b57cfda = Wheel of Fortune (USA)
-804ef7f9 = Wizardry: Proving Grounds of the Mad Overlord (USA)
-828d779b = Wizardry 2: Knight of Diamonds (USA)
-658d4fd4 = Wrecking Crew (World)
-c7bce866 = WWF Wrestlemania
-f9c7e1b2 = Yoshi (USA)
-9445a4ea = Zelda 2: The Adventure of Link (USA)
-
-
+eee75e94 = 100-in-1 Contra Function 16 [Unlicensed Multicart]
+e9cf747f = 1942 (Capcom, 1985) [Japan, USA]
+d131bf15 = 1943 (Capcom, 198?) [USA]
+e880d426 = AD&D: Heroes of the Lance [USA]
+45a2fd26 = AD&D: Pool of Radiance [USA]
+ 2e67223 = Alpha Mission [USA]
+30f39b6b = Archon [USA]
+de7e6767 = Asterix [Europe]
+cb15ba34 = Bad Dudes [USA]
+e38916bf = Baloon Fight [Japan, USA]
+73cefba7 = Bard's Tale: Tales of the Unknown [USA]
+83be000c = Bionic Commando [USA]
+52bcf64a = Blaster Master [USA]
+1c6f3036 = California Games [USA]
+856114c8 = Castlevania [USA; PRG1]
+a9c2c503 = Castlevania 2: Simon's Quest [USA]
+1826e6d2 = Caveman Games [USA]
+c50a8304 = Contra [USA]
+5438a0ac = Darkman [USA]
+307d0fc4 = Darkwing Duck [USA]
+e40b593b = Donkey Kong [Japan, USA]
+d1cac3c2 = Donkey Kong 3 [World]
+c3f85d1e = Donkey Kong Jr. [Japan, USA]
+67193fc8 = Donkey Kong Jr. Math [USA]
+62afe166 = Double Dragon [USA]
+576cc1a0 = Double Dragon 2: The Revenge [USA]
+7a6e0454 = Double Dragon 3: The Sacred Stones [USA]
+fd719491 = Dragon Spirit: The New Legend [USA]
+b1f7e3e9 = Dr. Mario [Japan, USA]
+54386491 = Elite [Europe]
+2bb33c69 = Excitebike [Japan, USA]
+ab12ece6 = Final Fantasy [USA]
+e36d5991 = Galaga [USA]
+6e4d873b = Galaxian [Japan]
+9948b04a = Ghostbusters [Japan]
+87ed54aa = Ghosts n' Goblins [USA]
+3e8dec2f = Golf [Japan, USA]
+526ad690 = Gyruss [USA]
+56dbfd1f = Hatris [USA]
+3515fc5b = Hollywood Squares [USA]
+80c41616 = Ice Climber [Japan, Europe]
+3bcd370e = Ikari Warriors 3: The Rescue [USA]
+2f1c2b30 = Image Fight [USA]
+da23166a = Indiana Jones and the Last Crusade [USA]
+e476313e = Indiana Jones and the Temple of Doom [USA]
+25687c07 = Jeopardy! [USA]
+fb72e586 = Jeopardy! 25th Anniversary Edition [USA]
+9a273fc0 = Jeopardy! Junior Edition [USA]
+11c48002 = Joust [USA]
+e9bad787 = Karateka [Japan]
+ 5b05500 = Kid Icarus [USA, Europe]
+32b45889 = Kung Fu [USA]
+d7ae93df = The Legend of Zelda [USA; PRG0]
+68309d06 = Maniac Mansion [USA]
+890d226e = Mappy Land [USA]
+4f5f0a80 = Mario Bros. [Japan, USA]
+fd5d5c55 = Mario is Missing! [USA]
+88d3b565 = Mario's Time Machine [USA]
+5ded683e = Megaman [USA]
+5e268761 = Megaman 2 [USA]
+be6dbb5d = Megaman 3 [USA]
+adbd4e48 = Megaman 4 [USA]
+1efcac48 = Megaman 6 [USA]
+a2c89cb9 = Metroid [USA]
+faf48d27 = Monopoly [USA]
+bd0e29b3 = Ms. Pac-Man [USA]
+7d111919 = Nangoku Shirei: Spy Vs. Spy 2 [Japan]
+9316bf4b = NES Open Tournament Golf [USA]
+ 5fd3f48 = Pac-Land [Japan]
+22276a55 = Pac-Man [USA]
+88c15cf3 = Pinball [Japan, USA]
+64fc3667 = Pirates! [USA]
+de1d762f = Popeye [Japan, USA]
+d5f95da7 = Pro Wrestling [USA]
+f2df30b2 = MTV's Remote Control [USA]
+3482720c = The Ren and Stimpy Show [USA]
+614afbea = The Simpsons: Bart Vs. The World [USA]
+713309ba = Skate or Die! [USA]
+bdd176af = Sky Kid [USA]
+525c0dab = Space Invaders [Japan]
+c4c896d8 = Spy Vs. Spy [Japan]
+2e1b6b3c = Super Mario Bros. [Japan, USA; PRG1, CHR0]
+6959c882 = Super Mario Bros. [Alternate Version]
+8aa4ace0 = Super Mario Brothers 2 [USA; PRG0, CHR0]
+83213ca0 = Teenage Mutant Ninja Turtles [USA]
+cd2b058c = Tetris (USA)
+3c8f2d80 = Times of Lore [USA]
+b34ed396 = Tiny Toons Adventures [USA]
+c1a9e6c0 = Ultima: Exodus [USA]
+c7f5b3d8 = Ultima: Quest of the Avatar [USA]
+2d8c2829 = Ultima: Warriors of Destiny [USA]
+9d1deab8 = Wacky Races [USA]
+7434dc82 = WCW World Championship Wrestling [USA]
+ b57cfda = Wheel of Fortune [USA]
+804ef7f9 = Wizardry: Proving Grounds of the Mad Overlord [USA]
+828d779b = Wizardry 2: Knight of Diamonds [USA]
+658d4fd4 = Wrecking Crew [World]
+c7bce866 = WWF Wrestlemania [USA]
+f9c7e1b2 = Yoshi [USA]
+9445a4ea = Zelda 2: The Adventure of Link [USA]
 
 
 #[not_working]
-79b7b5c6 = Duck Hunt (LIGHT GUN GAME; NOT WORKING)
-6d3396e3 = Gumshoe (US, Europe)(LIGHT GUN GAME; NOT WORKING)
-74b8498e = Hogan's Alley (Japan, USA) (LIGHT GUN GAME; NOT WORKING)
-8483510e = Ice Climber (NOT WORKING)
- 296e5f4 = RC Pro-Am (USA) (NOT WORKING)
-8351283e = Shadowgate (USA) (NOT WORKING)
- b742b33 = Super Mario Brothers 3 ver 1 (NOT WORKING)
-69488c31 = Super Mario Brothers 3 ver 2 (NOT WORKING)
-72e2395b = Uninvited (USA) (NOT WORKING)
-330f53ee = Wild Gunman (World) (LIGHT GUN GAME; NOT WORKING)
+32581f7f = Batman 3 [Pirate Cartridge] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+7cc9c669 = Castlevania 3: Dracula's Curse [USA] (NOT WORKING)
+1bd39032 = Crystalis [USA] (GRAPHIC GLITCHING}
+b1031788 = Deja Vu [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+77f45dff = Duck Hunt [World] (LIGHT GUN GAME; NOT WORKING)
+ca279a8f = The Empire Strikes Back [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+d1fb1533 = Gremlins 2: The New Batch [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+6d3396e3 = Gumshoe [USA, Europe](LIGHT GUN GAME; NOT WORKING)
+74b8498e = Hogan's Alley [Japan, USA] (LIGHT GUN GAME; NOT WORKING)
+57abbf15 = The Immortal [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+71d868c4 = Little Nemo: The Dream Master [USA] (NOT WORKING; LOCKS UP)
+5e023291 = Megaman 5 [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+afeafeaa = Punch Out!! [USA] (NOT WORKING)
+ 296e5f4 = RC Pro-Am [USA] (GRAPHIC GLITCHING)
+8351283e = Shadowgate [USA] (GRAPHIC GLITCHING)
+ b742b33 = Super Mario Brothers 3 [PRG1, CHR0](NOT WORKING)
+69488c31 = Super Mario Brothers 3 [Alternate Version] (NOT WORKING)
+470b031b = Teenage Mutant Ninja Turtles 2 [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+554704f0 = Teenage Mutant Ninja Turtles 3 [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+72e2395b = Uninvited [USA] (GRAPHIC GLITCHING)
+4e550aa9 = Where in Time is Carmen Sandiego? [USA] (NOT WORKING; GFX[0] EXTENDS BEYOND ALLOCATED MEMORY)
+330f53ee = Wild Gunman [World] (LIGHT GUN GAME; NOT WORKING)
 
 
 #[known_bad_dumps]
-
-
-
+4a9531ea = Arkanoid [Japan; Hacked]
+e063d23a = Duck Hunt [World; Hacked] (LIGHT GUN GAME; NOT WORKING)
+ 77e7791 = Mappy [USA] (BAD DUMP)
+9423614b = Super Mario Bros. [Trained Hack]
+9e5ead67 = Super Mario Bros. [No Title Screen; Mapper Hack]
 
 
 

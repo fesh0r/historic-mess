@@ -1,7 +1,8 @@
-# Atari 7800 Cartridge CRC's.  
+# Atari 7800 ProSystem Cartridge CRC List
 # Note: This list is provided as a record of known dumps for this system.  
 #       These checksums have not been validated and cannot be assumed correct.  
 #       They are provided here as a database to help the emulation of this system.  
+# Send corrections and submissions to: battlepriest@hotmail.com
 
 [a7800]
 44615260 = Ball Blazer (LucasFilm, 1987)
@@ -14,7 +15,6 @@ fda13f77 = Joust (Atari, 1984)
 5ec9c910 = Ms. PacMan (Atari, 1984)
 4bf501cb = Pole Position 2 (Atari, 1984
 44584fa2 = Xevious (Atari, 1984)
-
 
 
 #[not_working]
