@@ -6,7 +6,6 @@
 
 
  Contains the addresses of the 2600 hardware
- $Id: address.h,v 1.3 1996/01/22 17:54:35 alex Exp alex $
 
  TIA *Write* Addresses (6 bit)
 
@@ -115,7 +114,7 @@ int  a2600_load_rom(void);
 
 static struct MemoryReadAddress readmem[] =
 {
-
+    /*{ 0x0000, 0x0026, a2600_TIA_r },*/
 	{ -1 }  /* end of table */
 };
 

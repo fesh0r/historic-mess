@@ -7,7 +7,7 @@ MESS info - modified/added MAME core files (see below for details)
 1.  EMULATOR_EXE = mess.exe
 2.  DEBUG = 1 (optional)
 3.  NEOFREE = 1
-4.  uncomment all the required CPU cores (use all is ok)
+4.  uncomment all the required CPU cores (use all is ok) see below
 5.  COREOBJS firstline is obj/version.o obj/mess/system.o obj/mame.o obj/mess/mess.o \
 6.  DRVLIBS replace with MESS ones
 7.  MSDOSOBJS += obj/msdos/nec765.o
@@ -17,5 +17,25 @@ MESS info - modified/added MAME core files (see below for details)
 11. add MAKE MESSDIR to the bottom of MAKETREE
 12. add messdir:
 
+# uncomment the following lines to include a CPU core
+ CPUS+=Z80@
+ CPUS+=M6502@
+ CPUS+=M65C02@
+ CPUS+=M6510@
+ CPUS+=H6280@
+ CPUS+=I86@
+ CPUS+=M6809@
+ CPUS+=M68000@
+ CPUS+=TMS9900@
+ CPUS+=PDP1@
 
-
+# uncomment the following lines to include a sound core
+ SOUNDS+=DAC@
+ SOUNDS+=AY8910@
+ SOUNDS+=YM2612@
+ SOUNDS+=SN76496@
+ SOUNDS+=POKEY@
+ SOUNDS+=TIA@
+ SOUNDS+=NES@
+ SOUNDS+=ASTROCADE@
+ SOUNDS+=TMS5220@

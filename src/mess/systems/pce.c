@@ -231,7 +231,7 @@ static struct MachineDriver pce_machine_driver =
     512, 512,
     0,
     VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
-    256*2,
+    0,		/* was... (256*2) */
     pce_vh_start,
     pce_vh_stop,
     pce_vh_screenrefresh,

@@ -32,16 +32,16 @@ CPUS+=M68000@
 SOUNDS+=YM2610@
 else
 # uncomment the following lines to include a CPU core
- CPUS+=Z80@
+CPUS+=Z80@
 #CPUS+=Z80_VM@
 #CPUS+=8080@
 #CPUS+=8085A@
- CPUS+=M6502@
- CPUS+=M65C02@
- CPUS+=M6510@
+CPUS+=M6502@
+CPUS+=M65C02@
+CPUS+=M6510@
 #CPUS+=N2A03@
- CPUS+=H6280@
- CPUS+=I86@
+CPUS+=H6280@
+CPUS+=I86@
 #CPUS+=V20@
 #CPUS+=V30@
 #CPUS+=V33@
@@ -59,43 +59,43 @@ else
 #CPUS+=M68705@
 #CPUS+=HD63705@
 #CPUS+=M6309@
- CPUS+=M6809@
+CPUS+=M6809@
 #CPUS+=KONAMI@
- CPUS+=M68000@
+CPUS+=M68000@
 #CPUS+=M68010@
 #CPUS+=M68020@
 #CPUS+=T11@
 #CPUS+=S2650@
 #CPUS+=TMS34010@
- CPUS+=TMS9900@
+CPUS+=TMS9900@
 #CPUS+=Z8000@
 #CPUS+=TMS320C10@
 #CPUS+=CCPU@
- CPUS+=PDP1@
+CPUS+=PDP1@
 
 # uncomment the following lines to include a sound core
 #SOUNDS+=CUSTOM@
 #SOUNDS+=SAMPLES@
- SOUNDS+=DAC@
- SOUNDS+=AY8910@
+SOUNDS+=DAC@
+SOUNDS+=AY8910@
 #SOUNDS+=YM2203@
 #SOUNDS+=YM2151@
 #SOUNDS+=YM2151_ALT@
 #SOUNDS+=YM2608@
 #SOUNDS+=YM2610@
 #SOUNDS+=YM2610B@
- SOUNDS+=YM2612@
+SOUNDS+=YM2612@
 #SOUNDS+=YM3438@
 #SOUNDS+=YM2413@
 #SOUNDS+=YM3812@
 #SOUNDS+=YM3526@
- SOUNDS+=SN76496@
- SOUNDS+=POKEY@
- SOUNDS+=TIA@
- SOUNDS+=NES@
- SOUNDS+=ASTROCADE@
+SOUNDS+=SN76496@
+SOUNDS+=POKEY@
+SOUNDS+=TIA@
+SOUNDS+=NES@
+SOUNDS+=ASTROCADE@
 #SOUNDS+=NAMCO@
- SOUNDS+=TMS5220@
+SOUNDS+=TMS5220@
 #SOUNDS+=VLM5030@
 #SOUNDS+=ADPCM@
 #SOUNDS+=OKIM6295@
@@ -107,6 +107,7 @@ else
 #SOUNDS+=SEGAPCM@
 #SOUNDS+=RF5C68@
 #SOUNDS+=CEM3394@
+#SOUNDS+=C140@
 endif
 
 
@@ -637,6 +638,12 @@ SOUNDDEFS += -DHAS_CEM3394=1
 SOUNDOBJS += obj/sound/cem3394.o
 endif
 
+SOUND=$(strip $(findstring C140@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_C140=1
+SOUNDOBJS += obj/sound/c140.o
+endif
+
 
 
 ifdef DEBUG
@@ -1030,12 +1037,4 @@ messdir:
 	md obj\mess\vidhrdw
 	md obj\mess\sndhrdw
 
-
-cleanmess:
-	del obj\mess\*.a
-	del obj\mess\*.o
-	del obj\mess\machine\*.o
-	del obj\mess\systems\*.o
-	del obj\mess\vidhrdw\*.o
-	del obj\mess\sndhrdw\*.o
 

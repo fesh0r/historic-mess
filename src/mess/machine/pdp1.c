@@ -104,7 +104,7 @@ void pdp1_init_machine(void)
 {
 	/* init pdp1 cpu */
 	extern_iot=pdp1_iot;
-	cpu_setOPbaseoverride(setOPbasefunc);
+	cpu_setOPbaseoverride(1,setOPbasefunc);
 }
 
 int pdp1_read_mem(int offset)

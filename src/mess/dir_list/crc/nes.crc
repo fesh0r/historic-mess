@@ -1,0 +1,35 @@
+# Nintendo Entertainment System CRC's
+# Note: This list is provided as a record of known dumps for this system.  
+#       These checksums have not been validated and cannot be assumed correct.  
+#       They are provided here as a database to help the emulation of this system.  
+
+[nes]
+9423614b = Super Mario Brothers 
+9e5ead67 = Super Mario Brothers	(No title screen)
+6959c882 = Super Mario Brothers	(ver 3)
+8aa4ace0 = Super Mario Brothers 2
+6c538829 = Tetris
+d7ae93df = Zelda (The Legend of)
+9445a4ea = Zelda 2 (Adventures of Link)
+
+
+
+
+#[not_working]
+ b742b33 = Super Mario Brothers 3 ver 1 (NOT WORKING)
+69488c31 = Super Mario Brothers 3 ver 2 (NOT WORKING)
+
+
+#[known_bad_dumps]
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,16 +1,16 @@
 /*
-  Machine code for TI 99/4A.
+  Machine code for TI-99/4A.
   Raphael Nabet, 1999.
   Some code derived from Ed Swartz's V9T9.
 
   References :
-  * The TI-99/4A Tech Pages <http://www.nouspikel.com/ti99/titech.htm>.  Great site.
+  The TI-99/4A Tech Pages <http://www.nouspikel.com/ti99/titech.htm>.  Great site.
 
 Emulated :
-  * All TI99 basic console hardware, except tape input, and a few tricks in TMS9901 emulation.
-  * Cartidge with ROM (either non-paged or paged) and GROM (no GRAM or extra GPL ports).
-  * Speech Synthesizer, with standard speech ROM (no speech ROM expansion).
-  * Disk emulation (incomplete, not tested, therefore unlikely to work as is).
+  All TI99 basic console hardware, except tape input, and a few tricks in TMS9901 emulation.
+  Cartidge with ROM (either non-paged or paged) and GROM (no GRAM or extra GPL ports).
+  Speech Synthesizer, with standard speech ROM (no speech ROM expansion).
+  Disk emulation (incomplete, but seems to work OK).
 
   Compatibility looks quite good.
 */
@@ -20,14 +20,15 @@ Emulated :
 #include "mess/vidhrdw/tms9928a.h"
 #include <math.h>
 
+extern WD179X *wd[];
+
+
 #ifndef TRUE
 #define TRUE 1
 #endif
 #ifndef FALSE
 #define FALSE 0
 #endif
-
-extern WD179X *wd[];
 
 static void tms9901_set_int2(int state);
 
@@ -36,8 +37,8 @@ static void tms9901_set_int2(int state);
   initialization, cart loading, etc.
 ================================================================*/
 
-char *cartidge_pages[2] = { NULL, NULL };
-static int cartidge_paged = FALSE;
+static char *cartidge_pages[2];
+static int cartidge_paged;
 static int current_page;
 
 void ti99_init_machine(void)
@@ -55,6 +56,11 @@ void ti99_init_machine(void)
     wd179x_set_geometry(i, 40, 1, 9, 256, 0, 0);
     wd[i]->density = DEN_FM_LO;
   }
+
+  cartidge_pages[0] = NULL;
+  cartidge_pages[1] = NULL;
+
+  cartidge_paged = FALSE;
 }
 
 void ti99_stop_machine(void)
@@ -65,9 +71,7 @@ void ti99_stop_machine(void)
   if (cartidge_pages[1])
      free(cartidge_pages[1]);
 
-  cartidge_paged = FALSE;
-
-  wd179x_stop_drive();
+   wd179x_stop_drive();
 }
 
 /*
@@ -134,7 +138,7 @@ int ti99_load_rom (void)
 /*
   ROM identification : currently does nothing.
 
-  Actually, TI ROM header starts with a >AA.  Unfortunately, header-less ROMs exist
+  Actually, TI ROM header starts with a >AA.  Unfortunately, header-less ROMs do exist.
 */
 int ti99_id_rom (const char *name, const char *gamename)
 {
@@ -178,16 +182,19 @@ int ti99_vblank_interrupt(void)
   8-bit register (located at even address).
 
   The problem is :
-  (a) for performance reason, TMS9900.c calls MESS built-in 8-bit read routines rather than
+  (a) for performance reason, tms9900.c calls MESS built-in 8-bit read routines rather than
       translating them to 16-bit access.  Therefore if we make a true 8-bit access to an odd
       address, we should cause a dummy access to the register at even address HERE (i.e.
       in machine code).
-  (b) MESS only knows 8-bit access, so he cuts a 16-bit access into two 8-bit access.  Therefore
-      if we perform a 8-bit access, part of a 16-bit access, to an odd address, we MUST NOT cause
-      a dummy access to the register at even address.
+  (b) tms9900.c cuts a 16-bit access into two 8-bit access.  Therefore if we perform a 8-bit access,
+      part of a 16-bit access, to an odd address, we MUST NOT cause a dummy access to the register
+      at even address.
 
   As a consequence, I could not implement the 4-wait-state delay properly, and access to odd
   address in the memory mapped registers area are not emulated properly.
+
+  Fix : create 16-bit wide handlers (like cpu_readmen_24 or cpu_readmen_16lew).  I'll do this when
+  I have enough time.
 
 ================================================================*/
 
@@ -350,7 +357,7 @@ void ti99_wb_wspeech(int offset, int data)
 }
 
 /* current position in the gpl memory space */
-/*static*/ int gpl_addr = 0;
+static int gpl_addr = 0;
 
 /*
   GPL read
@@ -403,10 +410,13 @@ void ti99_wb_wgpl(int offset, int data)
       gpl_addr = ((gpl_addr & 0xFF) << 8) | (data & 0xFF);
     }
     else
-    { /* write GPL byte */
-//      /*if ((gpl_addr >= gram_start) && (gpl_addr <= gram_end))
-//        gplseg[gpl_addr /*+ ((long) page << 16)*//*] = value;*/
-//      /* increment gpl_addr (GPL wraps in 8k segments!) : */
+    {
+
+	  /* write GPL byte
+      if ((gpl_addr >= gram_start) && (gpl_addr <= gram_end))
+        gplseg[gpl_addr + ((long) page << 16)] = value;
+       increment gpl_addr (GPL wraps in 8k segments!) : */
+
       gpl_addr = ((gpl_addr + 1) & 0x1FFF) | (gpl_addr & 0xE000);
     }
   }
@@ -418,8 +428,8 @@ void ti99_wb_wgpl(int offset, int data)
   TMS9901 handles interrupts, provides several I/O pins, and a timer (a.k.a. clock : it is
   merely a register which decrements regularily and can generate an interrupt when it reaches 0).
 
-  It communicates with the TMS9900 with a CRU interface, and with the world with a number of
-  parallel I/O pins.
+  It communicates with the TMS9900 with a CRU interface, and with the rest of the world with
+  a number of parallel I/O pins.
 
   TODO :
   * complete TMS9901 emulation (e.g. other interrupts pins, pin mirroring...)
@@ -439,53 +449,96 @@ void ti99_wb_wgpl(int offset, int data)
 /*
   TMS9901 interrupt handling on a TI99.
 
-  Three interrupts are used by the system.  When an interrupt line is set, a level 1 interrupt is
-  requested from the TMS9900.  This interrupt request only stops when a write to the 9901 CRU
-  clears the pending interrupt (??).
+  Three interrupts are used by the system, out of 15/16 possible interrupt.  Keyboard pins can be
+  used as interrupt pins, too, but this is not emulated (it's a trick, anyway, and I don't know
+  of any program which uses it).
 
-Nota : I made various guesses on interrupt handling, and I may be completely wrong
+  When an interrupt line is set (and the corresponding bit in the interrupt mask is set),
+  a level 1 interrupt is requested from the TMS9900.  This interrupt request lasts as long as
+  the interrupt pin and the revelant bit in the interrupt mask are set.
 
-  TMS9901 manual reportedly says that int_state & enabled_ints is checked on every clock cycle,
-  but they say nothing on interrupt acknoledgement.  The problem is : if we need to notify
-  (by software) the TMS9901 of interrupt recognition, then the TMS9901 must "remember" interrupt
-  requests.  Hence the pending_ints thing.  But some examples could not work, so I complicated
-  the model so that pending_ints be set only on current_IRQs edge.
+  TIMER interrupts are kind of an exception, since they are not associated with an external
+  interrupt pin, and I guess it takes a write to the 9901 CRU bit 3 ("SBO 3") to clear
+  the pending interrupt (or am I wrong once again ?).
 
-  Maybe TMS9901 remembers nothing, actually, but it would be quite weird.
+nota :
+  All interrupt routines notify (by software) the TMS9901 of interrupt recognition ("SBO n").
+  However, AFAIK, this has strictly no consequence in the TMS9901, and interrupt routines would
+  work fine without this, (except maybe for TIMER interrupt).  All this is quite weird.  Maybe
+  the interrupt recognition notification is needed on TMS9985, or any other weird variant of
+  TMS9900 (does any TI990 or TI99/8 owner wants to test this :-) ?).
 */
 
-/* Masks for the three interrupts pins used on the TI99. */
+/* Masks for the three interrupts used on the TI99. */
 #define M_INT1 1    /* external interrupt (used by RS232 controler, for instance) */
 #define M_INT2 2    /* VDP interrupt */
 #define M_INT3 4    /* timer interrupt */
 
 static int int_state = 0;     /* state of the int1-int15 lines */
+static int timer_int_pending = 0; /* timer int pending (overrides int3 pin if timer enabled) */
 static int enabled_ints = 0;  /* interrupt enable mask */
-static int pending_ints = 0;  /* pending ints */
+
+static int int_pending = 0; /* status of int* pin (connected to TMS9900) */
+
+/*
+  TMS9901 mode bit.
+
+  0 = I/O mode (allow interrupts ???),
+  1 = Timer mode (we're programming the clock).
+*/
+static int mode9901 = 0;
+
+/*
+  clock registers
+
+  frequency : CPUCLK/64 = 46875Hz
+*/
+
+/* MESS timer, used to emulate the decrementer register */
+static void *tms9901_timer = NULL;
+
+/* clock interval, loaded in decrementer when it reaches 0. 0 means decrementer off */
+static int clockinvl = 0;
+
+/* when we go to timer mode, the decrementer is copied there to allow to read it reliably */
+static int latchedtimer;
+
+/* set to true when clockinvl has been written to, which means the decrementer must be reloaded
+when we quit timer mode (??) */
+static int clockinvlchanged;
+
 
 /*
   should be called after any change to int_state or enabled_ints.
 */
 static void tms9901_field_interrupts(void)
 {
-  static int previous_IRQs = 0;
-  int current_IRQs;
+  int current_ints;
 
   /* int_state : state of lines int1-int15 */
   /* enabled_ints : enabled interrupts */
-  current_IRQs = int_state & enabled_ints;
-  pending_ints |= current_IRQs & (~ previous_IRQs); /* set pending_ints on current_IRQs-edge */
-  previous_IRQs = current_IRQs;
-  if (pending_ints)
+  current_ints = int_state;
+  if (clockinvl != 0)
+  { /* if timer is enabled, INT3 pin is overriden by timer */
+    if (timer_int_pending)
+      current_ints |= M_INT3;
+    else
+      current_ints &= ~ M_INT3;
+  }
+
+  current_ints &= enabled_ints;
+
+  if (current_ints)
   {
     int level;
 
     /* find which interrupt tripped us :
-       we simply look for the first bit set to 1 in pending_ints... */
-    /*int current_ints = pending_ints;
-    while (! (current_ints & 1))
+       we simply look for the first bit set to 1 in current_ints... */
+    /*int current_ints2 = current_ints;
+    level = 1;
+    while (! (current_ints2 & 1))
     {
-      current_ints >>= 1;   // try next bit
+      current_ints2 >>= 1;  // try next bit
       level++;
     }*/
 
@@ -493,11 +546,15 @@ static void tms9901_field_interrupts(void)
     but hard-wired to force level 1 interrupts */
     level = 1;
 
+    int_pending = TRUE;
+
     cpu_0_irq_line_vector_w(0, level);
     cpu_set_irq_line(0, 0, ASSERT_LINE);  /* interrupt it, baby */
   }
   else
   {
+    int_pending = FALSE;
+
     cpu_set_irq_line(0, 0, CLEAR_LINE);
   }
 }
@@ -518,57 +575,14 @@ static void tms9901_set_int2(int state)
   tms9901_field_interrupts();
 }
 
-/*================================================================
-  CRU handlers.
-
-  The first handlers are TMS9901 related
-
-  BTW, although TMS9900 is generally big-endian, it is little endian as far as CRU is
-  concerned. (ie bit 0 is the least significant)
-================================================================*/
-
-/*----------------------------------------------------------------
-  TMS9901 CRU interface.
-----------------------------------------------------------------*/
-
-/*
-  bit 0 : TMS9901 mode bit.
-
-  0 = I/O mode (allow interrupts ???),
-  1 = Timer mode (we're programming the clock).
-*/
-static int mode9901 = 0;
-
-/*
-  clock registers
-
-  frequency : CPUCLK/64 = 46875Hz
-*/
-
-/* when we go to timer mode, the decrementer is copied there to allow to read it reliably */
-static int latchedtimer = 0;
-
-/* clock interval, loaded in decrementer when it reaches 0. 0 means decrementer off */
-static int clockinvl = 0;
-
-/* set to true when clockinvl has changed, which means the decrementer must be reloaded when
-we quit timer mode (??) */
-static int clockinvlchanged;
-
-/* MESS timer, used to emulate the decrementer register */
-static void *tms9901_timer = NULL;
-
 /*
   this call-back is called by MESS timer system when the decrementer reaches 0.
 */
 static void decrementer_callback(int ignored)
 {
-  if (enabled_ints & M_INT3)  /* trick */
-  {
-    pending_ints |= M_INT3; /* decrementer interrupt requested */
+  timer_int_pending = TRUE; /* decrementer interrupt requested */
 
-    tms9901_field_interrupts();
-  }
+  tms9901_field_interrupts();
 }
 
 /*
@@ -582,12 +596,25 @@ static void reset_tms9901_timer(void)
     tms9901_timer = NULL;
   }
 
-  /* clock intvl == 0 -> no timer */
+  /* clock interval == 0 -> no timer */
   if (clockinvl)
   {
     tms9901_timer = timer_pulse(clockinvl / 46875., 0, decrementer_callback);
   }
 }
+
+/*================================================================
+  CRU handlers.
+
+  The first handlers are TMS9901 related
+
+  BTW, although TMS9900 is generally big-endian, it is little endian as far as CRU is
+  concerned. (ie bit 0 is the least significant)
+================================================================*/
+
+/*----------------------------------------------------------------
+  TMS9901 CRU interface.
+----------------------------------------------------------------*/
 
 /* keyboard interface */
 static int KeyCol = 0;
@@ -619,9 +646,8 @@ int ti99_R9901_0(int offset)
     if (! (int_state & M_INT1))
       answer |= 0x02;
 
-    /*if (! (int_state & M_INT1))*/  /* lower levels active (???) */
-      if (! (int_state & M_INT2))
-        answer |= 0x04;
+    if (! (int_state & M_INT2))
+      answer |= 0x04;
 
     answer |= (readinputport(KeyCol) << 3) & 0xF8;
 
@@ -650,7 +676,7 @@ int ti99_R9901_1(int offset)
   if (mode9901)
   { /* timer mode */
     answer = (latchedtimer & 0x3F80) >> 7;
-    if (! (pending_ints & enabled_ints))
+    if (! int_pending)
       answer |= 0x80;
   }
   else
@@ -672,8 +698,11 @@ void ti99_W9901_0(int offset, int data)
 
     if (mode9901)
     {
-      latchedtimer = ceil(timer_timeleft(tms9901_timer) * 46875.);
-      clockinvlchanged = 0;
+      if (tms9901_timer)
+        latchedtimer = ceil(timer_timeleft(tms9901_timer) * 46875.);
+      else
+        latchedtimer = 0; /* timer inactive... */
+      clockinvlchanged = FALSE;
     }
     else
     {
@@ -709,7 +738,9 @@ void ti99_W9901_S(int offset, int data)
     else
       enabled_ints &= ~ masque;   /* unset bit */
 
-    pending_ints &= ~ masque;     /* to reset interrupt */
+    if (offset == 2)
+      timer_int_pending = FALSE;  /* SBO 3 clears pending timer interrupt (??) */
+
     tms9901_field_interrupts();   /* changed interrupt state */
   }
 }
@@ -734,7 +765,6 @@ void ti99_W9901_F(int offset, int data)
     else
       enabled_ints &= ~ 0x4000;   /* unset bit */
 
-    pending_ints &= ~ 0x4000;     /* reset interrupt */
     tms9901_field_interrupts();   /* changed interrupt state */
   }
 }
@@ -976,7 +1006,7 @@ void ti99_wb_disk(int offset, int data)
   if (! diskromon)
     return;
 
-  data ^= 0xFF; // inverted data bus
+  data ^= 0xFF; /* inverted data bus */
 
   switch (offset)
   {
@@ -1115,9 +1145,9 @@ void ti99_DSKsel(int offset, int data)
   }
   else
   {
-    if (drive == DSKnum)  // geez... who cares?
+    if (drive == DSKnum)  /* geez... who cares? */
     {
-      DSKnum = -1;   // no drive selected
+      DSKnum = -1;   /* no drive selected */
     }
   }
 }

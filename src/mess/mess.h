@@ -9,7 +9,6 @@
 void showmessinfo(void);
 
 
-
 /* common.h - begin */
 #define MAX_ROM 3        /* MAX_ROM is the maximum number of cartridge slots a driver supports */
 #define MAX_FLOPPY 4     /* MAX_FLOPPY is the maximum number of floppy drives a driver supports */
@@ -30,6 +29,18 @@ extern char cassette_name[MAX_CASSETTE][MAX_PATH];
 #define IPT_KEYBOARD	IPT_TILT
 /* driver.h - end */
 
+
+/* fileio.c */
+typedef struct
+{
+	int crc;
+	int length;
+	char * name;
+
+} image_details;
+
+char * get_alias(char *driver_name, char *argv);
+int check_crc(int crc, int length, char * driver);
 
 /* mess.c functions [for external use] */
 int parse_image_types(char *arg);

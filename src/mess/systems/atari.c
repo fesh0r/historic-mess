@@ -777,6 +777,11 @@ static struct MachineDriver a5200_machine_driver =
     }
 };
 
+ROM_START(a800_rom)
+	ROM_REGION(0x14000) /* 64K for the CPU + 2 * 8K for cartridges */
+	ROM_LOAD("atariosb.rom", 0xd800, 0x2800, 0x3e28a1fe)
+ROM_END
+
 struct GameDriver a800_driver =
 {
 	__FILE__,
@@ -785,15 +790,15 @@ struct GameDriver a800_driver =
 	"Atari 800",
 	"1979",
 	"Atari",
-	"Juergen Buchmueller",
+	0,
 	GAME_COMPUTER,
 	&a800_machine_driver,
 	0,
 
-	0,	/* ROM_LOAD structures */
+	a800_rom,	/* ROM_LOAD structures */
 	a800_load_rom,
 	a800_id_rom,
-	1,	/* number of ROM slots */
+	2,	/* number of ROM slots */
 	4,	/* number of floppy drives supported */
 	0,	/* number of hard drives supported */
 	0,	/* number of cassette drives supported */
@@ -809,6 +814,11 @@ struct GameDriver a800_driver =
 	0, 0,
 };
 
+ROM_START(a800xl_rom)
+	ROM_REGION(0x18000) /* 64K for the CPU + 16K + 2 * 8K for cartridges */
+	ROM_LOAD("atarixl.rom", 0xc000, 0x4000, 0x1f9cd270)
+ROM_END
+
 struct GameDriver a800xl_driver =
 {
 	__FILE__,
@@ -817,21 +827,21 @@ struct GameDriver a800xl_driver =
 	"Atari 800-XL",
 	"19??",
 	"Atari",
-	"Juergen Buchmueller",
+	0,
 	GAME_NOT_WORKING | GAME_COMPUTER,
 	&a800xl_machine_driver,
 	0,
 
-	0,	/* ROM_LOAD structures */
+	a800xl_rom, 	/* ROM_LOAD structures */
 	a800xl_load_rom,
 	a800xl_id_rom,
-	1,	/* number of ROM slots */
-	4,	/* number of floppy drives supported */
-	0,	/* number of hard drives supported */
-	0,	/* number of cassette drives supported */
+	1,				/* number of ROM slots */
+	4,				/* number of floppy drives supported */
+	0,				/* number of hard drives supported */
+	0,				/* number of cassette drives supported */
 	0, 0,
 	0,
-	0,	/* sound_prom */
+	0,				/* sound_prom */
 
 	input_ports_a800xl,
 
@@ -841,7 +851,10 @@ struct GameDriver a800xl_driver =
 	0, 0,
 };
 
-
+ROM_START(a5200_rom)
+	ROM_REGION(0x14000) /* 64K for the CPU + 16K for cartridges */
+	ROM_LOAD("5200.rom", 0xf800, 0x0800, 0x4248d3e3)
+ROM_END
 
 struct GameDriver a5200_driver =
 {
@@ -851,21 +864,21 @@ struct GameDriver a5200_driver =
 	"Atari 5200",
 	"1982",
 	"Atari",
-	"Juergen Buchmueller",
+	0,
 	GAME_NOT_WORKING,
 	&a5200_machine_driver,
 	0,
 
-	0,	/* ROM_LOAD structures */
+	a5200_rom,		/* ROM_LOAD structures */
     a5200_load_rom,
 	a5200_id_rom,
-	1,	/* number of ROM slots */
-	4,	/* number of floppy drives supported */
-	0,	/* number of hard drives supported */
-	0,	/* number of cassette drives supported */
+	1,				/* number of ROM slots */
+	4,				/* number of floppy drives supported */
+	0,				/* number of hard drives supported */
+	0,				/* number of cassette drives supported */
 	0, 0,
 	0,
-	0,	/* sound_prom */
+	0,				/* sound_prom */
 
 	input_ports_5200,
 

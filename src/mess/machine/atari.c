@@ -43,7 +43,7 @@ void a800_serial_write(void);
 void a800_serial_read(void);
 
 int  a800_cart_loaded = 0;
-int  a800_cart_32k = 0;
+int  a800_cart_16k = 0;
 int  a800_cart_banked = 0;
 int  a800xl_mode = 0;
 void a800xl_mmu(UINT8 old_mmu, UINT8 new_mmu);
@@ -101,81 +101,20 @@ int a800_load_rom(void)
 {
 	static char filename[200];
 	void *file;
-	UINT8 *mem;
 	int size;
 
-	size = 0x10000 + 2 * 0x2000;
-    /* allocate space for the CPU: 64K + 16K * 2 */
-	mem = malloc(size);
-	if (!mem)
-	{
-		LOG((errorlog,"%s 0x%X byte memory allocation failed\n", Machine->gamedrv->name, size));
-        return 1;
-	}
-	memset(mem, 0, size);
-
-	ROM = Machine->memory_region[0] = mem;
-
-    /*******************************************************
-	 * variant #1: open a file called a800.rom
-	 * load one 16K block for c000-ffff containing
-	 * 0000-0fff monitor or anything
-	 * 1000-17ff anything (hardware address space)
-	 * 1800-1fff floating point ROM
-	 * 2000-3fff BIOS ROM
-	 *******************************************************/
-	sprintf(filename, "a800.rom");
-	file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM, 0);
+	/* load an optional monitor.rom */
+	sprintf(filename, "monitor.rom");
+	file = osd_fopen(Machine->gamedrv->name, "monitor.rom", OSD_FILETYPE_ROM_CART, 0);
 	if (file)
 	{
-		size = osd_fread(file, mem + 0xc000, 0x4000);
+		LOG((errorlog,"%s loading optional image '%s' to C000-CFFF\n", Machine->gamedrv->name, filename));
+		size = osd_fread(file, ROM + 0xc000, 0x1000);
 		osd_fclose(file);
-
-		if (size < 0x4000)
-		{
-			LOG((errorlog,"%s image '%s' load failed (less than 16K)\n", Machine->gamedrv->name, filename));
-            free(mem);
-			return 2;
-		}
 	}
 	else
 	{
-		/*******************************************************
-		 * variant #2: load separate ROMs containing
-		 * d800-dfff atariosb.rom (part #1 0000-07ff)
-		 * e000-ffff atariosb.rom (part #2 0800-27ff)
-		 * c000-cfff monitor.rom (optionally)
-		 *******************************************************/
-		sprintf(filename, "atariosb.rom");
-		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM, 0);
-		if (!file)
-		{
-			LOG((errorlog,"%s required image '%s' not found!\n", Machine->gamedrv->name, filename));
-			free(mem);
-			return 3;
-		}
-		size = osd_fread(file, mem + 0xd800, 0x2800);
-		osd_fclose(file);
-		if (size < 0x2800)
-		{
-			LOG((errorlog,"%s image '%s' load failed (less than 10K)\n", Machine->gamedrv->name, filename));
-            free(mem);
-			return 4;
-        }
-
-		/* load an optional monitor.rom */
-		sprintf(filename, "monitor.rom");
-		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
-		if (file)
-		{
-			LOG((errorlog,"%s loading optional image '%s' to C000-CFFF\n", Machine->gamedrv->name, filename));
-            size = osd_fread(file, mem + 0xc000, 0x1000);
-			osd_fclose(file);
-		}
-		else
-		{
-			LOG((errorlog,"%s optional image '%s' not found\n", Machine->gamedrv->name, filename));
-		}
+		LOG((errorlog,"%s optional image '%s' not found\n", Machine->gamedrv->name, filename));
 	}
 
     /* load an optional (dual) cartidge (e.g. basic.rom) */
@@ -185,16 +124,35 @@ int a800_load_rom(void)
 		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
 		if( file )
 		{
-			size = osd_fread(file, mem + 0x10000, 0x2000);
+			size = osd_fread(file, ROM + 0x10000, 0x2000);
             a800_cart_loaded = size / 0x2000;
-			size = osd_fread(file, mem + 0x12000, 0x2000);
-			a800_cart_32k = size / 0x2000;
+			size = osd_fread(file, ROM + 0x12000, 0x2000);
+			a800_cart_16k = size / 0x2000;
 			osd_fclose(file);
-			LOG((errorlog,"%s loaded cartridge '%s' size %s\n",
+			LOG((errorlog,"%s loaded left cartridge '%s' size %s\n",
 				Machine->gamedrv->name,
 				filename,
-				(a800_cart_32k) ? "32K":"16K"));
-			a800_setbank( 1 );
+				(a800_cart_16k) ? "16K":"8K"));
+			if( strlen(rom_name[1]) )
+			{
+				strcpy(filename, rom_name[1]);
+				file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
+				if( file )
+				{
+					size = osd_fread(file, ROM + 0x12000, 0x2000);
+					a800_cart_16k = (size == 0x2000);
+					osd_fclose(file);
+					LOG((errorlog,"%s loaded right cartridge '%s' size 16K\n",
+						Machine->gamedrv->name,
+						filename));
+				}
+				else
+				{
+					LOG((errorlog,"%s cartridge '%s' not found\n", Machine->gamedrv->name, filename));
+				}
+			}
+			if( a800_cart_loaded )
+				a800_setbank( 1 );
         }
 		else
 		{
@@ -235,58 +193,23 @@ int a800xl_load_rom(void)
 {
     static char filename[200];
     void *file;
-    UINT8 *mem;
-	unsigned size = 0;
+    unsigned size;
 
-	size = 0x10000 + 0x04000 + 0x02000 * 2;
-	/* allocate space for the CPU: 64K + 16K + 2 * 8K */
-    mem = malloc(size);
-	if( !mem )
-    {
-        LOG((errorlog,"%s 0x%X byte memory allocation failed\n", Machine->gamedrv->name, size));
-        return 1;
-    }
-    memset(mem, 0, size);
-
-    ROM = Machine->memory_region[0] = mem;
-
-    /*******************************************************
-	 * variant #1: open a file called atarixl.rom
-     * load one 16K block for c000-ffff containing
-	 * 0000-0fff BIOS low ROM
-	 * 1000-17ff selftest ROM (mapped at 5000-57FF)
-     * 1800-1fff floating point ROM
-	 * 2000-3fff BIOS high ROM
-     *******************************************************/
-	sprintf(filename, "atarixl.rom");
-	file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM, 0);
-	if( file )
-    {
-		size = osd_fread(file, mem + 0x10000, 0x4000);
-        osd_fclose(file);
-    }
-	if( size < 0x4000 )
-	{
-		LOG((errorlog,"%s image '%s' load failed (less than 16K)\n", Machine->gamedrv->name, filename));
-		free(mem);
-		return 2;
-	}
-
-	memcpy(mem + 0x0c000, mem + 0x10000, 0x01000);
-	memcpy(mem + 0x05000, mem + 0x11000, 0x00800);
-	memcpy(mem + 0x0d800, mem + 0x11800, 0x02800);
+    memcpy(ROM + 0x0c000, ROM + 0x10000, 0x01000);
+	memcpy(ROM + 0x05000, ROM + 0x11000, 0x00800);
+	memcpy(ROM + 0x0d800, ROM + 0x11800, 0x02800);
 
 	sprintf(filename, "basic.rom");
 	file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM, 0);
 	if( file )
     {
-		size = osd_fread(file, mem + 0x14000, 0x2000);
+		size = osd_fread(file, ROM + 0x14000, 0x2000);
         osd_fclose(file);
-    }
-	if( size < 0x2000 )
-	{
-		LOG((errorlog,"%s image '%s' load failed (less than 8K)\n", Machine->gamedrv->name, filename));
-		return 2;
+		if( size < 0x2000 )
+		{
+			LOG((errorlog,"%s image '%s' load failed (less than 8K)\n", Machine->gamedrv->name, filename));
+			return 2;
+		}
 	}
 
     /* load an optional (dual) cartidge (e.g. basic.rom) */
@@ -296,15 +219,15 @@ int a800xl_load_rom(void)
         file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
         if( file )
         {
-			size = osd_fread(file, mem + 0x14000, 0x2000);
+			size = osd_fread(file, ROM + 0x14000, 0x2000);
             a800_cart_loaded = size / 0x2000;
-			size = osd_fread(file, mem + 0x16000, 0x2000);
-            a800_cart_32k = size / 0x2000;
+			size = osd_fread(file, ROM + 0x16000, 0x2000);
+			a800_cart_16k = size / 0x2000;
             osd_fclose(file);
             LOG((errorlog,"%s loaded cartridge '%s' size %s\n",
                 Machine->gamedrv->name,
                 filename,
-                (a800_cart_32k) ? "32K":"16K"));
+				(a800_cart_16k) ? "16K":"8K"));
         }
         else
         {
@@ -337,63 +260,22 @@ int a5200_load_rom(void)
 {
 	static char filename[200];
 	void *file;
-	UINT8 *mem;
 	int size;
 
-
-
-	size = 0x10000 + 2 * 0x2000;
-    /* allocate space for the CPU: 64K */
-	mem = malloc(size);
-
-
-	if (!mem)
-	{
-		LOG((errorlog,"%s 0x%X byte memory allocation failed\n", Machine->gamedrv->name, size));
-        return 1;
-	}
-	memset(mem, 0, size);
-
-    ROM = Machine->memory_region[0] = mem;
-
-	sprintf(filename, "5200.rom");
-	file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
-	if (!file)
-	{
-		LOG((errorlog,"%s optional image %s not found\n", Machine->gamedrv->name, filename));
-        sprintf(filename, "5200sys.bin");
-		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
-		if (!file)
-		{
-			LOG((errorlog,"%s required image %s not found!\n", Machine->gamedrv->name, filename));
-			free(mem);
-			return 2;
-		}
-	}
-	size = osd_fread(file, mem + 0xf800, 0x0800);
-	osd_fclose(file);
-	if (size < 0x0800)
-	{
-		LOG((errorlog,"%s file read failed (less than 2K)\n", Machine->gamedrv->name));
-        free(mem);
-		return 3;
-	}
-
-
 	/* load an optional (dual) cartidge */
-	if (strlen(rom_name[0]))
+	if( strlen(rom_name[0]) )
 	{
 		strcpy(filename, rom_name[0]);
 		file = osd_fopen(Machine->gamedrv->name, filename, OSD_FILETYPE_ROM_CART, 0);
 		if (file)
 		{
-			size = osd_fread(file, mem + 0x4000, 0x8000);
+			size = osd_fread(file, ROM + 0x4000, 0x8000);
             osd_fclose(file);
             if (size < 0x8000)
 			{
 				/* move it into upper memory */
-				memmove(mem + 0x8000, mem + 0x4000, 0x2000);
-				memmove(mem + 0xa000, mem + 0x6000, 0x2000);
+				memmove(ROM + 0x8000, ROM + 0x4000, 0x2000);
+				memmove(ROM + 0xa000, ROM + 0x6000, 0x2000);
 			}
 			LOG((errorlog,"%s loaded cartridge '%s' size %dK\n",
 				Machine->gamedrv->name, filename, size/1024));
@@ -408,7 +290,7 @@ int a5200_load_rom(void)
 
 int a5200_id_rom(const char *name, const char *gamename)
 {
-	return 0;
+	return 1;
 }
 
 void pokey_reset(void)

@@ -1,3 +1,62 @@
+0.36b8
+
+PLEASE NOTE:  .inp record/playback does not work currently.
+
+
+New drivers supported (in no particular order):
+-----------------------------------------------
+- n/a
+
+
+These drivers have improved GRAPHICS:
+-------------------------------------
+
+- TI99 now use the standard tms9918 palette since the tms9918 emulator
+  actually does not support custom palettes. [Raphael Nabet]
+
+
+
+These drivers have new or improved SOUND:
+-----------------------------------------
+
+- Vectrex clipping fixed. [Mathis Rosenhauer]
+
+
+
+Other drivers changes:
+----------------------
+- Several TI99 keyboard fixes [Raphael Nabet]
+
+- Atari 800 and Atari 5200 fixes [Juergen Buchmueller]
+
+
+
+
+Changes to the main program:
+----------------------------
+- ALIAS crash fixed. [Ben Bruscella]
+
+- System ROM (Image) name matched from CRC database file on startup.  
+  (file stored in CRC directory)
+
+- New option in the user interface to view the Loaded image Info.  
+  (See under Image Information for name, CRC and size info).  
+  (Only visible for one read-only image, otherwise disabled)
+  [Ben Bruscella] 
+
+
+Source:
+-------
+- The core is based on MAME 0.36b8. This incorporates all features 
+  of the update to this core.  [MAME team]
+
+
+
+
+
+
+===================================================================
+
 0.36b7
 
 PLEASE NOTE:  .inp record/playback does not work currently.
@@ -77,7 +136,8 @@ Source:
 
 
 
-------------------------------------------------------------------
+===================================================================
+
 0.36b6
 
 PLEASE NOTE: MESS is now developed and distributed as a MAME source 

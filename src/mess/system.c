@@ -78,7 +78,11 @@ const struct GameDriver *drivers[] =
 //    DRIVER( colecofb )    /* ColecoVision (Fast BIOS load)                  */
 //    DRIVER( coleconb )    /* ColecoVision (No BIOS load)                    */
 
-      DRIVER( cpc6128 )     /* Amstrad CPC                                    */
+  TESTDRIVER( cpc464 )      /* Amstrad (Schneider in Germany) 1984            */
+  TESTDRIVER( cpc664 )      /* Amstrad (Schneider in Germany) 1985            */
+      DRIVER( cpc6128 )     /* Amstrad (Schneider in Germany) 1985                                    */
+  TESTDRIVER( cpc464p )     /* Amstrad CPC464  Plus - 1987                    */
+  TESTDRIVER( cpc6128p )    /* Amstrad CPC6128 Plus - 1987                    */
 
       DRIVER( dragon32 )    /* Dragon32                                       */
 

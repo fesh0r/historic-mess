@@ -1,0 +1,25 @@
+# Atari 7800 Cartridge CRC's.  
+# Note: This list is provided as a record of known dumps for this system.  
+#       These checksums have not been validated and cannot be assumed correct.  
+#       They are provided here as a database to help the emulation of this system.  
+
+[a7800]
+44615260 = Ball Blazer (LucasFilm, 1987)
+5f94939e = Centipede (Atari, 1984)
+ 3ec1894 = Food Fight (Atari, 1984)
+cffaa1b7 = Galaga (Atari, 1984)
+fda13f77 = Joust
+5ec9c910 = Ms. PacMan (Atari, 1984)
+4bf501cb = Pole Position 2
+44584fa2 = Xevious
+
+
+
+#[not_working]
+8ead573d = DigDug (NOT WORKING)
+ab7bc9ce = RoboTron 2084 (NOT WORKING)
+
+
+#[known_bad_dumps]
+
+

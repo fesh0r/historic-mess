@@ -171,9 +171,8 @@ Known Issues:
        and a ROM will start, but the emulated system hangs...  If you can supply 
        info, please contact the MESS team! ;-)
 
-     - The required System ROM (5200sys.bin - 2,048k - CRC 4248d3e3) is not listed
-       in a MESS a5200 -listroms.  This file is required, and the system will not 
-       run without it.
+     - Required System ROM (5200sys.bin - 2,048k - CRC 4248d3e3) - the system 
+       will not run without it.
 
 
 Compatibility:
@@ -214,9 +213,15 @@ Known Issues:
        some key associated functionality may be disabled (like the ESC key for 
        EXIT).  The keyboard emulation mode is toggled using the scroll_lock key.   
 
-     - The required System ROM (.bin - 2,048k - CRC 4248d3e3) is not listed
-       in a MESS a5200 -listroms.  This
+     - Required System ROM (atariosb.rom - 1024 bytes  3e28a1fe)  
 
+     - The Atari800 driver now has two ROM slots. It really had two 
+       slots, so I modified the code to optionally read the second 
+       part of a 16K ROM from the second cartridge filename provided 
+       (right slot).
+       The previous version had a800_cartridge_32k flag which was      
+       wrong.  Cartridges are either 8K or 16K, so I renamed that to
+       ..._16k too ;)
 
 Compatibility:
      - It should run just about anything you throw at it.
@@ -647,6 +652,7 @@ nes - Nintendo Entertainment System:
 Usage:
 	arrow keys - 1p move
 	control, alt - 1p fire
+	3 - Select
 	1,2 - 1, 2 player select
 	return - 1p start
 
@@ -718,6 +724,28 @@ pdp1      "pdp1 SPACEWAR!"
 ----------------------------
 raaspec   "RA+A Spectrum I+"
 ----------------------------
+Intro:
+     - The Spectrum I+ was a modified Vectrex. It had a 32K ROM cart and 2K additional 
+       battery backed RAM (0x8000 - 0x87ff). PB6 was used to signal inserted coins to 
+       the VIA. The unit was controlled by 8 buttons (2x4 buttons of controller 1 and 
+       2).  Each button had a LED which were mapped to 0xa000.  The srvice mode can 
+       be accessed by pressing button 8 during startup.  As soon as all LEDs light up, 
+       press 2 and 3 without releasing 8. Then release 8 and after that 2 and 3. You 
+       can leave the screen where you enter ads by pressing 8 several times.
+
+Usage:
+     - This is the list of the ROMs required for driver "raaspec".
+       Name              Size       Checksum
+       spectrum.bin    32768 bytes  20af7f3f
+       system.img       8192 bytes  ba13fb57
+
+     - For the 8-button key mappings, see the user menu under 
+       "Keys (This Machine)".
+
+Compatibility:
+     - This driver supports the LED backdrop images:
+         spec_bt.png
+	 led.png
 
 
 

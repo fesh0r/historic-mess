@@ -49,7 +49,7 @@ extern unsigned char *Amstrad_Memory;
 int amstrad_opbaseoverride(int pc)
 {
   /* clear op base override */
-  cpu_setOPbaseoverride(0);
+  cpu_setOPbaseoverride(1,0);
 
   if (snapshot_loaded)
   {
@@ -74,7 +74,7 @@ void    amstrad_init_machine(void)
                 {
                    snapshot_loaded = 1;
 
-                   cpu_setOPbaseoverride(amstrad_opbaseoverride);
+                   cpu_setOPbaseoverride(1,amstrad_opbaseoverride);
                 }
         }
 
@@ -221,7 +221,7 @@ void    amstrad_handle_snapshot(unsigned char *pSnapshot)
                 int MemorySize;
 
                 MemSize = (pSnapshot[0x06b] & 0x0ff) | ((pSnapshot[0x06c] & 0x0ff)<<8);
-                
+
                 if (MemSize==128)
                 {
                         MemorySize = 128*1024;
@@ -242,7 +242,7 @@ void    amstrad_handle_snapshot(unsigned char *pSnapshot)
 int	amstrad_rom_load()
 {
         void *file;
-                
+
         file = osd_fopen(Machine->gamedrv->name, rom_name[0], OSD_FILETYPE_ROM_CART, 0);
 
         if (file)
@@ -257,14 +257,14 @@ int	amstrad_rom_load()
                 {
                         /* malloc memory for this data */
                         data = malloc(datasize);
-        
+
                         if (data!=NULL)
                         {
                                 /* read whole file */
                                 osd_fread(file, data, datasize);
-        
+
                                 file_loaded = data;
-        
+
                                 /* close file */
                                 osd_fclose(file);
 

@@ -24,8 +24,6 @@ static char *mess_alpha = "";
 
 
 
-/* fileio.c */
-void get_alias(char *driver_name, char *argv, char *alias);
 
 void showmessdisclaimer(void)
 {
@@ -112,26 +110,41 @@ int load_image(int argc, char **argv, char *driver, int j)
     */
     int i;
     int res=0;
-	char * alias;
-
-
+	char *alias;
 
 	for (i = j+1; i < argc; i++)
     {
 
-		alias=malloc(sizeof(char));
+
 
         /* skip options and their additional arguments */
 		if (argv[i][0] == '-')
         {
-			/* removed */
+         	/* Need to skip all options which are not followed by a "-" */
+            if (	!stricmp(argv[i],"-vgafreq")     ||
+                	!stricmp(argv[i],"-depth")       ||
+                	!stricmp(argv[i],"-skiplines")   ||
+                	!stricmp(argv[i],"-skipcolumns") ||
+                	!stricmp(argv[i],"-beam")        ||
+                	!stricmp(argv[i],"-flicker")     ||
+                	!stricmp(argv[i],"-gamma")       ||
+                	!stricmp(argv[i],"-frameskip")   ||
+                	!stricmp(argv[i],"-soundcard")   ||
+                	!stricmp(argv[i],"-samplerate")  ||
+                	!stricmp(argv[i],"-sr")          ||
+                	!stricmp(argv[i],"-samplebits")  ||
+                	!stricmp(argv[i],"-sb")          ||
+                	!stricmp(argv[i],"-joystick")    ||
+					!stricmp(argv[i],"-joy")         ||
+            		!stricmp(argv[i],"-resolution")) i++;
+
         }
         else
         {
 			/* check if this is an alias for a set of images */
 
-			//alias = get_config_string(driver, argv[i], "");
-			get_alias(driver,argv[i],alias);
+			alias = get_alias(driver,argv[i]);
+
 			if (alias && strlen(alias))
             {
 				char *arg;
@@ -150,8 +163,6 @@ int load_image(int argc, char **argv, char *driver, int j)
 				fprintf(errorlog,"NOTE: No alias found\n");
 				res = parse_image_types(argv[i]);
 			}
-			/* free up the alias - dont need it anymore */
-			free(alias);
 		}
 		/* If we had an error leave now */
 		if (res)

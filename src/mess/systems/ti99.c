@@ -1,21 +1,20 @@
 /*
-  MESS Driver for TI 99/4A Home Computer.
-  R Nabet, 1999.
+  MESS Driver for TI-99/4A Home Computer.
+  Raphael Nabet, 1999.
 
   see machine/ti99.c for some details and references
 
-  NOTE!!!!!!!!!!  for MAME 36b5, I commented out some members of this function..
-  check for m36b5 that Nicola added the new TMS5220 drivers.......
+  NOTE!!!!!!!!!!  Until Nicola adds the new TMS5220 drivers, you should uncomment two lines
+  in tms5220interface like this :
 
   static struct TMS5220interface tms5220interface =
   {
     640000L,   640kHz -> 8kHz output
     10000,     Volume.  I don't know the best value.
-  	NULL,      no IRQ callback
-  	2,         memory region where the speech ROM is.  -1 means no speech ROM
-  	0,         memory size of speech rom (0 -> take memory region length)
+    NULL,      no IRQ callback
+    //2,         memory region where the speech ROM is.  -1 means no speech ROM
+    //0,         memory size of speech rom (0 -> take memory region length)
   };
-
 */
 
 #include "driver.h"
@@ -167,7 +166,7 @@ INPUT_PORTS_START(ti99_input_ports)
     PORT_BITX(0x88, IP_ACTIVE_LOW, IPT_UNUSED, "unused", IP_KEY_NONE, IP_JOY_NONE)
     PORT_BITX(0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "CTRL", KEYCODE_LCONTROL, IP_JOY_NONE)
     PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT", KEYCODE_LSHIFT, IP_JOY_NONE)
-    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "FCTN", KEYCODE_O/*PTION*/, IP_JOY_NONE)
+    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "FCTN", KEYCODE_LALT, IP_JOY_NONE)
     PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "ENTER", KEYCODE_ENTER, IP_JOY_NONE)
     PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "(SPACE)", KEYCODE_SPACE, IP_JOY_NONE)
     PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "= + QUIT", KEYCODE_EQUALS, IP_JOY_NONE)
@@ -248,12 +247,20 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 }    /* end of array */
 };
 
-/*extern unsigned char TMS9928A_palette[];*/
+#if 1
+/*
+	Use normal palette.
+*/
+
+extern unsigned char TMS9928A_palette[];
+extern unsigned short TMS9928A_colortable[];
+
+#else
 
 /*
-  My palette.  Nicer than the default TMS9928A_palette...
+	My palette.  Nicer than the default TMS9928A_palette, but does not work quite well...
 */
-static unsigned char palette[] =
+static unsigned char TMS9928A_palette[] =
 {
   0, 0, 0,
   0, 0, 0,
@@ -273,9 +280,7 @@ static unsigned char palette[] =
   255, 255, 255,
 };
 
-/*extern unsigned short TMS9928A_colortable[];*/
-
-static unsigned short colortable[] =
+static unsigned short TMS9928A_colortable[] =
 {
   0, 1,
   0, 2,
@@ -294,34 +299,36 @@ static unsigned short colortable[] =
   0,15,
 };
 
+#endif
+
 
 /*
   TMS9919 sound chip parameters.
 */
 static struct SN76496interface tms9919interface =
 {
-	1,        /* one sound chip */
-	{3579545},  /* clock speed. connected to the TMS9918A CPUCLK pin... */
-	{ 10000 } /* Volume.  I don't know the best value. */
+	1,            /* one sound chip */
+	{ 3579545 },  /* clock speed. connected to the TMS9918A CPUCLK pin... */
+	{ 10000 }     /* Volume.  I don't know the best value. */
 };
 
 static struct TMS5220interface tms5220interface =
 {
-  640000L,  /* 640kHz -> 8kHz output */
-  10000,    /* Volume.  I don't know the best value. */
+	640000L,  /* 640kHz -> 8kHz output */
+	10000,    /* Volume.  I don't know the best value. */
 	NULL,     /* no IRQ callback */
 	//2,        /* memory region where the speech ROM is.  -1 means no speech ROM */
 	//0,        /* memory size of speech rom (0 -> take memory region length) */
 };
 
 /*
-  we use 2 DACs to emulate "audio gate and" tape output, even thought
-  a) there was no DAC in a TI99
-  b) these are 2-level output (a DAc is useless...)
+  we use 2 DACs to emulate "audio gate" and tape output, even thought
+  a) there was no DAC in an actual TI99
+  b) these are 2-level output (whereas a DAC provides 256-level output...)
 */
 static struct DACinterface aux_sound_intf =
 {
-  2,	/* total number of DACs */
+  2,  /* total number of DACs */
   {
     10000,  /* volume for tape output */
     10000   /* volume for audio gate*/
@@ -350,10 +357,10 @@ static struct MachineDriver machine_driver =
 	ti99_stop_machine,
 
 	/* video hardware */
-	256,							/* screen width */
-	192,							/* screen height */
-	{ 0, 256-1, 0, 192-1},			/* visible_area */
-	gfxdecodeinfo,					/* graphics decode info (???)*/
+	256,                    /* screen width */
+	192,                    /* screen height */
+	{ 0, 256-1, 0, 192-1},  /* visible_area */
+	gfxdecodeinfo,          /* graphics decode info (???)*/
 	TMS9928A_PALETTE_SIZE,TMS9928A_COLORTABLE_SIZE/sizeof(unsigned short),
 	0,
 
@@ -375,7 +382,7 @@ static struct MachineDriver machine_driver =
 			&tms5220interface
 		},
 		{
-		  SOUND_DAC,
+			SOUND_DAC,
 			&aux_sound_intf
 		}
 	}
@@ -410,37 +417,37 @@ struct GameDriver ti99_driver =
 	"1999",
 	"Texas Instrument",
 	"R Nabet, based on Ed Swartz's V9T9.",
-	GAME_COMPUTER,
+	/*GAME_COMPUTER*/0, /*we don't need it (hopefully)*/
 	&machine_driver,
 	0,
 
 	ti99_rom,
-	ti99_load_rom, 			/* load rom_file images */
-	ti99_id_rom,			/* identify rom images */
-	3,						/* number of ROM slots - in this case, a CMD binary */
-	/* TI99 only had one slot on console, but cutting the ROMs in 3 files seems to be the anly way
-	to handle cartidge until I use a header format.
-	Note that there was sometime a speech ROM slot in the speech synthesizer, and you could plug
+	ti99_load_rom,  /* load rom_file images */
+	ti99_id_rom,    /* identify rom images */
+	3,              /* number of ROM slots */
+	/* a TI99 console only had one cartidge slot, but cutting the ROMs in 3 files seems to be
+	the only way to handle cartidge until I use a header format.
+	Note that there sometimes was a speech ROM slot in the speech synthesizer, and you could plug
 	up to 16 additonnal DSR roms and quite a lot of GROMs in the side port.  None of these is
 	emulated. */
-	3,						/* number of floppy drives supported */
-	0,						/* number of hard drives supported */
-	0/*2*/,						/* number of cassette drives supported */
-	0,						/* rom decoder */
-	0,						/* opcode decoder */
-	0,						/* pointer to sample names */
-	0,						/* sound_prom */
+	3,            /* number of floppy drives supported */
+	0,            /* number of hard drives supported */
+	0/*2*/,       /* number of cassette drives supported */
+	0,            /* rom decoder */
+	0,            /* opcode decoder */
+	0,            /* pointer to sample names */
+	0,            /* sound_prom */
 
 	ti99_input_ports,
 
-	0,						/* color_prom */
-	/*TMS9928A_palette*/palette,				/* color palette */
-	/*TMS9928A_colortable*/colortable,				/* color lookup table */
+	0,            /* color_prom */
+	TMS9928A_palette,     /* color palette */
+	TMS9928A_colortable,  /* color lookup table */
 
-	ORIENTATION_DEFAULT,	/* orientation */
+	ORIENTATION_DEFAULT,  /* orientation */
 
-	0,						/* hiscore load */
-	0,						/* hiscore save */
+	0,            /* hiscore load */
+	0,            /* hiscore save */
 };
 
 

@@ -1,0 +1,163 @@
+# ColecoVision Cartridge CRC's.  
+# Note: This list is provided as a record of known dumps for this system.  
+#       These checksums have not been validated and cannot be assumed correct.  
+#       They are provided here as a database to help the emulation of this system.  
+
+[coleco]
+c575a831 = 2010 The Graphic Action Game
+9cc3fabc = Alcazar - The Forgotten Fortress
+4ffb4e8c = Alphabet Zoo
+275a7013 = Aqua Attack
+adfa09e2 = Artillery Duel
+2e8e9d42 = Beam Rider
+1f5f8571 = Ken Uston BlackJack/Poker
+da29c284 = BlockAde Runner
+1796de5e = Boulder Dash
+829c967d = Brain Strainers
+  2b22d4 = Bump 'n' Jump
+91346341 = BurgerTime
+f9d56307 = Cabbage Patch Kids - Adventures In The Park
+ c25ad84 = Cabbage Patch Kids Picture Show
+72aceac7 = Campaign '84
+d568c4c5 = Carnival
+14d6ced6 = Cosmic Avenger
+e7a1ff9f = Choplifter
+73e96e53 = Chuck Norris (Xonox, 1983)
+ddafb16f = Congo Bongo
+3a581cae = Cosmic Crisis (BIT, 1983)
+d93a7dc2 = Cosmic Fighter 2 (Red Bullet Software, 1996/97)
+c75fad5a = Dam Busters
+bff86a98 = Dance Fantasy
+614bb621 = Decathlon
+3c77198c = Donkey Kong (Version 1 - 16k)
+94c4cd4a = Donkey Kong (Version 2 - 24k)
+fd11508d = Donkey Kong Junior
+10969900 = Dr Seuss - Fixup the MixUp Puzzler
+dcb8f9e8 = Dragon Fire (Imagic, 1984)
+4025ac94 = Dukes of Hazzard
+dff01cf7 = Evolution
+7e97a22e = Flipper Slipper
+65bbbcb4 = Fortune Builder
+964db3bc = Fraction Fever
+8615c6e8 = Frantic Freddy 
+960616af = Frenzy
+32b95be0 = Frogger
+ 4405423 = Frogger 2
+9c551386 = Front Line
+3f18ba6c = Galaxian
+ 726b64d = Gateway To Apshai
+ 74ea085 = Gorf
+f2cac67c = Gust Buster
+b4ef0f1f = Gyruss
+6f2e2d84 = Heist (The)
+685ab9b5 = Hero
+c9893041 = Illusions
+3004a253 = James Bond
+a5511418 = Juke Box
+9528949a = Jump Man Junior
+e8858484 = Jungle Hunt
+819a06e5 = Kevtris
+fad8d414 = Keystone Kapers
+2c3097b8 = Lady Bug
+1641044f = Learning with Leeper
+918f12c0 = Linking Logic
+c28d7062 = Logic Levels
+472f8cf6 = Looping
+bab520ea = Memory Manor
+71d1bd4d = Miner 2049er
+f06592bf = Monkey Academy
+c521bcad = Moon Sweeper
+935ebe62 = Moto Cross Racer
+c173bbec = Mountain King
+fd8b79b3 = Mouse Trap
+d53e4bdf = Mr. Do!
+ef7e9562 = Mr. Do's Castle
+164c8c26 = Music Box Demo
+95051633 = Noise Generator
+ea06f585 = Nova Blast
+d2256b6c = Oil's Well
+9921ecb5 = Omega Race
+17c77c3a = One On One
+137d6c4c = PDMass???
+53b85e20 = Pepper 2
+312ae55a = Pitfall
+851a455f = Pitfall 2 The Lost Caverns
+3ef1d0ee = Popeye
+13f06adc = Q-Bert
+e45496d3 = Q-Bert 2
+4359a3e5 = Quest For Types (BC's Quest)
+9ebe5d98 = Quest for Tyres 2 (Grogs Revenge)
+eec81c42 = Quest for Quintana Roo
+fe897f9c = River Raid
+ eb45d6e = Robin Hood
+ 46f4b70 = Rocky Super Action Boxing
+3caca004 = Rock n Rope
+e4585c0a = RollOverTure
+c5f69a1b = Sammy Lightfoot
+8a46e5fa = Sector Alpha version 1
+fe5f4602 = Sector Alpha version 2
+74057241 = Sewer Sam
+62619dc0 = Super Action Football
+dd76775d = Sir Lancelot
+27f5c0ad = Slurpy
+97c0382d = Smurf Paint n Play Workshop
+d1a1fe0b = Smurf Rescue
+5bdf2997 = Space Panic
+3564e134 = Spectron
+ b8db61e = Spy Hunter
+6c82e0cc = Squish Em Sam
+f7f18e6f = Star Fortress
+b8ea7b19 = Star Trek
+ e75b3bf = Star Wars
+1d9082fb = Strike It!
+509267f8 = SubRoc
+c2e7f0e0 = Super Donkey Kong Junior
+7f0baa89 = Tank Wars
+6eab5d44 = Tapper
+eff35a70 = Tarzan
+c8bc1950 = Telly Turtle
+c1d5a702 = Tournament Tennis
+1593f7df = Thresh Hold
+969d77c8 = Tic Tac Toe
+b3a1eacb = Time Pilot
+1e14397e = Tomarc The Barbarian
+4defcdfa = Tunnels and Trolls
+10cc33a3 = Tutankam
+fdd52ca0 = Up N Down
+1d7eb7d1 = Venture
+5f20bf49 = Victory
+a9177b20 = Video Hustler
+6e0150c1 = War Games
+308a949b = War Room
+ 4eeef44 = Wing War
+1f947468 = Zaxxon
+
+
+
+#[not_working]
+275c800e = Antartic Adventure (NOT WORKING - CRASHES)
+1baf661e = Buck Rogers - Planet Of Zoom (NOT WORKING)
+17edbfd4 = Centipede (NOT WORKING)
+ffd16997 = Defender (NOT WORKING)
+56c358a6 = Destructor (NOT WORKING)
+448fed54 = Face Maker (NOT WORKING)
+1bed9c5b = Fall Guy (NOT WORKING)
+9eb58823 = Fathom (NOT WORKING)
+cc43ebf7 = Its Only Rock n Roll	(NOT WORKING)
+fc95b302 = Mash (NOT WORKING)
+ bd9d073 = Montezumas Revenge (NOT WORKING)
+1e455299 = Pitstop (NOT WORKING - CRASHES)
+97217677 = Super Action Baseball
+8093b672 = SCForce???? (NOT WORKING)
+f84622d2 = Super Cobra (INPUT PROBLEMS)  
+eb6cb4d8 = Super Controller Tester (GRAPHICS PROBLEMS) 
+53d2651c = Slither (INPUT PROBLEMS)  
+567be2b0 = Space Fury (NOT WORKING)
+6ca80b63 = Turbo (NOT WORKING)
+6e523e50 = Zenji (NOT WORKING)
+
+
+#[known_bad_dumps]
+
+
+

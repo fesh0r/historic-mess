@@ -39,7 +39,7 @@ extern void coleco_VDP_w(int offset, int data);
 
 static struct MemoryReadAddress readmem[] =
 {
-    { 0x0000, 0x1fff, MRA_ROM }, /* COLECO.ROM */
+    { 0x0000, 0x1fff, MRA_ROM },  /* COLECO.ROM */
     { 0x6000, 0x63ff, coleco_ram_r, &coleco_ram },
     { 0x6400, 0x67ff, coleco_ram_r },
     { 0x6800, 0x6bff, coleco_ram_r },
@@ -48,9 +48,10 @@ static struct MemoryReadAddress readmem[] =
     { 0x7400, 0x77ff, coleco_ram_r },
     { 0x7800, 0x7bff, coleco_ram_r },
     { 0x7c00, 0x7fff, coleco_ram_r },
-    { 0x8000, 0xffff, MRA_ROM, &coleco_cartridge_rom }, /* Cartridge */
-	{ -1 }	/* end of table */
+    { 0x8000, 0xffff, MRA_ROM, &coleco_cartridge_rom },  /* Cartridge */
+	{ -1 }	 /* end of table */
 };
+
 
 static struct MemoryWriteAddress writemem[] =
 {
@@ -211,7 +212,6 @@ static struct MachineDriver machine_driver =
 
 ROM_START (coleco_rom)
 	ROM_REGION (0x10000)
-//	ROM_LOAD ("coleco.rom", 0x0000, 0x2000, 0x6e6bc567)  CANNOT FIND THIS!
 	ROM_LOAD ("coleco.rom", 0x0000, 0x2000, 0x3aa93ef3)
 ROM_END
 
